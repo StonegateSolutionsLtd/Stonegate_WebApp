@@ -13,7 +13,10 @@ export interface OrderFormData {
   dropoffHasElevator: boolean
   apartmentSize: ApartmentSize | ''
   movingDate: string
+  movingTime: string
   // Step 3 — Contact
+  customerName: string
+  customerEmail: string
   phone: string
   specialNotes: string
 }
@@ -35,6 +38,9 @@ export const EMPTY_ORDER_FORM: OrderFormData = {
   dropoffHasElevator: false,
   apartmentSize: '',
   movingDate: '',
+  movingTime: '',
+  customerName: '',
+  customerEmail: '',
   phone: '',
   specialNotes: '',
 }

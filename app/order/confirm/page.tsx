@@ -69,6 +69,10 @@ export default function ConfirmPage() {
 
         <OrderSummary order={order} />
 
+        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+          After confirming, we will reach out to you to discuss further details including the price.
+        </div>
+
         {error && (
           <p className="mt-4 text-sm text-red-500">{error}</p>
         )}

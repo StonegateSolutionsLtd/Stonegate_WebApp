@@ -1,4 +1,4 @@
-# Stonegate Moving Solutions — Technical Documentation
+# Stonegate Moving Solutions. Technical Documentation
 
 Full-stack web application for an apartment moving company. Customers can fill out a moving order form, create an account, confirm their order, and have it saved to a database while the owner receives an email notification.
 
@@ -272,7 +272,7 @@ After saving, the form checks if the user is logged in via the browser Supabase 
 ### Step 4 — Confirm page reads sessionStorage
 On mount (`useEffect`), the confirm page reads `pendingOrder` from sessionStorage. If nothing is there (direct navigation), it redirects back to `/order`.
 
-### Step 5 — POST /api/orders ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+### Step 5 — POST /api/orders
 User clicks "Confirm Order":
 1. `fetch('/api/orders', { method: 'POST', body: JSON.stringify(order) })`
 2. Server verifies Supabase session (401 if unauthenticated)
