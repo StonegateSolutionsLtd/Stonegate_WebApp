@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { EMPTY_ORDER_FORM, type ApartmentSize, type OrderFormData } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,7 +25,7 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
         <div key={i} className="flex items-center gap-2">
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-              ${i < current ? 'bg-zinc-900 text-white' : i === current ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-400'}`}
+              ${i <= current ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-400'}`}
           >
             {i < current ? '✓' : i + 1}
           </div>
@@ -71,7 +70,6 @@ export default function OrderForm() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<OrderFormData>(EMPTY_ORDER_FORM)
-  const [saving, setSaving] = useState(false)
 
   function set<K extends keyof OrderFormData>(key: K, value: OrderFormData[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -82,30 +80,23 @@ export default function OrderForm() {
     if (step === 1) return (
       form.dropoffAddress.trim().length > 0 &&
       form.apartmentSize !== '' &&
-      form.movingDate !== ''
+      form.movingDate !== '' &&
+      form.movingTime !== ''
     )
-    return form.phone.trim().length > 0
+    return (
+      form.customerName.trim().length > 0 &&
+      form.customerEmail.trim().length > 0 &&
+      form.phone.trim().length > 0
+    )
   }
 
-  async function handleNext() {
+  function handleNext() {
     if (step < STEPS.length - 1) {
       setStep(s => s + 1)
       return
     }
-
-    // Final step — save to sessionStorage and check auth
-    setSaving(true)
     sessionStorage.setItem('pendingOrder', JSON.stringify(form))
-
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    setSaving(false)
-
-    if (!user) {
-      router.push('/register?next=/order/confirm')
-    } else {
-      router.push('/order/confirm')
-    }
+    router.push('/order/confirm')
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -218,12 +209,41 @@ export default function OrderForm() {
                   onChange={e => set('movingDate', e.target.value)}
                 />
               </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="movingTime">Preferred arrival time</Label>
+                <Input
+                  id="movingTime"
+                  type="time"
+                  value={form.movingTime}
+                  onChange={e => set('movingTime', e.target.value)}
+                />
+              </div>
             </>
           )}
 
           {/* ── Step 3: Contact ── */}
           {step === 2 && (
             <>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="customerName">Full name</Label>
+                <Input
+                  id="customerName"
+                  type="text"
+                  placeholder="Jane Smith"
+                  value={form.customerName}
+                  onChange={e => set('customerName', e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="customerEmail">Email</Label>
+                <Input
+                  id="customerEmail"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.customerEmail}
+                  onChange={e => set('customerEmail', e.target.value)}
+                />
+              </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="phone">Phone number</Label>
                 <Input
@@ -253,8 +273,8 @@ export default function OrderForm() {
             ) : (
               <div />
             )}
-            <Button onClick={handleNext} disabled={!canAdvanceStep() || saving}>
-              {saving ? 'Saving…' : step < STEPS.length - 1 ? 'Next →' : 'Review Order'}
+            <Button onClick={handleNext} disabled={!canAdvanceStep()}>
+              {step < STEPS.length - 1 ? 'Next →' : 'Review Order'}
             </Button>
           </div>
         </CardContent>

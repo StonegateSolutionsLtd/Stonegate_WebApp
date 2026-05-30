@@ -1,4 +1,4 @@
-# Stonegate Moving Solutions - Technical Documentation
+# Stonegate Moving Solutions. Technical Documentation
 
 Full-stack web application for an apartment moving company. Customers can fill out a moving order form, create an account, confirm their order, and have it saved to a database while the owner receives an email notification.
 

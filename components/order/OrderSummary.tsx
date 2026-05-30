@@ -25,6 +25,12 @@ export default function OrderSummary({ order }: { order: OrderFormData }) {
       })
     : '—'
 
+  const formattedTime = order.movingTime
+    ? new Date(`1970-01-01T${order.movingTime}`).toLocaleTimeString('en-GB', {
+        hour: '2-digit', minute: '2-digit', hour12: true,
+      })
+    : '—'
+
   return (
     <div className="bg-white rounded-xl border border-zinc-200 p-6">
       <div className="flex items-center justify-between mb-2">
@@ -47,6 +53,11 @@ export default function OrderSummary({ order }: { order: OrderFormData }) {
       <SectionTitle>Move details</SectionTitle>
       <Row label="Apartment size" value={sizeLabel} />
       <Row label="Moving date" value={formattedDate} />
+      <Row label="Arrival time" value={formattedTime} />
+
+      <SectionTitle>Contact</SectionTitle>
+      <Row label="Name" value={order.customerName} />
+      <Row label="Email" value={order.customerEmail} />
       <Row label="Phone" value={order.phone} />
 
       {order.specialNotes && (
