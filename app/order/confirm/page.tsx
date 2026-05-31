@@ -7,24 +7,27 @@ import { type OrderFormData } from '@/lib/types'
 import OrderSummary from '@/components/order/OrderSummary'
 import { Button } from '@/components/ui/button'
 
+function readStoredOrder(): OrderFormData | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = sessionStorage.getItem('pendingOrder')
+    return raw ? (JSON.parse(raw) as OrderFormData) : null
+  } catch {
+    return null
+  }
+}
+
 export default function ConfirmPage() {
   const router = useRouter()
-  const [order, setOrder] = useState<OrderFormData | null>(null)
+  const [order] = useState<OrderFormData | null>(readStoredOrder)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const raw = sessionStorage.getItem('pendingOrder')
-    if (!raw) {
-      router.replace('/order')
-      return
-    }
-    try {
-      setOrder(JSON.parse(raw))
-    } catch {
+    if (!order) {
       router.replace('/order')
     }
-  }, [router])
+  }, [order, router])
 
   async function handleConfirm() {
     if (!order) return
