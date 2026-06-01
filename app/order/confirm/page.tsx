@@ -55,42 +55,41 @@ export default function ConfirmPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-400">Loading your order...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FAF7F2' }}>
+        <p style={{ color: '#9A8E83' }}>Loading your order...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ backgroundColor: '#FAF7F2' }}>
       <div className="max-w-lg mx-auto">
         <div className="mb-8">
-          <Link href="/order" className="text-sm text-gray-400 hover:text-gray-700 font-medium">Edit order</Link>
-          <h1 className="text-4xl font-extrabold text-gray-950 mt-4 tracking-tight">Confirm your order</h1>
-          <p className="text-gray-500 mt-2">Review everything below, then hit confirm.</p>
+          <Link href="/order" className="text-sm font-medium" style={{ color: '#9A8E83' }}>Edit order</Link>
+          <h1 className="text-4xl font-extrabold mt-4 tracking-tight" style={{ color: '#1A1714' }}>Confirm your order</h1>
+          <p className="mt-2" style={{ color: '#9A8E83' }}>Review everything below, then hit confirm.</p>
         </div>
 
         <OrderSummary order={order} />
 
-        <div className="mt-4 p-4 bg-white border border-gray-200 rounded-xl text-sm text-gray-500">
+        <div className="mt-4 p-4 rounded-xl text-sm" style={{ backgroundColor: '#F0EBE3', border: '1px solid #E8E0D5', color: '#9A8E83' }}>
           After confirming, we will reach out to discuss the details and finalize the price.
         </div>
 
-        {error && (
-          <p className="mt-4 text-sm text-red-500">{error}</p>
-        )}
+        {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
         <div className="mt-6 flex flex-col gap-3">
           <Button
             size="lg"
-            className="w-full bg-gray-950 text-white hover:bg-gray-800 font-bold rounded-xl"
+            className="w-full font-bold rounded-xl border-0"
+            style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
             onClick={handleConfirm}
             disabled={submitting}
           >
             {submitting ? 'Confirming...' : 'Confirm Order'}
           </Button>
           <Link href="/order">
-            <Button variant="ghost" className="w-full text-gray-400 hover:text-gray-700">Go back and edit</Button>
+            <Button variant="ghost" className="w-full" style={{ color: '#9A8E83' }}>Go back and edit</Button>
           </Link>
         </div>
       </div>

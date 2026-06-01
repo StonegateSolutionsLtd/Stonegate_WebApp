@@ -24,13 +24,19 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} className="flex items-center gap-2">
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-              ${i <= current ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-400'}`}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
+            style={i <= current
+              ? { backgroundColor: '#4D6B47', color: '#FAF7F2' }
+              : { backgroundColor: '#E8E0D5', color: '#9A8E83' }
+            }
           >
             {i < current ? '✓' : i + 1}
           </div>
           {i < total - 1 && (
-            <div className={`h-0.5 w-12 transition-colors ${i < current ? 'bg-zinc-900' : 'bg-zinc-200'}`} />
+            <div
+              className="h-0.5 w-12 transition-colors"
+              style={{ backgroundColor: i < current ? '#4D6B47' : '#E8E0D5' }}
+            />
           )}
         </div>
       ))}
@@ -53,15 +59,15 @@ function ElevatorToggle({
         type="button"
         id={id}
         onClick={() => onChange(!value)}
-        className={`relative w-11 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2
-          ${value ? 'bg-zinc-900' : 'bg-zinc-200'}`}
+        className="relative w-11 h-6 rounded-full transition-colors focus:outline-none"
+        style={{ backgroundColor: value ? '#4D6B47' : '#D9CFC4' }}
       >
         <span
           className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform
             ${value ? 'translate-x-5' : 'translate-x-0'}`}
         />
       </button>
-      <span className="text-sm text-zinc-600">{value ? 'Yes, there is an elevator' : 'No elevator'}</span>
+      <span className="text-sm" style={{ color: '#6B5E54' }}>{value ? 'Yes, there is an elevator' : 'No elevator'}</span>
     </div>
   )
 }
@@ -113,17 +119,17 @@ export default function OrderForm() {
     <div className="w-full max-w-lg">
       <StepIndicator current={step} total={STEPS.length} />
 
-      <Card>
+      <Card style={{ backgroundColor: '#F0EBE3', borderColor: '#E8E0D5' }}>
         <CardHeader>
-          <CardTitle>{STEPS[step]}</CardTitle>
-          <CardDescription>
+          <CardTitle style={{ color: '#1A1714' }}>{STEPS[step]}</CardTitle>
+          <CardDescription style={{ color: '#9A8E83' }}>
             {step === 0 && 'Where are we picking up from?'}
             {step === 1 && 'Where are we delivering to, and when?'}
             {step === 2 && 'How can we reach you?'}
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="flex flex-col gap-5">
+        <CardContent className="flex flex-col gap-5 [&_label]:text-[#6B5E54] [&_input]:bg-[#FAF7F2] [&_input]:border-[#D9CFC4] [&_input]:text-[#1A1714] [&_input]:placeholder:text-[#C4B8AC] [&_textarea]:bg-[#FAF7F2] [&_textarea]:border-[#D9CFC4] [&_textarea]:text-[#1A1714] [&_textarea]:placeholder:text-[#C4B8AC]">
           {/* ── Step 1: Pickup ── */}
           {step === 0 && (
             <>
@@ -277,12 +283,17 @@ export default function OrderForm() {
 
           <div className="flex items-center justify-between pt-2">
             {step > 0 ? (
-              <Button variant="ghost" onClick={() => setStep(s => s - 1)}>← Back</Button>
+              <Button variant="ghost" style={{ color: '#9A8E83' }} onClick={() => setStep(s => s - 1)}>Back</Button>
             ) : (
               <div />
             )}
-            <Button onClick={handleNext} disabled={!canAdvanceStep() || sending}>
-              {sending ? 'Sending code...' : step < STEPS.length - 1 ? 'Next →' : 'Review Order'}
+            <Button
+              onClick={handleNext}
+              disabled={!canAdvanceStep() || sending}
+              className="border-0 font-bold"
+              style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+            >
+              {sending ? 'Sending code...' : step < STEPS.length - 1 ? 'Next' : 'Review Order'}
             </Button>
           </div>
         </CardContent>
