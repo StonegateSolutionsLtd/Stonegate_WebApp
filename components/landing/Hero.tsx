@@ -46,7 +46,7 @@ export default function Hero() {
           {/* Gradient overlay: solid cream on left, fades to transparent on right */}
           <div
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(to right, #FAF7F2 35%, #FAF7F2cc 55%, #FAF7F280 70%, transparent 100%)' }}
+            style={{ background: 'linear-gradient(to right, #FAF7F2dd 0%, #FAF7F2aa 40%, #FAF7F260 65%, transparent 95%)' }}
           />
           <div
             className="absolute inset-x-0 top-0 h-40"
@@ -87,7 +87,7 @@ export default function Hero() {
 
         {/* How it works */}
         <section className="relative" style={{ backgroundColor: 'transparent' }}>
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, #FAF7F2 35%, #FAF7F2cc 55%, #FAF7F280 70%, transparent 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, #FAF7F2dd 0%, #FAF7F2aa 40%, #FAF7F260 65%, transparent 95%)' }} />
           <div className="relative max-w-6xl mx-auto px-6 py-20">
             <p className="text-sm font-bold uppercase tracking-widest text-center mb-14" style={{ color: '#1A1714' }}>
               How it works
