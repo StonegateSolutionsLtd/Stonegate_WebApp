@@ -70,6 +70,7 @@ export default function OrderForm() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<OrderFormData>(EMPTY_ORDER_FORM)
+  const [sending, setSending] = useState(false)
 
   function set<K extends keyof OrderFormData>(key: K, value: OrderFormData[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -90,13 +91,20 @@ export default function OrderForm() {
     )
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (step < STEPS.length - 1) {
       setStep(s => s + 1)
       return
     }
+    setSending(true)
     sessionStorage.setItem('pendingOrder', JSON.stringify(form))
-    router.push('/order/confirm')
+    await fetch('/api/verify/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.customerEmail, name: form.customerName }),
+    })
+    setSending(false)
+    router.push('/order/verify')
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -273,8 +281,8 @@ export default function OrderForm() {
             ) : (
               <div />
             )}
-            <Button onClick={handleNext} disabled={!canAdvanceStep()}>
-              {step < STEPS.length - 1 ? 'Next →' : 'Review Order'}
+            <Button onClick={handleNext} disabled={!canAdvanceStep() || sending}>
+              {sending ? 'Sending code...' : step < STEPS.length - 1 ? 'Next →' : 'Review Order'}
             </Button>
           </div>
         </CardContent>
