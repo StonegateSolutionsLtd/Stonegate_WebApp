@@ -1,6 +1,6 @@
 import { Resend } from 'resend'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from './types'
-
+990495
 interface OrderEmailPayload {
   orderId: string
   order: OrderFormData
@@ -15,6 +15,31 @@ function formatDate(dateStr: string) {
 function formatTime(timeStr: string) {
   return new Date(`1970-01-01T${timeStr}`).toLocaleTimeString('en-GB', {
     hour: '2-digit', minute: '2-digit', hour12: true,
+  })
+}
+
+export async function sendVerificationCode(email: string, name: string, code: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+      <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+        Verify your email
+      </h2>
+      <p style="color: #374151; margin-top: 16px;">Hi ${name},</p>
+      <p style="color: #374151;">Enter the code below to confirm your email and complete your move booking.</p>
+      <div style="margin: 32px 0; text-align: center;">
+        <span style="font-size: 48px; font-weight: 800; letter-spacing: 12px; color: #111827;">${code}</span>
+      </div>
+      <p style="color: #6b7280; font-size: 13px;">This code expires in 10 minutes. If you did not request this, you can safely ignore this email.</p>
+    </div>
+  `
+
+  return resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: email,
+    subject: `${code} is your Stonegate verification code`,
+    html,
   })
 }
 
