@@ -113,16 +113,16 @@ export default function VerifyPage() {
   if (!email) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#FAF7F2' }}>
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold text-gray-950 tracking-tight">Check your email</h1>
-          <p className="text-gray-500 mt-3">
-            We sent a 6-digit code to <span className="font-semibold text-gray-800">{email}</span>
+          <h1 className="text-4xl font-extrabold tracking-tight" style={{ color: '#1A1714' }}>Check your email</h1>
+          <p className="mt-3" style={{ color: '#9A8E83' }}>
+            We sent a 6-digit code to <span className="font-semibold" style={{ color: '#1A1714' }}>{email}</span>
           </p>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-8">
+        <div className="rounded-2xl p-8" style={{ backgroundColor: '#F0EBE3', border: '1px solid #E8E0D5' }}>
           <div className="flex justify-center gap-3 mb-6" onPaste={handlePaste}>
             {digits.map((digit, i) => (
               <input
@@ -134,16 +134,22 @@ export default function VerifyPage() {
                 value={digit}
                 onChange={e => handleChange(i, e.target.value)}
                 onKeyDown={e => handleKeyDown(i, e)}
-                className="w-12 h-14 text-center text-2xl font-bold text-gray-950 border-2 border-gray-200 rounded-xl focus:border-gray-950 focus:outline-none transition-colors"
+                className="w-12 h-14 text-center text-2xl font-bold rounded-xl focus:outline-none transition-colors"
+                style={{
+                  backgroundColor: '#FAF7F2',
+                  border: '2px solid #D9CFC4',
+                  color: '#1A1714',
+                }}
               />
             ))}
           </div>
 
           {error && <p className="text-sm text-red-500 text-center mb-4">{error}</p>}
-          {resent && <p className="text-sm text-green-600 text-center mb-4">A new code has been sent.</p>}
+          {resent && <p className="text-sm text-center mb-4" style={{ color: '#4D6B47' }}>A new code has been sent.</p>}
 
           <Button
-            className="w-full bg-gray-950 text-white hover:bg-gray-800 font-bold rounded-xl py-6"
+            className="w-full font-bold rounded-xl py-6 border-0"
+            style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
             onClick={handleVerify}
             disabled={verifying}
           >
@@ -154,7 +160,8 @@ export default function VerifyPage() {
             <button
               onClick={handleResend}
               disabled={resending}
-              className="text-sm text-gray-400 hover:text-gray-700 transition-colors"
+              className="text-sm transition-colors"
+              style={{ color: '#9A8E83' }}
             >
               {resending ? 'Sending...' : "Didn't receive it? Resend code"}
             </button>

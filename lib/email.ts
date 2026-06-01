@@ -127,7 +127,7 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
       </p>
 
       <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
-        Questions? Reply to this email or call us directly.
+        Questions? Reach out to orders@stonegatemoving.com or call us directly.
       </p>
     </div>
   `
