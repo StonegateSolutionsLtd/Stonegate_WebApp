@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
-export const metadata = { title: 'Order Received — Stonegate Moving Solutions' }
+export const metadata = { title: 'Order Received - Stonegate Moving Solutions' }
 
 export default function SuccessPage() {
   return (

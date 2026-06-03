@@ -77,7 +77,7 @@ export default function Hero() {
                   className="text-base px-10 py-6 rounded-full font-bold border-0"
                   style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
                 >
-                  Book a Move
+                  Book Your Move
                 </Button>
               </Link>
             </div>

@@ -1,6 +1,11 @@
-import { Resend } from 'resend'
+﻿import { Resend } from 'resend'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from './types'
-990495
+
+
+const EMAIL_FOOTER = `
+  <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e7eb; text-align: center;">
+    <p style="color: #1a1a1a; font-size: 20px; font-weight: 700; margin: 0; letter-spacing: 0.5px;">Stonegate Moving Solutions</p>
+  </div>`
 interface OrderEmailPayload {
   orderId: string
   order: OrderFormData
@@ -32,6 +37,7 @@ export async function sendVerificationCode(email: string, name: string, code: st
         <span style="font-size: 48px; font-weight: 800; letter-spacing: 12px; color: #111827;">${code}</span>
       </div>
       <p style="color: #6b7280; font-size: 13px;">This code expires in 10 minutes. If you did not request this, you can safely ignore this email.</p>
+      ${EMAIL_FOOTER}
     </div>
   `
 
@@ -40,6 +46,7 @@ export async function sendVerificationCode(email: string, name: string, code: st
     to: email,
     subject: `${code} is your Stonegate verification code`,
     html,
+
   })
 }
 
@@ -86,6 +93,7 @@ export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailP
         Order ID: <strong>${orderId}</strong><br>
         Submitted: ${new Date().toLocaleString('en-GB')}
       </p>
+      ${EMAIL_FOOTER}
     </div>
   `
 
@@ -94,6 +102,7 @@ export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailP
     to: process.env.ORDERS_EMAIL!,
     subject: `New Move Order. ${movingDate}. ${order.customerName}`,
     html,
+
   })
 }
 
@@ -129,6 +138,7 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
       <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
         Questions? Reach out to orders@stonegatemoving.com or call us directly.
       </p>
+      ${EMAIL_FOOTER}
     </div>
   `
 
@@ -137,5 +147,6 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
     to: order.customerEmail,
     subject: `Move confirmed for ${movingDate}. Stonegate Moving Solutions`,
     html,
+
   })
 }

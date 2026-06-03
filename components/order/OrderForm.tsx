@@ -15,8 +15,18 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import DatePicker from './DatePicker'
 
 const STEPS = ['Pickup location', 'Drop-off & move details', 'Contact information']
+
+const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
+  const totalMinutes = 6 * 60 + i * 30
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  const value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  const label = `${h > 12 ? h - 12 : h}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
+  return { value, label }
+})
 
 function StepIndicator({ current, total }: { current: number; total: number }) {
   return (
@@ -201,7 +211,7 @@ export default function OrderForm() {
                   value={form.apartmentSize}
                   onValueChange={v => set('apartmentSize', v as ApartmentSize)}
                 >
-                  <SelectTrigger id="apartmentSize">
+                  <SelectTrigger id="apartmentSize" className="bg-[#FAF7F2] border-[#D9CFC4] text-[#1A1714]">
                     <SelectValue placeholder="Select size" />
                   </SelectTrigger>
                   <SelectContent>
@@ -215,22 +225,28 @@ export default function OrderForm() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="movingDate">Moving date</Label>
-                <Input
+                <DatePicker
                   id="movingDate"
-                  type="date"
-                  min={today}
                   value={form.movingDate}
-                  onChange={e => set('movingDate', e.target.value)}
+                  onChange={v => set('movingDate', v)}
+                  min={today}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="movingTime">Preferred arrival time</Label>
-                <Input
-                  id="movingTime"
-                  type="time"
+                <Select
                   value={form.movingTime}
-                  onChange={e => set('movingTime', e.target.value)}
-                />
+                  onValueChange={v => set('movingTime', v)}
+                >
+                  <SelectTrigger id="movingTime" className="bg-[#FAF7F2] border-[#D9CFC4] text-[#1A1714]">
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIME_SLOTS.map(({ value, label }) => (
+                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </>
           )}

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import OrderForm from '@/components/order/OrderForm'
 
-export const metadata = { title: 'Book Your Move — Stonegate Moving Solutions' }
+export const metadata = { title: 'Book Your Move - Stonegate Moving Solutions' }
 
 export default function OrderPage() {
   return (

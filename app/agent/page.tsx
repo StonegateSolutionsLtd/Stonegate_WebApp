@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
-export const metadata = { title: 'AI Move Assistant — Stonegate Moves' }
+export const metadata = { title: 'AI Move Assistant - Stonegate Moves' }
 
 export default function AgentPage() {
   return (
@@ -11,7 +11,7 @@ export default function AgentPage() {
         <Badge variant="secondary" className="mb-6">Coming Soon</Badge>
         <h1 className="text-3xl font-bold text-zinc-900">AI Move Assistant</h1>
         <p className="text-zinc-500 mt-4 leading-relaxed">
-          Our AI assistant will guide you through your move, ask the right questions, and give you an instant price estimate — all in a simple chat.
+          Our AI assistant will guide you through your move, ask the right questions, and give you an instant price estimate - all in a simple chat.
         </p>
         <div className="mt-8 p-5 bg-white rounded-xl border border-zinc-200 text-left space-y-3">
           <p className="text-sm font-semibold text-zinc-700">What the assistant will do:</p>

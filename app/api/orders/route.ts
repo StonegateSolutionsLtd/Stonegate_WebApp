@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to save order' }, { status: 500 })
   }
 
-  // Send both emails — don't fail the request if email fails
+  // Send both emails - don't fail the request if email fails
   await Promise.allSettled([
     sendOwnerOrderNotification({ orderId: order.id, order: body }),
     sendCustomerOrderConfirmation({ orderId: order.id, order: body }),

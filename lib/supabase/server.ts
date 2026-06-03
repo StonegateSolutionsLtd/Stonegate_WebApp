@@ -19,7 +19,7 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             )
           } catch {
-            // Called from a Server Component — session refresh handled by middleware
+            // Called from a Server Component - session refresh handled by middleware
           }
         },
       },
@@ -27,7 +27,7 @@ export async function createClient() {
   )
 }
 
-// Bypasses RLS — use only in server-side API routes, never expose to the client
+// Bypasses RLS - use only in server-side API routes, never expose to the client
 export function createServiceClient() {
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
