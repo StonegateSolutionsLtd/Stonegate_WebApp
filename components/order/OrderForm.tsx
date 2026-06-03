@@ -42,10 +42,11 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
 
 function StepIndicator({ current }: { current: number }) {
   return (
-    <div className="mb-8">
+    <div className="mb-10">
       <div className="flex items-center">
         {STEPS.map((s, i) => (
-          <div key={i} className="flex items-center" style={{ flex: i < STEPS.length - 1 ? 1 : 'none' }}>
+          <div key={i} className="relative flex items-center" style={{ flex: i < STEPS.length - 1 ? 1 : 'none' }}>
+            {/* Circle */}
             <div
               className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all duration-300"
               style={
@@ -58,20 +59,20 @@ function StepIndicator({ current }: { current: number }) {
             >
               {i < current ? <Check size={14} strokeWidth={3} /> : i + 1}
             </div>
+
+            {/* Label centered under circle */}
+            <div className="absolute top-full mt-1.5 w-9 flex justify-center">
+              <span className="text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap"
+                style={{ color: i <= current ? '#4D6B47' : '#C4B8AC' }}>
+                {s.short}
+              </span>
+            </div>
+
+            {/* Connector line */}
             {i < STEPS.length - 1 && (
               <div className="flex-1 h-[2px] mx-2 rounded-full transition-all duration-500"
                 style={{ backgroundColor: i < current ? '#4D6B47' : '#E0D8D0' }} />
             )}
-          </div>
-        ))}
-      </div>
-      <div className="flex mt-2">
-        {STEPS.map((s, i) => (
-          <div key={i} className="flex-1 last:flex-none">
-            <span className="text-[11px] font-semibold uppercase tracking-wide"
-              style={{ color: i <= current ? '#4D6B47' : '#C4B8AC' }}>
-              {s.short}
-            </span>
           </div>
         ))}
       </div>
