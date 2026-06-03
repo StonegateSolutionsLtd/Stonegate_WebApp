@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 export default function PageCanvas({
@@ -11,10 +10,10 @@ export default function PageCanvas({
   backLabel?: string
 }) {
   return (
-    <div className="min-h-screen p-4 sm:p-8 flex flex-col" style={{ backgroundColor: '#1C3318' }}>
+    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#1C3318' }}>
       {/* Cream canvas */}
       <div
-        className="relative z-10 flex-1 rounded-2xl flex flex-col items-center justify-start px-6 pt-24 pb-12 overflow-hidden"
+        className="relative z-10 flex-1 rounded-t-2xl flex flex-col items-center justify-start px-6 pt-24 pb-12 overflow-hidden"
         style={{ backgroundColor: '#F5F0EB' }}
       >
         {/* Dot grid */}
@@ -27,13 +26,7 @@ export default function PageCanvas({
           }}
         />
 
-        {/* Logo watermark */}
-        <div className="absolute bottom-0 right-0 pointer-events-none select-none"
-          style={{ opacity: 0.12, filter: 'invert(1)' }}>
-          <Image src="/logo.png" alt="" width={340} height={340} className="object-contain" />
-        </div>
-
-        {/* Back link */}
+{/* Back link */}
         <Link
           href={backHref}
           className="absolute top-5 left-6 text-sm font-semibold opacity-50 hover:opacity-100 transition-opacity z-20"
