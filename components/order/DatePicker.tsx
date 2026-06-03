@@ -104,8 +104,8 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
         onClick={toggle}
         className="w-full h-9 flex items-center gap-2.5 px-3 rounded-md border text-sm transition-colors focus:outline-none"
         style={{
-          backgroundColor: '#FAF7F2',
-          borderColor: open ? '#4D6B47' : '#D9CFC4',
+          backgroundColor: '#FFFFFF',
+          borderColor: open ? '#4D6B47' : '#E0D8D0',
           color: displayValue ? '#1A1714' : '#C4B8AC',
           boxShadow: open ? '0 0 0 3px rgba(77,107,71,0.15)' : 'none',
         }}
