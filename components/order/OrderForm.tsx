@@ -106,8 +106,8 @@ function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   )
 }
 
-function SizeCard({ value, label, selected, onClick }: {
-  value: string; label: string; selected: boolean; onClick: () => void
+function SizeCard({ label, selected, onClick }: {
+  label: string; selected: boolean; onClick: () => void
 }) {
   return (
     <button
@@ -273,7 +273,6 @@ export default function OrderForm() {
                   {APARTMENT_SIZES.map(s => (
                     <SizeCard
                       key={s.value}
-                      value={s.value}
                       label={s.label}
                       selected={form.apartmentSize === s.value}
                       onClick={() => set('apartmentSize', s.value as ApartmentSize)}

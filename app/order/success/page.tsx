@@ -21,7 +21,7 @@ export default function SuccessPage() {
           Order received
         </h1>
         <p className="mt-4 text-base leading-relaxed" style={{ color: '#9A8E83' }}>
-          We've received your request and will reach out within 24 hours to discuss the details and finalize your move.
+          We&apos;ve received your request and will reach out within 24 hours to discuss the details and finalize your move.
         </p>
 
         <div className="mt-8 p-5 rounded-2xl text-sm text-left"
