@@ -289,7 +289,7 @@ export default function OrderForm() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Arrival time</span>
-                  <Select value={form.movingTime} onValueChange={v => set('movingTime', v)}>
+                  <Select value={form.movingTime} onValueChange={v => set('movingTime', v ?? '')}>
                     <SelectTrigger className="h-9 bg-white border-[#E0D8D0] text-[#1A1714] rounded-xl">
                       <SelectValue placeholder="Select time" />
                     </SelectTrigger>
