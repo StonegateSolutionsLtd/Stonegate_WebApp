@@ -6,13 +6,13 @@ export const metadata = { title: 'Book Your Move - Stonegate Moving Solutions' }
 
 export default function OrderPage() {
   return (
-    <div className="min-h-screen p-4 sm:p-8 flex flex-col" style={{ backgroundColor: '#1C3318' }}>
+    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#1C3318' }}>
 
 
 
       {/* Cream canvas */}
       <div
-        className="relative z-10 flex-1 rounded-2xl flex flex-col items-center justify-start px-6 pt-10 pb-12"
+        className="relative z-10 flex-1 rounded-t-2xl flex flex-col items-center justify-start px-6 pt-10 pb-12"
         style={{ backgroundColor: '#F5F0EB' }}
       >
         {/* Subtle dot grid pattern */}
@@ -39,9 +39,6 @@ export default function OrderPage() {
 
         <div className="relative z-10 w-full max-w-xl">
           <div className="mb-8">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#4D6B47' }}>
-              Professional Moving Service
-            </p>
             <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
               Book your move
             </h1>
