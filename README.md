@@ -48,22 +48,22 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | Styling | Tailwind CSS v4 + shadcn/ui | v4 |
 | Database + Auth | Supabase (PostgreSQL) | @supabase/ssr 0.10.3 |
 | Email | Resend | latest |
-| Deployment | Vercel | — |
+| Deployment | Vercel | - |
 | AI Agent (future) | Python service (separate repo) | placeholder only |
 
 ### What Each Tool Does
 
 **Next.js 16 (App Router)**
-Next.js is the core framework built on top of React. It adds routing, server-side rendering, API endpoints, and static page generation. The App Router organises pages by folder structure inside `app/` — every folder with a `page.tsx` becomes a URL route automatically. It distinguishes between Server Components (run on the server) and Client Components (run in the browser, marked with `'use client'`).
+Next.js is the core framework built on top of React. It adds routing, server-side rendering, API endpoints, and static page generation. The App Router organises pages by folder structure inside `app/` - every folder with a `page.tsx` becomes a URL route automatically. It distinguishes between Server Components (run on the server) and Client Components (run in the browser, marked with `'use client'`).
 
 **TypeScript**
 JavaScript with a type system. Prevents entire categories of bugs at compile time before you ever run the code. All types for shared data structures are defined in `lib/types.ts`.
 
 **Tailwind CSS v4**
-Utility-first CSS framework. Styles are applied as class names directly on elements. Version 4 has no `tailwind.config.ts` — all theme configuration lives in `globals.css` using CSS variables.
+Utility-first CSS framework. Styles are applied as class names directly on elements. Version 4 has no `tailwind.config.ts` - all theme configuration lives in `globals.css` using CSS variables.
 
 **shadcn/ui**
-Not a traditional component library — it copies component source code directly into `components/ui/` when you run `npx shadcn@latest add <component>`. You own and can modify every component. Built on Radix UI (accessible headless primitives) and styled with Tailwind.
+Not a traditional component library - it copies component source code directly into `components/ui/` when you run `npx shadcn@latest add <component>`. You own and can modify every component. Built on Radix UI (accessible headless primitives) and styled with Tailwind.
 
 **Supabase**
 Backend-as-a-service built on PostgreSQL. Provides a managed database, built-in authentication (email/password), Row Level Security, and a web dashboard to inspect data. The `@supabase/ssr` package makes Supabase work correctly with server-side rendering by handling session cookies on both browser and server.
@@ -72,7 +72,7 @@ Backend-as-a-service built on PostgreSQL. Provides a managed database, built-in 
 Email delivery API. When an order is confirmed, the server calls Resend's API with an HTML string and Resend delivers it to the owner's inbox. Free tier: 3,000 emails/month.
 
 **Vercel**
-Hosting platform that connects to GitHub and auto-deploys on every push. Next.js API routes run as serverless functions — they spin up on demand, handle a request, and shut down. No server to manage.
+Hosting platform that connects to GitHub and auto-deploys on every push. Next.js API routes run as serverless functions - they spin up on demand, handle a request, and shut down. No server to manage.
 
 ---
 
@@ -99,7 +99,7 @@ Vercel Edge Network (CDN + serverless)
               └── Resend                  ← Delivers email to owner's inbox
 ```
 
-The browser also communicates **directly** with Supabase for authentication (login, register) — this bypasses your Vercel app entirely and goes straight to Supabase's servers. Your Vercel backend only touches Supabase to verify sessions server-side or read/write database rows.
+The browser also communicates **directly** with Supabase for authentication (login, register) - this bypasses your Vercel app entirely and goes straight to Supabase's servers. Your Vercel backend only touches Supabase to verify sessions server-side or read/write database rows.
 
 ---
 
@@ -108,11 +108,11 @@ The browser also communicates **directly** with Supabase for authentication (log
 ```
 /
 ├── app/                              All pages and API routes
-│   ├── layout.tsx                    Root layout — wraps every page, sets fonts and metadata
-│   ├── page.tsx                      Homepage (/) — renders Hero component
+│   ├── layout.tsx                    Root layout - wraps every page, sets fonts and metadata
+│   ├── page.tsx                      Homepage (/) - renders Hero component
 │   ├── globals.css                   Tailwind v4 import + CSS variable theme
 │   │
-│   ├── (auth)/                       Route group — parentheses mean this folder does NOT
+│   ├── (auth)/                       Route group - parentheses mean this folder does NOT
 │   │   │                             appear in the URL (/login not /auth/login)
 │   │   ├── login/page.tsx            → /login
 │   │   └── register/page.tsx         → /register
@@ -161,14 +161,14 @@ The browser also communicates **directly** with Supabase for authentication (log
 │
 ├── supabase/
 │   └── migrations/
-│       └── 001_initial_schema.sql    Full DB schema — run once in Supabase SQL Editor
+│       └── 001_initial_schema.sql    Full DB schema - run once in Supabase SQL Editor
 │
 ├── proxy.ts                          Auth route protection (Next.js 16 middleware)
 ├── next.config.ts                    Next.js configuration
 ├── tsconfig.json                     TypeScript compiler configuration
 ├── components.json                   shadcn/ui configuration
-├── .env.local                        Secret keys — NOT committed to git
-├── .env.local.example                Template showing required keys — committed
+├── .env.local                        Secret keys - NOT committed to git
+├── .env.local.example                Template showing required keys - committed
 └── package.json                      Dependencies and npm scripts
 ```
 
@@ -184,7 +184,7 @@ Extension of the user record. A database trigger (`handle_new_user`) automatical
 
 | Column | Type | Notes |
 |---|---|---|
-| id | UUID | PK — same as auth.users.id |
+| id | UUID | PK - same as auth.users.id |
 | email | TEXT | Copied from auth at signup |
 | full_name | TEXT | Filled in at registration |
 | phone | TEXT | Optional |
@@ -213,7 +213,7 @@ One row per confirmed order.
 | updated_at | TIMESTAMPTZ | Auto-updated via trigger |
 
 ### Row Level Security (RLS)
-Enabled on both tables. Database queries are automatically filtered based on who is making the request — even if a bug in the code tried to fetch all orders, Supabase would only return rows belonging to the authenticated user.
+Enabled on both tables. Database queries are automatically filtered based on who is making the request - even if a bug in the code tried to fetch all orders, Supabase would only return rows belonging to the authenticated user.
 
 | Table | Operation | Policy |
 |---|---|---|
@@ -228,10 +228,10 @@ Enabled on both tables. Database queries are automatically filtered based on who
 
 ### Two Supabase Clients
 
-**`lib/supabase/client.ts`** — for Client Components (browser)
+**`lib/supabase/client.ts`** - for Client Components (browser)
 Uses `createBrowserClient` from `@supabase/ssr`. Reads session cookies from the browser. Used in `LoginForm.tsx` and `RegisterForm.tsx`.
 
-**`lib/supabase/server.ts`** — for Server Components and API routes
+**`lib/supabase/server.ts`** - for Server Components and API routes
 Uses `createServerClient` from `@supabase/ssr` with `cookies()` from `next/headers`. Reads session cookies from the incoming HTTP request. Used in `app/api/orders/route.ts` to verify authentication server-side.
 
 ### Registration Flow
@@ -251,7 +251,7 @@ Uses `createServerClient` from `@supabase/ssr` with `cookies()` from `next/heade
 5. Page redirects to the `next` parameter
 
 ### Session Security
-Sessions are stored in **httpOnly cookies** — JavaScript running in the browser cannot read them, only the server can. This protects against XSS attacks. `proxy.ts` runs on every request and calls `supabase.auth.getUser()` to validate and refresh the session token before it expires.
+Sessions are stored in **httpOnly cookies** - JavaScript running in the browser cannot read them, only the server can. This protects against XSS attacks. `proxy.ts` runs on every request and calls `supabase.auth.getUser()` to validate and refresh the session token before it expires.
 
 ### Route Protection
 `proxy.ts` checks if the requested path is `/order/confirm` or `/order/success`. If no valid session exists, the user is redirected to `/register?next=/order/confirm`. The `next` parameter ensures they land back where they were after authenticating.
@@ -260,19 +260,19 @@ Sessions are stored in **httpOnly cookies** — JavaScript running in the browse
 
 ## 6. The Order Flow
 
-### Step 1 — Form (client-side only)
+### Step 1 - Form (client-side only)
 `OrderForm` keeps all data in React `useState`. Nothing is sent to the server as the user fills in the 3 steps. All data lives in the browser's memory.
 
-### Step 2 — Save to sessionStorage
-On the final step, form data is serialised to JSON and saved to `sessionStorage` under the key `pendingOrder`. sessionStorage persists for the duration of the browser tab — it's used as a handoff mechanism between the form page and the confirm page.
+### Step 2 - Save to sessionStorage
+On the final step, form data is serialised to JSON and saved to `sessionStorage` under the key `pendingOrder`. sessionStorage persists for the duration of the browser tab - it's used as a handoff mechanism between the form page and the confirm page.
 
-### Step 3 — Auth check
+### Step 3 - Auth check
 After saving, the form checks if the user is logged in via the browser Supabase client. If not → `/register?next=/order/confirm`. If yes → `/order/confirm`.
 
-### Step 4 — Confirm page reads sessionStorage
+### Step 4 - Confirm page reads sessionStorage
 On mount (`useEffect`), the confirm page reads `pendingOrder` from sessionStorage. If nothing is there (direct navigation), it redirects back to `/order`.
 
-### Step 5 — POST /api/orders
+### Step 5 - POST /api/orders
 User clicks "Confirm Order":
 1. `fetch('/api/orders', { method: 'POST', body: JSON.stringify(order) })`
 2. Server verifies Supabase session (401 if unauthenticated)
@@ -282,10 +282,10 @@ User clicks "Confirm Order":
 6. Calls `sendOwnerOrderNotification()` from `lib/email.ts`
 7. Returns `{ orderId }` to the browser
 
-### Step 6 — Email via Resend
-`lib/email.ts` builds an HTML table with all order details and calls `resend.emails.send()`. Wrapped in `try/catch` — if Resend fails, the order is still saved and only the notification fails (logged to console).
+### Step 6 - Email via Resend
+`lib/email.ts` builds an HTML table with all order details and calls `resend.emails.send()`. Wrapped in `try/catch` - if Resend fails, the order is still saved and only the notification fails (logged to console).
 
-### Step 7 — Success
+### Step 7 - Success
 Browser receives `{ orderId }`, clears sessionStorage, navigates to `/order/success`.
 
 ---
@@ -294,7 +294,7 @@ Browser receives `{ orderId }`, clears sessionStorage, navigates to `/order/succ
 
 | Route | File | Type | Description |
 |---|---|---|---|
-| `/` | `app/page.tsx` + `components/landing/Hero.tsx` | Static | Landing page — nav, hero, how-it-works, CTA, footer |
+| `/` | `app/page.tsx` + `components/landing/Hero.tsx` | Static | Landing page - nav, hero, how-it-works, CTA, footer |
 | `/order` | `app/order/page.tsx` + `components/order/OrderForm.tsx` | Client | 3-step form wizard with step indicator |
 | `/order/confirm` | `app/order/confirm/page.tsx` | Client | Order summary + confirm button. Protected. |
 | `/order/success` | `app/order/success/page.tsx` | Static | Booking confirmed screen |
@@ -315,12 +315,12 @@ Called by Supabase after a user clicks their confirmation email link. Receives a
 **File:** `app/api/orders/route.ts`
 
 The only write endpoint. Full sequence:
-1. Auth check — returns `401` if no valid session
-2. JSON body parsing — returns `400` if malformed
-3. Required field validation — returns `400` if any required field is missing
-4. Insert into `orders` table — returns `500` if DB fails
+1. Auth check - returns `401` if no valid session
+2. JSON body parsing - returns `400` if malformed
+3. Required field validation - returns `400` if any required field is missing
+4. Insert into `orders` table - returns `500` if DB fails
 5. Fetch user profile for email content
-6. Send Resend notification (non-blocking — errors are logged, not returned)
+6. Send Resend notification (non-blocking - errors are logged, not returned)
 7. Return `{ orderId }` with status `201`
 
 ---
@@ -330,10 +330,10 @@ The only write endpoint. Full sequence:
 | Threat | Defence |
 |---|---|
 | Unauthenticated order submission | API route verifies Supabase session server-side before any DB write |
-| User reading another user's orders | Row Level Security at DB level — Supabase filters automatically |
-| Session token theft via XSS | Sessions in httpOnly cookies — inaccessible to JavaScript |
+| User reading another user's orders | Row Level Security at DB level - Supabase filters automatically |
+| Session token theft via XSS | Sessions in httpOnly cookies - inaccessible to JavaScript |
 | Expired sessions | `proxy.ts` refreshes session token on every request |
-| Secret keys exposed to browser | `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `OWNER_EMAIL` have no `NEXT_PUBLIC_` prefix — Next.js never sends them to the browser |
+| Secret keys exposed to browser | `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `OWNER_EMAIL` have no `NEXT_PUBLIC_` prefix - Next.js never sends them to the browser |
 | `.env.local` committed to git | `.gitignore` includes `.env*` |
 
 ---
@@ -342,9 +342,9 @@ The only write endpoint. Full sequence:
 
 | Variable | Used In | Exposed to Browser |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Both Supabase clients | Yes — safe, needed by browser |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Both Supabase clients | Yes — safe, RLS enforces access |
-| `SUPABASE_SERVICE_ROLE_KEY` | Future admin routes | No — bypasses RLS, never expose |
+| `NEXT_PUBLIC_SUPABASE_URL` | Both Supabase clients | Yes - safe, needed by browser |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Both Supabase clients | Yes - safe, RLS enforces access |
+| `SUPABASE_SERVICE_ROLE_KEY` | Future admin routes | No - bypasses RLS, never expose |
 | `RESEND_API_KEY` | `lib/email.ts` | No |
 | `RESEND_FROM_EMAIL` | `lib/email.ts` | No |
 | `OWNER_EMAIL` | `lib/email.ts` | No |
@@ -356,25 +356,25 @@ The only write endpoint. Full sequence:
 
 ## 11. Setup Guide
 
-### Step 1 — Environment file
+### Step 1 - Environment file
 ```bash
 cp .env.local.example .env.local
 ```
 
-### Step 2 — Supabase
+### Step 2 - Supabase
 1. Go to [supabase.com](https://supabase.com) → New Project
 2. **Settings → API** → copy Project URL and anon key into `.env.local`
 3. Copy the service_role key into `.env.local`
 4. **SQL Editor → New Query** → paste contents of `supabase/migrations/001_initial_schema.sql` → Run
 5. **Authentication → URL Configuration → Redirect URLs** → add `http://localhost:3000/api/auth/callback`
 
-### Step 3 — Resend
+### Step 3 - Resend
 1. Go to [resend.com](https://resend.com) → sign up
 2. **API Keys → Create API Key** → paste into `.env.local`
 3. For development: set `RESEND_FROM_EMAIL=onboarding@resend.dev` (no domain needed)
 4. Set `OWNER_EMAIL` to your email address
 
-### Step 4 — Run locally
+### Step 4 - Run locally
 ```bash
 npm run dev
 ```

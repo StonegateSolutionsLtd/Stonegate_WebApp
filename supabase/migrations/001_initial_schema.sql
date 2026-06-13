@@ -26,7 +26,7 @@ CREATE TABLE orders (
   updated_at            TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS enabled — only service_role key (used in API routes) can access orders.
+-- RLS enabled - only service_role key (used in API routes) can access orders.
 -- Anon/public key is blocked by default when there are no permissive policies.
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 

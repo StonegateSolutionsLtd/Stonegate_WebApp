@@ -34,7 +34,7 @@ export default function OrderPage() {
         <Link href="/"
           className="absolute top-5 left-6 text-sm font-semibold opacity-50 hover:opacity-100 transition-opacity z-20"
           style={{ color: '#6B5E54' }}>
-          ← Back
+          ← Home
         </Link>
 
         <div className="relative z-10 w-full max-w-xl">

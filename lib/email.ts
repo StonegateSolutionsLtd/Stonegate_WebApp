@@ -106,6 +106,99 @@ export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailP
   })
 }
 
+const SERVICE_LABELS: Record<string, string> = {
+  'bin-cleaning': 'Bin Cleaning',
+  'junk-removal': 'Junk Removal',
+}
+
+export interface ServiceRequestData {
+  serviceType: string
+  address: string
+  date: string
+  time: string
+  customerName: string
+  customerEmail: string
+  phone: string
+  notes?: string
+}
+
+export async function sendOwnerServiceRequestNotification(req: ServiceRequestData) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
+  const serviceLabel = SERVICE_LABELS[req.serviceType] ?? req.serviceType
+  const formattedDate = formatDate(req.date)
+  const formattedTime = formatTime(req.time)
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+      <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+        New ${serviceLabel} Request
+      </h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Customer</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Name</td><td style="padding: 8px 12px;">${req.customerName}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Email</td><td style="padding: 8px 12px;">${req.customerEmail}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Phone</td><td style="padding: 8px 12px;">${req.phone}</td></tr>
+        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Service Details</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Service</td><td style="padding: 8px 12px; font-weight: 600;">${serviceLabel}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
+        ${req.notes ? `
+        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Notes</td></tr>
+        <tr><td colspan="2" style="padding: 8px 12px;">${req.notes}</td></tr>
+        ` : ''}
+      </table>
+      <p style="margin-top: 24px; padding: 12px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
+        Submitted: ${new Date().toLocaleString('en-GB')}
+      </p>
+      ${EMAIL_FOOTER}
+    </div>
+  `
+
+  return resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: process.env.ORDERS_EMAIL!,
+    subject: `New ${serviceLabel} Request - ${req.customerName}`,
+    html,
+  })
+}
+
+export async function sendCustomerServiceRequestConfirmation(req: ServiceRequestData) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
+  const serviceLabel = SERVICE_LABELS[req.serviceType] ?? req.serviceType
+  const formattedDate = formatDate(req.date)
+  const formattedTime = formatTime(req.time)
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+      <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+        Request Received, ${req.customerName}!
+      </h2>
+      <p style="color: #374151; margin-top: 16px;">
+        Thanks for reaching out. We've received your ${serviceLabel} request and will get back to you the same day.
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">
+        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Your Request</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Service</td><td style="padding: 8px 12px; font-weight: 600;">${serviceLabel}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
+      </table>
+      <p style="color: #6b7280; font-size: 13px; margin-top: 24px;">
+        Questions? Reach out to orders@stonegatemoving.com or call us directly.
+      </p>
+      ${EMAIL_FOOTER}
+    </div>
+  `
+
+  return resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: req.customerEmail,
+    subject: `${serviceLabel} request received - Stonegate Moving Solutions`,
+    html,
+  })
+}
+
 export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEmailPayload) {
   const resend = new Resend(process.env.RESEND_API_KEY)
   const sizeLabel = APARTMENT_SIZE_LABELS[order.apartmentSize as ApartmentSize] ?? order.apartmentSize

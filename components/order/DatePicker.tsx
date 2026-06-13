@@ -46,15 +46,21 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
         triggerRef.current && !triggerRef.current.contains(e.target as Node)
       ) setOpen(false)
     }
+    let rafId: number
+    function onScrollOrResize() {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(updatePos)
+    }
     if (open) {
       document.addEventListener('mousedown', onClickOutside)
-      window.addEventListener('scroll', updatePos, true)
-      window.addEventListener('resize', updatePos)
+      window.addEventListener('scroll', onScrollOrResize, true)
+      window.addEventListener('resize', onScrollOrResize)
     }
     return () => {
       document.removeEventListener('mousedown', onClickOutside)
-      window.removeEventListener('scroll', updatePos, true)
-      window.removeEventListener('resize', updatePos)
+      window.removeEventListener('scroll', onScrollOrResize, true)
+      window.removeEventListener('resize', onScrollOrResize)
+      cancelAnimationFrame(rafId)
     }
   }, [open, updatePos])
 
@@ -170,7 +176,7 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
                   type="button"
                   disabled={disabled}
                   onClick={() => selectDay(day)}
-                  className="h-8 w-8 mx-auto flex items-center justify-center rounded-full text-sm font-medium transition-all"
+                  className="h-8 w-8 mx-auto flex items-center justify-center rounded-full text-sm font-medium transition-colors"
                   style={{
                     backgroundColor: sel ? '#4D6B47' : 'transparent',
                     color: disabled ? '#D9CFC4' : sel ? '#FAF7F2' : today ? '#4D6B47' : '#1A1714',
