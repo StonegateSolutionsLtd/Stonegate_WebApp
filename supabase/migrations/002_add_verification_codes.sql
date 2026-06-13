@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS verification_codes (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS enabled — only service_role key (used in API routes) can access this table
+-- RLS enabled - only service_role key (used in API routes) can access this table
 ALTER TABLE verification_codes ENABLE ROW LEVEL SECURITY;

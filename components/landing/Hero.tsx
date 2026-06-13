@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
+import Navbar from '@/components/landing/Navbar'
+import { Droplets, Trash2 } from 'lucide-react'
 
 const logoStyle = {
   filter: 'brightness(0)',
@@ -17,14 +19,7 @@ export default function Hero() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
 
-      {/* Nav */}
-      <header style={{ backgroundColor: '#FAF7F2' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-8 pb-4 flex items-center justify-center">
-          <span className="font-extrabold text-2xl tracking-tight" style={{ color: '#1A1714' }}>
-            Stonegate Moving Solutions
-          </span>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="flex-1">
 
@@ -110,6 +105,38 @@ export default function Hero() {
 
         </div>{/* end shared background */}
 
+        {/* Also offering */}
+        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="max-w-6xl mx-auto px-6 py-14">
+            <p className="text-xs font-bold uppercase tracking-widest mb-8" style={{ color: '#4D6B47' }}>
+              Also offering
+            </p>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <Link href="/other-services" className="group flex items-start gap-5 p-6 rounded-2xl transition-colors hover:bg-[#F0EDE8]" style={{ border: '1px solid #E8E0D5' }}>
+                <span className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E8F0E6' }}>
+                  <Droplets size={22} style={{ color: '#4D6B47' }} />
+                </span>
+                <div>
+                  <p className="font-bold mb-1" style={{ color: '#1A1714' }}>Bin Cleaning</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>
+                    High-pressure hot water washing with eco-safe disinfectants. Available for residential and commercial properties.
+                  </p>
+                </div>
+              </Link>
+              <Link href="/other-services" className="group flex items-start gap-5 p-6 rounded-2xl transition-colors hover:bg-[#F0EDE8]" style={{ border: '1px solid #E8E0D5' }}>
+                <span className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E8F0E6' }}>
+                  <Trash2 size={22} style={{ color: '#4D6B47' }} />
+                </span>
+                <div>
+                  <p className="font-bold mb-1" style={{ color: '#1A1714' }}>Junk Removal</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>
+                    Furniture, appliances, estate and office cleanouts - hauled away responsibly across Metro Vancouver.
+                  </p>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* Contact & Service Area */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>

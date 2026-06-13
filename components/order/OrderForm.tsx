@@ -48,7 +48,7 @@ function StepIndicator({ current }: { current: number }) {
           <div key={i} className="relative flex items-center" style={{ flex: i < STEPS.length - 1 ? 1 : 'none' }}>
             {/* Circle */}
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all duration-300"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-[background-color,color,box-shadow] duration-150"
               style={
                 i < current
                   ? { backgroundColor: '#4D6B47', color: '#FAF7F2' }
@@ -70,7 +70,7 @@ function StepIndicator({ current }: { current: number }) {
 
             {/* Connector line */}
             {i < STEPS.length - 1 && (
-              <div className="flex-1 h-[2px] mx-2 rounded-full transition-all duration-500"
+              <div className="flex-1 h-[2px] mx-2 rounded-full transition-colors duration-300"
                 style={{ backgroundColor: i < current ? '#4D6B47' : '#E0D8D0' }} />
             )}
           </div>
@@ -113,7 +113,7 @@ function SizeCard({ label, selected, onClick }: {
     <button
       type="button"
       onClick={onClick}
-      className="h-12 rounded-xl border text-sm font-semibold transition-all duration-150 hover:border-[#4D6B47]"
+      className="h-12 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#4D6B47]"
       style={{
         backgroundColor: selected ? '#4D6B47' : '#FFFFFF',
         borderColor:     selected ? '#4D6B47' : '#E0D8D0',
@@ -137,7 +137,7 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
           key={String(opt.val)}
           type="button"
           onClick={() => onChange(opt.val)}
-          className="h-11 rounded-xl border text-sm font-semibold transition-all duration-150 hover:border-[#4D6B47]"
+          className="h-11 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#4D6B47]"
           style={{
             backgroundColor: value === opt.val ? '#4D6B47' : '#FFFFFF',
             borderColor:     value === opt.val ? '#4D6B47' : '#E0D8D0',
@@ -370,7 +370,7 @@ export default function OrderForm() {
               type="button"
               onClick={handleNext}
               disabled={!ready}
-              className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-[box-shadow,opacity] duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{
                 backgroundColor: '#4D6B47',
                 color: '#FAF7F2',
