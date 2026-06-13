@@ -11,6 +11,10 @@ const raleway = Raleway({
 export const metadata: Metadata = {
   title: "Stonegate Moving Solutions · Apartment Moving Service",
   description: "Book your apartment move in minutes. We handle the heavy lifting.",
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

@@ -133,7 +133,7 @@ export default function OtherServicesPage() {
         {/* Truck image */}
         <section style={{ borderTop: '1px solid #E8E0D5' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
-            <div className="relative w-full overflow-hidden rounded-3xl" style={{ height: '620px' }}>
+            <div className="relative w-full overflow-hidden rounded-3xl" style={{ height: 'clamp(220px, 40vw, 620px)' }}>
               <Image
                 src="/truck.png"
                 alt="Stonegate Moving Solutions truck"
