@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
@@ -198,7 +198,7 @@ export default function Hero() {
                   <div>
                     <p className="font-bold mb-1" style={{ color: '#1A1714' }}>Junk Removal</p>
                     <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>
-                      Furniture, appliances, estate and office cleanouts "" hauled away responsibly across Metro Vancouver.
+                      Furniture, appliances, estate and office cleanouts - hauled away responsibly across Metro Vancouver.
                     </p>
                   </div>
                 </div>

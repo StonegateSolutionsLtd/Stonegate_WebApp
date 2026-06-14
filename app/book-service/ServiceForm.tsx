@@ -241,7 +241,7 @@ export default function ServiceForm() {
               className="rounded-full text-sm font-bold py-6 border-0"
               style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
-              {submitting ? 'Sending"¦' : 'Submit Request'}
+              {submitting ? 'Sending…' : 'Submit Request'}
             </Button>
           </form>
         </div>

@@ -342,7 +342,7 @@ export default function OrderForm() {
                 </label>
                 <Textarea
                   id="specialNotes"
-                  placeholder="Heavy items, fragile furniture, access codesâ€¦"
+                  placeholder="Heavy items, fragile furniture, access codes…"
                   rows={3}
                   value={form.specialNotes}
                   onChange={e => set('specialNotes', e.target.value)}
@@ -362,7 +362,7 @@ export default function OrderForm() {
                 className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors hover:bg-[#F0EBE3]"
                 style={{ color: '#9A8E83' }}
               >
-                â† Back
+                ← Back
               </button>
             ) : <div />}
 
@@ -377,7 +377,7 @@ export default function OrderForm() {
                 boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
               }}
             >
-              {sending ? 'Sending codeâ€¦' : step < STEPS.length - 1 ? 'Continue' : 'Review Order'}
+              {sending ? 'Sending code…' : step < STEPS.length - 1 ? 'Continue' : 'Review Order'}
               {!sending && <ArrowRight size={14} strokeWidth={2.5} />}
             </button>
           </div>
