@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -83,7 +83,7 @@ export default function ServiceForm() {
             className="flex items-center gap-1.5 text-sm font-semibold mb-10 transition-opacity hover:opacity-60"
             style={{ color: '#6B5E54' }}
           >
-            â† Back
+            ← Back
           </Link>
 
           <span
@@ -223,7 +223,7 @@ export default function ServiceForm() {
               <div className="relative">
                 <FileText size={16} className="absolute left-3.5 top-3.5 pointer-events-none" style={{ color: '#B5C9B0' }} />
                 <Textarea
-                  placeholder="Anything else we should know"¦"
+                  placeholder="Anything else we should know"
                   value={form.notes}
                   onChange={e => set('notes', e.target.value)}
                   className="pl-10 resize-none"

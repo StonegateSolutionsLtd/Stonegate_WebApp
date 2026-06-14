@@ -53,7 +53,7 @@ export default function OrderPage() {
             {['Licensed & insured', 'Same-week slots', 'Fixed pricing'].map(item => (
               <div key={item} className="flex items-center gap-2">
                 <span className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
-                  style={{ backgroundColor: '#D6E8D3', color: '#254220' }}>âœ“</span>
+                  style={{ backgroundColor: '#D6E8D3', color: '#254220' }}>âœ"</span>
                 <span className="text-sm" style={{ color: '#9A8E83' }}>{item}</span>
               </div>
             ))}

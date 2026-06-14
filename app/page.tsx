@@ -17,7 +17,7 @@ const jsonLd = {
   telephone: '+16043546479',
   email: 'orders@stonegatemoving.com',
   logo: 'https://stonegatemoving.com/logo.png',
-  description: 'Professional apartment moving company serving Metro Vancouver. 2 movers with truck from $73–$95/hr. Also offering bin cleaning and junk removal.',
+  description: 'Professional apartment moving company serving Metro Vancouver. 2 movers with truck from $73-$95/hr. Also offering bin cleaning and junk removal.',
   areaServed: [
     'Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam',
     'New Westminster', 'Port Coquitlam', 'Port Moody', 'Delta', 'North Vancouver',
@@ -28,14 +28,14 @@ const jsonLd = {
     addressRegion: 'BC',
     addressCountry: 'CA',
   },
-  priceRange: '$73–$95/hr',
+  priceRange: '$73-$95/hr',
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Moving Services',
     itemListElement: [
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $73–$95/hr' },
+        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $73-$95/hr' },
       },
       {
         '@type': 'Offer',
