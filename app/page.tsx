@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Hero from '@/components/landing/Hero'
 
 export const metadata: Metadata = {
-  title: 'Apartment Moving in Vancouver & Metro Area | Stonegate Moving Solutions',
+  title: { absolute: 'Apartment Moving Service in Vancouver & Metro Area | Stonegate Moving Solutions' },
   description: 'Top-rated apartment moving company in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. 2 professional movers with truck from $73/hr. Also offering bin cleaning and junk removal.',
   alternates: {
     canonical: 'https://stonegatemoving.com',
