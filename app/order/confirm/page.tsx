@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -50,7 +50,7 @@ export default function ConfirmPage() {
   )
 
   return (
-    <PageCanvas backHref="/order" backLabel="← Edit order">
+    <PageCanvas backHref="/order" backLabel="â† Edit order">
       <div className="max-w-lg mx-auto pt-8">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
           Confirm your order
@@ -73,7 +73,7 @@ export default function ConfirmPage() {
           <Button
             size="lg"
             className="w-full font-bold rounded-xl border-0"
-            style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+            style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             onClick={handleConfirm}
             disabled={submitting}
           >
@@ -89,3 +89,6 @@ export default function ConfirmPage() {
     </PageCanvas>
   )
 }
+
+
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -111,7 +111,7 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
         className="w-full h-9 flex items-center gap-2.5 px-3 rounded-md border text-sm transition-colors focus:outline-none"
         style={{
           backgroundColor: '#FFFFFF',
-          borderColor: open ? '#4D6B47' : '#E0D8D0',
+          borderColor: open ? '#254220' : '#E0D8D0',
           color: displayValue ? '#1A1714' : '#C4B8AC',
           boxShadow: open ? '0 0 0 3px rgba(77,107,71,0.15)' : 'none',
         }}
@@ -178,11 +178,11 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
                   onClick={() => selectDay(day)}
                   className="h-8 w-8 mx-auto flex items-center justify-center rounded-full text-sm font-medium transition-colors"
                   style={{
-                    backgroundColor: sel ? '#4D6B47' : 'transparent',
-                    color: disabled ? '#D9CFC4' : sel ? '#FAF7F2' : today ? '#4D6B47' : '#1A1714',
+                    backgroundColor: sel ? '#254220' : 'transparent',
+                    color: disabled ? '#D9CFC4' : sel ? '#FAF7F2' : today ? '#254220' : '#1A1714',
                     fontWeight: sel || today ? 600 : 400,
                     cursor: disabled ? 'not-allowed' : 'pointer',
-                    outline: today && !sel ? '2px solid #4D6B47' : 'none',
+                    outline: today && !sel ? '2px solid #254220' : 'none',
                     outlineOffset: '-2px',
                   }}
                   onMouseEnter={e => {
@@ -204,3 +204,6 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
     </div>
   )
 }
+
+
+

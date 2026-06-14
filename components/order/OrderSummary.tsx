@@ -1,4 +1,4 @@
-import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from '@/lib/types'
+﻿import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from '@/lib/types'
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -11,7 +11,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-widest pt-4 pb-1" style={{ color: '#4D6B47' }}>{children}</p>
+    <p className="text-xs font-semibold uppercase tracking-widest pt-4 pb-1" style={{ color: '#254220' }}>{children}</p>
   )
 }
 
@@ -35,7 +35,7 @@ export default function OrderSummary({ order }: { order: OrderFormData }) {
         <h2 className="text-lg font-bold" style={{ color: '#1A1714' }}>Order summary</h2>
         <span
           className="text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-          style={{ color: '#4D6B47', borderColor: '#B5C9B0' }}
+          style={{ color: '#254220', borderColor: '#B5C9B0' }}
         >
           Pending
         </span>
@@ -72,3 +72,6 @@ export default function OrderSummary({ order }: { order: OrderFormData }) {
     </div>
   )
 }
+
+
+

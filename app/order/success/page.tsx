@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import PageCanvas from '@/components/PageCanvas'
 
@@ -6,11 +6,11 @@ export const metadata = { title: 'Order Received - Stonegate Moving Solutions' }
 
 export default function SuccessPage() {
   return (
-    <PageCanvas backHref="/" backLabel="← Home">
+    <PageCanvas backHref="/" backLabel="â† Home">
       <div className="max-w-md mx-auto pt-16 text-center">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ backgroundColor: '#4D6B47', boxShadow: '0 4px 20px rgba(77,107,71,0.35)' }}
+          style={{ backgroundColor: '#254220', boxShadow: '0 4px 20px rgba(77,107,71,0.35)' }}
         >
           <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -33,7 +33,7 @@ export default function SuccessPage() {
           <Link href="/">
             <Button
               className="font-bold rounded-xl px-8 border-0"
-              style={{ backgroundColor: '#4D6B47', color: '#FAF7F2', boxShadow: '0 4px 14px rgba(77,107,71,0.35)' }}
+              style={{ backgroundColor: '#254220', color: '#FAF7F2', boxShadow: '0 4px 14px rgba(77,107,71,0.35)' }}
             >
               Back to home
             </Button>
@@ -43,3 +43,6 @@ export default function SuccessPage() {
     </PageCanvas>
   )
 }
+
+
+

@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
 import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Pricing · Stonegate Moving Solutions',
-  description: 'Transparent hourly pricing for professional apartment moving in Metro Vancouver. 2 movers from $73–$95 CAD/hr.',
+  title: 'Moving Prices in Vancouver · From $73/hr',
+  description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck from $73"“$95 CAD/hr. No hidden fees.',
+  alternates: { canonical: 'https://stonegatemoving.com/pricing' },
 }
 
 const included = [
@@ -22,7 +23,7 @@ const notes = [
   {
     icon: Clock,
     title: '2-hour minimum',
-    body: 'Most 1-bedroom moves complete in 2–3 hours. 2-bedrooms typically take 3–5 hours depending on the amount of items.',
+    body: 'Most 1-bedroom moves complete in 2"“3 hours. 2-bedrooms typically take 3"“5 hours depending on the amount of items.',
   },
   {
     icon: Truck,
@@ -32,7 +33,7 @@ const notes = [
   {
     icon: Users,
     title: 'Rate reflects travel distance',
-    body: 'The $73–$95/hr range depends on the distance between pickup and drop-off within Metro Vancouver. Closer destinations fall at the lower end.',
+    body: 'The $73"“$95/hr range depends on the distance between pickup and drop-off within Metro Vancouver. Closer destinations fall at the lower end.',
   },
   {
     icon: Info,
@@ -71,12 +72,12 @@ export default function PricingPage() {
         <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
           <span
             className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
-            style={{ color: '#4D6B47', borderColor: '#B5C9B0' }}
+            style={{ color: '#254220', borderColor: '#B5C9B0' }}
           >
             Transparent pricing
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#1A1714' }}>
-            Simple, honest <span style={{ color: '#4D6B47' }}>pricing.</span>
+            Simple, honest <span style={{ color: '#254220' }}>pricing.</span>
           </h1>
           <p className="text-lg leading-relaxed max-w-xl" style={{ color: '#6B5E54' }}>
             No surprise fees. Just a straightforward hourly rate that covers everything you need for a smooth move.
@@ -89,11 +90,11 @@ export default function PricingPage() {
 
             {/* Pricing card */}
             <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-              <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#1C3318' }}>
+              <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
                 <div className="flex items-center gap-2 mb-8">
                   <span
                     className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-                    style={{ color: '#B5C9B0', borderColor: '#2E5228' }}
+                    style={{ color: '#B5C9B0', borderColor: '#254220' }}
                   >
                     <Users size={13} />
                     2 Movers
@@ -101,18 +102,18 @@ export default function PricingPage() {
                 </div>
                 <div className="flex items-end gap-3 mb-1">
                   <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$73</span>
-                  <span className="text-3xl font-bold mb-1" style={{ color: '#7DA87A' }}>– $95</span>
+                  <span className="text-3xl font-bold mb-1" style={{ color: '#B5C9B0' }}>"“ $95</span>
                 </div>
                 <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD per hour</span>
               </div>
               <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#4D6B47' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
                   Everything included
                 </p>
                 <ul className="flex flex-col gap-4">
                   {included.map(item => (
                     <li key={item} className="flex items-start gap-3">
-                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#4D6B47' }} />
+                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
                       <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
                     </li>
                   ))}
@@ -120,7 +121,7 @@ export default function PricingPage() {
                 <Link href="/order" className="block mt-8">
                   <Button
                     className="w-full rounded-full text-sm font-bold py-6 border-0"
-                    style={{ backgroundColor: '#2E5228', color: '#FAF7F2' }}
+                    style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
                   >
                     Book Your Move
                   </Button>
@@ -141,7 +142,7 @@ export default function PricingPage() {
                       className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{ backgroundColor: '#E8F0E6' }}
                     >
-                      <Icon size={18} style={{ color: '#4D6B47' }} />
+                      <Icon size={18} style={{ color: '#254220' }} />
                     </span>
                     <div>
                       <p className="font-bold mb-1" style={{ color: '#1A1714' }}>{title}</p>
@@ -164,11 +165,11 @@ export default function PricingPage() {
 
               {/* Bin Cleaning */}
               <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-                <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#1C3318' }}>
+                <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
                   <div className="flex items-center gap-2 mb-8">
                     <span
                       className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-                      style={{ color: '#B5C9B0', borderColor: '#2E5228' }}
+                      style={{ color: '#B5C9B0', borderColor: '#254220' }}
                     >
                       <Droplets size={13} />
                       Bin Cleaning
@@ -179,23 +180,23 @@ export default function PricingPage() {
                   </div>
                   <div className="flex items-end gap-2 mt-2 mb-1">
                     <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$35</span>
-                    <span className="text-xl font-bold mb-1" style={{ color: '#7DA87A' }}>/ bin</span>
+                    <span className="text-xl font-bold mb-1" style={{ color: '#B5C9B0' }}>/ bin</span>
                   </div>
                   <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · discounts for multiple bins</span>
                 </div>
                 <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#4D6B47' }}>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
                     What&apos;s included
                   </p>
                   <ul className="flex flex-col gap-4 mb-8">
                     {['High-pressure hot water washing', 'Eco-friendly disinfectants', 'Interior & exterior cleaning', 'Odor and bacteria elimination'].map(item => (
                       <li key={item} className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#4D6B47' }} />
+                        <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
                         <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
                       </li>
                     ))}
                   </ul>
-                  <Link href="/book-service?type=bin-cleaning" className="block w-full rounded-full py-3.5 text-sm font-bold text-center transition-opacity hover:opacity-90" style={{ backgroundColor: '#2E5228', color: '#FAF7F2' }}>
+                  <Link href="/book-service?type=bin-cleaning" className="block w-full rounded-full py-3.5 text-sm font-bold text-center transition-opacity hover:opacity-90" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
                     Book Bin Cleaning
                   </Link>
                 </div>
@@ -203,11 +204,11 @@ export default function PricingPage() {
 
               {/* Junk Removal */}
               <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-                <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#1C3318' }}>
+                <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
                   <div className="flex items-center gap-2 mb-8">
                     <span
                       className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-                      style={{ color: '#B5C9B0', borderColor: '#2E5228' }}
+                      style={{ color: '#B5C9B0', borderColor: '#254220' }}
                     >
                       <Trash2 size={13} />
                       Junk Removal
@@ -222,18 +223,18 @@ export default function PricingPage() {
                   <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · price varies by volume</span>
                 </div>
                 <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#4D6B47' }}>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
                     What&apos;s included
                   </p>
                   <ul className="flex flex-col gap-4 mb-8">
                     {['Furniture, appliances & electronics', 'Estate & garage cleanouts', 'Office & commercial junk', 'Responsible disposal - donate & recycle first'].map(item => (
                       <li key={item} className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#4D6B47' }} />
+                        <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
                         <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
                       </li>
                     ))}
                   </ul>
-                  <Link href="/book-service?type=junk-removal" className="block w-full rounded-full py-3.5 text-sm font-bold text-center transition-opacity hover:opacity-90" style={{ backgroundColor: '#2E5228', color: '#FAF7F2' }}>
+                  <Link href="/book-service?type=junk-removal" className="block w-full rounded-full py-3.5 text-sm font-bold text-center transition-opacity hover:opacity-90" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
                     Book Junk Removal
                   </Link>
                 </div>
@@ -272,3 +273,6 @@ export default function PricingPage() {
     </div>
   )
 }
+
+
+

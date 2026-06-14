@@ -1,16 +1,16 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 
 export default function PageCanvas({
   children,
   backHref = '/',
-  backLabel = '← Back',
+  backLabel = 'â† Back',
 }: {
   children: React.ReactNode
   backHref?: string
   backLabel?: string
 }) {
   return (
-    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#1C3318' }}>
+    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#254220' }}>
       {/* Cream canvas */}
       <div
         className="relative z-10 flex-1 rounded-t-2xl flex flex-col items-center justify-start px-6 pt-24 pb-12 overflow-hidden"
@@ -43,3 +43,5 @@ export default function PageCanvas({
     </div>
   )
 }
+
+

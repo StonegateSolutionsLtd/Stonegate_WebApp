@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -83,12 +83,12 @@ export default function ServiceForm() {
             className="flex items-center gap-1.5 text-sm font-semibold mb-10 transition-opacity hover:opacity-60"
             style={{ color: '#6B5E54' }}
           >
-            ← Back
+            â† Back
           </Link>
 
           <span
             className="inline-block text-xs font-semibold uppercase tracking-widest mb-5 border rounded-full px-4 py-1.5"
-            style={{ color: '#4D6B47', borderColor: '#B5C9B0' }}
+            style={{ color: '#254220', borderColor: '#B5C9B0' }}
           >
             {serviceLabel}
           </span>
@@ -103,11 +103,11 @@ export default function ServiceForm() {
 
             {/* Address */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#4D6B47' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#254220' }}>
                 Service Address
               </p>
               <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                Address <span style={{ color: '#4D6B47' }}>*</span>
+                Address <span style={{ color: '#254220' }}>*</span>
               </label>
               <div className="relative">
                 <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
@@ -126,7 +126,7 @@ export default function ServiceForm() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                  Date <span style={{ color: '#4D6B47' }}>*</span>
+                  Date <span style={{ color: '#254220' }}>*</span>
                 </label>
                 <DatePicker
                   value={form.date}
@@ -137,7 +137,7 @@ export default function ServiceForm() {
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                  Time <span style={{ color: '#4D6B47' }}>*</span>
+                  Time <span style={{ color: '#254220' }}>*</span>
                 </label>
                 <Select value={form.time} onValueChange={v => set('time', v ?? '')}>
                   <SelectTrigger className="h-9 bg-white border-[#E0D8D0] text-[#1A1714] rounded-xl" style={{ borderColor: errors.time ? '#ef4444' : '#E0D8D0' }}>
@@ -155,13 +155,13 @@ export default function ServiceForm() {
 
             {/* Contact info */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#4D6B47' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#254220' }}>
                 Your Information
               </p>
               <div className="flex flex-col gap-4">
                 <div>
                   <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Full Name <span style={{ color: '#4D6B47' }}>*</span>
+                    Full Name <span style={{ color: '#254220' }}>*</span>
                   </label>
                   <div className="relative">
                     <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
@@ -178,7 +178,7 @@ export default function ServiceForm() {
 
                 <div>
                   <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Email <span style={{ color: '#4D6B47' }}>*</span>
+                    Email <span style={{ color: '#254220' }}>*</span>
                   </label>
                   <div className="relative">
                     <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
@@ -196,7 +196,7 @@ export default function ServiceForm() {
 
                 <div>
                   <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Phone <span style={{ color: '#4D6B47' }}>*</span>
+                    Phone <span style={{ color: '#254220' }}>*</span>
                   </label>
                   <div className="relative">
                     <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
@@ -223,7 +223,7 @@ export default function ServiceForm() {
               <div className="relative">
                 <FileText size={16} className="absolute left-3.5 top-3.5 pointer-events-none" style={{ color: '#B5C9B0' }} />
                 <Textarea
-                  placeholder="Anything else we should know…"
+                  placeholder="Anything else we should know"¦"
                   value={form.notes}
                   onChange={e => set('notes', e.target.value)}
                   className="pl-10 resize-none"
@@ -239,9 +239,9 @@ export default function ServiceForm() {
               type="submit"
               disabled={submitting}
               className="rounded-full text-sm font-bold py-6 border-0"
-              style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+              style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
-              {submitting ? 'Sending…' : 'Submit Request'}
+              {submitting ? 'Sending"¦' : 'Submit Request'}
             </Button>
           </form>
         </div>
@@ -257,3 +257,6 @@ export default function ServiceForm() {
     </div>
   )
 }
+
+
+

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -49,7 +49,7 @@ export default function Navbar() {
             <Link href="/order">
               <Button
                 className="rounded-full text-sm font-bold px-6 py-2 border-0 cursor-pointer transition-transform duration-200 hover:scale-110"
-                style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+                style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
               >
                 Book Your Move
               </Button>
@@ -96,7 +96,7 @@ export default function Navbar() {
                 href="/order"
                 onClick={closeMenu}
                 className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+                style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
               >
                 Book Your Move
               </Link>
@@ -123,7 +123,7 @@ export default function Navbar() {
             >
               <X size={18} style={{ color: '#1A1714' }} />
             </button>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#4D6B47' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>
               Get in touch
             </p>
             <h2 className="text-2xl font-extrabold mb-8" style={{ color: '#1A1714' }}>
@@ -140,7 +140,7 @@ export default function Navbar() {
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#E8F0E6' }}
                   >
-                    <Phone size={15} style={{ color: '#4D6B47' }} />
+                    <Phone size={15} style={{ color: '#254220' }} />
                   </span>
                   <span
                     className="font-semibold transition-opacity group-hover:opacity-60"
@@ -159,7 +159,7 @@ export default function Navbar() {
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#E8F0E6' }}
                   >
-                    <Mail size={15} style={{ color: '#4D6B47' }} />
+                    <Mail size={15} style={{ color: '#254220' }} />
                   </span>
                   <span
                     className="font-semibold transition-opacity group-hover:opacity-60"
@@ -176,3 +176,6 @@ export default function Navbar() {
     </>
   )
 }
+
+
+
