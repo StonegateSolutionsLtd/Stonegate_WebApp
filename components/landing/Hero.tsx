@@ -209,7 +209,20 @@ export default function Hero() {
         </section>
 
         {/* Contact & Service Area */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+        <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+
+          {/* Truck – desktop only, absolute right */}
+          <div className="absolute bottom-0 right-0 hidden md:block pointer-events-none select-none" style={{ width: '560px' }}>
+            <Image
+              src="/truck-nobg.png"
+              alt=""
+              width={560}
+              height={420}
+              className="object-contain w-full"
+              style={{ mixBlendMode: 'multiply' }}
+            />
+          </div>
+
           <div className="max-w-6xl mx-auto px-6 py-16 grid sm:grid-cols-2 gap-12">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>Contact us</p>
@@ -238,6 +251,18 @@ export default function Hero() {
         </section>
 
       </main>
+
+      {/* Truck – mobile only: centered between We Operate and footer */}
+      <div className="flex justify-center md:hidden" style={{ backgroundColor: '#FAF7F2' }}>
+        <Image
+          src="/truck-nobg.png"
+          alt=""
+          width={400}
+          height={300}
+          className="w-[260px] object-contain"
+          style={{ mixBlendMode: 'multiply' }}
+        />
+      </div>
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
