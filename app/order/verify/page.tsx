@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -93,7 +93,7 @@ export default function VerifyPage() {
   if (!email) return null
 
   return (
-    <PageCanvas backHref="/order" backLabel="← Edit order">
+    <PageCanvas backHref="/order" backLabel="â† Edit order">
       <div className="max-w-xl mx-auto pt-4 text-center">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
           Check your email
@@ -118,7 +118,7 @@ export default function VerifyPage() {
                 className="w-12 h-14 text-center text-2xl font-bold rounded-xl outline-none transition-all"
                 style={{
                   backgroundColor: '#FAF7F2',
-                  border: `2px solid ${digit ? '#4D6B47' : '#D9CFC4'}`,
+                  border: `2px solid ${digit ? '#254220' : '#D9CFC4'}`,
                   color: '#1A1714',
                 }}
               />
@@ -126,11 +126,11 @@ export default function VerifyPage() {
           </div>
 
           {error && <p className="text-sm text-red-500 text-center mb-4">{error}</p>}
-          {resent && <p className="text-sm text-center mb-4" style={{ color: '#4D6B47' }}>A new code has been sent.</p>}
+          {resent && <p className="text-sm text-center mb-4" style={{ color: '#254220' }}>A new code has been sent.</p>}
 
           <Button
             className="w-full font-bold rounded-xl py-6 border-0"
-            style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+            style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             onClick={handleVerify}
             disabled={verifying}
           >
@@ -152,3 +152,6 @@ export default function VerifyPage() {
     </PageCanvas>
   )
 }
+
+
+

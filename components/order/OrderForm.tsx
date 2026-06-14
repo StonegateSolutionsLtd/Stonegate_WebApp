@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -12,7 +12,7 @@ import {
   MapPin, Building2, User, Mail, Phone, ArrowRight, Check,
 } from 'lucide-react'
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const STEPS = [
   { short: 'Pickup',   title: 'Pickup location',        desc: 'Where are we picking up from?' },
@@ -38,7 +38,7 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
   }
 })
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -51,9 +51,9 @@ function StepIndicator({ current }: { current: number }) {
               className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-[background-color,color,box-shadow] duration-150"
               style={
                 i < current
-                  ? { backgroundColor: '#4D6B47', color: '#FAF7F2' }
+                  ? { backgroundColor: '#254220', color: '#FAF7F2' }
                   : i === current
-                    ? { backgroundColor: '#4D6B47', color: '#FAF7F2', boxShadow: '0 0 0 5px rgba(77,107,71,0.18)' }
+                    ? { backgroundColor: '#254220', color: '#FAF7F2', boxShadow: '0 0 0 5px rgba(77,107,71,0.18)' }
                     : { backgroundColor: '#E8E0D5', color: '#B0A49A' }
               }
             >
@@ -63,7 +63,7 @@ function StepIndicator({ current }: { current: number }) {
             {/* Label centered under circle */}
             <div className="absolute top-full mt-1.5 w-9 flex justify-center">
               <span className="text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap"
-                style={{ color: i <= current ? '#4D6B47' : '#C4B8AC' }}>
+                style={{ color: i <= current ? '#254220' : '#C4B8AC' }}>
                 {s.short}
               </span>
             </div>
@@ -71,7 +71,7 @@ function StepIndicator({ current }: { current: number }) {
             {/* Connector line */}
             {i < STEPS.length - 1 && (
               <div className="flex-1 h-[2px] mx-2 rounded-full transition-colors duration-300"
-                style={{ backgroundColor: i < current ? '#4D6B47' : '#E0D8D0' }} />
+                style={{ backgroundColor: i < current ? '#254220' : '#E0D8D0' }} />
             )}
           </div>
         ))}
@@ -100,7 +100,7 @@ function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={`w-full h-11 pl-10 pr-4 rounded-xl border text-sm transition-all outline-none
-        focus:border-[#4D6B47] focus:ring-2 focus:ring-[#4D6B47]/15 placeholder:text-[#C4B8AC] ${props.className ?? ''}`}
+        focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15 placeholder:text-[#C4B8AC] ${props.className ?? ''}`}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714', ...props.style }}
     />
   )
@@ -113,10 +113,10 @@ function SizeCard({ label, selected, onClick }: {
     <button
       type="button"
       onClick={onClick}
-      className="h-12 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#4D6B47]"
+      className="h-12 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#254220]"
       style={{
-        backgroundColor: selected ? '#4D6B47' : '#FFFFFF',
-        borderColor:     selected ? '#4D6B47' : '#E0D8D0',
+        backgroundColor: selected ? '#254220' : '#FFFFFF',
+        borderColor:     selected ? '#254220' : '#E0D8D0',
         color:           selected ? '#FAF7F2' : '#6B5E54',
         boxShadow:       selected ? '0 2px 8px rgba(77,107,71,0.25)' : 'none',
       }}
@@ -137,10 +137,10 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
           key={String(opt.val)}
           type="button"
           onClick={() => onChange(opt.val)}
-          className="h-11 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#4D6B47]"
+          className="h-11 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color] duration-150 hover:border-[#254220]"
           style={{
-            backgroundColor: value === opt.val ? '#4D6B47' : '#FFFFFF',
-            borderColor:     value === opt.val ? '#4D6B47' : '#E0D8D0',
+            backgroundColor: value === opt.val ? '#254220' : '#FFFFFF',
+            borderColor:     value === opt.val ? '#254220' : '#E0D8D0',
             color:           value === opt.val ? '#FAF7F2' : '#6B5E54',
             boxShadow:       value === opt.val ? '0 2px 8px rgba(77,107,71,0.25)' : 'none',
           }}
@@ -152,7 +152,7 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
   )
 }
 
-// ─── Main form ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function OrderForm() {
   const router = useRouter()
@@ -199,7 +199,7 @@ export default function OrderForm() {
     <div className="w-full">
       <StepIndicator current={step} />
 
-      {/* ── Card ── */}
+      {/* â”€â”€ Card â”€â”€ */}
       <div className="rounded-2xl p-8 lg:p-10"
         style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #EDE6DE' }}>
 
@@ -211,7 +211,7 @@ export default function OrderForm() {
 
         <div className="flex flex-col gap-5">
 
-          {/* ── Step 1: Pickup ── */}
+          {/* â”€â”€ Step 1: Pickup â”€â”€ */}
           {step === 0 && (
             <>
               <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress">
@@ -240,7 +240,7 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* ── Step 2: Drop-off ── */}
+          {/* â”€â”€ Step 2: Drop-off â”€â”€ */}
           {step === 1 && (
             <>
               <FieldIcon icon={MapPin} label="Drop-off address" id="dropoffAddress">
@@ -303,7 +303,7 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* ── Step 3: Contact ── */}
+          {/* â”€â”€ Step 3: Contact â”€â”€ */}
           {step === 2 && (
             <>
               <FieldIcon icon={User} label="Full name" id="customerName">
@@ -342,18 +342,18 @@ export default function OrderForm() {
                 </label>
                 <Textarea
                   id="specialNotes"
-                  placeholder="Heavy items, fragile furniture, access codes…"
+                  placeholder="Heavy items, fragile furniture, access codesâ€¦"
                   rows={3}
                   value={form.specialNotes}
                   onChange={e => set('specialNotes', e.target.value)}
-                  className="rounded-xl border resize-none text-sm placeholder:text-[#C4B8AC] focus:border-[#4D6B47] focus:ring-2 focus:ring-[#4D6B47]/15"
+                  className="rounded-xl border resize-none text-sm placeholder:text-[#C4B8AC] focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15"
                   style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714' }}
                 />
               </div>
             </>
           )}
 
-          {/* ── Navigation ── */}
+          {/* â”€â”€ Navigation â”€â”€ */}
           <div className="flex items-center justify-between pt-3">
             {step > 0 ? (
               <button
@@ -362,7 +362,7 @@ export default function OrderForm() {
                 className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors hover:bg-[#F0EBE3]"
                 style={{ color: '#9A8E83' }}
               >
-                ← Back
+                â† Back
               </button>
             ) : <div />}
 
@@ -372,12 +372,12 @@ export default function OrderForm() {
               disabled={!ready}
               className="flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-[box-shadow,opacity] duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{
-                backgroundColor: '#4D6B47',
+                backgroundColor: '#254220',
                 color: '#FAF7F2',
                 boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
               }}
             >
-              {sending ? 'Sending code…' : step < STEPS.length - 1 ? 'Continue' : 'Review Order'}
+              {sending ? 'Sending codeâ€¦' : step < STEPS.length - 1 ? 'Continue' : 'Review Order'}
               {!sending && <ArrowRight size={14} strokeWidth={2.5} />}
             </button>
           </div>
@@ -386,3 +386,6 @@ export default function OrderForm() {
     </div>
   )
 }
+
+
+

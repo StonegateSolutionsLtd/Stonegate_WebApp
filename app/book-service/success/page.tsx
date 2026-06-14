@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ export default function ServiceSuccessPage() {
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"
             style={{ backgroundColor: '#E8F0E6' }}
           >
-            <CheckCircle2 size={32} style={{ color: '#4D6B47' }} />
+            <CheckCircle2 size={32} style={{ color: '#254220' }} />
           </div>
           <h1 className="text-3xl font-extrabold mb-4" style={{ color: '#1A1714' }}>
             Request sent!
@@ -32,7 +32,7 @@ export default function ServiceSuccessPage() {
           <Link href="/">
             <Button
               className="rounded-full text-sm font-bold px-10 py-6 border-0"
-              style={{ backgroundColor: '#4D6B47', color: '#FAF7F2' }}
+              style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
               Back to Home
             </Button>
@@ -49,3 +49,6 @@ export default function ServiceSuccessPage() {
     </div>
   )
 }
+
+
+
