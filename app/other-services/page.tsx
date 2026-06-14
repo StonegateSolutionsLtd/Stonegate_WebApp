@@ -74,7 +74,7 @@ export default function OtherServicesPage() {
               </div>
               <h2 className="text-4xl font-extrabold mb-4" style={{ color: '#1A1714' }}>Bin Cleaning</h2>
               <p className="text-base leading-relaxed mb-8" style={{ color: '#6B5E54' }}>
-                Your garbage bins harbour bacteria, mold, and stubborn odors that household cleaning can&apos;t reach. We solve that with high-pressure hot water and eco-safe disinfectants — leaving your bins hygienically clean and smelling fresh. Available for homes, apartments, and strata complexes.
+                Your garbage bins harbour bacteria, mold, and stubborn odors that household cleaning can&apos;t reach. We solve that with high-pressure hot water and eco-safe disinfectants - leaving your bins hygienically clean and smelling fresh. Available for homes, apartments, and strata complexes.
               </p>
               <ul className="flex flex-col gap-3 mb-8">
                 {binFeatures.map(f => (
@@ -106,7 +106,7 @@ export default function OtherServicesPage() {
               </div>
               <h2 className="text-4xl font-extrabold mb-4" style={{ color: '#1A1714' }}>Junk Removal</h2>
               <p className="text-base leading-relaxed mb-8" style={{ color: '#6B5E54' }}>
-                Reclaim your space. Whether you&apos;re decluttering before a move, clearing out an estate, or just need that old couch gone — we&apos;ll haul it away quickly and responsibly. We prioritize donating usable items and recycling before anything reaches the landfill.
+                Reclaim your space. Whether you&apos;re decluttering before a move, clearing out an estate, or just need that old couch gone - we&apos;ll haul it away quickly and responsibly. We prioritize donating usable items and recycling before anything reaches the landfill.
               </p>
               <ul className="flex flex-col gap-3 mb-8">
                 {junkFeatures.map(f => (
@@ -153,7 +153,7 @@ export default function OtherServicesPage() {
                 Fully equipped.<br />Always on time.
               </h2>
               <p className="text-sm leading-relaxed mb-8" style={{ color: '#B5C9B0' }}>
-                Our truck comes loaded with moving blankets, straps, and dollies — everything needed to move your belongings safely. No extra fees, no surprises.
+                Our truck comes loaded with moving blankets, straps, and dollies - everything needed to move your belongings safely. No extra fees, no surprises.
               </p>
               <ContactButton
                 label="Contact Us Directly"

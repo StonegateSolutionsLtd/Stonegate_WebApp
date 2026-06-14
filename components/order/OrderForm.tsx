@@ -12,7 +12,7 @@ import {
   MapPin, Building2, User, Mail, Phone, ArrowRight, Check,
 } from 'lucide-react'
 
-// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€â"€ Constants â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 const STEPS = [
   { short: 'Pickup',   title: 'Pickup location',        desc: 'Where are we picking up from?' },
@@ -38,7 +38,7 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
   }
 })
 
-// â”€â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€â"€ Sub-components â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -152,7 +152,7 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
   )
 }
 
-// â”€â”€â”€ Main form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€â"€ Main form â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 export default function OrderForm() {
   const router = useRouter()
@@ -199,7 +199,7 @@ export default function OrderForm() {
     <div className="w-full">
       <StepIndicator current={step} />
 
-      {/* â”€â”€ Card â”€â”€ */}
+      {/* â"€â"€ Card â"€â"€ */}
       <div className="rounded-2xl p-8 lg:p-10"
         style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #EDE6DE' }}>
 
@@ -211,7 +211,7 @@ export default function OrderForm() {
 
         <div className="flex flex-col gap-5">
 
-          {/* â”€â”€ Step 1: Pickup â”€â”€ */}
+          {/* â"€â"€ Step 1: Pickup â"€â"€ */}
           {step === 0 && (
             <>
               <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress">
@@ -240,7 +240,7 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* â”€â”€ Step 2: Drop-off â”€â”€ */}
+          {/* â"€â"€ Step 2: Drop-off â"€â"€ */}
           {step === 1 && (
             <>
               <FieldIcon icon={MapPin} label="Drop-off address" id="dropoffAddress">
@@ -303,7 +303,7 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* â”€â”€ Step 3: Contact â”€â”€ */}
+          {/* â"€â"€ Step 3: Contact â"€â"€ */}
           {step === 2 && (
             <>
               <FieldIcon icon={User} label="Full name" id="customerName">
@@ -353,7 +353,7 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* â”€â”€ Navigation â”€â”€ */}
+          {/* â"€â"€ Navigation â"€â"€ */}
           <div className="flex items-center justify-between pt-3">
             {step > 0 ? (
               <button

@@ -6,7 +6,7 @@ import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucid
 
 export const metadata: Metadata = {
   title: 'Moving Prices in Vancouver · From $73/hr',
-  description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck from $73"“$95 CAD/hr. No hidden fees.',
+  description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck from $73""$95 CAD/hr. No hidden fees.',
   alternates: { canonical: 'https://stonegatemoving.com/pricing' },
 }
 
@@ -23,7 +23,7 @@ const notes = [
   {
     icon: Clock,
     title: '2-hour minimum',
-    body: 'Most 1-bedroom moves complete in 2"“3 hours. 2-bedrooms typically take 3"“5 hours depending on the amount of items.',
+    body: 'Most 1-bedroom moves complete in 2""3 hours. 2-bedrooms typically take 3""5 hours depending on the amount of items.',
   },
   {
     icon: Truck,
@@ -33,7 +33,7 @@ const notes = [
   {
     icon: Users,
     title: 'Rate reflects travel distance',
-    body: 'The $73"“$95/hr range depends on the distance between pickup and drop-off within Metro Vancouver. Closer destinations fall at the lower end.',
+    body: 'The $73""$95/hr range depends on the distance between pickup and drop-off within Metro Vancouver. Closer destinations fall at the lower end.',
   },
   {
     icon: Info,
@@ -102,7 +102,7 @@ export default function PricingPage() {
                 </div>
                 <div className="flex items-end gap-3 mb-1">
                   <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$73</span>
-                  <span className="text-3xl font-bold mb-1" style={{ color: '#B5C9B0' }}>"“ $95</span>
+                  <span className="text-3xl font-bold mb-1" style={{ color: '#B5C9B0' }}>"" $95</span>
                 </div>
                 <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD per hour</span>
               </div>
