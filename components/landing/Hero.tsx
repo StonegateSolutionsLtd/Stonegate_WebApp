@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
-import { Droplets, Trash2, MapPin } from 'lucide-react'
+import { Droplets, Trash2 } from 'lucide-react'
 
 const logoStyle = {
   filter: 'brightness(0)',
@@ -49,25 +49,22 @@ export default function Hero() {
           />
 
           {/* Content */}
-          <div className="relative max-w-6xl mx-auto px-6 pt-40 pb-16 lg:pt-52 lg:pb-20 flex items-end justify-between gap-12">
-            <div className="max-w-xl">
-              <span
-                className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
-                style={{ color: '#254220', borderColor: '#B5C9B0', backgroundColor: '#FAF7F2ee' }}
-              >
-                Metro Vancouver · Apartment Moving Specialists
-              </span>
+          <div className="relative max-w-6xl mx-auto px-6 pt-40 pb-16 lg:pt-52 lg:pb-20">
+            <div className="max-w-5xl">
               <h1
                 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none"
-                style={{ color: '#1A1714' }}
+                style={{ color: '#1A1714', textShadow: '0 1px 12px rgba(250,247,242,0.9), 0 0 24px rgba(250,247,242,0.7)' }}
               >
-                Moving made<br />
-                <span style={{ color: '#254220' }}>effortless.</span>
+                Moving In Metro Vancouver<br />
+                <span style={{ color: '#254220' }}>Made Effortless.</span>
               </h1>
-              <p className="mt-6 text-lg leading-relaxed" style={{ color: '#6B5E54' }}>
+              <p className="mt-6 text-lg leading-relaxed" style={{ color: '#1A1714' }}>
                 Book your apartment move in minutes. We handle the heavy lifting so you can focus on settling in.
               </p>
-              <Link href="/order" className="mt-8 inline-block">
+              <p className="mt-6 text-sm" style={{ color: '#1A1714' }}>
+                No commitment - we confirm the details and price with you before anything is booked.
+              </p>
+              <Link href="/order" className="mt-4 inline-block">
                 <Button
                   className="text-base px-10 py-6 rounded-full font-bold border-0"
                   style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
@@ -75,50 +72,6 @@ export default function Hero() {
                   Book Your Move
                 </Button>
               </Link>
-
-              {/* Mobile city strip */}
-              <div className="mt-5 flex items-center gap-2 lg:hidden">
-                <MapPin size={13} style={{ color: '#254220', flexShrink: 0 }} />
-                <p className="text-xs font-semibold" style={{ color: '#6B5E54' }}>
-                  Vancouver · Burnaby · Richmond · Surrey · Coquitlam & more
-                </p>
-              </div>
-            </div>
-
-            {/* Map card - desktop only */}
-            <div className="hidden lg:block shrink-0" style={{ width: '255px', marginBottom: '4px' }}>
-              <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ border: '1px solid #254220' }}>
-
-                {/* Dark header */}
-                <div className="px-6 pt-6 pb-6" style={{ backgroundColor: '#254220' }}>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#B5C9B0' }}>Service area</span>
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: '#254220' }}>
-                      <MapPin size={14} style={{ color: '#B5C9B0' }} />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-extrabold leading-tight" style={{ color: '#FAF7F2' }}>Metro<br />Vancouver</p>
-                </div>
-
-                {/* City grid */}
-                <div className="px-6 py-5" style={{ backgroundColor: '#FAF7F2' }}>
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-                    {[
-                      'Vancouver', 'Burnaby',
-                      'Richmond', 'Surrey',
-                      'Coquitlam', 'North Van',
-                      'Delta', 'N. West.',
-                      'Port Moody', 'Port Coq.',
-                    ].map(city => (
-                      <div key={city} className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: '#254220' }} />
-                        <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>{city}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-              </div>
             </div>
           </div>
 
@@ -212,7 +165,7 @@ export default function Hero() {
         <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
 
           {/* Truck – desktop only, absolute right */}
-          <div className="absolute bottom-0 right-0 hidden md:block pointer-events-none select-none" style={{ width: '560px' }}>
+          <div className="absolute bottom-0 hidden md:block pointer-events-none select-none" style={{ width: '440px', right: '140px' }}>
             <Image
               src="/truck-nobg.png"
               alt=""

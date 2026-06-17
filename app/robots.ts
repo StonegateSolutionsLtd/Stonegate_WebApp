@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://stonegatemoving.com/sitemap.xml',
+    sitemap: 'https://www.stonegatemoving.com/sitemap.xml',
   }
 }
