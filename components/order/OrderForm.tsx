@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { EMPTY_ORDER_FORM, type ApartmentSize, type OrderFormData } from '@/lib/types'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,7 +12,6 @@ import {
   MapPin, Building2, User, Mail, Phone, ArrowRight, Check,
 } from 'lucide-react'
 
-// â"€â"€â"€ Constants â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 const STEPS = [
   { short: 'Pickup',   title: 'Pickup location',        desc: 'Where are we picking up from?' },
@@ -38,7 +37,6 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
   }
 })
 
-// â"€â"€â"€ Sub-components â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -152,13 +150,27 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
   )
 }
 
-// â"€â"€â"€ Main form â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 
 export default function OrderForm() {
   const router = useRouter()
   const [step, setStep]     = useState(0)
   const [form, setForm]     = useState<OrderFormData>(EMPTY_ORDER_FORM)
   const [sending, setSending] = useState(false)
+
+  // Seed the current history entry with step:0 so back button works correctly
+  useEffect(() => {
+    window.history.replaceState({ step: 0 }, '')
+  }, [])
+
+  // Browser back button → go to previous step instead of leaving the page
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      const target = e.state?.step
+      if (typeof target === 'number') setStep(target)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
 
   function set<K extends keyof OrderFormData>(key: K, value: OrderFormData[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -180,7 +192,12 @@ export default function OrderForm() {
   }
 
   async function handleNext() {
-    if (step < STEPS.length - 1) { setStep(s => s + 1); return }
+    if (step < STEPS.length - 1) {
+      const next = step + 1
+      window.history.pushState({ step: next }, '')
+      setStep(next)
+      return
+    }
     setSending(true)
     sessionStorage.setItem('pendingOrder', JSON.stringify(form))
     await fetch('/api/verify/send', {
@@ -358,7 +375,7 @@ export default function OrderForm() {
             {step > 0 ? (
               <button
                 type="button"
-                onClick={() => setStep(s => s - 1)}
+                onClick={() => window.history.back()}
                 className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors hover:bg-[#F0EBE3]"
                 style={{ color: '#9A8E83' }}
               >

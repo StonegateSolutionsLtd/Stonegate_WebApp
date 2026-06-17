@@ -7,7 +7,7 @@ import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucid
 export const metadata: Metadata = {
   title: 'Moving Prices in Vancouver · From $73/hr',
   description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck from $73-$95 CAD/hr. No hidden fees.',
-  alternates: { canonical: 'https://stonegatemoving.com/pricing' },
+  alternates: { canonical: 'https://www.stonegatemoving.com/pricing' },
 }
 
 const included = [

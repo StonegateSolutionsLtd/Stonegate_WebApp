@@ -8,7 +8,7 @@ import { Droplets, Trash2, CheckCircle2, ArrowRight } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Bin Cleaning & Junk Removal in Vancouver',
   description: 'Professional bin cleaning and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. Residential and commercial. Book online.',
-  alternates: { canonical: 'https://stonegatemoving.com/other-services' },
+  alternates: { canonical: 'https://www.stonegatemoving.com/other-services' },
 }
 
 const binFeatures = [

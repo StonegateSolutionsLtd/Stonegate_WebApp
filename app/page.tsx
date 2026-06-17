@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: { absolute: 'Apartment Moving Service in Vancouver & Metro Area | Stonegate Moving Solutions' },
   description: 'Top-rated apartment moving company in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. 2 professional movers with truck from $73/hr. Also offering bin cleaning and junk removal.',
   alternates: {
-    canonical: 'https://stonegatemoving.com',
+    canonical: 'https://www.stonegatemoving.com',
   },
 }
 
@@ -13,10 +13,10 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'MovingCompany',
   name: 'Stonegate Moving Solutions',
-  url: 'https://stonegatemoving.com',
+  url: 'https://www.stonegatemoving.com',
   telephone: '+16043546479',
   email: 'orders@stonegatemoving.com',
-  logo: 'https://stonegatemoving.com/logo.png',
+  logo: 'https://www.stonegatemoving.com/logo.png',
   description: 'Professional apartment moving company serving Metro Vancouver. 2 movers with truck from $73-$95/hr. Also offering bin cleaning and junk removal.',
   areaServed: [
     'Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam',

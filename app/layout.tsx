@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC',
     'bin cleaning Vancouver', 'junk removal Vancouver', 'Coquitlam movers',
   ],
-  metadataBase: new URL('https://stonegatemoving.com'),
+  metadataBase: new URL('https://www.stonegatemoving.com'),
   openGraph: {
     type: 'website',
     locale: 'en_CA',
-    url: 'https://stonegatemoving.com',
+    url: 'https://www.stonegatemoving.com',
     siteName: 'Stonegate Moving Solutions',
     title: 'Stonegate Moving Solutions · Apartment Moving in Vancouver',
     description: 'Professional apartment movers serving all of Metro Vancouver. 2 movers with truck from $73/hr.',
