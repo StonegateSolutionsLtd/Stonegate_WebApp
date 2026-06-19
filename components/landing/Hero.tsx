@@ -53,7 +53,7 @@ export default function Hero() {
             <div className="max-w-5xl">
               <h1
                 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none"
-                style={{ color: '#1A1714', textShadow: '0 1px 12px rgba(250,247,242,0.9), 0 0 24px rgba(250,247,242,0.7)' }}
+                style={{ color: '#1A1714' }}
               >
                 Moving In Metro Vancouver<br />
                 <span style={{ color: '#254220' }}>Made Effortless.</span>
