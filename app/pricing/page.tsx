@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Moving Prices in Vancouver · From $73/hr',
-  description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck from $73-$95 CAD/hr. No hidden fees.',
+  title: 'Moving Prices in Vancouver · $80/hr',
+  description: 'Transparent hourly pricing for apartment moving in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck at $80 CAD/hr. No hidden fees.',
   alternates: { canonical: 'https://www.stonegatemoving.com/pricing' },
 }
 
@@ -33,7 +33,7 @@ const notes = [
   {
     icon: Users,
     title: 'Rate reflects travel distance',
-    body: 'The $73-$95/hr range depends on the distance between pickup and drop-off within Metro Vancouver. Closer destinations fall at the lower end.',
+    body: 'Our flat $80/hr rate applies across all moves within Metro Vancouver — no surprises based on distance.',
   },
   {
     icon: Info,
@@ -90,21 +90,21 @@ export default function PricingPage() {
 
             {/* Pricing card */}
             <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-              <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
+              <div className="px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
                 <div className="flex items-center gap-2 mb-8">
                   <span
                     className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-                    style={{ color: '#B5C9B0', borderColor: '#254220' }}
+                    style={{ color: '#B5C9B0', borderColor: 'rgba(181,201,176,0.3)' }}
                   >
                     <Users size={13} />
                     2 Movers
                   </span>
                 </div>
-                <div className="flex items-end gap-3 mb-1">
-                  <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$73</span>
-                  <span className="text-3xl font-bold mb-1" style={{ color: '#B5C9B0' }}>- $95</span>
+                <div className="flex items-end gap-2 mb-1">
+                  <span className="text-7xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$80</span>
+                  <span className="text-xl font-semibold mb-2" style={{ color: '#B5C9B0' }}>/hr</span>
                 </div>
-                <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD per hour</span>
+                <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · 2-hour minimum</span>
               </div>
               <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
@@ -123,7 +123,7 @@ export default function PricingPage() {
                     className="w-full rounded-full text-sm font-bold py-6 border-0"
                     style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
                   >
-                    Book Your Move
+                    Get a quote
                   </Button>
                 </Link>
               </div>
@@ -180,9 +180,9 @@ export default function PricingPage() {
                   </div>
                   <div className="flex items-end gap-2 mt-2 mb-1">
                     <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$35</span>
-                    <span className="text-xl font-bold mb-1" style={{ color: '#B5C9B0' }}>/ bin</span>
+                    <span className="text-xl font-bold mb-1" style={{ color: '#B5C9B0' }}>/ house</span>
                   </div>
-                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · discounts for multiple bins</span>
+                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · discounts for multiple houses</span>
                 </div>
                 <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
                   <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>

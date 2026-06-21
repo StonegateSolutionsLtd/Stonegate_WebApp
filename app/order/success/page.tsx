@@ -6,7 +6,7 @@ export const metadata = { title: 'Order Received - Stonegate Moving Solutions' }
 
 export default function SuccessPage() {
   return (
-    <PageCanvas backHref="/" backLabel="â† Home">
+    <PageCanvas backHref="/" backLabel="← Home">
       <div className="max-w-md mx-auto pt-16 text-center">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"

@@ -3,7 +3,7 @@
 export default function PageCanvas({
   children,
   backHref = '/',
-  backLabel = 'â† Back',
+  backLabel = '← Back',
 }: {
   children: React.ReactNode
   backHref?: string

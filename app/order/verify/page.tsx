@@ -93,7 +93,7 @@ export default function VerifyPage() {
   if (!email) return null
 
   return (
-    <PageCanvas backHref="/order" backLabel="â† Edit order">
+    <PageCanvas backHref="/order" backLabel="← Edit order">
       <div className="max-w-xl mx-auto pt-4 text-center">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
           Check your email
