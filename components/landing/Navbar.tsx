@@ -51,7 +51,7 @@ export default function Navbar() {
                 className="rounded-full text-sm font-bold px-6 py-2 border-0 cursor-pointer transition-transform duration-200 hover:scale-110"
                 style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
               >
-                Book Your Move
+                Get a quote
               </Button>
             </Link>
           </nav>
@@ -98,7 +98,7 @@ export default function Navbar() {
                 className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
               >
-                Book Your Move
+                Get a quote
               </Link>
             </div>
           </div>

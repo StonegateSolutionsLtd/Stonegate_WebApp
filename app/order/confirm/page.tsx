@@ -50,7 +50,7 @@ export default function ConfirmPage() {
   )
 
   return (
-    <PageCanvas backHref="/order" backLabel="â† Edit order">
+    <PageCanvas backHref="/order" backLabel="← Edit order">
       <div className="max-w-lg mx-auto pt-8">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
           Confirm your order
