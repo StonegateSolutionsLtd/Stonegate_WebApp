@@ -6,6 +6,8 @@ import DeleteButton from './DeleteButton'
 import StatusSelect from './StatusSelect'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
   const supabase = createServiceClient()
   const { data: orders } = await supabase
