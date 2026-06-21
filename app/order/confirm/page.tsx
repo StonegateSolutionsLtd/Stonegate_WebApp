@@ -53,10 +53,10 @@ export default function ConfirmPage() {
     <PageCanvas backHref="/order" backLabel="← Edit order">
       <div className="max-w-lg mx-auto pt-8">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
-          Confirm your order
+          Review your quote details
         </h1>
         <p className="mt-2 text-base" style={{ color: '#9A8E83' }}>
-          Review everything below, then hit confirm.
+          Make sure everything looks right before submitting.
         </p>
 
         <div className="mt-8">
@@ -77,7 +77,7 @@ export default function ConfirmPage() {
             onClick={handleConfirm}
             disabled={submitting}
           >
-            {submitting ? 'Confirming...' : 'Confirm Order'}
+            {submitting ? 'Submitting...' : 'Submit Quote Request'}
           </Button>
           <Link href="/order">
             <Button variant="ghost" className="w-full" style={{ color: '#9A8E83' }}>

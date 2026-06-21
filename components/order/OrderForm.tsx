@@ -394,7 +394,7 @@ export default function OrderForm() {
                 boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
               }}
             >
-              {sending ? 'Sending code…' : step < STEPS.length - 1 ? 'Continue' : 'Review Order'}
+              {sending ? 'Sending code…' : step < STEPS.length - 1 ? 'Continue' : 'Review Quote'}
               {!sending && <ArrowRight size={14} strokeWidth={2.5} />}
             </button>
           </div>
