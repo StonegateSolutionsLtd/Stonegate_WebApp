@@ -74,34 +74,47 @@ export default function QuoteEditor({ order }: { order: Order }) {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F2' }}>
+      <style>{`
+        .qe-header { padding: 14px 20px; }
+        .qe-title { font-size: 15px; }
+        .qe-main { padding: 20px 16px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+        .qe-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 768px) {
+          .qe-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+          .qe-title { font-size: 13px; }
+          .qe-main { grid-template-columns: 1fr; padding: 16px 12px; gap: 16px; }
+          .qe-detail-grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+      `}</style>
+
       {/* Header */}
-      <header style={{ background: '#254220', padding: '14px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none' }}>
+      <header className="qe-header" style={{ background: '#254220', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Link href="/admin/dashboard" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
             ← Dashboard
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '16px' }}>Generate Quote — {orderNum}</span>
+          <span className="qe-title" style={{ color: 'white', fontWeight: 700 }}>Quote — {orderNum}</span>
         </div>
         {order.estimated_price != null && (
           <a
             href={`/admin/quote/${order.id}/print`}
             target="_blank"
             rel="noreferrer"
-            style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px', padding: '8px 16px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}
+            style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px', padding: '7px 12px', fontSize: '12px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}
           >
-            Open PDF Preview
+            Open PDF
           </a>
         )}
       </header>
 
-      <main style={{ padding: '32px', maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 360px', gap: '24px', alignItems: 'start' }}>
+      <main className="qe-main">
         {/* Order Details */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
           <h2 style={{ color: '#254220', fontSize: '16px', fontWeight: 700, margin: '0 0 20px', borderBottom: '1px solid #F5F0EB', paddingBottom: '12px' }}>
             Order Details
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div className="qe-detail-grid">
             <div>
               <div style={{ fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px', marginBottom: '12px' }}>CUSTOMER</div>
               <Row label="Name" value={order.customer_name} />
@@ -131,7 +144,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
         </div>
 
         {/* Quote Input Panel */}
-        <div style={{ background: 'white', borderRadius: '12px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', position: 'sticky', top: '24px' }}>
+        <div style={{ background: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
           <h2 style={{ color: '#254220', fontSize: '16px', fontWeight: 700, margin: '0 0 20px', borderBottom: '1px solid #F5F0EB', paddingBottom: '12px' }}>
             Quote Details
           </h2>
