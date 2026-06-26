@@ -16,11 +16,12 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
   const { data: orders } = await query
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
+    <div className="jr-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
       <style>{`
         .so-table { display: block; }
         .so-cards { display: none; }
         @media (max-width: 768px) {
+          .jr-wrap { left: 0 !important; padding: 16px 12px !important; }
           .so-table { display: none; }
           .so-cards { display: flex; flex-direction: column; gap: 12px; }
         }

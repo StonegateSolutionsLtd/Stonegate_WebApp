@@ -15,11 +15,12 @@ export default async function BinCleaningPage({ searchParams }: { searchParams: 
   const { data: orders } = await query
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
+    <div className="bc-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
       <style>{`
         .bc-table { display: block; }
         .bc-cards { display: none; }
         @media (max-width: 768px) {
+          .bc-wrap { left: 0 !important; padding: 16px 12px !important; }
           .bc-table { display: none; }
           .bc-cards { display: flex; flex-direction: column; gap: 12px; }
         }

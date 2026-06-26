@@ -17,11 +17,12 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
   const { data: orders } = await query
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
+    <div className="mo-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
       <style>{`
         .mo-table { display: block; }
         .mo-cards { display: none; }
         @media (max-width: 768px) {
+          .mo-wrap { left: 0 !important; padding: 16px 12px !important; }
           .mo-table { display: none; }
           .mo-cards { display: flex; flex-direction: column; gap: 12px; }
         }
