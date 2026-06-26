@@ -153,9 +153,8 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
 
 export default function OrderForm() {
   const router = useRouter()
-  const [step, setStep]     = useState(0)
-  const [form, setForm]     = useState<OrderFormData>(EMPTY_ORDER_FORM)
-  const [sending, setSending] = useState(false)
+  const [step, setStep] = useState(0)
+  const [form, setForm] = useState<OrderFormData>(EMPTY_ORDER_FORM)
 
   // Seed the current history entry with step:0 so back button works correctly
   useEffect(() => {
@@ -191,26 +190,19 @@ export default function OrderForm() {
     )
   }
 
-  async function handleNext() {
+  function handleNext() {
     if (step < STEPS.length - 1) {
       const next = step + 1
       window.history.pushState({ step: next }, '')
       setStep(next)
       return
     }
-    setSending(true)
     sessionStorage.setItem('pendingOrder', JSON.stringify(form))
-    await fetch('/api/verify/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: form.customerEmail, name: form.customerName }),
-    })
-    setSending(false)
-    router.push('/order/verify')
+    router.push('/order/confirm')
   }
 
   const today = new Date().toISOString().split('T')[0]
-  const ready  = canAdvance() && !sending
+  const ready  = canAdvance()
 
   return (
     <div className="w-full">
@@ -394,8 +386,8 @@ export default function OrderForm() {
                 boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
               }}
             >
-              {sending ? 'Sending code…' : step < STEPS.length - 1 ? 'Continue' : 'Review Quote'}
-              {!sending && <ArrowRight size={14} strokeWidth={2.5} />}
+              {step < STEPS.length - 1 ? 'Continue' : 'Review Quote'}
+              <ArrowRight size={14} strokeWidth={2.5} />
             </button>
           </div>
         </div>

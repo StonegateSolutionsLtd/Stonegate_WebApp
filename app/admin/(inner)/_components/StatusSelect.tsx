@@ -2,16 +2,23 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-const STATUSES = ['pending', 'confirmed', 'cancelled'] as const
+const STATUSES = ['pending', 'confirmed', 'completed', 'cancelled'] as const
 type Status = typeof STATUSES[number]
 
 const COLORS: Record<Status, { bg: string; color: string }> = {
   pending:   { bg: '#FEF3C7', color: '#92400E' },
   confirmed: { bg: '#D1FAE5', color: '#065F46' },
+  completed: { bg: '#DBEAFE', color: '#1E40AF' },
   cancelled: { bg: '#FEE2E2', color: '#991B1B' },
 }
 
-export default function StatusSelect({ orderId, current }: { orderId: string; current: string }) {
+interface Props {
+  orderId: string
+  current: string
+  apiPath: string
+}
+
+export default function StatusSelect({ orderId, current, apiPath }: Props) {
   const initial = STATUSES.includes(current as Status) ? (current as Status) : 'pending'
   const [status, setStatus] = useState<Status>(initial)
   const [open, setOpen] = useState(false)
@@ -20,11 +27,11 @@ export default function StatusSelect({ orderId, current }: { orderId: string; cu
   const router = useRouter()
 
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    function outside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', outside)
+    return () => document.removeEventListener('mousedown', outside)
   }, [])
 
   async function handleSelect(next: Status) {
@@ -32,7 +39,7 @@ export default function StatusSelect({ orderId, current }: { orderId: string; cu
     if (next === status) return
     setSaving(true)
     setStatus(next)
-    await fetch(`/api/admin/orders/${orderId}`, {
+    await fetch(`${apiPath}/${orderId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: next }),
@@ -51,8 +58,7 @@ export default function StatusSelect({ orderId, current }: { orderId: string; cu
           display: 'flex', alignItems: 'center', gap: '5px',
           backgroundColor: c.bg, color: c.color,
           border: 'none', borderRadius: '20px',
-          paddingTop: '4px', paddingBottom: '4px',
-          paddingLeft: '10px', paddingRight: '8px',
+          padding: '4px 8px 4px 10px',
           fontSize: '12px', fontWeight: 600,
           cursor: saving ? 'not-allowed' : 'pointer',
           textTransform: 'capitalize', whiteSpace: 'nowrap',
@@ -70,32 +76,24 @@ export default function StatusSelect({ orderId, current }: { orderId: string; cu
           position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 50,
           background: 'white', borderRadius: '10px',
           boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
-          border: '1px solid #E8E0D5',
-          overflow: 'hidden', minWidth: '120px',
+          border: '1px solid #E8E0D5', overflow: 'hidden', minWidth: '130px',
         }}>
-          {STATUSES.map(s => {
-            const sc = COLORS[s]
-            return (
-              <button
-                key={s}
-                onClick={() => handleSelect(s)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  width: '100%', padding: '8px 12px',
-                  background: s === status ? '#FAF7F2' : 'white',
-                  border: 'none', cursor: 'pointer', textAlign: 'left',
-                  fontSize: '13px', fontWeight: s === status ? 600 : 400,
-                  color: '#1A1714',
-                }}
-              >
-                <span style={{
-                  width: '8px', height: '8px', borderRadius: '50%',
-                  backgroundColor: sc.color, flexShrink: 0,
-                }} />
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </button>
-            )
-          })}
+          {STATUSES.map(s => (
+            <button
+              key={s}
+              onClick={() => handleSelect(s)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                width: '100%', padding: '8px 12px',
+                background: s === status ? '#FAF7F2' : 'white',
+                border: 'none', cursor: 'pointer', textAlign: 'left',
+                fontSize: '13px', fontWeight: s === status ? 600 : 400, color: '#1A1714',
+              }}
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: COLORS[s].color, flexShrink: 0 }} />
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </button>
+          ))}
         </div>
       )}
     </div>

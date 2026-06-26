@@ -16,12 +16,12 @@ export async function PATCH(
 
   const supabase = createServiceClient()
   const { error } = await supabase
-    .from('orders')
+    .from('service_orders')
     .update({ status })
     .eq('id', orderId)
 
   if (error) {
-    console.error('Status update error:', error)
+    console.error('Service order status update error:', error)
     return NextResponse.json({ error: 'Failed to update status' }, { status: 500 })
   }
 
@@ -36,12 +36,12 @@ export async function DELETE(
   const supabase = createServiceClient()
 
   const { error } = await supabase
-    .from('orders')
+    .from('service_orders')
     .delete()
     .eq('id', orderId)
 
   if (error) {
-    console.error('Order delete error:', error)
+    console.error('Service order delete error:', error)
     return NextResponse.json({ error: 'Failed to delete order' }, { status: 500 })
   }
 
