@@ -2,14 +2,20 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function DeleteButton({ orderId, customerName }: { orderId: string; customerName: string }) {
+interface Props {
+  orderId: string
+  customerName: string
+  apiPath: string
+}
+
+export default function DeleteButton({ orderId, customerName, apiPath }: Props) {
   const [confirming, setConfirming] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
 
   async function handleDelete() {
     setDeleting(true)
-    const res = await fetch(`/api/admin/orders/${orderId}`, { method: 'DELETE' })
+    const res = await fetch(`${apiPath}/${orderId}`, { method: 'DELETE' })
     if (res.ok) {
       router.refresh()
     } else {
