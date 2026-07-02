@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import ContactButton from '@/components/landing/ContactButton'
 import { Droplets, Trash2, CheckCircle2, ArrowRight } from 'lucide-react'
+import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: 'Bin Cleaning & Junk Removal in Vancouver',
@@ -57,6 +58,7 @@ export default function OtherServicesPage() {
           <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
 
             {/* Photo */}
+            <FadeIn>
             <div className="relative rounded-3xl overflow-hidden order-last md:order-first" style={{ height: '420px' }}>
               <Image
                 src="/bin-cleaning.jpg"
@@ -66,8 +68,10 @@ export default function OtherServicesPage() {
                 style={{ objectPosition: 'center 65%' }}
               />
             </div>
+            </FadeIn>
 
             {/* Content */}
+            <FadeIn delay={120}>
             <div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#E8F0E6' }}>
                 <Droplets size={22} style={{ color: '#254220' }} />
@@ -92,6 +96,7 @@ export default function OtherServicesPage() {
                 Book Bin Cleaning <ArrowRight size={15} />
               </Link>
             </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -100,6 +105,7 @@ export default function OtherServicesPage() {
           <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
 
             {/* Content */}
+            <FadeIn>
             <div>
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#E8F0E6' }}>
                 <Trash2 size={22} style={{ color: '#254220' }} />
@@ -124,8 +130,10 @@ export default function OtherServicesPage() {
                 Book Junk Removal <ArrowRight size={15} />
               </Link>
             </div>
+            </FadeIn>
 
             {/* Photo */}
+            <FadeIn delay={120}>
             <div className="relative rounded-3xl overflow-hidden" style={{ height: '420px' }}>
               <Image
                 src="/junk-removal.jpg"
@@ -134,6 +142,7 @@ export default function OtherServicesPage() {
                 className="object-cover object-center"
               />
             </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -142,8 +151,9 @@ export default function OtherServicesPage() {
           <div className="flex flex-col md:flex-row gap-6 px-6 py-6 items-stretch" style={{ backgroundColor: '#FAF7F2' }}>
 
             {/* Left: dark green content */}
+            <FadeIn className="md:w-2/5">
             <div
-              className="flex flex-col justify-center px-10 py-16 md:w-2/5 rounded-3xl"
+              className="flex flex-col justify-center px-10 py-16 h-full rounded-3xl"
               style={{ backgroundColor: '#254220' }}
             >
               <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#B5C9B0' }}>
@@ -162,8 +172,11 @@ export default function OtherServicesPage() {
               />
             </div>
 
+            </FadeIn>
+
             {/* Right: truck image */}
-            <div className="md:w-3/5" style={{ backgroundColor: '#FAF7F2' }}>
+            <FadeIn delay={120} className="md:w-3/5">
+            <div style={{ backgroundColor: '#FAF7F2' }}>
               <div className="relative w-full rounded-3xl overflow-hidden" style={{ height: '520px' }}>
                 <Image
                   src="/truck.png"
@@ -174,6 +187,7 @@ export default function OtherServicesPage() {
                 />
               </div>
             </div>
+            </FadeIn>
 
           </div>
         </section>

@@ -66,7 +66,7 @@ export default function ServiceQuoteEditor({ order }: { order: Order }) {
   const router = useRouter()
 
   const year = new Date(order.created_at).getFullYear()
-  const num = String(order.order_number ?? '—').padStart(4, '0')
+  const num = String(order.order_number ?? '-').padStart(4, '0')
   const typeLabel = TYPE_LABELS[order.order_type] ?? order.order_type
   const prefix = order.order_type === 'junk_removal' ? 'JR' : 'BC'
   const orderNum = `${prefix}-${year}-${num}`
@@ -142,7 +142,7 @@ export default function ServiceQuoteEditor({ order }: { order: Order }) {
             ← {typeLabel}
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '15px' }}>Quote — {orderNum}</span>
+          <span style={{ color: 'white', fontWeight: 700, fontSize: '15px' }}>Quote - {orderNum}</span>
         </div>
         {order.estimated_price != null && (
           <a href={`/admin/service-quote/${order.id}/print`} target="_blank" rel="noreferrer"

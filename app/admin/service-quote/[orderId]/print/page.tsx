@@ -199,8 +199,8 @@ export default async function ServicePrintPage({ params }: { params: Promise<{ o
                   <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>2</td>
                   <td style={{ padding: '10px 12px', fontSize: '12px', fontWeight: 700 }}>Additional Charges</td>
                   {!isJunk && <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Additional services or fees</td>}
-                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>
-                  {!isJunk && <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>}
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
+                  {!isJunk && <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>}
                   <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${additionalCharges.toFixed(2)}</td>
                 </tr>
               )}

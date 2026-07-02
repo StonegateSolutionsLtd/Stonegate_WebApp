@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to save request', detail: insertError.message }, { status: 500 })
   }
 
-  // Send email notifications — don't fail the request if email fails
+  // Send email notifications - don't fail the request if email fails
   await Promise.allSettled([
     sendOwnerServiceRequestNotification({ serviceType, address, date, time, customerName, customerEmail, phone, notes: body.notes }),
     sendCustomerServiceRequestConfirmation({ serviceType, address, date, time, customerName, customerEmail, phone }),
