@@ -28,10 +28,6 @@ export const metadata: Metadata = {
     title: 'Stonegate Moving Solutions · Apartment Moving in Vancouver',
     description: 'Professional apartment movers serving all of Metro Vancouver. 2 movers with truck from $73/hr.',
   },
-  icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
-  },
 };
 
 export default function RootLayout({
