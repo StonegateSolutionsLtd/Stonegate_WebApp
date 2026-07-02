@@ -64,7 +64,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
       {/* eslint-disable-next-line react/no-danger */}
       <style dangerouslySetInnerHTML={{ __html: printCss }} />
 
-      {/* Toolbar sits above the document — hidden when printing */}
+      {/* Toolbar sits above the document - hidden when printing */}
       <div className="toolbar">
         <PrintButton />
       </div>
@@ -194,7 +194,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                 </td>
                 <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Travel time to and from locations</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
-                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>
+                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
               </tr>
               <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
@@ -207,7 +207,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                 </td>
                 <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Fuel costs and mileage</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
-                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>
+                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
               </tr>
               {additionalCharges > 0 && (
@@ -217,8 +217,8 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                     <span style={{ fontSize: '12px', fontWeight: 700 }}>Additional Charges</span>
                   </td>
                   <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Additional services or fees</td>
-                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>
-                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>—</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
                   <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${additionalCharges.toFixed(2)}</td>
                 </tr>
               )}

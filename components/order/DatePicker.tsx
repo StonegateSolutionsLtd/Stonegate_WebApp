@@ -83,8 +83,9 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
   }
 
   function isDisabled(day: number) {
-    if (!minDate) return false
-    return new Date(viewYear, viewMonth, day) < minDate
+    if (!min) return false
+    const cellDate = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    return cellDate < min
   }
   function isSelected(day: number) {
     return !!parsed &&

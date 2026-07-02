@@ -37,7 +37,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const router = useRouter()
 
   const year = new Date(order.created_at).getFullYear()
-  const num = String(order.order_number ?? '—').padStart(4, '0')
+  const num = String(order.order_number ?? '-').padStart(4, '0')
   const orderNum = `SG-${year}-${num}`
   const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
 
@@ -94,7 +94,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
             ← Dashboard
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
-          <span className="qe-title" style={{ color: 'white', fontWeight: 700 }}>Quote — {orderNum}</span>
+          <span className="qe-title" style={{ color: 'white', fontWeight: 700 }}>Quote - {orderNum}</span>
         </div>
         {order.estimated_price != null && (
           <a
@@ -220,7 +220,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
               <span>Rate</span><span>${parsedRate.toFixed(2)} / hr</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
-              <span>Hours</span><span>{hours || '—'}</span>
+              <span>Hours</span><span>{hours || '-'}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
               <span>Base ({hours || '0'} × ${parsedRate.toFixed(0)})</span>

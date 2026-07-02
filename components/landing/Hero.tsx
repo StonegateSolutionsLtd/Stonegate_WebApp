@@ -1,17 +1,20 @@
-﻿import Link from 'next/link'
+import { Fragment } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
-import { Droplets, Trash2 } from 'lucide-react'
+import HeroVideo from '@/components/landing/HeroVideo'
+import { Droplets, Trash2, Truck, Shield, Clock, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
+import FadeIn from '@/components/landing/FadeIn'
 
 const logoStyle = {
   filter: 'brightness(0)',
 }
 
 const steps = [
-  { number: '01', title: 'Fill the form', description: 'Tell us your addresses, apartment size, and moving date. Takes under 2 minutes.' },
-  { number: '02', title: 'Review your order', description: 'Look over the details and submit. We handle everything from there.' },
-  { number: '03', title: 'We handle the rest', description: 'Our team shows up on time and moves everything safely to your new home.' },
+  { number: '01', title: 'Request Your Quote', description: 'Tell us about your move or junk removal. Get your free estimate in minutes.', Icon: ClipboardList },
+  { number: '02', title: 'Schedule Your Move', description: 'Choose a time that works for you. We\'ll handle the rest.', Icon: CalendarDays },
+  { number: '03', title: 'We Get The Job Done', description: 'Our professional team shows up on time and gets it done right. You relax, we carry the load.', Icon: Truck },
 ]
 
 
@@ -23,96 +26,195 @@ export default function Hero() {
 
       <main className="flex-1">
 
-        {/* Shared background for hero + how it works */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0">
-            <Image
-              src="/hero.jpg"
-              alt="Elegant living room interior"
-              fill
-              className="object-cover object-center"
-              priority
-            />
+        {/* Hero - full-screen video with text overlay */}
+        <section className="relative" style={{ height: 'calc(100vh - 65px)', overflow: 'hidden' }}>
+
+          {/* Full-screen video */}
+          <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
+            <HeroVideo />
           </div>
 
-        {/* Hero */}
-        <section className="relative" style={{ minHeight: '600px' }}>
+          {/* Left-side darkening gradient */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.45) 20%, transparent 40%)' }} />
 
-          {/* Gradient overlay: solid cream on left, fades to transparent on right */}
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(to right, #FAF7F2dd 0%, #FAF7F2aa 40%, #FAF7F260 65%, transparent 95%)' }}
-          />
-          <div
-            className="absolute inset-x-0 top-0 h-40"
-            style={{ background: 'linear-gradient(to bottom, #FAF7F2 0%, #FAF7F2cc 40%, #FAF7F280 70%, transparent 100%)' }}
-          />
-
-          {/* Content */}
-          <div className="relative max-w-6xl mx-auto px-6 pt-40 pb-16 lg:pt-52 lg:pb-20">
-            <div className="max-w-5xl">
-              <h1
-                className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none"
-                style={{ color: '#1A1714' }}
-              >
-                Moving In Metro Vancouver<br />
-                <span style={{ color: '#254220' }}>Made Effortless.</span>
+          {/* Text - left side, vertically centered */}
+          <div className="relative z-10 h-full flex flex-col justify-center pl-8 sm:pl-16 lg:pl-52" style={{ maxWidth: '680px' }}>
+            <div className="flex flex-col" style={{ marginTop: '-180px' }}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
+                Metro Vancouver
+              </p>
+              <h1 className="font-extrabold uppercase tracking-tight leading-none mb-6" style={{ fontSize: 'clamp(2.8rem, 5vw, 5rem)' }}>
+                <span style={{ color: '#FFFFFF' }}>Moving Made</span><br />
+                <span style={{ color: '#014421' }}>Effortless.</span>
               </h1>
-              <p className="mt-6 text-lg leading-relaxed" style={{ color: '#1A1714' }}>
-                Book your apartment move in minutes. We handle the heavy lifting so you can focus on settling in.
+              <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
+                Professional moving services across Metro Vancouver. No hidden fees, no stress.
               </p>
-              <p className="mt-6 text-sm" style={{ color: '#1A1714' }}>
-                No commitment - we confirm the details and price with you before anything is booked.
-              </p>
-              <Link href="/order" className="mt-4 inline-block">
-                <Button
-                  className="text-base px-10 py-6 rounded-full font-bold border-0"
-                  style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
-                >
-                  Get a quote
-                </Button>
-              </Link>
+
+              {/* Buttons - side by side */}
+              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                <Link href="/order">
+                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2', paddingLeft: '20px', paddingRight: '20px' }}>
+                    <CalendarDays size={15} /> Moving Quote →
+                  </Button>
+                </Link>
+                <Link href="/book-service?type=junk-removal">
+                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: 'transparent', color: '#FAF7F2', border: '2px solid rgba(255,255,255,0.6)', paddingLeft: '20px', paddingRight: '20px' }}>
+                    <Trash2 size={15} /> Junk Removal Quote →
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Trust badges */}
+              <div className="flex flex-row flex-wrap gap-x-6 gap-y-3">
+                {([
+                  { Icon: Shield, label: 'Fully Insured' },
+                  { Icon: Star, label: '5-Star Rated' },
+                  { Icon: Clock, label: 'Same-Day Availability' },
+                  { Icon: DollarSign, label: 'No Hidden Fees' },
+                ] as const).map(({ Icon, label }) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <Icon size={14} style={{ color: 'rgba(255,255,255,0.65)' }} />
+                    <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
+          {/* Serving area bar */}
+          <div className="absolute inset-x-0 z-10 flex items-center justify-center gap-6 px-8" style={{ bottom: '200px', height: '60px' }}>
+            <div className="flex items-center gap-2 shrink-0">
+              <MapPin size={13} style={{ color: '#FFFFFF' }} />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FFFFFF' }}>Serving Metro Vancouver</span>
+            </div>
+            <div className="hidden sm:flex items-center overflow-hidden">
+              {['Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam', 'North Vancouver', 'West Vancouver', '& More'].map((city, i, arr) => (
+                <span key={city} className="flex items-center">
+                  <span className="text-sm font-medium px-3" style={{ color: 'rgba(255,255,255,0.85)' }}>{city}</span>
+                  {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.25)' }}>|</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Solid cream strip - covers watermark */}
+          <div className="absolute bottom-0 inset-x-0" style={{ height: '200px', backgroundColor: '#FAF7F2' }} />
 
         </section>
 
         {/* How it works */}
-        <section className="relative" style={{ backgroundColor: 'transparent' }}>
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, #FAF7F2dd 0%, #FAF7F2aa 40%, #FAF7F260 65%, transparent 95%)' }} />
-          <div className="relative max-w-6xl mx-auto px-6 py-20">
-            <p className="text-sm font-bold uppercase tracking-widest text-center mb-14" style={{ color: '#1A1714' }}>
-              How it works
-            </p>
-            <div className="grid sm:grid-cols-3 gap-10">
-              {steps.map(step => (
-                <div
-                  key={step.number}
-                  className="flex flex-col gap-4 p-6 rounded-2xl"
-                  style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8E0D5' }}
-                >
-                  <span className="text-5xl font-extrabold" style={{ color: '#254220' }}>{step.number}</span>
-                  <h3 className="text-base font-bold" style={{ color: '#1A1714' }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{step.description}</p>
-                </div>
+        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-160px' }}>
+          <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
+                How it works
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-16" style={{ color: '#1A1714' }}>
+                Simple. Transparent. Stress-Free.
+              </h2>
+            </FadeIn>
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              {steps.map((step, i) => (
+                <Fragment key={step.number}>
+                  <FadeIn delay={i * 120} style={{ flex: 1 }}>
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center gap-4">
+                        <span className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0"
+                          style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                          {step.number}
+                        </span>
+                        <div className="w-24 h-24 rounded-2xl flex items-center justify-center"
+                          style={{ backgroundColor: '#EDE8E3' }}>
+                          <step.Icon size={40} strokeWidth={1.5} style={{ color: '#014421' }} />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="font-bold text-lg mb-2" style={{ color: '#1A1714' }}>{step.title}</p>
+                        <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>{step.description}</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                  {i < steps.length - 1 && (
+                    <div className="hidden sm:flex items-center self-start shrink-0" style={{ paddingTop: '30px' }}>
+                      <span style={{ color: 'rgba(0,0,0,0.18)', fontSize: '16px', letterSpacing: '3px' }}>——</span>
+                    </div>
+                  )}
+                </Fragment>
               ))}
             </div>
           </div>
         </section>
 
-        </div>{/* end shared background */}
-
-        {/* Also offering */}
+        {/* Our Services */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl mx-auto px-6 py-14">
-            <p className="text-xs font-bold uppercase tracking-widest mb-8" style={{ color: '#254220' }}>
-              Also offering
-            </p>
-            <div className="grid sm:grid-cols-2 gap-6">
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Our Services</h2>
+            </FadeIn>
+            <div className="grid sm:grid-cols-3 gap-6">
+
+              {/* Moving card */}
+              <FadeIn delay={0} className="flex flex-col">
+              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+                <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
+                  <Image
+                    src="/hero.jpg"
+                    alt="Moving service"
+                    fill
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
+                    <Truck size={18} style={{ color: '#014421' }} />
+                  </span>
+                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Moving</p>
+                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
+                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $73/hr.
+                  </p>
+                  <Link href="/order" className="mt-auto">
+                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                      Book a Move
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              </FadeIn>
+
+              {/* Junk Removal card */}
+              <FadeIn delay={120} className="flex flex-col">
+              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+                <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
+                  <Image
+                    src="/junk-removal.jpg"
+                    alt="Junk removal service"
+                    fill
+                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
+                    <Trash2 size={18} style={{ color: '#014421' }} />
+                  </span>
+                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Junk Removal</p>
+                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
+                    Furniture, appliances, estate and office cleanouts - hauled away responsibly across Metro Vancouver.
+                  </p>
+                  <Link href="/book-service?type=junk-removal" className="mt-auto">
+                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                      Book Junk Removal
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              </FadeIn>
 
               {/* Bin Cleaning card */}
-              <Link href="/other-services" className="group rounded-2xl overflow-hidden transition-opacity hover:opacity-90" style={{ border: '1px solid #E8E0D5' }}>
-                <div className="relative w-full overflow-hidden" style={{ height: '220px' }}>
+              <FadeIn delay={240} className="flex flex-col">
+              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+                <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
                   <Image
                     src="/bin-cleaning.jpg"
                     alt="Bin cleaning service"
@@ -121,41 +223,22 @@ export default function Hero() {
                     style={{ objectPosition: 'center 65%' }}
                   />
                 </div>
-                <div className="p-6 flex items-start gap-4" style={{ backgroundColor: '#FAF7F2' }}>
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#E8F0E6' }}>
-                    <Droplets size={18} style={{ color: '#254220' }} />
+                <div className="p-6 flex flex-col flex-1">
+                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
+                    <Droplets size={18} style={{ color: '#014421' }} />
                   </span>
-                  <div>
-                    <p className="font-bold mb-1" style={{ color: '#1A1714' }}>Bin Cleaning</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>
-                      High-pressure hot water washing with eco-safe disinfectants. Residential and commercial.
-                    </p>
-                  </div>
+                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Bin Cleaning</p>
+                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
+                    High-pressure hot water washing with eco-safe disinfectants. Residential and commercial bins.
+                  </p>
+                  <Link href="/book-service?type=bin-cleaning" className="mt-auto">
+                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                      Book Bin Cleaning
+                    </Button>
+                  </Link>
                 </div>
-              </Link>
-
-              {/* Junk Removal card */}
-              <Link href="/other-services" className="group rounded-2xl overflow-hidden transition-opacity hover:opacity-90" style={{ border: '1px solid #E8E0D5' }}>
-                <div className="relative w-full overflow-hidden" style={{ height: '220px' }}>
-                  <Image
-                    src="/junk-removal.jpg"
-                    alt="Junk removal service"
-                    fill
-                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-6 flex items-start gap-4" style={{ backgroundColor: '#FAF7F2' }}>
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#E8F0E6' }}>
-                    <Trash2 size={18} style={{ color: '#254220' }} />
-                  </span>
-                  <div>
-                    <p className="font-bold mb-1" style={{ color: '#1A1714' }}>Junk Removal</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>
-                      Furniture, appliances, estate and office cleanouts - hauled away responsibly across Metro Vancouver.
-                    </p>
-                  </div>
-                </div>
-              </Link>
+              </div>
+              </FadeIn>
 
             </div>
           </div>
@@ -177,8 +260,9 @@ export default function Hero() {
           </div>
 
           <div className="max-w-6xl mx-auto px-6 py-16 grid sm:grid-cols-2 gap-12">
+            <FadeIn>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>Contact us</p>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>Contact us</p>
               <div className="flex flex-col gap-3">
                 <a href="mailto:orders@stonegatemoving.com" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714' }}>
                   orders@stonegatemoving.com
@@ -188,8 +272,10 @@ export default function Hero() {
                 </a>
               </div>
             </div>
+            </FadeIn>
+            <FadeIn delay={120}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>We operate in Metro Vancouver</p>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>We operate in Metro Vancouver</p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                 {[
                   'Vancouver', 'Burnaby', 'Richmond', 'Coquitlam',
@@ -200,6 +286,7 @@ export default function Hero() {
                 ))}
               </div>
             </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -228,6 +315,3 @@ export default function Hero() {
     </div>
   )
 }
-
-
-

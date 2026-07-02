@@ -38,7 +38,7 @@ export default function ContactButton({ label = 'Contact Us', className, style }
             >
               <X size={18} style={{ color: '#6B5E54' }} />
             </button>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>
               Get in touch
             </p>
             <h2 className="text-2xl font-extrabold mb-8" style={{ color: '#1A1714' }}>
@@ -51,7 +51,7 @@ export default function ContactButton({ label = 'Contact Us', className, style }
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#E8F0E6' }}
                   >
-                    <Phone size={15} style={{ color: '#254220' }} />
+                    <Phone size={15} style={{ color: '#014421' }} />
                   </span>
                   <span className="font-semibold transition-opacity group-hover:opacity-60" style={{ color: '#1A1714' }}>
                     {phone}
@@ -64,7 +64,7 @@ export default function ContactButton({ label = 'Contact Us', className, style }
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: '#E8F0E6' }}
                   >
-                    <Mail size={15} style={{ color: '#254220' }} />
+                    <Mail size={15} style={{ color: '#014421' }} />
                   </span>
                   <span className="font-semibold transition-opacity group-hover:opacity-60" style={{ color: '#1A1714' }}>
                     {CONTACT_EMAIL}

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
 import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucide-react'
+import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: 'Moving Prices in Vancouver · $80/hr',
@@ -33,7 +34,7 @@ const notes = [
   {
     icon: Users,
     title: 'Rate reflects travel distance',
-    body: 'Our flat $80/hr rate applies across all moves within Metro Vancouver — no surprises based on distance.',
+    body: 'Our flat $80/hr rate applies across all moves within Metro Vancouver - no surprises based on distance.',
   },
   {
     icon: Info,
@@ -70,6 +71,7 @@ export default function PricingPage() {
 
         {/* Page header */}
         <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
+          <FadeIn>
           <span
             className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
             style={{ color: '#254220', borderColor: '#B5C9B0' }}
@@ -82,6 +84,7 @@ export default function PricingPage() {
           <p className="text-lg leading-relaxed max-w-xl" style={{ color: '#6B5E54' }}>
             No surprise fees. Just a straightforward hourly rate that covers everything you need for a smooth move.
           </p>
+          </FadeIn>
         </section>
 
         {/* Pricing + notes */}
@@ -89,6 +92,7 @@ export default function PricingPage() {
           <div className="grid md:grid-cols-2 gap-8 items-start">
 
             {/* Pricing card */}
+            <FadeIn>
             <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
               <div className="px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
                 <div className="flex items-center gap-2 mb-8">
@@ -128,12 +132,13 @@ export default function PricingPage() {
                 </Link>
               </div>
             </div>
+            </FadeIn>
 
             {/* Notes */}
             <div className="flex flex-col gap-4">
-              {notes.map(({ icon: Icon, title, body }) => (
+              {notes.map(({ icon: Icon, title, body }, i) => (
+                <FadeIn key={title} delay={i * 100}>
                 <div
-                  key={title}
                   className="rounded-2xl p-6"
                   style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}
                 >
@@ -150,6 +155,7 @@ export default function PricingPage() {
                     </div>
                   </div>
                 </div>
+                </FadeIn>
               ))}
             </div>
           </div>
@@ -164,6 +170,7 @@ export default function PricingPage() {
             <div className="grid md:grid-cols-2 gap-8">
 
               {/* Bin Cleaning */}
+              <FadeIn>
               <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
                 <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
                   <div className="flex items-center gap-2 mb-8">
@@ -201,8 +208,10 @@ export default function PricingPage() {
                   </Link>
                 </div>
               </div>
+              </FadeIn>
 
               {/* Junk Removal */}
+              <FadeIn delay={120}>
               <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
                 <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
                   <div className="flex items-center gap-2 mb-8">
@@ -239,6 +248,7 @@ export default function PricingPage() {
                   </Link>
                 </div>
               </div>
+              </FadeIn>
 
             </div>
           </div>
@@ -251,11 +261,11 @@ export default function PricingPage() {
               Common questions
             </p>
             <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
-              {faqs.map(({ q, a }) => (
-                <div key={q}>
+              {faqs.map(({ q, a }, i) => (
+                <FadeIn key={q} delay={i * 80}>
                   <p className="font-bold mb-2" style={{ color: '#1A1714' }}>{q}</p>
                   <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{a}</p>
-                </div>
+                </FadeIn>
               ))}
             </div>
           </div>
