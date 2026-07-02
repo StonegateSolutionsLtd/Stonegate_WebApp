@@ -45,7 +45,7 @@ export default function Hero() {
               </p>
               <h1 className="font-extrabold uppercase tracking-tight leading-none mb-6" style={{ fontSize: 'clamp(2.8rem, 5vw, 5rem)' }}>
                 <span style={{ color: '#FFFFFF' }}>Moving Made</span><br />
-                <span style={{ color: '#014421' }}>Effortless.</span>
+                <span style={{ color: '#FFFFFF' }}>Effortless.</span>
               </h1>
               <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
                 Professional moving services across Metro Vancouver. No hidden fees, no stress.
