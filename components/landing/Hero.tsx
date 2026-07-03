@@ -43,12 +43,17 @@ export default function Hero() {
               <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
                 Metro Vancouver
               </p>
-              <h1 className="font-extrabold uppercase tracking-tight leading-none mb-6" style={{ fontSize: 'clamp(2.8rem, 5vw, 5rem)' }}>
-                <span style={{ color: '#FFFFFF' }}>Moving Made</span><br />
-                <span style={{ color: '#FFFFFF' }}>Effortless.</span>
+              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-6 w-fit" style={{ fontSize: 'clamp(2.25rem, 8vw, 5rem)' }}>
+                <span style={{ color: '#FFFFFF' }}>Moving</span>
+                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
+                  <span style={{ flex: 0.6, height: '1.5px', backgroundColor: 'rgba(255,255,255,0.35)' }} />
+                  <span className="font-extrabold" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
+                  <span style={{ flex: 1.4, height: '1.5px', backgroundColor: 'rgba(255,255,255,0.35)' }} />
+                </span>
+                <span style={{ color: '#FFFFFF', whiteSpace: 'nowrap' }}>Junk Removal</span>
               </h1>
               <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
-                Professional moving services across Metro Vancouver. No hidden fees, no stress.
+                Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
               </p>
 
               {/* Buttons - side by side */}
@@ -59,7 +64,7 @@ export default function Hero() {
                   </Button>
                 </Link>
                 <Link href="/book-service?type=junk-removal">
-                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: 'transparent', color: '#FAF7F2', border: '2px solid rgba(255,255,255,0.6)', paddingLeft: '20px', paddingRight: '20px' }}>
+                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421', paddingLeft: '20px', paddingRight: '20px' }}>
                     <Trash2 size={15} /> Junk Removal Quote →
                   </Button>
                 </Link>
