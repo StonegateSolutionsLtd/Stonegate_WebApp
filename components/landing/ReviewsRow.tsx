@@ -17,7 +17,7 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
   const arrowStyle: React.CSSProperties = {
     width: '40px', height: '40px', borderRadius: '50%',
     backgroundColor: '#FAF7F2', border: '1px solid #E8E0D5',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    alignItems: 'center', justifyContent: 'center',
     cursor: 'pointer', flexShrink: 0, color: '#014421',
   }
 
@@ -26,7 +26,7 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
       <style>{`
         .reviews-row::-webkit-scrollbar { display: none; }
       `}</style>
-      <button onClick={() => scroll('left')} aria-label="Scroll reviews left" style={arrowStyle}>
+      <button onClick={() => scroll('left')} aria-label="Scroll reviews left" className="hidden sm:flex" style={arrowStyle}>
         <ChevronLeft size={20} />
       </button>
 
@@ -38,8 +38,8 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
         {reviews.map(review => (
           <div
             key={review.name}
-            className="flex flex-col shrink-0 p-6 rounded-2xl"
-            style={{ border: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', width: '300px', scrollSnapAlign: 'start' }}
+            className="flex flex-col shrink-0 p-6 rounded-2xl w-[85vw] sm:w-[300px]"
+            style={{ border: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', maxWidth: '300px', scrollSnapAlign: 'start' }}
           >
             <div className="flex items-center gap-3 mb-3">
               <span
@@ -60,7 +60,7 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
         ))}
       </div>
 
-      <button onClick={() => scroll('right')} aria-label="Scroll reviews right" style={arrowStyle}>
+      <button onClick={() => scroll('right')} aria-label="Scroll reviews right" className="hidden sm:flex" style={arrowStyle}>
         <ChevronRight size={20} />
       </button>
     </div>
