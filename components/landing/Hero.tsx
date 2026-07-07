@@ -16,14 +16,6 @@ const steps = [
 
 const reviews = [
   {
-    name: 'Ksusha Martynova',
-    text: "Needed some old furniture and random junk hauled away, and these guys did an awesome job. They were courteous, worked fast, and had everything loaded up in no time. The price was better than I expected, especially for how much they took. I'll definitely be calling them again the next time I need junk removed.",
-  },
-  {
-    name: 'Aizhan Tabyldiyeva',
-    text: 'Excellent junk removal service! The team was professional, punctual, and worked quickly. Their pricing was very fair and offered great value for the quality of service. They cleared everything out efficiently, and made the whole process easy and stress-free. Highly recommend!!',
-  },
-  {
     name: 'Fady Nasr',
     text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
   },
@@ -32,16 +24,24 @@ const reviews = [
     text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than…',
   },
   {
-    name: 'Albert Go',
-    text: 'I had a great experience with Stonegate Moving Solutions for junk removal. They responded quickly, arrived on time, and cleared everything out much faster than I expected. The crew was friendly, professional, and handled everything…',
+    name: 'Amirali Nasrinpay',
+    text: 'The stonegate solution is the best moving company in the whole of Vancouver. They came on time picked my items and safely put them to the other location i needed them to it. They have one of the strongest times in Vancouver, very respect…',
   },
   {
     name: 'Aryan Kapoor',
     text: 'Really happy with the service. The guys were on time, worked quickly, and took good care of my stuff. The whole move went smoothly and they made the process a lot less stressful. Would definitely use them again!',
   },
   {
-    name: 'Amirali Nasrinpay',
-    text: 'The stonegate solution is the best moving company in the whole of Vancouver. They came on time picked my items and safely put them to the other location i needed them to it. They have one of the strongest times in Vancouver, very respect…',
+    name: 'Aizhan Tabyldiyeva',
+    text: 'Excellent junk removal service! The team was professional, punctual, and worked quickly. Their pricing was very fair and offered great value for the quality of service. They cleared everything out efficiently, and made the whole process easy and stress-free. Highly recommend!!',
+  },
+  {
+    name: 'Albert Go',
+    text: 'I had a great experience with Stonegate Moving Solutions for junk removal. They responded quickly, arrived on time, and cleared everything out much faster than I expected. The crew was friendly, professional, and handled everything…',
+  },
+  {
+    name: 'Ksusha Martynova',
+    text: "Needed some old furniture and random junk hauled away, and these guys did an awesome job. They were courteous, worked fast, and had everything loaded up in no time. The price was better than I expected, especially for how much they took. I'll definitely be calling them again the next time I need junk removed.",
   },
 ]
 
