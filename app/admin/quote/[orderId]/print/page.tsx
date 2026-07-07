@@ -74,7 +74,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10mm' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sg-logo.png" alt="SG" style={{ height: '68px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/logo.png" alt="SG" style={{ height: '68px', width: 'auto', objectFit: 'contain' }} />
             <div style={{ borderLeft: '1.5px solid #ccc', paddingLeft: '14px' }}>
               <div style={{ fontSize: '19px', fontWeight: 800, color: G, letterSpacing: '2px', lineHeight: 1 }}>STONEGATE</div>
               <div style={{ fontSize: '13px', fontWeight: 700, color: G, letterSpacing: '3px', marginTop: '2px' }}>MOVING SOLUTIONS</div>

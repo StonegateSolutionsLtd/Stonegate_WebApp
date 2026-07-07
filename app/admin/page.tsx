@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FAF7F2' }}>
       <div style={{ background: 'white', padding: '48px', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <Image src="/sg-logo.png" alt="Stonegate" width={80} height={80} style={{ objectFit: 'contain', marginBottom: '16px' }} />
+          <Image src="/logo.png" alt="Stonegate" width={80} height={80} style={{ objectFit: 'contain', marginBottom: '16px' }} />
           <h1 style={{ color: '#254220', fontSize: '20px', fontWeight: 700, margin: 0 }}>Admin Access</h1>
           <p style={{ color: '#9A8E83', fontSize: '14px', margin: '8px 0 0' }}>Stonegate Moving Solutions</p>
         </div>

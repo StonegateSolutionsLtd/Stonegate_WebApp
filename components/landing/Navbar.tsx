@@ -22,7 +22,7 @@ export default function Navbar() {
 
           {/* Brand - left */}
           <Link href="/" className="hidden md:flex shrink-0 items-center gap-3">
-            <Image src="/sg-logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover" />
+            <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover" />
             <span className="font-extrabold text-lg tracking-tight lg:text-xl" style={{ color: '#1A1714' }}>
               Stonegate Moving Solutions
             </span>
