@@ -6,11 +6,43 @@ import Navbar from '@/components/landing/Navbar'
 import HeroVideo from '@/components/landing/HeroVideo'
 import { Droplets, Trash2, Truck, Shield, Clock, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
+import ReviewsRow from '@/components/landing/ReviewsRow'
 
 const steps = [
   { number: '01', title: 'Request Your Quote', description: 'Tell us about your move or junk removal. Get your free estimate in minutes.', Icon: ClipboardList },
   { number: '02', title: 'Schedule Your Move', description: 'Choose a time that works for you. We\'ll handle the rest.', Icon: CalendarDays },
   { number: '03', title: 'We Get The Job Done', description: 'Our professional team shows up on time and gets it done right. You relax, we carry the load.', Icon: Truck },
+]
+
+const reviews = [
+  {
+    name: 'Ksusha Martynova',
+    text: "Needed some old furniture and random junk hauled away, and these guys did an awesome job. They were courteous, worked fast, and had everything loaded up in no time. The price was better than I expected, especially for how much they took. I'll definitely be calling them again the next time I need junk removed.",
+  },
+  {
+    name: 'Aizhan Tabyldiyeva',
+    text: 'Excellent junk removal service! The team was professional, punctual, and worked quickly. Their pricing was very fair and offered great value for the quality of service. They cleared everything out efficiently, and made the whole process easy and stress-free. Highly recommend!!',
+  },
+  {
+    name: 'Fady Nasr',
+    text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
+  },
+  {
+    name: 'Le Cao Huy',
+    text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than…',
+  },
+  {
+    name: 'Albert Go',
+    text: 'I had a great experience with Stonegate Moving Solutions for junk removal. They responded quickly, arrived on time, and cleared everything out much faster than I expected. The crew was friendly, professional, and handled everything…',
+  },
+  {
+    name: 'Aryan Kapoor',
+    text: 'Really happy with the service. The guys were on time, worked quickly, and took good care of my stuff. The whole move went smoothly and they made the process a lot less stressful. Would definitely use them again!',
+  },
+  {
+    name: 'Amirali Nasrinpay',
+    text: 'The stonegate solution is the best moving company in the whole of Vancouver. They came on time picked my items and safely put them to the other location i needed them to it. They have one of the strongest times in Vancouver, very respect…',
+  },
 ]
 
 
@@ -143,6 +175,43 @@ export default function Hero() {
                   )}
                 </Fragment>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Reviews */}
+        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
+                Reviews
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-4" style={{ color: '#1A1714' }}>
+                What Our Customers Say
+              </h2>
+              <div className="flex items-center justify-center gap-2 mb-14">
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
+                  ))}
+                </div>
+                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>5.0 from Google reviews</span>
+              </div>
+            </FadeIn>
+
+            <ReviewsRow reviews={reviews} />
+
+            <div className="text-center">
+              <a
+                href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2"
+              >
+                <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                  Read More Reviews on Google →
+                </Button>
+              </a>
             </div>
           </div>
         </section>
