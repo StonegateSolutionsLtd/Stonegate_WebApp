@@ -3,7 +3,7 @@ import Hero from '@/components/landing/Hero'
 
 export const metadata: Metadata = {
   title: { absolute: 'Apartment Moving Service in Vancouver & Metro Area | Stonegate Moving Solutions' },
-  description: 'Top-rated apartment moving company in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. 2 professional movers with truck from $73/hr. Also offering bin cleaning and junk removal.',
+  description: 'Top-rated apartment moving company in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. 2 professional movers with truck from $90/hr. Also offering bin cleaning and junk removal.',
   alternates: {
     canonical: 'https://www.stonegatemoving.com',
   },

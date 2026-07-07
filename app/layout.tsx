@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: 'Stonegate Moving Solutions · Apartment Moving in Vancouver',
     template: '%s · Stonegate Moving Solutions',
   },
-  description: 'Professional apartment moving company serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. 2 movers with truck from $73/hr. Book online in minutes.',
+  description: 'Professional apartment moving company serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. 2 movers with truck from $90/hr. Book online in minutes.',
   keywords: [
     'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://www.stonegatemoving.com',
     siteName: 'Stonegate Moving Solutions',
     title: 'Stonegate Moving Solutions · Apartment Moving in Vancouver',
-    description: 'Professional apartment movers serving all of Metro Vancouver. 2 movers with truck from $73/hr.',
+    description: 'Professional apartment movers serving all of Metro Vancouver. 2 movers with truck from $90/hr.',
   },
   robots: {
     index: true,

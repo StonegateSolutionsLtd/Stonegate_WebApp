@@ -7,10 +7,6 @@ import HeroVideo from '@/components/landing/HeroVideo'
 import { Droplets, Trash2, Truck, Shield, Clock, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 
-const logoStyle = {
-  filter: 'brightness(0)',
-}
-
 const steps = [
   { number: '01', title: 'Request Your Quote', description: 'Tell us about your move or junk removal. Get your free estimate in minutes.', Icon: ClipboardList },
   { number: '02', title: 'Schedule Your Move', description: 'Choose a time that works for you. We\'ll handle the rest.', Icon: CalendarDays },
@@ -177,7 +173,7 @@ export default function Hero() {
                   </span>
                   <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Moving</p>
                   <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $73/hr.
+                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $90/hr.
                   </p>
                   <Link href="/order" className="mt-auto">
                     <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
@@ -312,7 +308,7 @@ export default function Hero() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
         <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col items-center gap-4">
-          <Image src="/logo.png" alt="Stonegate logo" width={220} height={220} style={logoStyle} />
+          <Image src="/logo.png" alt="Stonegate logo" width={220} height={220} />
           <span className="font-extrabold text-xl tracking-tight" style={{ color: '#1A1714' }}>Stonegate Moving Solutions</span>
           <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
         </div>
