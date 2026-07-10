@@ -66,7 +66,8 @@ export default function ServiceForm() {
         body: JSON.stringify({ serviceType, ...form }),
       })
       if (!res.ok) throw new Error()
-      router.push('/book-service/success')
+      const { orderId } = await res.json()
+      router.push(`/book-service/success?id=${orderId}`)
     } catch {
       setErrors({ form: 'Something went wrong. Please try again.' })
       setSubmitting(false)

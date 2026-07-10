@@ -1,12 +1,20 @@
 ﻿import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import PageCanvas from '@/components/PageCanvas'
+import ConversionEvent from '@/components/ConversionEvent'
 
 export const metadata = { title: 'Quote Request Received - Stonegate Moving Solutions' }
 
-export default function SuccessPage() {
+export default async function SuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>
+}) {
+  const { id } = await searchParams
+
   return (
     <PageCanvas backHref="/" backLabel="← Home">
+      {id && <ConversionEvent transactionId={id} />}
       <div className="max-w-md mx-auto pt-16 text-center">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"
