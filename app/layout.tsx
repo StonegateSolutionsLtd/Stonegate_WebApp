@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const raleway = Raleway({
@@ -43,6 +44,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${raleway.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-[family-name:var(--font-raleway)]">{children}</body>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=AW-18221842465"
+        strategy="afterInteractive"
+      />
+      <Script id="google-tag" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-18221842465');
+        `}
+      </Script>
     </html>
   );
 }
