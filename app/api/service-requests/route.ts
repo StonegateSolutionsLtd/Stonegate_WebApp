@@ -27,21 +27,25 @@ export async function POST(request: NextRequest) {
 
   // Save to database
   const supabase = createServiceClient()
-  const { error: insertError } = await supabase.from('service_orders').insert({
-    order_type: orderType,
-    customer_name: customerName,
-    customer_email: customerEmail,
-    phone,
-    address,
-    service_date: date,
-    service_time: time,
-    notes: body.notes || null,
-    status: 'pending',
-  })
+  const { data: serviceOrder, error: insertError } = await supabase
+    .from('service_orders')
+    .insert({
+      order_type: orderType,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      phone,
+      address,
+      service_date: date,
+      service_time: time,
+      notes: body.notes || null,
+      status: 'pending',
+    })
+    .select('id')
+    .single()
 
-  if (insertError) {
+  if (insertError || !serviceOrder) {
     console.error('Service order insert error:', JSON.stringify(insertError))
-    return NextResponse.json({ error: 'Failed to save request', detail: insertError.message }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save request', detail: insertError?.message }, { status: 500 })
   }
 
   // Send email notifications - don't fail the request if email fails
@@ -50,5 +54,5 @@ export async function POST(request: NextRequest) {
     sendCustomerServiceRequestConfirmation({ serviceType, address, date, time, customerName, customerEmail, phone }),
   ])
 
-  return NextResponse.json({ success: true }, { status: 201 })
+  return NextResponse.json({ orderId: serviceOrder.id }, { status: 201 })
 }

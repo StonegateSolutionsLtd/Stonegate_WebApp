@@ -3,14 +3,22 @@ import Link from 'next/link'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2 } from 'lucide-react'
+import ConversionEvent from '@/components/ConversionEvent'
 
 export const metadata: Metadata = {
   title: 'Request Sent · Stonegate Moving Solutions',
 }
 
-export default function ServiceSuccessPage() {
+export default async function ServiceSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>
+}) {
+  const { id } = await searchParams
+
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+      {id && <ConversionEvent transactionId={id} />}
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-6">
         <div className="max-w-md w-full text-center py-20">
