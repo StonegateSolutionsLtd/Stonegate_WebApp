@@ -27,7 +27,7 @@ const APARTMENT_SIZES = [
   { value: '4br+',   label: '4+ BR'  },
 ]
 
-const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
+const TIME_SLOTS = Array.from({ length: 33 }, (_, i) => {
   const total = 6 * 60 + i * 30
   const h = Math.floor(total / 60)
   const m = total % 60

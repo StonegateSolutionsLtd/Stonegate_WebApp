@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation'
 const NAV = [
   { label: 'Moving Orders', href: '/admin/dashboard', icon: '🚛' },
   { label: 'Junk Removal', href: '/admin/junk-removal', icon: '🗑️' },
-  { label: 'Bin Cleaning', href: '/admin/bin-cleaning', icon: '🧹' },
 ]
 
 export default function AdminSidebar() {

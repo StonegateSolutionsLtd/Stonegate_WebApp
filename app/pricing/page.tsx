@@ -1,8 +1,9 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
-import { Users, Clock, Truck, Info, CheckCircle2, Droplets, Trash2 } from 'lucide-react'
+import { Users, Clock, Truck, Info, CheckCircle2, Trash2 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
@@ -20,13 +21,16 @@ const included = [
   'No fuel surcharge, no hidden fees',
 ]
 
+// Truck bed: 16ft (L) x 7.5ft (W) x 6.5ft (H) = 780 ft³ full load
+const TRUCK_CUBIC_FT = 16 * 7.5 * 6.5
+
 const junkTiers = [
   { name: '1/8 Truck', desc: 'A few small items', price: 99, fraction: 0.125 },
   { name: '1/4 Truck', desc: 'Small room worth', price: 175, fraction: 0.25 },
   { name: '1/2 Truck', desc: 'One-two rooms', price: 275, fraction: 0.5 },
   { name: '3/4 Truck', desc: 'Large haul', price: 375, fraction: 0.75 },
   { name: 'Full Truck', desc: 'Complete cleanout', price: 475, fraction: 1 },
-]
+].map(tier => ({ ...tier, cubicFeet: TRUCK_CUBIC_FT * tier.fraction }))
 
 const notes = [
   {
@@ -95,7 +99,7 @@ export default function PricingPage() {
           </FadeIn>
         </section>
 
-        {/* Junk Removal + Moving pricing - equal priority, junk removal shown first */}
+        {/* Junk Removal pricing + truck size */}
         <section id="pricing-cards" className="max-w-6xl mx-auto px-6 pb-12">
           <div className="grid md:grid-cols-2 gap-8 items-stretch">
 
@@ -142,7 +146,7 @@ export default function PricingPage() {
                       <div className="flex items-center justify-between gap-3 mb-2.5">
                         <div>
                           <p className="text-sm font-bold" style={{ color: '#1A1714' }}>{tier.name}</p>
-                          <p className="text-xs" style={{ color: '#9A8E83' }}>{tier.desc}</p>
+                          <p className="text-xs" style={{ color: '#9A8E83' }}>{tier.desc} · {tier.cubicFeet} ft³</p>
                         </div>
                         <span className="text-lg font-extrabold flex-shrink-0" style={{ color: '#1A1714' }}>${tier.price}</span>
                       </div>
@@ -167,11 +171,34 @@ export default function PricingPage() {
             </div>
             </FadeIn>
 
+            {/* Truck size reference */}
+            <FadeIn delay={60} className="h-full min-w-0">
+            <div className="h-full flex flex-col items-center justify-center overflow-hidden min-[1400px]:overflow-visible">
+              <div className="relative w-full ml-0 min-[1400px]:w-[130%] min-[1400px]:ml-[70%]" style={{ aspectRatio: '1536 / 1024' }}>
+                <Image
+                  src="/truck-dimensions.jpg"
+                  alt="Stonegate truck dimensions: 16 feet long, 7.5 feet wide, 6.5 feet tall"
+                  fill
+                  className="object-contain"
+                  style={{ mixBlendMode: 'multiply' }}
+                />
+              </div>
+              <p className="text-sm text-center mt-6" style={{ color: '#9A8E83' }}>
+                Our truck bed: 16ft × 7.5ft × 6.5ft ({TRUCK_CUBIC_FT} ft³ full load)
+              </p>
+            </div>
+            </FadeIn>
+
+          </div>
+        </section>
+
+        {/* Moving pricing */}
+        <section className="max-w-3xl mx-auto px-6 pb-12">
             {/* Moving pricing card */}
-            <FadeIn delay={100} className="h-full">
+            <FadeIn delay={100}>
             <div
               id="moving-pricing"
-              className="rounded-3xl overflow-hidden h-full flex flex-col transition-transform duration-300 hover:-translate-y-1"
+              className="rounded-3xl overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-1"
               style={{ border: '1px solid #E8E0D5', boxShadow: '0 2px 12px rgba(37,66,32,0.06)', scrollMarginTop: '16px' }}
             >
               <div className="relative overflow-hidden px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
@@ -219,8 +246,6 @@ export default function PricingPage() {
               </div>
             </div>
             </FadeIn>
-
-          </div>
         </section>
 
         {/* Notes about the hourly moving rate */}
@@ -250,59 +275,6 @@ export default function PricingPage() {
               </div>
               </FadeIn>
             ))}
-          </div>
-        </section>
-
-        {/* Other services */}
-        <section style={{ borderTop: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16">
-            <p className="text-sm font-bold uppercase tracking-widest mb-10" style={{ color: '#1A1714' }}>
-              Other services
-            </p>
-            <div className="max-w-md">
-
-              {/* Bin Cleaning */}
-              <FadeIn>
-              <div className="rounded-3xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-                <div className="px-8 pt-10 pb-8" style={{ backgroundColor: '#254220' }}>
-                  <div className="flex items-center gap-2 mb-8">
-                    <span
-                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-                      style={{ color: '#B5C9B0', borderColor: '#254220' }}
-                    >
-                      <Droplets size={13} />
-                      Bin Cleaning
-                    </span>
-                  </div>
-                  <div className="flex items-end gap-2 mb-1">
-                    <span className="text-4xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>Starting at</span>
-                  </div>
-                  <div className="flex items-end gap-2 mt-2 mb-1">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$35</span>
-                    <span className="text-xl font-bold mb-1" style={{ color: '#B5C9B0' }}>/ house</span>
-                  </div>
-                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · discounts for multiple houses</span>
-                </div>
-                <div className="px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
-                    What&apos;s included
-                  </p>
-                  <ul className="flex flex-col gap-4 mb-8">
-                    {['High-pressure hot water washing', 'Eco-friendly disinfectants', 'Interior & exterior cleaning', 'Odor and bacteria elimination'].map(item => (
-                      <li key={item} className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
-                        <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/book-service?type=bin-cleaning" className="block w-full rounded-full py-3.5 text-sm font-bold text-center transition-opacity hover:opacity-90" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
-                    Book Bin Cleaning
-                  </Link>
-                </div>
-              </div>
-              </FadeIn>
-
-            </div>
           </div>
         </section>
 

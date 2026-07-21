@@ -8,7 +8,7 @@ import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: 'About Us | Stonegate Moving Solutions',
-  description: 'Meet the Stonegate Moving Solutions team - professional movers serving Metro Vancouver with moving, junk removal, and bin cleaning services.',
+  description: 'Meet the Stonegate Moving Solutions team - professional movers serving Metro Vancouver with moving and junk removal services.',
 }
 
 const values = [
@@ -88,7 +88,7 @@ export default function AboutPage() {
                   We&apos;re a young, driven team based right here in Metro Vancouver. Every job we take on gets our full attention and effort, whether it&apos;s a studio apartment move across town or a full house cleanout.
                 </p>
                 <p>
-                  Over time we expanded into junk removal and bin cleaning - because the same values that make a great move also make every other home service better: showing up on time, working hard, and leaving the place better than we found it.
+                  Over time we expanded into junk removal - because the same values that make a great move also make every other home service better: showing up on time, working hard, and leaving the place better than we found it.
                 </p>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function AboutPage() {
               Ready to work with us?
             </h2>
             <p className="text-lg mb-10 max-w-lg mx-auto" style={{ color: '#6B5E54' }}>
-              Book a move, schedule junk removal, or get your bins cleaned - we&apos;ve got you covered.
+              Book a move or schedule junk removal - we&apos;ve got you covered.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/order">
@@ -202,11 +202,6 @@ export default function AboutPage() {
               <Link href="/book-service?type=junk-removal">
                 <Button className="text-base px-10 py-6 rounded-full font-bold" style={{ backgroundColor: 'transparent', color: '#254220', border: '2px solid #254220' }}>
                   Junk Removal
-                </Button>
-              </Link>
-              <Link href="/book-service?type=bin-cleaning">
-                <Button className="text-base px-10 py-6 rounded-full font-bold" style={{ backgroundColor: 'transparent', color: '#254220', border: '2px solid #254220' }}>
-                  Bin Cleaning
                 </Button>
               </Link>
             </div>

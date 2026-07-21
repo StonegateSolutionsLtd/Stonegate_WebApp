@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const TIMES = Array.from({ length: 20 }, (_, i) => {
+const TIMES = Array.from({ length: 33 }, (_, i) => {
   const totalMins = 6 * 60 + i * 30
   const h = Math.floor(totalMins / 60)
   const m = totalMins % 60
@@ -18,11 +18,10 @@ const EMPTY = {
 
 const TYPE_LABELS: Record<string, string> = {
   junk_removal: 'Junk Removal',
-  bin_cleaning: 'Bin Cleaning',
 }
 
 interface Props {
-  orderType: 'junk_removal' | 'bin_cleaning'
+  orderType: 'junk_removal'
 }
 
 export default function AddServiceOrderModal({ orderType }: Props) {

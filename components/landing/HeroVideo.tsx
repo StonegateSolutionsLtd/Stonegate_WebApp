@@ -8,6 +8,7 @@ const mediaStyle = {
   width: '100%',
   objectFit: 'cover' as const,
   transform: 'translateY(-8%)',
+  filter: 'brightness(1.35)',
 }
 
 const LOOP_DELAY_MS = 10000
@@ -56,7 +57,7 @@ export default function HeroVideo() {
         fill
         priority
         className="object-cover"
-        style={{ transform: 'translateY(-8%)' }}
+        style={{ transform: 'translateY(-8%)', filter: 'brightness(1.35)' }}
       />
     )
   }

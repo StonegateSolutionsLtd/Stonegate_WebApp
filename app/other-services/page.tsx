@@ -3,22 +3,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import ContactButton from '@/components/landing/ContactButton'
-import { Droplets, Trash2, CheckCircle2, ArrowRight } from 'lucide-react'
+import { Trash2, CheckCircle2, ArrowRight } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
-  title: 'Bin Cleaning & Junk Removal in Vancouver',
-  description: 'Professional bin cleaning and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. Residential and commercial. Book online.',
+  title: 'Junk Removal in Vancouver',
+  description: 'Professional junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. Residential and commercial. Book online.',
   alternates: { canonical: 'https://www.stonegatemoving.com/other-services' },
 }
-
-const binFeatures = [
-  'High-pressure hot water washing',
-  'Eco-friendly, non-toxic disinfectants',
-  'Eliminates odors, bacteria, and mold',
-  'Interior and exterior cleaning',
-  'Available for residential buildings and strata',
-]
 
 const junkFeatures = [
   'Old furniture and mattresses',
@@ -38,65 +30,18 @@ export default function OtherServicesPage() {
         {/* Hero */}
         <section className="relative overflow-hidden" style={{ backgroundColor: '#254220', minHeight: '340px' }}>
           <div className="absolute inset-0 opacity-20">
-            <Image src="/bin-cleaning.jpg" alt="" fill className="object-cover object-center" priority />
+            <Image src="/junk-removal.jpg" alt="" fill className="object-cover object-center" priority />
           </div>
           <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-20">
             <span className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5" style={{ color: '#B5C9B0', borderColor: '#3d6b35' }}>
               Beyond moving
             </span>
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#FAF7F2' }}>
-              Bin Cleaning &<br />Junk Removal
+              Junk Removal
             </h1>
             <p className="text-lg leading-relaxed max-w-xl" style={{ color: '#B5C9B0' }}>
-              We go beyond moving day. Keep your home clean and clutter-free with professional services across Metro Vancouver.
+              We go beyond moving day. Keep your home clean and clutter-free with professional junk removal across Metro Vancouver.
             </p>
-          </div>
-        </section>
-
-        {/* Bin Cleaning */}
-        <section style={{ borderBottom: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
-
-            {/* Photo */}
-            <FadeIn>
-            <div className="relative rounded-3xl overflow-hidden order-last md:order-first" style={{ height: '420px' }}>
-              <Image
-                src="/bin-cleaning.jpg"
-                alt="Bin cleaning service"
-                fill
-                className="object-cover"
-                style={{ objectPosition: 'center 65%' }}
-              />
-            </div>
-            </FadeIn>
-
-            {/* Content */}
-            <FadeIn delay={120}>
-            <div>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#E8F0E6' }}>
-                <Droplets size={22} style={{ color: '#254220' }} />
-              </div>
-              <h2 className="text-4xl font-extrabold mb-4" style={{ color: '#1A1714' }}>Bin Cleaning</h2>
-              <p className="text-base leading-relaxed mb-8" style={{ color: '#6B5E54' }}>
-                Your garbage bins harbour bacteria, mold, and stubborn odors that household cleaning can&apos;t reach. We solve that with high-pressure hot water and eco-safe disinfectants - leaving your bins hygienically clean and smelling fresh. Available for homes, apartments, and strata complexes.
-              </p>
-              <ul className="flex flex-col gap-3 mb-8">
-                {binFeatures.map(f => (
-                  <li key={f} className="flex items-center gap-3">
-                    <CheckCircle2 size={16} className="flex-shrink-0" style={{ color: '#254220' }} />
-                    <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/book-service?type=bin-cleaning"
-                className="inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-bold transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
-              >
-                Book Bin Cleaning <ArrowRight size={15} />
-              </Link>
-            </div>
-            </FadeIn>
           </div>
         </section>
 

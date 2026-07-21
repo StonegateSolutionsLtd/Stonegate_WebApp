@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { X, Phone, Mail, Menu, Truck, Trash2, Droplets } from 'lucide-react'
+import { X, Phone, Mail, Menu, Truck, Trash2 } from 'lucide-react'
 import { CONTACT_PHONES, CONTACT_EMAIL } from '@/lib/contact'
 
 export default function Navbar() {
@@ -36,7 +36,7 @@ export default function Navbar() {
               </Link>
             )}
             <Link href="/other-services" className="text-base font-extrabold transition-all duration-200 hover:opacity-50 hover:scale-110" style={{ color: '#1A1714' }}>
-              Bin & Junk Removal
+              Junk Removal
             </Link>
             <Link href="/pricing" className="text-base font-extrabold transition-all duration-200 hover:opacity-50 hover:scale-110" style={{ color: '#1A1714' }}>
               Pricing
@@ -91,7 +91,7 @@ export default function Navbar() {
                 </Link>
               )}
               <Link href="/other-services" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
-                Bin & Junk Removal
+                Junk Removal
               </Link>
               <Link href="/pricing" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 Pricing
@@ -165,20 +165,6 @@ export default function Navbar() {
                 <div>
                   <p className="font-bold text-sm" style={{ color: '#1A1714' }}>Junk Removal</p>
                   <p className="text-xs" style={{ color: '#9A8E83' }}>Furniture, appliances & estate cleanouts</p>
-                </div>
-              </Link>
-              <Link
-                href="/book-service?type=bin-cleaning"
-                onClick={() => setQuoteOpen(false)}
-                className="flex items-center gap-4 p-4 rounded-xl border transition-colors hover:border-[#014421] group"
-                style={{ border: '1.5px solid #E8E0D5', textDecoration: 'none' }}
-              >
-                <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E8F0E6' }}>
-                  <Droplets size={18} style={{ color: '#014421' }} />
-                </span>
-                <div>
-                  <p className="font-bold text-sm" style={{ color: '#1A1714' }}>Bin Cleaning</p>
-                  <p className="text-xs" style={{ color: '#9A8E83' }}>High-pressure hot water washing for your bins</p>
                 </div>
               </Link>
             </div>

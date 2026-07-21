@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
+import type { DetailedQuoteInputs } from '@/lib/quote-pricing'
+import { useDetailedQuoteState } from '@/components/admin/useDetailedQuoteState'
+import { DetailedQuoteForm } from '@/components/admin/DetailedQuoteForm'
 
 interface Order {
   id: string
@@ -25,13 +28,21 @@ interface Order {
   estimated_hours: number | null
   additional_fees: number | null
   estimated_price: number | null
+  quote_type: string | null
+  quote_details: { inputs: DetailedQuoteInputs } | null
   created_at: string
 }
 
 export default function QuoteEditor({ order }: { order: Order }) {
+  const [tab, setTab] = useState<'standard' | 'detailed'>(order.quote_type === 'detailed' ? 'detailed' : 'standard')
+
   const [rate, setRate] = useState(order.hourly_rate?.toString() ?? '80')
   const [hours, setHours] = useState(order.estimated_hours?.toString() ?? '')
   const [fees, setFees] = useState(order.additional_fees?.toString() ?? '0')
+
+  const { inputs: detailedInputs, result: detailedResult, formProps: detailedFormProps } =
+    useDetailedQuoteState(order.quote_details?.inputs)
+
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -47,22 +58,40 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const total = Math.round((parsedRate * parsedHours + parsedFees) * 100) / 100
 
   async function handleSaveAndPrint() {
-    const r = parseFloat(rate)
-    const h = parseFloat(hours)
-    const f = parseFloat(fees)
-    if (isNaN(r) || r <= 0) { setError('Enter a valid hourly rate'); return }
-    if (isNaN(h) || h <= 0) { setError('Enter valid hours'); return }
-    if (isNaN(f) || f < 0) { setError('Additional fees cannot be negative'); return }
-
-    setSaving(true)
     setError('')
 
+    if (tab === 'standard') {
+      const r = parseFloat(rate)
+      const h = parseFloat(hours)
+      const f = parseFloat(fees)
+      if (isNaN(r) || r <= 0) { setError('Enter a valid hourly rate'); return }
+      if (isNaN(h) || h <= 0) { setError('Enter valid hours'); return }
+      if (isNaN(f) || f < 0) { setError('Additional fees cannot be negative'); return }
+
+      setSaving(true)
+      const res = await fetch(`/api/admin/quote/${order.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quote_type: 'standard', hourly_rate: r, estimated_hours: h, additional_fees: f }),
+      })
+      if (res.ok) {
+        router.refresh()
+        window.open(`/admin/quote/${order.id}/print`, '_blank')
+      } else {
+        setError('Failed to save. Try again.')
+      }
+      setSaving(false)
+      return
+    }
+
+    if (detailedResult.total <= 0) { setError('Enter at least one quote detail'); return }
+
+    setSaving(true)
     const res = await fetch(`/api/admin/quote/${order.id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hourly_rate: r, estimated_hours: h, additional_fees: f }),
+      body: JSON.stringify({ quote_type: 'detailed', detailed_inputs: detailedInputs }),
     })
-
     if (res.ok) {
       router.refresh()
       window.open(`/admin/quote/${order.id}/print`, '_blank')
@@ -145,63 +174,87 @@ export default function QuoteEditor({ order }: { order: Order }) {
 
         {/* Quote Input Panel */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-          <h2 style={{ color: '#254220', fontSize: '16px', fontWeight: 700, margin: '0 0 20px', borderBottom: '1px solid #F5F0EB', paddingBottom: '12px' }}>
+          <h2 style={{ color: '#254220', fontSize: '16px', fontWeight: 700, margin: '0 0 16px', borderBottom: '1px solid #F5F0EB', paddingBottom: '12px' }}>
             Quote Details
           </h2>
 
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
-              Hourly Rate (CAD)
-            </label>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#9A8E83', fontSize: '15px' }}>$</span>
-              <input
-                type="number"
-                min="1"
-                step="1"
-                value={rate}
-                onChange={e => setRate(e.target.value)}
-                placeholder="80"
-                style={{ width: '100%', padding: '11px 14px 11px 26px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
-              />
-            </div>
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '20px', background: '#FAF7F2', borderRadius: '10px', padding: '4px' }}>
+            {(['standard', 'detailed'] as const).map(t => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTab(t)}
+                style={{
+                  flex: 1, padding: '9px 10px', borderRadius: '8px', border: 'none',
+                  background: tab === t ? '#254220' : 'transparent',
+                  color: tab === t ? 'white' : '#6B5E54',
+                  fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                }}
+              >
+                {t === 'standard' ? 'Hourly Rate' : 'Detailed Quote'}
+              </button>
+            ))}
           </div>
 
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
-              Estimated Hours
-            </label>
-            <input
-              type="number"
-              min="0.5"
-              step="0.5"
-              value={hours}
-              onChange={e => setHours(e.target.value)}
-              placeholder="e.g. 5"
-              style={{ width: '100%', padding: '11px 14px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
-            />
-          </div>
+          {tab === 'standard' && (
+            <>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
+                  Hourly Rate (CAD)
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#9A8E83', fontSize: '15px' }}>$</span>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={rate}
+                    onChange={e => setRate(e.target.value)}
+                    placeholder="80"
+                    style={{ width: '100%', padding: '11px 14px 11px 26px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+              </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
-              Additional Fees (CAD)
-            </label>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#9A8E83', fontSize: '15px' }}>$</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={fees}
-                onChange={e => setFees(e.target.value)}
-                placeholder="0.00"
-                style={{ width: '100%', padding: '11px 14px 11px 26px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
-              />
-            </div>
-            <p style={{ fontSize: '12px', color: '#9A8E83', marginTop: '6px' }}>
-              Extra charges beyond hourly rate (stairs, long carry, etc.)
-            </p>
-          </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
+                  Estimated Hours
+                </label>
+                <input
+                  type="number"
+                  min="0.5"
+                  step="0.5"
+                  value={hours}
+                  onChange={e => setHours(e.target.value)}
+                  placeholder="e.g. 5"
+                  style={{ width: '100%', padding: '11px 14px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
+                  Additional Fees (CAD)
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#9A8E83', fontSize: '15px' }}>$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={fees}
+                    onChange={e => setFees(e.target.value)}
+                    placeholder="0.00"
+                    style={{ width: '100%', padding: '11px 14px 11px 26px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <p style={{ fontSize: '12px', color: '#9A8E83', marginTop: '6px' }}>
+                  Extra charges beyond hourly rate (stairs, long carry, etc.)
+                </p>
+              </div>
+            </>
+          )}
+
+          {tab === 'detailed' && <DetailedQuoteForm {...detailedFormProps} showWeightOption={false} showStairsFee />}
 
           {error && <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '12px' }}>{error}</p>}
 
@@ -216,24 +269,43 @@ export default function QuoteEditor({ order }: { order: Order }) {
           {/* Pricing Summary */}
           <div style={{ marginTop: '20px', padding: '12px', background: '#FAF7F2', borderRadius: '8px' }}>
             <div style={{ fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px', marginBottom: '8px' }}>PRICING SUMMARY</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
-              <span>Rate</span><span>${parsedRate.toFixed(2)} / hr</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
-              <span>Hours</span><span>{hours || '-'}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
-              <span>Base ({hours || '0'} × ${parsedRate.toFixed(0)})</span>
-              <span>${(parsedRate * parsedHours).toFixed(2)}</span>
-            </div>
-            {parsedFees > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
-                <span>Additional Fees</span><span>${parsedFees.toFixed(2)}</span>
-              </div>
+
+            {tab === 'standard' ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                  <span>Rate</span><span>${parsedRate.toFixed(2)} / hr</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                  <span>Hours</span><span>{hours || '-'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                  <span>Base ({hours || '0'} × ${parsedRate.toFixed(0)})</span>
+                  <span>${(parsedRate * parsedHours).toFixed(2)}</span>
+                </div>
+                {parsedFees > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                    <span>Additional Fees</span><span>${parsedFees.toFixed(2)}</span>
+                  </div>
+                )}
+                <div style={{ borderTop: '1px solid #E8E0D5', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 700, color: '#254220' }}>
+                  <span>Total</span><span>${total.toFixed(2)}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                {detailedResult.lineItems.length === 0 && (
+                  <div style={{ fontSize: '12px', color: '#9A8E83' }}>Enter quote details to see a breakdown.</div>
+                )}
+                {detailedResult.lineItems.map(li => (
+                  <div key={li.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                    <span>{li.label}</span><span>${li.amount.toFixed(2)}</span>
+                  </div>
+                ))}
+                <div style={{ borderTop: '1px solid #E8E0D5', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 700, color: '#254220' }}>
+                  <span>Total</span><span>${detailedResult.total.toFixed(2)}</span>
+                </div>
+              </>
             )}
-            <div style={{ borderTop: '1px solid #E8E0D5', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 700, color: '#254220' }}>
-              <span>Total</span><span>${total.toFixed(2)}</span>
-            </div>
           </div>
         </div>
       </main>

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 
-const VALID_TYPES = ['junk_removal', 'bin_cleaning'] as const
+const VALID_TYPES = ['junk_removal'] as const
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)

@@ -10,7 +10,7 @@ const SIZES = [
   { value: '4br+', label: '4+ Bedrooms' },
 ]
 
-const TIMES = Array.from({ length: 20 }, (_, i) => {
+const TIMES = Array.from({ length: 33 }, (_, i) => {
   const totalMins = 6 * 60 + i * 30
   const h = Math.floor(totalMins / 60)
   const m = totalMins % 60
