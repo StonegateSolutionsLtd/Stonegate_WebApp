@@ -107,7 +107,6 @@ export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailP
 }
 
 const SERVICE_LABELS: Record<string, string> = {
-  'bin-cleaning': 'Bin Cleaning',
   'junk-removal': 'Junk Removal',
 }
 

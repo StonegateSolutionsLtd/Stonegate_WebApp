@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
 import PrintButton from './PrintButton'
+import { calcDetailedQuote, type DetailedQuoteInputs, type QuoteLineItem } from '@/lib/quote-pricing'
 
 export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }): Promise<Metadata> {
   const { orderId } = await params
@@ -36,11 +37,26 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
   const moveTime = new Date(`1970-01-01T${order.moving_time}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
   const price = Number(order.estimated_price)
-  const estHours = Number(order.estimated_hours)
-  const hourlyRate = Number(order.hourly_rate ?? 80)
-  const additionalCharges = Math.round(Math.max(0, Number(order.additional_fees ?? 0)) * 100) / 100
-  const baseAmount = Math.round(estHours * hourlyRate * 100) / 100
   const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
+  const isDetailed = order.quote_type === 'detailed' && order.quote_details?.inputs
+
+  let lineItems: QuoteLineItem[]
+  let estHours = 0
+  let hourlyRate = 0
+  let baseAmount = 0
+  let additionalCharges = 0
+
+  if (isDetailed) {
+    lineItems = calcDetailedQuote(order.quote_details.inputs as DetailedQuoteInputs).lineItems
+  } else {
+    estHours = Number(order.estimated_hours)
+    hourlyRate = Number(order.hourly_rate ?? 80)
+    additionalCharges = Math.round(Math.max(0, Number(order.additional_fees ?? 0)) * 100) / 100
+    baseAmount = Math.round(estHours * hourlyRate * 100) / 100
+
+    lineItems = [{ label: '2 Movers + Truck', amount: baseAmount }]
+    if (additionalCharges > 0) lineItems.push({ label: 'Additional Charges', amount: additionalCharges })
+  }
 
   const G = '#254220'
 
@@ -147,10 +163,10 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
             </div>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.25)', width: '100%', margin: '10px 0' }} />
             <div style={{ fontSize: '11px', fontWeight: 700, color: 'white', marginBottom: '6px' }}>
-              Estimated Time: {estHours} Hour{estHours !== 1 ? 's' : ''}
+              {isDetailed ? 'Detailed Quote' : `Estimated Time: ${estHours} Hour${estHours !== 1 ? 's' : ''}`}
             </div>
             <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>
-              Final cost will be based on the actual time spent on your move.
+              {isDetailed ? 'See itemized breakdown below.' : 'Final cost will be based on the actual time spent on your move.'}
             </div>
           </div>
         </div>
@@ -160,6 +176,30 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 14px', borderBottom: '1px solid #e0e0e0' }}>
             <span style={{ fontSize: '11px', fontWeight: 700, color: G, letterSpacing: '1px' }}>SERVICE &amp; PRICING</span>
           </div>
+          {isDetailed ? (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: G }}>
+                  {['#', 'DESCRIPTION', 'AMOUNT (CAD)'].map((h, i) => (
+                    <th key={h} style={{ padding: '8px 12px', fontSize: '10px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', textAlign: i === 0 ? 'center' : i === 1 ? 'left' : 'right' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {lineItems.map((li, i) => (
+                  <tr key={li.label} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                    <td style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>{i + 1}</td>
+                    <td style={{ padding: '12px', fontSize: '12px', fontWeight: 700 }}>{li.label}</td>
+                    <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${li.amount.toFixed(2)}</td>
+                  </tr>
+                ))}
+                <tr style={{ borderTop: '2px solid #e0e0e0', background: '#fafafa' }}>
+                  <td colSpan={2} style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 800 }}>ESTIMATED TOTAL (CAD)</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '15px', fontWeight: 800, color: G }}>${price.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: G }}>
@@ -232,11 +272,12 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
               </tr>
               <tr style={{ background: '#f0f7f3' }}>
                 <td colSpan={6} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
-                  All applicable taxes included (GST &amp; PST)
+                  All applicable taxes included (GST)
                 </td>
               </tr>
             </tbody>
           </table>
+          )}
           <div style={{ padding: '6px 14px', fontSize: '9px', color: '#aaa', letterSpacing: '1px', fontWeight: 600 }}>
             NO HIDDEN FEES. NO SURPRISES.
           </div>

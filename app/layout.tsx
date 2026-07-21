@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   keywords: [
     'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC',
-    'bin cleaning Vancouver', 'junk removal Vancouver', 'Coquitlam movers',
+    'junk removal Vancouver', 'Coquitlam movers',
   ],
   metadataBase: new URL('https://www.stonegatemoving.com'),
   openGraph: {

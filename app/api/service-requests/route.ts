@@ -3,7 +3,6 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { sendOwnerServiceRequestNotification, sendCustomerServiceRequestConfirmation } from '@/lib/email'
 
 const TYPE_MAP: Record<string, string> = {
-  'bin-cleaning': 'bin_cleaning',
   'junk-removal': 'junk_removal',
 }
 

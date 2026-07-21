@@ -2,15 +2,14 @@ import type { Metadata } from 'next'
 import { createServiceClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import PrintButton from './PrintButton'
+import { calcDetailedQuote, type DetailedQuoteInputs, type QuoteLineItem } from '@/lib/quote-pricing'
 
 const TYPE_LABELS: Record<string, string> = {
   junk_removal: 'JUNK REMOVAL',
-  bin_cleaning: 'BIN CLEANING',
 }
 
 const ORDER_PREFIXES: Record<string, string> = {
   junk_removal: 'JR',
-  bin_cleaning: 'BC',
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }): Promise<Metadata> {
@@ -45,18 +44,28 @@ export default async function ServicePrintPage({ params }: { params: Promise<{ o
   const serviceDate = new Date(order.service_date + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   const serviceTime = new Date(`1970-01-01T${order.service_time}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
-  const isJunk = order.order_type === 'junk_removal'
   const price = Number(order.estimated_price)
-  const hourlyRate = Number(order.hourly_rate ?? 80)
-  const estHours = Number(order.estimated_hours)
-  const additionalCharges = Math.round(Math.max(0, Number(order.additional_fees ?? 0)) * 100) / 100
-  const baseAmount = isJunk
-    ? Math.round(hourlyRate * 100) / 100          // load price stored in hourly_rate
-    : Math.round(estHours * hourlyRate * 100) / 100
+  const isDetailed = order.quote_type === 'detailed' && order.quote_details?.inputs
 
-  // Map load price back to a label for the PDF
-  const LOAD_MAP: [number, string][] = [[99,'1/8 Truck'],[175,'1/4 Truck'],[275,'1/2 Truck'],[375,'3/4 Truck'],[475,'Full Truck']]
-  const loadLabel = LOAD_MAP.find(([p]) => p === hourlyRate)?.[1] ?? 'Custom Load'
+  let lineItems: QuoteLineItem[]
+  let loadLabel: string
+
+  if (isDetailed) {
+    const result = calcDetailedQuote(order.quote_details.inputs as DetailedQuoteInputs)
+    lineItems = result.lineItems
+    loadLabel = 'Detailed Quote'
+  } else {
+    const hourlyRate = Number(order.hourly_rate ?? 80)
+    const additionalCharges = Math.round(Math.max(0, Number(order.additional_fees ?? 0)) * 100) / 100
+    const baseAmount = Math.round(hourlyRate * 100) / 100 // load price stored in hourly_rate
+
+    // Map load price back to a label for the PDF
+    const LOAD_MAP: [number, string][] = [[99,'1/8 Truck'],[175,'1/4 Truck'],[275,'1/2 Truck'],[375,'3/4 Truck'],[475,'Full Truck']]
+    loadLabel = LOAD_MAP.find(([p]) => p === hourlyRate)?.[1] ?? 'Custom Load'
+
+    lineItems = [{ label: `Junk Removal Service — ${loadLabel}`, amount: baseAmount }]
+    if (additionalCharges > 0) lineItems.push({ label: 'Additional Charges', amount: additionalCharges })
+  }
 
   const G = '#254220'
 
@@ -144,17 +153,11 @@ export default async function ServicePrintPage({ params }: { params: Promise<{ o
               ${price.toFixed(2)}<span style={{ fontSize: '14px', fontWeight: 600, marginLeft: '3px' }}>CAD</span>
             </div>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.25)', width: '100%', margin: '10px 0' }} />
-            {isJunk ? (
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'white', marginBottom: '6px' }}>
-                Load Size: {loadLabel}
-              </div>
-            ) : (
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'white', marginBottom: '6px' }}>
-                Estimated Time: {estHours} Hour{estHours !== 1 ? 's' : ''}
-              </div>
-            )}
+            <div style={{ fontSize: '11px', fontWeight: 700, color: 'white', marginBottom: '6px' }}>
+              {isDetailed ? loadLabel : `Load Size: ${loadLabel}`}
+            </div>
             <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>
-              {isJunk ? 'Price is based on truck space used.' : 'Final cost is based on actual time spent.'}
+              {isDetailed ? 'See itemized breakdown below.' : 'Price is based on truck space used.'}
             </div>
           </div>
         </div>
@@ -167,56 +170,30 @@ export default async function ServicePrintPage({ params }: { params: Promise<{ o
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: G }}>
-                {(isJunk
-                  ? ['#', 'DESCRIPTION', 'LOAD SIZE', 'BASE PRICE', 'AMOUNT (CAD)']
-                  : ['#', 'DESCRIPTION', 'DETAILS', 'RATE', 'EST. HOURS', 'AMOUNT (CAD)']
-                ).map((h, i, arr) => (
-                  <th key={h} style={{ padding: '8px 12px', fontSize: '10px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', textAlign: i === 0 ? 'center' : i >= arr.length - 2 ? 'right' : 'left' }}>{h}</th>
+                {['#', 'DESCRIPTION', 'AMOUNT (CAD)'].map((h, i) => (
+                  <th key={h} style={{ padding: '8px 12px', fontSize: '10px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', textAlign: i === 0 ? 'center' : i === 1 ? 'left' : 'right' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {isJunk ? (
-                <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                  <td style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>1</td>
-                  <td style={{ padding: '12px', fontSize: '12px', fontWeight: 700 }}>Junk Removal Service</td>
-                  <td style={{ padding: '12px', fontSize: '12px', color: '#333', fontWeight: 600 }}>{loadLabel}</td>
-                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px' }}>${baseAmount.toFixed(2)}</td>
-                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${baseAmount.toFixed(2)}</td>
+              {lineItems.map((li, i) => (
+                <tr key={li.label} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                  <td style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>{i + 1}</td>
+                  <td style={{ padding: '12px', fontSize: '12px', fontWeight: 700 }}>{li.label}</td>
+                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${li.amount.toFixed(2)}</td>
                 </tr>
-              ) : (
-                <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                  <td style={{ padding: '12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>1</td>
-                  <td style={{ padding: '12px', fontSize: '12px', fontWeight: 700 }}>Bin Cleaning Service</td>
-                  <td style={{ padding: '12px', fontSize: '11px', color: '#555', lineHeight: 1.5 }}>Includes crew, equipment,<br />and all necessary supplies</td>
-                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px' }}>${hourlyRate.toFixed(2)} / hr</td>
-                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px' }}>{estHours}</td>
-                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${baseAmount.toFixed(2)}</td>
-                </tr>
-              )}
-              {additionalCharges > 0 && (
-                <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>2</td>
-                  <td style={{ padding: '10px 12px', fontSize: '12px', fontWeight: 700 }}>Additional Charges</td>
-                  {!isJunk && <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Additional services or fees</td>}
-                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
-                  {!isJunk && <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>}
-                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${additionalCharges.toFixed(2)}</td>
-                </tr>
-              )}
-              <tr style={{ borderTop: '1px solid #e0e0e0' }}>
-                <td colSpan={5} style={{ padding: '8px 12px', fontSize: '12px', fontWeight: 600 }}>SUBTOTAL</td>
-                <td style={{ padding: '8px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 600 }}>${price.toFixed(2)}</td>
-              </tr>
+              ))}
               <tr style={{ borderTop: '2px solid #e0e0e0', background: '#fafafa' }}>
-                <td colSpan={5} style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 800 }}>ESTIMATED TOTAL (CAD)</td>
+                <td colSpan={2} style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 800 }}>ESTIMATED TOTAL (CAD)</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '15px', fontWeight: 800, color: G }}>${price.toFixed(2)}</td>
               </tr>
-              <tr style={{ background: '#f0f7f3' }}>
-                <td colSpan={6} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
-                  All applicable taxes included (GST &amp; PST)
-                </td>
-              </tr>
+              {!isDetailed && (
+                <tr style={{ background: '#f0f7f3' }}>
+                  <td colSpan={3} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
+                    All applicable taxes included (GST)
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           <div style={{ padding: '6px 14px', fontSize: '9px', color: '#aaa', letterSpacing: '1px', fontWeight: 600 }}>

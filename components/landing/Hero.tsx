@@ -4,9 +4,14 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
 import HeroVideo from '@/components/landing/HeroVideo'
-import { Droplets, Trash2, Truck, Shield, Clock, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
+import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
+
+const beforeAfterPairs = [
+  { label: 'House exterior', before: '/junk-before-siding.jpg', after: '/junk-after-siding.jpg', height: 300, afterObjectPosition: 'center' },
+  { label: 'Fence line', before: '/junk-before-fence.jpg', after: '/junk-after-fence-v2.jpg', height: 420, afterObjectPosition: 'center 25%' },
+]
 
 const steps = [
   { number: '01', title: 'Request Your Quote', description: 'Tell us about your move or junk removal. Get your free estimate in minutes.', Icon: ClipboardList },
@@ -74,11 +79,11 @@ export default function Hero() {
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-6 w-fit" style={{ fontSize: 'clamp(2.25rem, 8vw, 5rem)' }}>
                 <span style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
-                  <span style={{ flex: 0.6, height: '1.5px', backgroundColor: 'rgba(255,255,255,0.35)' }} />
+                  <span style={{ flex: 0.6, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
                   <span className="font-extrabold" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
-                  <span style={{ flex: 1.4, height: '1.5px', backgroundColor: 'rgba(255,255,255,0.35)' }} />
+                  <span style={{ flex: 1.4, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
                 </span>
-                <span style={{ color: '#FFFFFF', whiteSpace: 'nowrap' }}>Junk Removal</span>
+                <span style={{ color: '#E38A2F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
               </h1>
               <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
                 Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
@@ -103,7 +108,7 @@ export default function Hero() {
                 {([
                   { Icon: Shield, label: 'Fully Insured' },
                   { Icon: Star, label: '5-Star Rated' },
-                  { Icon: Clock, label: 'Same-Day Availability' },
+                  { Icon: Trash2, label: 'Same-Day Junk Pickup' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2">
@@ -136,8 +141,76 @@ export default function Hero() {
 
         </section>
 
-        {/* How it works */}
+        {/* Real Crew */}
         <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-160px' }}>
+          <div className="max-w-6xl mx-auto px-6 pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
+            <FadeIn>
+              <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
+                <Image
+                  src="/team-with-truck.jpg"
+                  alt="The Stonegate Moving Solutions crew in front of their truck"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: 'center 60%' }}
+                />
+              </div>
+            </FadeIn>
+            <FadeIn delay={120}>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>
+                  Who shows up
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
+                  A Real, Local Crew - Not Contractors.
+                </h2>
+                <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>
+                  Every job is handled by our own uniformed team in our fully-equipped truck - no subcontractors, no surprises. Based right here in Metro Vancouver.
+                </p>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* Before & After */}
+        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Junk removal results</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>See The Difference</h2>
+            </FadeIn>
+            <div className="grid grid-cols-1 gap-6">
+              {beforeAfterPairs.map((pair, i) => (
+                <FadeIn key={pair.label} delay={i * 120}>
+                  <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
+                    <div className="grid grid-cols-2">
+                      <div className="relative" style={{ height: `${pair.height}px` }}>
+                        <Image src={pair.before} alt={`Before junk removal - ${pair.label}`} fill className="object-cover" />
+                        <span
+                          className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
+                          style={{ backgroundColor: 'rgba(26,23,20,0.6)', color: '#FFFFFF' }}
+                        >
+                          Before
+                        </span>
+                      </div>
+                      <div className="relative" style={{ height: `${pair.height}px` }}>
+                        <Image src={pair.after} alt={`After junk removal - ${pair.label}`} fill className="object-cover" style={{ objectPosition: pair.afterObjectPosition }} />
+                        <span
+                          className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
+                          style={{ backgroundColor: '#014421', color: '#FFFFFF' }}
+                        >
+                          After
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
           <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
@@ -220,20 +293,30 @@ export default function Hero() {
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Our Services</h2>
+              <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
+                  <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: '#1A1714' }}>Our Services</h2>
+                </div>
+                <Link href="/pricing">
+                  <Button className="rounded-full font-bold border-0 px-6 py-5" style={{ backgroundColor: 'transparent', color: '#014421', border: '2px solid #014421' }}>
+                    Check Out Pricing →
+                  </Button>
+                </Link>
+              </div>
             </FadeIn>
-            <div className="grid sm:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 gap-6">
 
               {/* Moving card */}
               <FadeIn delay={0} className="flex flex-col">
               <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
                 <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
                   <Image
-                    src="/hero.jpg"
-                    alt="Moving service"
+                    src="/crew-wrapping-furniture.jpg"
+                    alt="Stonegate crew wrapping and loading furniture into the truck"
                     fill
-                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ objectPosition: 'center 45%' }}
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
@@ -258,10 +341,11 @@ export default function Hero() {
               <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
                 <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
                   <Image
-                    src="/junk-removal.jpg"
-                    alt="Junk removal service"
+                    src="/crew-loading-ramp.jpg"
+                    alt="Stonegate crew loading the truck ramp"
                     fill
-                    className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ objectPosition: 'center 40%' }}
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-1">
@@ -275,35 +359,6 @@ export default function Hero() {
                   <Link href="/book-service?type=junk-removal" className="mt-auto">
                     <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
                       Book Junk Removal
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              </FadeIn>
-
-              {/* Bin Cleaning card */}
-              <FadeIn delay={240} className="flex flex-col">
-              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-                <div className="relative w-full overflow-hidden" style={{ height: '200px' }}>
-                  <Image
-                    src="/bin-cleaning.jpg"
-                    alt="Bin cleaning service"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ objectPosition: 'center 65%' }}
-                  />
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
-                    <Droplets size={18} style={{ color: '#014421' }} />
-                  </span>
-                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Bin Cleaning</p>
-                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    High-pressure hot water washing with eco-safe disinfectants. Residential and commercial bins.
-                  </p>
-                  <Link href="/book-service?type=bin-cleaning" className="mt-auto">
-                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                      Book Bin Cleaning
                     </Button>
                   </Link>
                 </div>

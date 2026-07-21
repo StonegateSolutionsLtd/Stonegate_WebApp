@@ -13,7 +13,7 @@ import { MapPin, User, Mail, Phone, FileText } from 'lucide-react'
 
 const today = new Date().toISOString().split('T')[0]
 
-const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
+const TIME_SLOTS = Array.from({ length: 33 }, (_, i) => {
   const total = 6 * 60 + i * 30
   const h = Math.floor(total / 60)
   const m = total % 60
@@ -23,14 +23,13 @@ const TIME_SLOTS = Array.from({ length: 31 }, (_, i) => {
 })
 
 const SERVICE_LABELS: Record<string, string> = {
-  'bin-cleaning': 'Bin Cleaning',
   'junk-removal': 'Junk Removal',
 }
 
 export default function ServiceForm() {
   const params = useSearchParams()
   const router = useRouter()
-  const serviceType = params.get('type') ?? 'bin-cleaning'
+  const serviceType = params.get('type') ?? 'junk-removal'
   const serviceLabel = SERVICE_LABELS[serviceType] ?? 'Service'
 
   const [form, setForm] = useState({ address: '', date: '', time: '', customerName: '', customerEmail: '', phone: '', notes: '' })
