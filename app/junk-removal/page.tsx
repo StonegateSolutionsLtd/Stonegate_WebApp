@@ -172,7 +172,7 @@ export default function JunkRemovalPage() {
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Junk removal results</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>See The Difference</h2>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Let Your House Breathe</h2>
             </FadeIn>
             <FadeIn>
               <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
