@@ -35,7 +35,7 @@ export default function Navbar() {
                 Home
               </Link>
             )}
-            <Link href="/other-services" className="text-base font-extrabold transition-all duration-200 hover:opacity-50 hover:scale-110" style={{ color: '#1A1714' }}>
+            <Link href="/junk-removal" className="text-base font-extrabold transition-all duration-200 hover:opacity-50 hover:scale-110" style={{ color: '#1A1714' }}>
               Junk Removal
             </Link>
             <Link href="/pricing" className="text-base font-extrabold transition-all duration-200 hover:opacity-50 hover:scale-110" style={{ color: '#1A1714' }}>
@@ -90,7 +90,7 @@ export default function Navbar() {
                   Home
                 </Link>
               )}
-              <Link href="/other-services" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+              <Link href="/junk-removal" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 Junk Removal
               </Link>
               <Link href="/pricing" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>

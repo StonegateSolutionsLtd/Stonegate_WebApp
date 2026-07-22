@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Hero from '@/components/landing/Hero'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Apartment Moving Service in Vancouver & Metro Area | Stonegate Moving Solutions' },
-  description: 'Top-rated apartment moving company in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. 2 professional movers with truck from $90/hr. Also offering junk removal.',
+  title: { absolute: 'Junk Removal & Moving Services in Vancouver | Stonegate Moving Solutions' },
+  description: 'Fast, reliable junk removal in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. Also offering professional apartment moving with 2 movers and a truck from $90/hr.',
   alternates: {
     canonical: 'https://www.stonegatemoving.com',
   },
@@ -17,7 +17,7 @@ const jsonLd = {
   telephone: '+16043546479',
   email: 'orders@stonegatemoving.com',
   logo: 'https://www.stonegatemoving.com/logo.png',
-  description: 'Professional apartment moving company serving Metro Vancouver. 2 movers with truck from $73-$95/hr. Also offering junk removal.',
+  description: 'Junk removal and professional apartment moving serving Metro Vancouver. 2 movers with truck from $73-$95/hr.',
   areaServed: [
     'Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam',
     'New Westminster', 'Port Coquitlam', 'Port Moody', 'Delta', 'North Vancouver',
@@ -35,11 +35,11 @@ const jsonLd = {
     itemListElement: [
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $73-$95/hr' },
+        itemOffered: { '@type': 'Service', name: 'Junk Removal', description: 'Furniture, appliances, estate cleanouts, starting at $150' },
       },
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Junk Removal', description: 'Furniture, appliances, estate cleanouts, starting at $150' },
+        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $73-$95/hr' },
       },
     ],
   },

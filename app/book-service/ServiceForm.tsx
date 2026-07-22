@@ -217,13 +217,13 @@ export default function ServiceForm() {
             {/* Notes */}
             <div>
               <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                Additional Notes{' '}
+                What Junk Do You Need Removed?{' '}
                 <span className="font-normal" style={{ color: '#B5A99E' }}>(optional)</span>
               </label>
               <div className="relative">
                 <FileText size={16} className="absolute left-3.5 top-3.5 pointer-events-none" style={{ color: '#B5C9B0' }} />
                 <Textarea
-                  placeholder="Anything else we should know"
+                  placeholder="Tell us what items and roughly how much (e.g. a couch, mattress, and a few boxes)"
                   value={form.notes}
                   onChange={e => set('notes', e.target.value)}
                   className="pl-10 resize-none"
