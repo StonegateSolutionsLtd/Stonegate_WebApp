@@ -77,13 +77,13 @@ export default function Hero() {
                 Metro Vancouver
               </p>
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-6 w-fit" style={{ fontSize: 'clamp(2.25rem, 8vw, 5rem)' }}>
-                <span style={{ color: '#FFFFFF' }}>Moving</span>
+                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
                   <span style={{ flex: 0.6, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
-                  <span className="font-extrabold" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
+                  <span className="font-extrabold [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
                   <span style={{ flex: 1.4, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
                 </span>
-                <span style={{ color: '#E38A2F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
+                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#E38A2F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
               </h1>
               <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
                 Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
@@ -91,14 +91,14 @@ export default function Hero() {
 
               {/* Buttons - side by side */}
               <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                <Link href="/order">
+                <Link href="/book-service?type=junk-removal">
                   <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <CalendarDays size={15} /> Moving Quote →
+                    <Trash2 size={15} /> Junk Removal Quote →
                   </Button>
                 </Link>
-                <Link href="/book-service?type=junk-removal">
+                <Link href="/order">
                   <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <Trash2 size={15} /> Junk Removal Quote →
+                    <CalendarDays size={15} /> Moving Quote →
                   </Button>
                 </Link>
               </div>
