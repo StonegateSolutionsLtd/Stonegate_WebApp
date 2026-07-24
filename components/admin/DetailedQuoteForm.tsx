@@ -87,7 +87,7 @@ export function DetailedQuoteForm(props: DetailedQuoteFormProps) {
             style={inputStyle}
           />
           <div style={{ fontSize: '11px', color: '#9A8E83', marginTop: '4px' }}>
-            ${(WEIGHT_RATE_PER_KG * 100).toFixed(0)} per 100kg (${WEIGHT_RATE_PER_KG.toFixed(2)}/kg).
+            ${(WEIGHT_RATE_PER_KG * 1000).toFixed(0)} per 1000kg (${WEIGHT_RATE_PER_KG.toFixed(2)}/kg).
           </div>
         </div>
       )}

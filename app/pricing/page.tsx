@@ -3,12 +3,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import { Button } from '@/components/ui/button'
-import { Users, Clock, Truck, Info, CheckCircle2, Trash2 } from 'lucide-react'
+import { Users, Clock, Truck, Info, CheckCircle2, Weight, Ruler } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: 'Moving & Junk Removal Prices in Vancouver',
-  description: 'Transparent pricing for apartment moving and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck at $90 CAD/hr, junk removal from $99. No hidden fees.',
+  description: 'Transparent pricing for apartment moving and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck at $90 CAD/hr, junk removal from $145. No hidden fees.',
   alternates: { canonical: 'https://www.stonegatemoving.com/pricing' },
 }
 
@@ -23,13 +23,17 @@ const included = [
 
 // Truck bed: 16ft (L) x 7.5ft (W) x 6.5ft (H) = 780 ft³ full load
 const TRUCK_CUBIC_FT = 16 * 7.5 * 6.5
+const OUR_TRUCK_CUBIC_YD = Math.round(TRUCK_CUBIC_FT / 27)
+const STANDARD_DUMP_TRUCK_CUBIC_YD = 12
+const SIZE_MULTIPLIER = (OUR_TRUCK_CUBIC_YD / STANDARD_DUMP_TRUCK_CUBIC_YD).toFixed(1)
+const WEIGHT_RATE_PER_1000KG = 550
 
 const junkTiers = [
-  { name: '1/8 Truck', desc: 'A few small items', price: 99, fraction: 0.125 },
-  { name: '1/4 Truck', desc: 'Small room worth', price: 175, fraction: 0.25 },
-  { name: '1/2 Truck', desc: 'One-two rooms', price: 275, fraction: 0.5 },
-  { name: '3/4 Truck', desc: 'Large haul', price: 375, fraction: 0.75 },
-  { name: 'Full Truck', desc: 'Complete cleanout', price: 475, fraction: 1 },
+  { name: '1/8 Truck', desc: 'A few small items', price: 145, fraction: 0.125 },
+  { name: '1/4 Truck', desc: 'Small room worth', price: 260, fraction: 0.25 },
+  { name: '1/2 Truck', desc: 'One-two rooms', price: 405, fraction: 0.5 },
+  { name: '3/4 Truck', desc: 'Large haul', price: 555, fraction: 0.75 },
+  { name: 'Full Truck', desc: 'Complete cleanout', price: 700, fraction: 1 },
 ].map(tier => ({ ...tier, cubicFeet: TRUCK_CUBIC_FT * tier.fraction }))
 
 const notes = [
@@ -99,11 +103,18 @@ export default function PricingPage() {
           </FadeIn>
         </section>
 
-        {/* Junk Removal pricing + truck size */}
-        <section id="pricing-cards" className="max-w-6xl mx-auto px-6 pb-12">
+        {/* Junk Removal pricing */}
+        <section id="pricing-cards" className="max-w-6xl mx-auto px-6 pb-8">
+          <FadeIn>
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>How junk removal pricing works</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>
+              Two ways we calculate your price.
+            </h2>
+          </FadeIn>
+
           <div className="grid md:grid-cols-2 gap-8 items-stretch">
 
-            {/* Junk Removal pricing card */}
+            {/* By truck space */}
             <FadeIn className="h-full">
             <div
               id="junk-pricing"
@@ -111,51 +122,36 @@ export default function PricingPage() {
               style={{ border: '1px solid #E8E0D5', boxShadow: '0 2px 12px rgba(37,66,32,0.06)', scrollMarginTop: '16px' }}
             >
               <div className="relative overflow-hidden px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
-                <Trash2 size={160} className="absolute -right-6 -top-6 opacity-[0.07]" style={{ color: '#FAF7F2' }} />
+                <Ruler size={160} className="absolute -right-6 -top-6 opacity-[0.07]" style={{ color: '#FAF7F2' }} />
                 <div className="relative">
                   <div className="flex items-center gap-2 mb-8">
                     <span
                       className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
                       style={{ color: '#B5C9B0', borderColor: 'rgba(181,201,176,0.3)' }}
                     >
-                      <Trash2 size={13} />
-                      Junk & Furniture Removal
+                      <Ruler size={13} />
+                      By Truck Space
                     </span>
                   </div>
-                  <h2 className="text-2xl font-extrabold mb-4" style={{ color: '#FAF7F2' }}>
-                    Clearing out junk or furniture?
-                  </h2>
+                  <h3 className="text-2xl font-extrabold mb-4" style={{ color: '#FAF7F2' }}>
+                    Bulky but light? Pay for the space it takes.
+                  </h3>
                   <div className="flex items-end gap-2 mb-1">
-                    <span className="text-5xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$99</span>
+                    <span className="text-5xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$145</span>
                     <span className="text-xl font-semibold mb-1" style={{ color: '#B5C9B0' }}>and up</span>
                   </div>
-                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · priced by truck space used</span>
+                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · best for furniture, boxes, mattresses</span>
                 </div>
               </div>
               <div className="flex-1 flex flex-col px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#254220' }}>
-                  Truck space used
+                <p className="text-sm leading-relaxed mb-6" style={{ color: '#6B5E54' }}>
+                  Priced by how much of the truck your items take up - from ${junkTiers[0].price} for a small load up to ${junkTiers[junkTiers.length - 1].price} for a full truck. We confirm the exact tier on-site before we start.
                 </p>
-                <ul className="flex flex-col gap-3 mb-8">
-                  {junkTiers.map(tier => (
-                    <li
-                      key={tier.name}
-                      className="rounded-2xl px-5 py-3.5"
-                      style={{ border: '1px solid #E8E0D5', backgroundColor: '#FFFFFF' }}
-                    >
-                      <div className="flex items-center justify-between gap-3 mb-2.5">
-                        <div>
-                          <p className="text-sm font-bold" style={{ color: '#1A1714' }}>{tier.name}</p>
-                          <p className="text-xs" style={{ color: '#9A8E83' }}>{tier.desc} · {tier.cubicFeet} ft³</p>
-                        </div>
-                        <span className="text-lg font-extrabold flex-shrink-0" style={{ color: '#1A1714' }}>${tier.price}</span>
-                      </div>
-                      <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#E8F0E6' }}>
-                        <div
-                          className="h-full rounded-full"
-                          style={{ width: `${tier.fraction * 100}%`, backgroundColor: '#254220' }}
-                        />
-                      </div>
+                <ul className="flex flex-col gap-3 mb-6">
+                  {['No hidden fees - price matches the space used', 'Great for furniture, boxes, and mattresses'].map(item => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
+                      <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -171,10 +167,67 @@ export default function PricingPage() {
             </div>
             </FadeIn>
 
-            {/* Truck size reference */}
-            <FadeIn delay={60} className="h-full min-w-0">
-            <div className="h-full flex flex-col items-center justify-center overflow-hidden min-[1400px]:overflow-visible">
-              <div className="relative w-full ml-0 min-[1400px]:w-[130%] min-[1400px]:ml-[70%]" style={{ aspectRatio: '1536 / 1024' }}>
+            {/* By weight */}
+            <FadeIn delay={100} className="h-full">
+            <div
+              className="rounded-3xl overflow-hidden h-full flex flex-col transition-transform duration-300 hover:-translate-y-1"
+              style={{ border: '1px solid #E8E0D5', boxShadow: '0 2px 12px rgba(37,66,32,0.06)' }}
+            >
+              <div className="relative overflow-hidden px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
+                <Weight size={160} className="absolute -right-6 -top-6 opacity-[0.07]" style={{ color: '#FAF7F2' }} />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-8">
+                    <span
+                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
+                      style={{ color: '#B5C9B0', borderColor: 'rgba(181,201,176,0.3)' }}
+                    >
+                      <Weight size={13} />
+                      By Weight
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-extrabold mb-4" style={{ color: '#FAF7F2' }}>
+                    Heavy load? We charge by the kg.
+                  </h3>
+                  <div className="flex items-end gap-2 mb-1">
+                    <span className="text-5xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>${WEIGHT_RATE_PER_1000KG}</span>
+                    <span className="text-xl font-semibold mb-1" style={{ color: '#B5C9B0' }}>/1,000 kg</span>
+                  </div>
+                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · $0.55/kg · best for dirt, concrete, appliances</span>
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: '#6B5E54' }}>
+                  This is the exact rate disposal stations charge us, passed straight through with no markup. A typical 1,000 kg load (small renovation debris) runs about $550.
+                </p>
+                <ul className="flex flex-col gap-3 mb-6">
+                  {['Best for dirt, concrete, and appliances', 'We weigh on-site before confirming your price'].map(item => (
+                    <li key={item} className="flex items-start gap-3">
+                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
+                      <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/book-service?type=junk-removal" className="block mt-auto">
+                  <Button
+                    className="w-full rounded-full text-sm font-bold py-6 border-0"
+                    style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
+                  >
+                    Get a quote
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            </FadeIn>
+
+          </div>
+        </section>
+
+        {/* Truck size comparison */}
+        <section className="max-w-6xl mx-auto px-6 pb-12">
+          <FadeIn>
+            <div className="rounded-3xl overflow-hidden grid md:grid-cols-2 gap-8 items-center p-8 md:p-10" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
+
+              <div className="relative w-full" style={{ aspectRatio: '1536 / 1024' }}>
                 <Image
                   src="/truck-dimensions.jpg"
                   alt="Stonegate truck dimensions: 16 feet long, 7.5 feet wide, 6.5 feet tall"
@@ -183,13 +236,40 @@ export default function PricingPage() {
                   style={{ mixBlendMode: 'multiply' }}
                 />
               </div>
-              <p className="text-sm text-center mt-6" style={{ color: '#9A8E83' }}>
-                Our truck bed: 16ft × 7.5ft × 6.5ft ({TRUCK_CUBIC_FT} ft³ full load)
-              </p>
-            </div>
-            </FadeIn>
 
-          </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>Why full-truck pricing is higher</p>
+                <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
+                  Our truck is {SIZE_MULTIPLIER}× bigger than a standard dump truck.
+                </h3>
+                <p className="text-sm leading-relaxed mb-6" style={{ color: '#6B5E54' }}>
+                  A full load with us means {TRUCK_CUBIC_FT} ft³ ({OUR_TRUCK_CUBIC_YD} cubic yards) hauled away in a single trip - not a fraction of it. That&apos;s why our top-tier prices look higher than a typical dump-trailer service: you&apos;re getting a lot more capacity for it.
+                </p>
+
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5" style={{ color: '#1A1714' }}>
+                      <span>Stonegate truck</span>
+                      <span>{OUR_TRUCK_CUBIC_YD} cu yd</span>
+                    </div>
+                    <div className="w-full h-3 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E0D5' }}>
+                      <div className="h-full rounded-full" style={{ width: '100%', backgroundColor: '#254220' }} />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-bold mb-1.5" style={{ color: '#9A8E83' }}>
+                      <span>Standard dump truck</span>
+                      <span>~{STANDARD_DUMP_TRUCK_CUBIC_YD} cu yd</span>
+                    </div>
+                    <div className="w-full h-3 rounded-full overflow-hidden" style={{ backgroundColor: '#E8E0D5' }}>
+                      <div className="h-full rounded-full" style={{ width: `${(Number(STANDARD_DUMP_TRUCK_CUBIC_YD) / Number(OUR_TRUCK_CUBIC_YD)) * 100}%`, backgroundColor: '#B5A99E' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </FadeIn>
         </section>
 
         {/* Moving pricing */}

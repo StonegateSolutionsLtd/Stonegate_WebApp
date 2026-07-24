@@ -66,7 +66,7 @@ export default function JunkRemovalPage() {
 
         {/* Junk Removal */}
         <section style={{ borderBottom: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8 items-center">
 
             {/* Content */}
             <FadeIn>
@@ -104,6 +104,19 @@ export default function JunkRemovalPage() {
                 alt="Junk removal service"
                 fill
                 className="object-cover object-center"
+              />
+            </div>
+            </FadeIn>
+
+            {/* Loaded truck bed */}
+            <FadeIn delay={200}>
+            <div className="relative rounded-3xl overflow-hidden" style={{ height: '420px' }}>
+              <Image
+                src="/truck-bed-loaded.jpg"
+                alt="Stonegate truck bed loaded with junk removal items"
+                fill
+                className="object-cover"
+                style={{ objectPosition: 'center' }}
               />
             </div>
             </FadeIn>
