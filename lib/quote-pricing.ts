@@ -4,8 +4,8 @@
 // three surfaces drifting out of sync.
 
 export const KM_RATE = 1.2 // $ per km of driving, charged for one leg
-export const FULL_TRUCK_PRICE = 300
-export const WEIGHT_RATE_PER_KG = 80 / 100 // $80 per 100kg
+export const FULL_TRUCK_PRICE = 700
+export const WEIGHT_RATE_PER_KG = 550 / 1000 // $550 per 1000kg
 export const RUSH_JOB_RATE = 0.25
 export const STAIRS_FEE_RATE_PER_FLOOR = 0.10 // +10% of the base subtotal per floor with no elevator
 export const GST_RATE = 0.05

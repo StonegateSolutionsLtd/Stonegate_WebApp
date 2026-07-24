@@ -7,10 +7,12 @@ import HeroVideo from '@/components/landing/HeroVideo'
 import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
+import BeforeAfterCarousel from '@/components/landing/BeforeAfterCarousel'
 
 const beforeAfterPairs = [
-  { label: 'House exterior', before: '/junk-before-siding.jpg', after: '/junk-after-siding.jpg', height: 300, afterObjectPosition: 'center' },
-  { label: 'Fence line', before: '/junk-before-fence.jpg', after: '/junk-after-fence-v2.jpg', height: 420, afterObjectPosition: 'center 25%' },
+  { label: 'Warehouse cleanout', before: '/junk-before-warehouse.jpg', after: '/junk-after-warehouse.jpg', afterObjectPosition: 'center' },
+  { label: 'House exterior', before: '/junk-before-siding.jpg', after: '/junk-after-siding.jpg', afterObjectPosition: 'center' },
+  { label: 'Fence line', before: '/junk-before-fence.jpg', after: '/junk-after-fence-v2.jpg', afterObjectPosition: 'center 25%' },
 ]
 
 const steps = [
@@ -178,34 +180,9 @@ export default function Hero() {
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Junk removal results</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>See The Difference</h2>
             </FadeIn>
-            <div className="grid grid-cols-1 gap-6">
-              {beforeAfterPairs.map((pair, i) => (
-                <FadeIn key={pair.label} delay={i * 120}>
-                  <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E0D5' }}>
-                    <div className="grid grid-cols-2">
-                      <div className="relative" style={{ height: `${pair.height}px` }}>
-                        <Image src={pair.before} alt={`Before junk removal - ${pair.label}`} fill className="object-cover" />
-                        <span
-                          className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
-                          style={{ backgroundColor: 'rgba(26,23,20,0.6)', color: '#FFFFFF' }}
-                        >
-                          Before
-                        </span>
-                      </div>
-                      <div className="relative" style={{ height: `${pair.height}px` }}>
-                        <Image src={pair.after} alt={`After junk removal - ${pair.label}`} fill className="object-cover" style={{ objectPosition: pair.afterObjectPosition }} />
-                        <span
-                          className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
-                          style={{ backgroundColor: '#014421', color: '#FFFFFF' }}
-                        >
-                          After
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
+            <FadeIn delay={60}>
+              <BeforeAfterCarousel pairs={beforeAfterPairs} />
+            </FadeIn>
           </div>
         </section>
 
