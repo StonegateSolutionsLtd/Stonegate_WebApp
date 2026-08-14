@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(npm *)",
-      "PowerShell(winget *)"
+      "PowerShell(winget *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

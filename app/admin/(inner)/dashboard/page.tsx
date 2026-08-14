@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import StatusSelect from '../_components/StatusSelect'
 import DeleteButton from '../_components/DeleteButton'
 import AddMovingOrderModal from '../_components/AddMovingOrderModal'
+import AddToCalendarButton from '../_components/AddToCalendarButton'
 import StatusFilter from '../_components/StatusFilter'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
 
@@ -14,7 +15,11 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
   const supabase = createServiceClient()
   let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
   if (status) query = query.eq('status', status)
-  const { data: orders } = await query
+  const [{ data: orders }, { data: calendarLinks }] = await Promise.all([
+    query,
+    supabase.from('calendar_jobs').select('order_id').not('order_id', 'is', null),
+  ])
+  const onCalendar = new Set((calendarLinks ?? []).map(c => c.order_id))
 
   return (
     <div className="mo-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
@@ -79,16 +84,32 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                     )}
                   </td>
                   <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      {order.estimated_price != null && (
-                        <Link href={`/admin/quote/${order.id}/print`} target="_blank" style={{ background: 'white', color: '#254220', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid #254220' }}>
-                          View PDF
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        {order.estimated_price != null && (
+                          <Link href={`/admin/quote/${order.id}/print`} target="_blank" style={{ background: 'white', color: '#254220', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid #254220' }}>
+                            View PDF
+                          </Link>
+                        )}
+                        <Link href={`/admin/quote/${order.id}`} style={{ background: '#254220', color: 'white', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+                          {order.estimated_price != null ? 'Edit' : 'Generate Quote'}
                         </Link>
+                        <DeleteButton orderId={order.id} customerName={order.customer_name} apiPath="/api/admin/orders" />
+                      </div>
+                      {order.status === 'confirmed' && (
+                        <AddToCalendarButton
+                          alreadyAdded={onCalendar.has(order.id)}
+                          payload={{
+                            job_type: 'moving',
+                            event_date: order.moving_date,
+                            event_time: order.moving_time,
+                            pickup_address: order.pickup_address,
+                            size: order.apartment_size,
+                            customer_name: order.customer_name,
+                            order_id: order.id,
+                          }}
+                        />
                       )}
-                      <Link href={`/admin/quote/${order.id}`} style={{ background: '#254220', color: 'white', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-                        {order.estimated_price != null ? 'Edit' : 'Generate Quote'}
-                      </Link>
-                      <DeleteButton orderId={order.id} customerName={order.customer_name} apiPath="/api/admin/orders" />
                     </div>
                   </td>
                 </tr>
@@ -155,6 +176,22 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                 </Link>
                 <DeleteButton orderId={order.id} customerName={order.customer_name} apiPath="/api/admin/orders" />
               </div>
+              {order.status === 'confirmed' && (
+                <div style={{ marginTop: '8px' }}>
+                  <AddToCalendarButton
+                    alreadyAdded={onCalendar.has(order.id)}
+                    payload={{
+                      job_type: 'moving',
+                      event_date: order.moving_date,
+                      event_time: order.moving_time,
+                      pickup_address: order.pickup_address,
+                      size: order.apartment_size,
+                      customer_name: order.customer_name,
+                      order_id: order.id,
+                    }}
+                  />
+                </div>
+              )}
             </div>
           )
         })}

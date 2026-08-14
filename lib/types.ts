@@ -44,3 +44,22 @@ export const EMPTY_ORDER_FORM: OrderFormData = {
   phone: '',
   specialNotes: '',
 }
+
+export type CalendarJobType = 'moving' | 'junk_removal'
+
+export interface CalendarJob {
+  id: string
+  job_type: CalendarJobType
+  event_date: string
+  event_time: string | null
+  is_subcontract: boolean
+  company_name: string | null
+  pickup_address: string | null
+  size: ApartmentSize | null
+  customer_name: string | null
+  notes: string | null
+  order_id: string | null
+  service_order_id: string | null
+  created_at: string
+  updated_at: string
+}

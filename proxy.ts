@@ -16,6 +16,8 @@ export const config = {
     '/admin/dashboard/:path*',
     '/admin/quote/:path*',
     '/admin/statistics/:path*',
+    '/admin/calendar/:path*',
     '/api/admin/quote/:path*',
+    '/api/admin/calendar/:path*',
   ],
 }
