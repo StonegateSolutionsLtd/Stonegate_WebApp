@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: 'Stonegate Moving Solutions · Junk Removal & Moving in Vancouver',
     template: '%s · Stonegate Moving Solutions',
   },
-  description: 'Junk removal and professional apartment moving serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. 2 movers with truck from $90/hr. Book online in minutes.',
+  description: 'Junk removal and professional apartment moving serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. 2 movers with truck from $110/hr + GST. Book online in minutes.',
   keywords: [
     'junk removal Vancouver', 'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC', 'Coquitlam movers',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://www.stonegatemoving.com',
     siteName: 'Stonegate Moving Solutions',
     title: 'Stonegate Moving Solutions · Junk Removal & Moving in Vancouver',
-    description: 'Junk removal and professional apartment moving serving all of Metro Vancouver. 2 movers with truck from $90/hr.',
+    description: 'Junk removal and professional apartment moving serving all of Metro Vancouver. 2 movers with truck from $110/hr + GST.',
   },
   robots: {
     index: true,
