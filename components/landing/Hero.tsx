@@ -302,7 +302,7 @@ export default function Hero() {
                   </span>
                   <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Moving</p>
                   <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $90/hr.
+                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $110/hr + GST.
                   </p>
                   <Link href="/order" className="mt-auto">
                     <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>

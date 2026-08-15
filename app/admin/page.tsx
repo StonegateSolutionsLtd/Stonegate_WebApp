@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 export default function AdminLoginPage() {
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,13 +18,14 @@ export default function AdminLoginPage() {
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     })
 
     if (res.ok) {
       router.push('/admin/dashboard')
     } else {
-      setError('Incorrect password')
+      const data = await res.json().catch(() => ({}))
+      setError(data.error || 'Invalid email or password')
       setLoading(false)
     }
   }
@@ -40,14 +42,30 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@stonegatemoving.com"
+              required
+              autoComplete="username"
+              style={{ width: '100%', padding: '12px 16px', border: '1px solid #E8E0D5', borderRadius: '10px', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#1A1714', marginBottom: '8px' }}>
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder="Enter admin password"
+              placeholder="Enter your password"
               required
+              autoComplete="current-password"
               style={{ width: '100%', padding: '12px 16px', border: '1px solid #E8E0D5', borderRadius: '10px', fontSize: '16px', outline: 'none', boxSizing: 'border-box' }}
             />
           </div>

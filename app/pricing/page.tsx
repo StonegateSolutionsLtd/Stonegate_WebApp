@@ -8,7 +8,7 @@ import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: 'Moving & Junk Removal Prices in Vancouver',
-  description: 'Transparent pricing for apartment moving and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck at $90 CAD/hr, junk removal from $145. No hidden fees.',
+  description: 'Transparent pricing for apartment moving and junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. 2 movers with truck at $110 CAD/hr + GST, junk removal from $145. No hidden fees.',
   alternates: { canonical: 'https://www.stonegatemoving.com/pricing' },
 }
 
@@ -39,8 +39,8 @@ const junkTiers = [
 const notes = [
   {
     icon: Clock,
-    title: '2-hour minimum',
-    body: 'Most 1-bedroom moves complete in 2-3 hours. 2-bedrooms typically take 3-5 hours depending on the amount of items.',
+    title: '3-hour minimum',
+    body: 'Most 1-bedroom moves complete in 3-4 hours. 2-bedrooms typically take 4-5 hours depending on the amount of items.',
   },
   {
     icon: Truck,
@@ -50,7 +50,7 @@ const notes = [
   {
     icon: Users,
     title: 'Rate reflects travel distance',
-    body: 'Our flat $90/hr rate applies across all moves within Metro Vancouver - no surprises based on distance.',
+    body: 'Our flat $110/hr rate (plus GST) applies across all moves within Metro Vancouver - no surprises based on distance.',
   },
   {
     icon: Info,
@@ -297,10 +297,10 @@ export default function PricingPage() {
                     Moving to a new home?
                   </h2>
                   <div className="flex items-end gap-2 mb-1">
-                    <span className="text-7xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$90</span>
+                    <span className="text-7xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$110</span>
                     <span className="text-xl font-semibold mb-2" style={{ color: '#B5C9B0' }}>/hr</span>
                   </div>
-                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · 2-hour minimum · 2 movers</span>
+                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD + GST · 3-hour minimum · 2 movers</span>
                 </div>
               </div>
               <div className="flex-1 flex flex-col px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
