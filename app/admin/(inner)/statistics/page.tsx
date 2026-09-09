@@ -9,6 +9,12 @@ interface QuoteRecord {
   status: string
 }
 
+interface CalendarJobRecord {
+  event_date: string
+  job_type: 'moving' | 'junk_removal'
+  is_subcontract: boolean
+}
+
 interface PeriodStats {
   total: number
   ordersReceived: number
@@ -47,6 +53,8 @@ function combine(a: PeriodStats, b: PeriodStats): PeriodStats {
 
 const money = (n: number) => `$${n.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 
+const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
 
 function daysBetween(start: Date, endExclusive: Date): Date[] {
@@ -77,6 +85,17 @@ function countDaysWithoutCompleted(records: QuoteRecord[], days: Date[]): number
   return count
 }
 
+// calendar_jobs is the manually-curated confirmed schedule (not tied to quote status or
+// price), so it can't feed revenue totals - but it's the most reliable source for "did we
+// actually have a job booked that day."
+function dailyJobCounts(jobs: CalendarJobRecord[], days: Date[]): number[] {
+  return days.map(day => jobs.filter(j => j.event_date === fmt(day)).length)
+}
+
+function countDaysWithoutJob(jobs: CalendarJobRecord[], days: Date[]): number {
+  return days.filter(day => !jobs.some(j => j.event_date === fmt(day))).length
+}
+
 export default async function StatisticsPage({ searchParams }: { searchParams: Promise<{ month?: string }> }) {
   const { month } = await searchParams
   const now = new Date()
@@ -96,14 +115,16 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
 
   const supabase = createServiceClient()
 
-  const [movingRes, junkRes] = await Promise.all([
+  const [movingRes, junkRes, calendarJobsRes] = await Promise.all([
     supabase.from('orders').select('estimated_price, created_at, status').gte('created_at', fetchStart.toISOString()),
     supabase.from('service_orders').select('estimated_price, created_at, status').eq('order_type', 'junk_removal').gte('created_at', fetchStart.toISOString()),
+    supabase.from('calendar_jobs').select('event_date, job_type, is_subcontract').gte('event_date', fmt(selectedMonthStart)).lt('event_date', fmt(selectedMonthEnd)),
   ])
 
   const movingRecords = (movingRes.data ?? []) as QuoteRecord[]
   const junkRecords = (junkRes.data ?? []) as QuoteRecord[]
   const allRecords = [...movingRecords, ...junkRecords]
+  const calendarJobs = (calendarJobsRes.data ?? []) as CalendarJobRecord[]
 
   const movingMonth = aggregate(movingRecords, selectedMonthStart, selectedMonthEnd)
   const movingYear = aggregate(movingRecords, yearStart)
@@ -133,6 +154,17 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
   const dailyCounts = dailyLeadCounts(allRecords, monthDays)
   const daysWithoutCompleted = countDaysWithoutCompleted(allRecords, monthDays)
   const daysWithoutCompletedIsHigh = daysWithoutCompleted > 3
+
+  // Calendar jobs for the whole selected month (including days beyond "today"), so the
+  // scheduled-job count reflects everything already booked - the gap count below still
+  // only looks at days that have already happened.
+  const jobsScheduled = calendarJobs.length
+  const movingJobsCount = calendarJobs.filter(j => j.job_type === 'moving').length
+  const junkJobsCount = calendarJobs.filter(j => j.job_type === 'junk_removal').length
+  const subcontractJobsCount = calendarJobs.filter(j => j.is_subcontract).length
+  const dailyJobCountsArr = dailyJobCounts(calendarJobs, monthDays)
+  const daysWithoutJob = countDaysWithoutJob(calendarJobs, monthDays)
+  const daysWithoutJobIsHigh = daysWithoutJob > 3
 
   const monthLabel = selectedMonthStart.toLocaleDateString('en-CA', { month: 'long', year: 'numeric' })
   const yearRangeLabel = `${yearStart.toLocaleDateString('en-CA', { month: 'short', year: 'numeric' })} – ${now.toLocaleDateString('en-CA', { month: 'short', year: 'numeric' })}`
@@ -219,7 +251,59 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
               {daysWithoutCompletedIsHigh ? ' - more than 3' : ''}
             </div>
           </div>
-          <LeadsChart days={monthDays} counts={dailyCounts} />
+          <DailyBarChart title="Leads Received Per Day" unit="lead" days={monthDays} counts={dailyCounts} />
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '14px' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#1A1714', margin: 0 }}>Jobs Scheduled</h2>
+          <span style={{ fontSize: '12px', color: '#9A8E83' }}>{monthLabel} · from the Calendar tab, no price data</span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(160px, 220px) minmax(160px, 220px) 1fr', gap: '16px' }}>
+          <div style={{ background: 'white', borderRadius: '14px', padding: '20px', border: '1px solid #F5F0EB', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+            <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#9A8E83', marginBottom: '8px' }}>
+              Jobs Scheduled
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: 800, lineHeight: 1, marginBottom: '10px', color: '#1A1714' }}>
+              {jobsScheduled}
+            </div>
+            <div style={{ fontSize: '12px', color: '#9A8E83' }}>
+              {movingJobsCount} moving · {junkJobsCount} junk removal
+              {subcontractJobsCount > 0 ? ` · ${subcontractJobsCount} subcontract` : ''}
+            </div>
+          </div>
+          <div
+            style={{
+              background: daysWithoutJobIsHigh ? '#FEF2F2' : 'white',
+              borderRadius: '14px',
+              padding: '20px',
+              border: daysWithoutJobIsHigh ? '1px solid #FCA5A5' : '1px solid #F5F0EB',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase',
+                color: daysWithoutJobIsHigh ? '#B91C1C' : '#9A8E83', marginBottom: '8px',
+              }}
+            >
+              Days Without a Job
+            </div>
+            <div
+              style={{
+                fontSize: '28px', fontWeight: 800, lineHeight: 1, marginBottom: '10px',
+                color: daysWithoutJobIsHigh ? '#B91C1C' : '#1A1714',
+              }}
+            >
+              {daysWithoutJob}
+            </div>
+            <div style={{ fontSize: '12px', color: daysWithoutJobIsHigh ? '#B91C1C' : '#9A8E83' }}>
+              out of {monthDays.length} day{monthDays.length === 1 ? '' : 's'} so far
+              {daysWithoutJobIsHigh ? ' - more than 3' : ''}
+            </div>
+          </div>
+          <DailyBarChart title="Jobs Scheduled Per Day" unit="job" days={monthDays} counts={dailyJobCountsArr} />
         </div>
       </div>
 
@@ -228,7 +312,7 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
   )
 }
 
-function LeadsChart({ days, counts }: { days: Date[]; counts: number[] }) {
+function DailyBarChart({ title, unit, days, counts }: { title: string; unit: string; days: Date[]; counts: number[] }) {
   const max = Math.max(1, ...counts)
   const showLabelEvery = Math.max(1, Math.ceil(days.length / 10))
 
@@ -240,13 +324,13 @@ function LeadsChart({ days, counts }: { days: Date[]; counts: number[] }) {
       }}
     >
       <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#9A8E83', marginBottom: '14px' }}>
-        Leads Received Per Day
+        {title}
       </div>
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '140px' }}>
         {counts.map((c, i) => (
           <div
             key={i}
-            title={`${days[i].toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}: ${c} lead${c === 1 ? '' : 's'}`}
+            title={`${days[i].toLocaleDateString('en-CA', { month: 'short', day: 'numeric' })}: ${c} ${unit}${c === 1 ? '' : 's'}`}
             style={{ flex: 1, display: 'flex', alignItems: 'flex-end', height: '100%', minWidth: 0 }}
           >
             <div

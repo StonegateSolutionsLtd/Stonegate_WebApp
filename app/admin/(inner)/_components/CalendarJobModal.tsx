@@ -1,6 +1,6 @@
 'use client'
-import { useState } from 'react'
-import type { CalendarJob, CalendarJobType } from '@/lib/types'
+import { useEffect, useState } from 'react'
+import type { CalendarJob, CalendarJobType, Mover } from '@/lib/types'
 
 const SIZES = [
   { value: '', label: 'Not set' },
@@ -78,8 +78,29 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState('')
+  const [movers, setMovers] = useState<Mover[]>([])
+  const [selectedMoverIds, setSelectedMoverIds] = useState<string[]>([])
+
+  useEffect(() => {
+    if (!open) return
+    fetch('/api/admin/movers?active=true')
+      .then(res => res.json())
+      .then(data => setMovers(data.movers ?? []))
+      .catch(() => {})
+
+    if (job) {
+      fetch(`/api/admin/calendar/${job.id}/movers`)
+        .then(res => res.json())
+        .then(data => setSelectedMoverIds(data.moverIds ?? []))
+        .catch(() => {})
+    }
+  }, [open, job])
 
   if (!open) return null
+
+  function toggleMover(id: string) {
+    setSelectedMoverIds(ids => ids.includes(id) ? ids.filter(m => m !== id) : [...ids, id])
+  }
 
   function set<K extends keyof FormState>(field: K, value: FormState[K]) {
     setForm(f => ({ ...f, [field]: value }))
@@ -115,14 +136,25 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
           body: JSON.stringify(payload),
         })
 
-    setSaving(false)
-    if (res.ok) {
-      onSaved()
-      onClose()
-    } else {
+    if (!res.ok) {
+      setSaving(false)
       const data = await res.json().catch(() => ({}))
       setError(data.error || 'Failed to save. Try again.')
+      return
     }
+
+    const savedJobId = job ? job.id : (await res.json().catch(() => ({} as { jobId?: string }))).jobId
+    if (savedJobId) {
+      await fetch(`/api/admin/calendar/${savedJobId}/movers`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mover_ids: selectedMoverIds }),
+      }).catch(() => {})
+    }
+
+    setSaving(false)
+    onSaved()
+    onClose()
   }
 
   async function handleDelete() {
@@ -220,6 +252,27 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
               <label style={lbl}>Customer Name</label>
               <input style={inp} value={form.customerName} onChange={e => set('customerName', e.target.value)} placeholder="Optional" />
             </div>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={lbl}>Assigned Movers</label>
+            {movers.length === 0 ? (
+              <p style={{ fontSize: '12px', color: '#9A8E83', margin: '4px 0 0' }}>
+                No active movers yet — add them from the Movers tab.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {movers.map(m => {
+                  const on = selectedMoverIds.includes(m.id)
+                  return (
+                    <button key={m.id} type="button"
+                      onClick={() => toggleMover(m.id)}
+                      style={{ padding: '6px 12px', border: '1.5px solid', borderColor: on ? '#254220' : '#E8E0D5', borderRadius: '20px', background: on ? '#254220' : 'white', color: on ? 'white' : '#6B5E54', fontSize: '12.5px', cursor: 'pointer', fontWeight: 600 }}
+                    >{on ? '✓ ' : ''}{m.name}</button>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
           <div style={{ marginBottom: '16px' }}>
