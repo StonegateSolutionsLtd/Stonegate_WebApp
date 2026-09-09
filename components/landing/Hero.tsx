@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
-import HeroVideo from '@/components/landing/HeroVideo'
 import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
@@ -62,19 +61,28 @@ export default function Hero() {
       <main className="flex-1">
 
         {/* Hero - full-screen video with text overlay */}
-        <section className="relative" style={{ height: 'calc(100vh - 65px)', overflow: 'hidden' }}>
+        <section className="relative flex items-center min-h-[calc(100vh-65px)] lg:min-h-[calc(110vh-65px)]" style={{ overflow: 'hidden' }}>
 
-          {/* Full-screen video */}
+          {/* Full-screen image */}
           <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
-            <HeroVideo />
+            <Image
+              src="/hero-truck.jpg"
+              alt="Stonegate Moving Solutions truck outside a home"
+              fill
+              priority
+              quality={90}
+              sizes="(max-width: 1024px) 200vw, 100vw"
+              className="object-cover"
+              style={{ filter: 'brightness(0.8)' }}
+            />
           </div>
 
           {/* Left-side darkening gradient */}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.45) 20%, transparent 40%)' }} />
 
           {/* Text - left side, vertically centered */}
-          <div className="relative z-10 h-full flex flex-col justify-center pl-8 sm:pl-16 lg:pl-52" style={{ maxWidth: '680px' }}>
-            <div className="flex flex-col" style={{ marginTop: '-180px' }}>
+          <div className="relative z-10 flex flex-col pl-8 sm:pl-16 lg:pl-24 py-24" style={{ maxWidth: '680px' }}>
+            <div className="flex flex-col">
               <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
                 Metro Vancouver
               </p>
@@ -85,9 +93,9 @@ export default function Hero() {
                   <span className="font-extrabold [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
                   <span style={{ flex: 1.4, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
                 </span>
-                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#E38A2F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
+                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#A9743F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
               </h1>
-              <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)', maxWidth: '380px' }}>
+              <p className="text-base leading-relaxed mb-8 [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: '380px' }}>
                 Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
               </p>
 
@@ -106,7 +114,7 @@ export default function Hero() {
               </div>
 
               {/* Trust badges */}
-              <div className="flex flex-row flex-wrap gap-x-6 gap-y-3">
+              <div className="flex flex-row flex-wrap gap-x-6 gap-y-3 mb-6">
                 {([
                   { Icon: Shield, label: 'Fully Insured' },
                   { Icon: Star, label: '5-Star Rated' },
@@ -119,32 +127,32 @@ export default function Hero() {
                   </div>
                 ))}
               </div>
+
+              {/* Serving area */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                <div className="flex items-center gap-2 shrink-0">
+                  <MapPin size={13} style={{ color: '#FFFFFF' }} />
+                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FFFFFF' }}>Serving Metro Vancouver</span>
+                </div>
+                <div className="hidden sm:flex flex-wrap items-center gap-y-1">
+                  {['Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam', 'North Vancouver', 'West Vancouver', '& More'].map((city, i, arr) => (
+                    <span key={city} className="flex items-center whitespace-nowrap">
+                      <span className="text-sm font-medium px-3" style={{ color: 'rgba(255,255,255,0.85)' }}>{city}</span>
+                      {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.25)' }}>|</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Serving area bar */}
-          <div className="absolute inset-x-0 z-10 flex items-center justify-center gap-6 px-8" style={{ bottom: '200px', height: '60px' }}>
-            <div className="flex items-center gap-2 shrink-0">
-              <MapPin size={13} style={{ color: '#FFFFFF' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FFFFFF' }}>Serving Metro Vancouver</span>
-            </div>
-            <div className="hidden sm:flex items-center overflow-hidden">
-              {['Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam', 'North Vancouver', 'West Vancouver', '& More'].map((city, i, arr) => (
-                <span key={city} className="flex items-center">
-                  <span className="text-sm font-medium px-3" style={{ color: 'rgba(255,255,255,0.85)' }}>{city}</span>
-                  {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.25)' }}>|</span>}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Solid cream strip - covers watermark */}
-          <div className="absolute bottom-0 inset-x-0" style={{ height: '200px', backgroundColor: '#FAF7F2' }} />
+          {/* Solid cream strip - smooth transition into next section */}
+          <div className="absolute bottom-0 inset-x-0" style={{ height: '110px', backgroundColor: '#FAF7F2' }} />
 
         </section>
 
         {/* Real Crew */}
-        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-160px' }}>
+        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-90px' }}>
           <div className="max-w-6xl mx-auto px-6 pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
             <FadeIn>
               <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
