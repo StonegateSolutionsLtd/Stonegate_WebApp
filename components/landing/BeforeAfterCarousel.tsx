@@ -59,7 +59,7 @@ export default function BeforeAfterCarousel({ pairs, height = 440 }: { pairs: Pa
                 <Image src={pair.after} alt={`After junk removal - ${pair.label}`} fill className="object-cover" style={{ objectPosition: pair.afterObjectPosition }} />
                 <span
                   className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
-                  style={{ backgroundColor: '#014421', color: '#FFFFFF' }}
+                  style={{ backgroundColor: '#A9743F', color: '#FFFFFF' }}
                 >
                   After
                 </span>

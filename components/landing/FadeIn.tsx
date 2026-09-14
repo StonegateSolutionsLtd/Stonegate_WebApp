@@ -22,7 +22,7 @@ export default function FadeIn({ children, className = '', style, delay = 0 }: F
           observer.unobserve(el)
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '0px 0px 300px 0px' }
     )
     observer.observe(el)
     return () => observer.disconnect()

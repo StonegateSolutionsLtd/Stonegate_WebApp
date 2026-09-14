@@ -24,7 +24,7 @@ const jsonLd = {
   ],
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Vancouver',
+    addressLocality: 'Burnaby',
     addressRegion: 'BC',
     addressCountry: 'CA',
   },

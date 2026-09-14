@@ -2,13 +2,15 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '@/components/landing/Navbar'
+import Footer from '@/components/landing/Footer'
 import { Button } from '@/components/ui/button'
 import { Shield, Clock, Star } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
-  title: 'About Us | Stonegate Moving Solutions',
+  title: { absolute: 'About Us | Stonegate Moving Solutions' },
   description: 'Meet the Stonegate Moving Solutions team - professional movers serving Metro Vancouver with moving and junk removal services.',
+  alternates: { canonical: 'https://www.stonegatemoving.com/about' },
 }
 
 const values = [
@@ -211,14 +213,7 @@ export default function AboutPage() {
 
       </main>
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-        <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col items-center gap-4">
-          <Image src="/logo.png" alt="Stonegate logo" width={220} height={220} style={{ filter: 'brightness(0)' }} />
-          <span className="font-extrabold text-xl tracking-tight" style={{ color: '#1A1714' }}>Stonegate Moving Solutions</span>
-          <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

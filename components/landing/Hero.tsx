@@ -3,7 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
-import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList } from 'lucide-react'
+import Footer from '@/components/landing/Footer'
+import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, ArrowRight } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import BeforeAfterCarousel from '@/components/landing/BeforeAfterCarousel'
@@ -83,10 +84,10 @@ export default function Hero() {
           {/* Text - left side, vertically centered */}
           <div className="relative z-10 flex flex-col pl-8 sm:pl-16 lg:pl-24 py-24" style={{ maxWidth: '680px' }}>
             <div className="flex flex-col">
-              <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
-                Metro Vancouver
-              </p>
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-6 w-fit" style={{ fontSize: 'clamp(2.25rem, 8vw, 5rem)' }}>
+                <span className="block text-xs font-bold normal-case tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
+                  Metro Vancouver
+                </span>
                 <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
                   <span style={{ flex: 0.6, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
@@ -108,7 +109,7 @@ export default function Hero() {
                 </Link>
                 <Link href="/order">
                   <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <CalendarDays size={15} /> Moving Quote →
+                    <CalendarDays size={15} /> Request Your Move →
                   </Button>
                 </Link>
               </div>
@@ -152,8 +153,8 @@ export default function Hero() {
         </section>
 
         {/* Real Crew */}
-        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-90px' }}>
-          <div className="max-w-6xl mx-auto px-6 pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
+        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-110px' }}>
+          <div className="max-w-6xl mx-auto px-6 pt-10 sm:pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
             <FadeIn>
               <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
                 <Image
@@ -354,20 +355,46 @@ export default function Hero() {
           </div>
         </section>
 
+        {/* Burnaby - dedicated local pages */}
+        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Based in Burnaby</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Local to Burnaby, Serving All of Metro Vancouver</h2>
+            </FadeIn>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <FadeIn delay={0}>
+                <Link
+                  href="/burnaby-movers"
+                  className="group flex items-center justify-between gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
+                  style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
+                >
+                  <div>
+                    <p className="font-bold text-lg mb-1" style={{ color: '#1A1714' }}>Burnaby Movers</p>
+                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>Professional local movers based right in Burnaby.</p>
+                  </div>
+                  <ArrowRight size={20} className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1" style={{ color: '#014421' }} />
+                </Link>
+              </FadeIn>
+              <FadeIn delay={100}>
+                <Link
+                  href="/burnaby-junk-removal"
+                  className="group flex items-center justify-between gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
+                  style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
+                >
+                  <div>
+                    <p className="font-bold text-lg mb-1" style={{ color: '#1A1714' }}>Burnaby Junk Removal</p>
+                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>Same-day junk removal for Burnaby homes and businesses.</p>
+                  </div>
+                  <ArrowRight size={20} className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1" style={{ color: '#014421' }} />
+                </Link>
+              </FadeIn>
+            </div>
+          </div>
+        </section>
+
         {/* Contact & Service Area */}
         <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-
-          {/* Truck – desktop only, absolute right */}
-          <div className="absolute bottom-0 hidden md:block pointer-events-none select-none" style={{ width: '440px', right: '140px' }}>
-            <Image
-              src="/truck-nobg.png"
-              alt=""
-              width={560}
-              height={420}
-              className="object-contain w-full"
-              style={{ mixBlendMode: 'multiply' }}
-            />
-          </div>
 
           <div className="max-w-6xl mx-auto px-6 py-16 grid sm:grid-cols-2 gap-12">
             <FadeIn>
@@ -402,26 +429,7 @@ export default function Hero() {
 
       </main>
 
-      {/* Truck – mobile only: centered between We Operate and footer */}
-      <div className="flex justify-center md:hidden" style={{ backgroundColor: '#FAF7F2' }}>
-        <Image
-          src="/truck-nobg.png"
-          alt=""
-          width={400}
-          height={300}
-          className="w-[260px] object-contain"
-          style={{ mixBlendMode: 'multiply' }}
-        />
-      </div>
-
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-        <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col items-center gap-4">
-          <Image src="/logo.png" alt="Stonegate logo" width={220} height={220} />
-          <span className="font-extrabold text-xl tracking-tight" style={{ color: '#1A1714' }}>Stonegate Moving Solutions</span>
-          <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
