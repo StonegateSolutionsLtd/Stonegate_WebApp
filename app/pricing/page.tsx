@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
+import Footer from '@/components/landing/Footer'
 import { Button } from '@/components/ui/button'
 import { Users, Clock, Truck, Info, CheckCircle2, Weight, Ruler } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
@@ -320,7 +321,7 @@ export default function PricingPage() {
                     className="w-full rounded-full text-sm font-bold py-6 border-0"
                     style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
                   >
-                    Get a quote
+                    Request Your Move
                   </Button>
                 </Link>
               </div>
@@ -377,13 +378,7 @@ export default function PricingPage() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-        <div className="max-w-6xl mx-auto px-6 py-10 text-center">
-          <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>
-            © {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.
-          </span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
+import Footer from '@/components/landing/Footer'
 import ContactButton from '@/components/landing/ContactButton'
 import {
   Trash2, CheckCircle2, ArrowRight, Sofa, Refrigerator, Tv, BedDouble,
@@ -11,8 +12,8 @@ import {
 import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
-  title: 'Junk Removal in Vancouver',
-  description: 'Professional junk removal in Vancouver, Burnaby, Richmond & Metro Vancouver. Residential and commercial. Book online.',
+  title: { absolute: 'Junk Removal Services in Metro Vancouver | Stonegate Moving Solutions' },
+  description: 'Professional junk removal across Metro Vancouver - furniture, appliances, property cleanouts, and construction debris. Residential and commercial. Book online.',
   alternates: { canonical: 'https://www.stonegatemoving.com/junk-removal' },
 }
 
@@ -24,19 +25,49 @@ const junkFeatures = [
   'We donate and recycle before the landfill',
 ]
 
-const junkCategories = [
-  { label: 'Couches & Big Furniture', desc: 'Too heavy to move alone? That\'s our job.', Icon: Sofa },
-  { label: 'Fridges, Washers & Stoves', desc: 'We disconnect and haul the big stuff too.', Icon: Refrigerator },
-  { label: 'Old TVs & Gadgets', desc: 'Screens, computers and other e-waste.', Icon: Tv },
-  { label: 'Beds & Box Springs', desc: 'One mattress or a whole guest room.', Icon: BedDouble },
-  { label: 'Home Gym Gear', desc: 'Treadmills and weights you\'ll never lift.', Icon: Dumbbell },
-  { label: 'Patio & BBQ Leftovers', desc: 'Includes safe propane tank disposal.', Icon: Flame },
-  { label: 'Business Cleanouts', desc: 'Desks, chairs and office move-outs.', Icon: Building2 },
-  { label: 'Reno Leftovers', desc: 'Drywall, cabinets and old fixtures.', Icon: Wrench },
-  { label: 'Yard Debris', desc: 'Fence boards, branches and dirt piles.', Icon: Leaf },
-  { label: 'Whole-Property Cleanouts', desc: 'Estate sales, foreclosures and more.', Icon: Warehouse },
-  { label: 'General Clutter', desc: 'Boxes, bags - if it\'s in the way, it\'s gone.', Icon: Package },
-  { label: 'Oversized & Awkward Items', desc: 'Hot tubs, pianos - ask and we\'ll haul it.', Icon: Waves },
+const junkGroups = [
+  {
+    id: 'furniture-removal',
+    title: 'Furniture Removal',
+    items: [
+      { label: 'Couches & Big Furniture', desc: 'Too heavy to move alone? That\'s our job.', Icon: Sofa },
+      { label: 'Beds & Box Springs', desc: 'One mattress or a whole guest room.', Icon: BedDouble },
+    ],
+  },
+  {
+    id: 'appliance-removal',
+    title: 'Appliance Removal',
+    items: [
+      { label: 'Fridges, Washers & Stoves', desc: 'We disconnect and haul the big stuff too.', Icon: Refrigerator },
+      { label: 'Old TVs & Gadgets', desc: 'Screens, computers and other e-waste.', Icon: Tv },
+    ],
+  },
+  {
+    id: 'property-cleanouts',
+    title: 'Property Cleanouts',
+    items: [
+      { label: 'Whole-Property Cleanouts', desc: 'Estate sales, foreclosures and more.', Icon: Warehouse },
+      { label: 'General Clutter', desc: 'Boxes, bags - if it\'s in the way, it\'s gone.', Icon: Package },
+      { label: 'Home Gym Gear', desc: 'Treadmills and weights you\'ll never lift.', Icon: Dumbbell },
+      { label: 'Patio & BBQ Leftovers', desc: 'Includes safe propane tank disposal.', Icon: Flame },
+      { label: 'Oversized & Awkward Items', desc: 'Hot tubs, pianos - ask and we\'ll haul it.', Icon: Waves },
+    ],
+  },
+  {
+    id: 'commercial-junk-removal',
+    title: 'Commercial Junk Removal',
+    items: [
+      { label: 'Business Cleanouts', desc: 'Desks, chairs and office move-outs.', Icon: Building2 },
+    ],
+  },
+  {
+    id: 'construction-debris-removal',
+    title: 'Construction Debris Removal',
+    items: [
+      { label: 'Reno Leftovers', desc: 'Drywall, cabinets and old fixtures.', Icon: Wrench },
+      { label: 'Yard Debris', desc: 'Fence boards, branches and dirt piles.', Icon: Leaf },
+    ],
+  },
 ]
 
 export default function JunkRemovalPage() {
@@ -47,18 +78,17 @@ export default function JunkRemovalPage() {
       <main className="flex-1">
 
         {/* Hero */}
-        <section className="relative overflow-hidden" style={{ backgroundColor: '#254220', minHeight: '340px' }}>
-          <div className="absolute inset-0 opacity-20">
-            <Image src="/junk-removal.jpg" alt="" fill className="object-cover object-center" priority />
-          </div>
+        <section className="relative overflow-hidden" style={{ minHeight: '340px' }}>
+          <Image src="/junk-removal.jpg" alt="" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(26,23,20,0.8) 0%, rgba(26,23,20,0.5) 45%, rgba(26,23,20,0.15) 80%)' }} />
           <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-20">
-            <span className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5" style={{ color: '#B5C9B0', borderColor: '#3d6b35' }}>
+            <span className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5" style={{ color: '#D9A876', borderColor: 'rgba(217,168,118,0.45)' }}>
               Beyond moving
             </span>
-            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#FAF7F2' }}>
-              Junk Removal
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#FFFFFF' }}>
+              Junk Removal Services in Metro Vancouver
             </h1>
-            <p className="text-lg leading-relaxed max-w-xl" style={{ color: '#B5C9B0' }}>
+            <p className="text-lg leading-relaxed max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
               We go beyond moving day. Keep your home clean and clutter-free with professional junk removal across Metro Vancouver.
             </p>
           </div>
@@ -129,7 +159,7 @@ export default function JunkRemovalPage() {
           <div className="relative max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
               <div className="text-center max-w-2xl mx-auto mb-12">
-                <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>What we take</p>
+                <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#A9743F' }}>What we take</p>
                 <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
                   If it&apos;s taking up space, we&apos;ll take it away.
                 </h2>
@@ -139,23 +169,30 @@ export default function JunkRemovalPage() {
               </div>
             </FadeIn>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {junkCategories.map(({ label, desc, Icon }, i) => (
-                <FadeIn key={label} delay={i * 40}>
-                  <div
-                    className="group h-full rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
-                    style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 2px 10px rgba(37,66,32,0.05)' }}
-                  >
-                    <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300 group-hover:bg-[#254220]"
-                      style={{ backgroundColor: '#E8F0E6' }}
-                    >
-                      <Icon size={20} className="transition-colors duration-300 group-hover:text-white" style={{ color: '#254220' }} />
-                    </div>
-                    <p className="font-bold text-sm mb-1" style={{ color: '#1A1714' }}>{label}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
+            <div className="flex flex-col gap-10">
+              {junkGroups.map(group => (
+                <div key={group.id} id={group.id} style={{ scrollMarginTop: '80px' }}>
+                  <h3 className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>{group.title}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {group.items.map(({ label, desc, Icon }, i) => (
+                      <FadeIn key={label} delay={i * 40}>
+                        <div
+                          className="group h-full rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
+                          style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 2px 10px rgba(37,66,32,0.05)' }}
+                        >
+                          <div
+                            className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-colors duration-300 group-hover:bg-[#254220]"
+                            style={{ backgroundColor: '#E8F0E6' }}
+                          >
+                            <Icon size={20} className="transition-colors duration-300 group-hover:text-white" style={{ color: '#254220' }} />
+                          </div>
+                          <p className="font-bold text-sm mb-1" style={{ color: '#1A1714' }}>{label}</p>
+                          <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
+                        </div>
+                      </FadeIn>
+                    ))}
                   </div>
-                </FadeIn>
+                </div>
               ))}
             </div>
 
@@ -184,7 +221,7 @@ export default function JunkRemovalPage() {
         <section style={{ borderBottom: '1px solid #E8E0D5' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Junk removal results</p>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#A9743F' }}>Junk removal results</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Let Your House Breathe</h2>
             </FadeIn>
             <FadeIn>
@@ -203,7 +240,7 @@ export default function JunkRemovalPage() {
                     <Image src="/junk-after-livingroom.png" alt="After junk removal - Living room furniture removal" fill className="object-cover" />
                     <span
                       className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
-                      style={{ backgroundColor: '#014421', color: '#FFFFFF' }}
+                      style={{ backgroundColor: '#A9743F', color: '#FFFFFF' }}
                     >
                       After
                     </span>
@@ -262,13 +299,7 @@ export default function JunkRemovalPage() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-        <div className="max-w-6xl mx-auto px-6 py-10 text-center">
-          <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>
-            © {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.
-          </span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
