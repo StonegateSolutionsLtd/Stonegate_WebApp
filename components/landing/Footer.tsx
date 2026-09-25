@@ -52,7 +52,7 @@ export default function Footer() {
               <span className="font-extrabold text-base tracking-tight" style={{ color: '#1A1714' }}>Stonegate</span>
             </Link>
             <div className="flex flex-col gap-1.5">
-              {CONTACT_PHONES.slice(0, 1).map(phone => (
+              {CONTACT_PHONES.map(phone => (
                 <a key={phone} href={`tel:${phone.replace(/\D/g, '')}`} className="text-sm font-semibold transition-opacity hover:opacity-60" style={{ color: '#6B5E54' }}>
                   {phone}
                 </a>

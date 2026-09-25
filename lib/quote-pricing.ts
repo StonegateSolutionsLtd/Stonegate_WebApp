@@ -120,6 +120,34 @@ export function calcDetailedQuote(inputs: DetailedQuoteInputs): DetailedQuoteRes
   return { travelFee, loadFee, toughJobFee, laborFee, subtotal, stairsFee, rushFee, preTax, gstAmount, total, lineItems }
 }
 
+export interface StandardQuoteInputs {
+  hourlyRate: number
+  hours: number
+  fees: number
+  gst: boolean
+}
+
+export interface StandardQuoteResult {
+  baseAmount: number
+  fees: number
+  subtotal: number
+  gstAmount: number
+  total: number
+}
+
+export function calcStandardQuote(inputs: StandardQuoteInputs): StandardQuoteResult {
+  const hourlyRate = Math.max(0, inputs.hourlyRate || 0)
+  const hours = Math.max(0, inputs.hours || 0)
+  const fees = round2(Math.max(0, inputs.fees || 0))
+
+  const baseAmount = round2(hourlyRate * hours)
+  const subtotal = round2(baseAmount + fees)
+  const gstAmount = inputs.gst ? round2(subtotal * GST_RATE) : 0
+  const total = round2(subtotal + gstAmount)
+
+  return { baseAmount, fees, subtotal, gstAmount, total }
+}
+
 export function isValidDetailedQuoteInputs(v: unknown): v is DetailedQuoteInputs {
   if (typeof v !== 'object' || v === null) return false
   const i = v as Record<string, unknown>

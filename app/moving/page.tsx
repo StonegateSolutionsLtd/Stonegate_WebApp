@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import ContactButton from '@/components/landing/ContactButton'
 import { Button } from '@/components/ui/button'
 import {
   Building2, Home, Package, MapPinned, Star, CheckCircle2, MessageCircleQuestion,
@@ -168,9 +169,11 @@ export default function MovingPage() {
                 <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
                   Have an office or commercial move in mind? Contact us directly with the details and we&apos;ll let you know if we&apos;re the right fit.
                 </p>
-                <a href="tel:+16043546479" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
-                  <MessageCircleQuestion size={16} /> Ask About Your Move
-                </a>
+                <ContactButton
+                  label={<><MessageCircleQuestion size={16} /> Ask About Your Move</>}
+                  className="inline-flex items-center gap-2 text-sm font-bold bg-transparent hover:bg-transparent p-0 h-auto border-0 shadow-none"
+                  style={{ color: '#254220' }}
+                />
               </div>
             </FadeIn>
             <FadeIn delay={100}>
@@ -182,9 +185,11 @@ export default function MovingPage() {
                 <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
                   Moving outside Metro Vancouver? Get in touch with your route and timeline and we&apos;ll confirm whether we can take it on.
                 </p>
-                <a href="tel:+16043546479" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
-                  <MessageCircleQuestion size={16} /> Ask About Your Move
-                </a>
+                <ContactButton
+                  label={<><MessageCircleQuestion size={16} /> Ask About Your Move</>}
+                  className="inline-flex items-center gap-2 text-sm font-bold bg-transparent hover:bg-transparent p-0 h-auto border-0 shadow-none"
+                  style={{ color: '#254220' }}
+                />
               </div>
             </FadeIn>
           </div>

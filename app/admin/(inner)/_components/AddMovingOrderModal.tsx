@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { FALLBACK_ORDER_EMAIL, FALLBACK_ORDER_PHONE } from '@/lib/contact'
 
 const SIZES = [
   { value: 'studio', label: 'Studio' },
@@ -50,8 +51,8 @@ export default function AddMovingOrderModal() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         customerName: form.customerName,
-        customerEmail: form.customerEmail,
-        phone: form.phone,
+        customerEmail: form.customerEmail.trim() || FALLBACK_ORDER_EMAIL,
+        phone: form.phone.trim() || FALLBACK_ORDER_PHONE,
         pickupAddress: form.pickupAddress,
         pickupFloor: parseInt(form.pickupFloor) || 1,
         pickupHasElevator: form.pickupHasElevator,
@@ -116,14 +117,17 @@ export default function AddMovingOrderModal() {
                     <input style={inp} required value={form.customerName} onChange={e => set('customerName', e.target.value)} placeholder="Jane Smith" />
                   </div>
                   <div>
-                    <label style={lbl}>Phone *</label>
-                    <input style={inp} required value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="604-555-0100" />
+                    <label style={lbl}>Phone</label>
+                    <input style={inp} value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="604-555-0100" />
                   </div>
                 </div>
                 <div style={{ marginTop: '10px' }}>
-                  <label style={lbl}>Email *</label>
-                  <input style={inp} type="email" required value={form.customerEmail} onChange={e => set('customerEmail', e.target.value)} placeholder="jane@example.com" />
+                  <label style={lbl}>Email</label>
+                  <input style={inp} type="email" value={form.customerEmail} onChange={e => set('customerEmail', e.target.value)} placeholder="jane@example.com" />
                 </div>
+                <p style={{ fontSize: '11px', color: '#9A8E83', marginTop: '6px' }}>
+                  Leave phone or email blank if unknown — the order will use Stonegate&apos;s own contact info instead.
+                </p>
               </div>
 
               {/* Pickup */}

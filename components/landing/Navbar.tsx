@@ -101,6 +101,48 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
   )
 }
 
+function PhoneDropdown() {
+  const [open, setOpen] = useState(false)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function openNow() {
+    if (closeTimer.current) clearTimeout(closeTimer.current)
+    setOpen(true)
+  }
+  function closeSoon() {
+    closeTimer.current = setTimeout(() => setOpen(false), 120)
+  }
+
+  return (
+    <div className="relative" onMouseEnter={openNow} onMouseLeave={closeSoon}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-label="Call Stonegate"
+        className="flex items-center justify-center rounded-full transition-opacity hover:opacity-60 cursor-pointer"
+        style={{ width: '38px', height: '38px', border: '1.5px solid #E8E0D5', background: 'none' }}
+      >
+        <Phone size={15} style={{ color: '#014421' }} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full pt-3" style={{ minWidth: '220px' }}>
+          <div className="rounded-2xl overflow-hidden py-2" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 12px 32px rgba(26,23,20,0.12)' }}>
+            {CONTACT_PHONES.map(phone => (
+              <a
+                key={phone}
+                href={`tel:${phone.replace(/\D/g, '')}`}
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-[#F5F0EB]"
+                style={{ color: '#1A1714' }}
+              >
+                <Phone size={13} style={{ color: '#014421' }} /> {phone}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
   const [open, setOpen] = useState(false)
   return (
@@ -165,14 +207,7 @@ export default function Navbar() {
             <Link href="/about" className="text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
               About
             </Link>
-            <a
-              href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
-              aria-label="Call Stonegate"
-              className="flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
-              style={{ width: '38px', height: '38px', border: '1.5px solid #E8E0D5' }}
-            >
-              <Phone size={15} style={{ color: '#014421' }} />
-            </a>
+            <PhoneDropdown />
             <button
               onClick={() => setQuoteOpen(true)}
               className="rounded-full text-sm font-extrabold px-6 py-3 cursor-pointer transition-transform duration-200 hover:scale-105 border-0"
@@ -220,7 +255,7 @@ export default function Navbar() {
                 Make a Request
               </button>
               <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
-                {CONTACT_PHONES.slice(0, 1).map(phone => (
+                {CONTACT_PHONES.map(phone => (
                   <a key={phone} href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>
                     <Phone size={14} style={{ color: '#014421' }} /> {phone}
                   </a>

@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
 import PrintButton from './PrintButton'
-import { calcDetailedQuote, type DetailedQuoteInputs, type QuoteLineItem } from '@/lib/quote-pricing'
+import { calcDetailedQuote, calcStandardQuote, type DetailedQuoteInputs, type QuoteLineItem } from '@/lib/quote-pricing'
 
 export async function generateMetadata({ params }: { params: Promise<{ orderId: string }> }): Promise<Metadata> {
   const { orderId } = await params
@@ -45,6 +45,10 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
   let hourlyRate = 0
   let baseAmount = 0
   let additionalCharges = 0
+  let numTrucks = 1
+  let gstEnabled = false
+  let subtotal = 0
+  let gstAmount = 0
 
   if (isDetailed) {
     lineItems = calcDetailedQuote(order.quote_details.inputs as DetailedQuoteInputs).lineItems
@@ -52,11 +56,21 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
     estHours = Number(order.estimated_hours)
     hourlyRate = Number(order.hourly_rate ?? 80)
     additionalCharges = Math.round(Math.max(0, Number(order.additional_fees ?? 0)) * 100) / 100
-    baseAmount = Math.round(estHours * hourlyRate * 100) / 100
+    numTrucks = Math.max(1, Number(order.num_trucks ?? 1))
+    gstEnabled = !!order.gst
 
-    lineItems = [{ label: '2 Movers + Truck', amount: baseAmount }]
+    const standardResult = calcStandardQuote({ hourlyRate, hours: estHours, fees: additionalCharges, gst: gstEnabled })
+    baseAmount = standardResult.baseAmount
+    subtotal = standardResult.subtotal
+    gstAmount = standardResult.gstAmount
+
+    lineItems = [{ label: `2 Movers + ${numTrucks > 1 ? `${numTrucks} × ` : ''}16' Truck${numTrucks > 1 ? 's' : ''}`, amount: baseAmount }]
     if (additionalCharges > 0) lineItems.push({ label: 'Additional Charges', amount: additionalCharges })
+    if (gstAmount > 0) lineItems.push({ label: 'GST (5%)', amount: gstAmount })
   }
+
+  const additionalChargesRowNum = additionalCharges > 0 ? 4 : null
+  const gstRowNum = gstAmount > 0 ? (additionalCharges > 0 ? 5 : 4) : null
 
   const G = '#254220'
 
@@ -166,7 +180,9 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
               {isDetailed ? 'Detailed Quote' : `Estimated Time: ${estHours} Hour${estHours !== 1 ? 's' : ''}`}
             </div>
             <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>
-              {isDetailed ? 'See itemized breakdown below.' : 'Final cost will be based on the actual time spent on your move.'}
+              {isDetailed
+                ? 'See itemized breakdown below.'
+                : `Price is for ${numTrucks > 1 ? `${numTrucks} × ` : 'a '}16' truck${numTrucks > 1 ? 's' : ''} + 2 movers${gstEnabled ? ', plus GST' : ''}. Final cost will be based on the actual time spent on your move.`}
             </div>
           </div>
         </div>
@@ -214,11 +230,11 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                 <td style={{ padding: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <MoversIcon />
-                    <span style={{ fontSize: '12px', fontWeight: 700 }}>2 Movers + Truck</span>
+                    <span style={{ fontSize: '12px', fontWeight: 700 }}>2 Movers + {numTrucks > 1 ? `${numTrucks} × ` : ''}16&apos; Truck{numTrucks > 1 ? 's' : ''}</span>
                   </div>
                 </td>
                 <td style={{ padding: '12px', fontSize: '11px', color: '#555', lineHeight: 1.5 }}>
-                  Includes moving crew, truck,<br />equipment, blankets, dollies<br />and all tools
+                  Includes moving crew, 16&apos; truck{numTrucks > 1 ? 's' : ''},<br />equipment, blankets, dollies<br />and all tools
                 </td>
                 <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px' }}>${hourlyRate.toFixed(2)} / hr</td>
                 <td style={{ padding: '12px', textAlign: 'right', fontSize: '12px' }}>{estHours}</td>
@@ -252,7 +268,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
               </tr>
               {additionalCharges > 0 && (
                 <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
-                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>4</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>{additionalChargesRowNum}</td>
                   <td style={{ padding: '10px 12px' }}>
                     <span style={{ fontSize: '12px', fontWeight: 700 }}>Additional Charges</span>
                   </td>
@@ -262,19 +278,39 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                   <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${additionalCharges.toFixed(2)}</td>
                 </tr>
               )}
+              {gstAmount > 0 && (
+                <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
+                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>{gstRowNum}</td>
+                  <td style={{ padding: '10px 12px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700 }}>GST (5%)</span>
+                  </td>
+                  <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Goods and Services Tax</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
+                  <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${gstAmount.toFixed(2)}</td>
+                </tr>
+              )}
               <tr style={{ borderTop: '1px solid #e0e0e0' }}>
                 <td colSpan={5} style={{ padding: '8px 12px', fontSize: '12px', fontWeight: 600 }}>SUBTOTAL</td>
-                <td style={{ padding: '8px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 600 }}>${price.toFixed(2)}</td>
+                <td style={{ padding: '8px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 600 }}>${subtotal.toFixed(2)}</td>
               </tr>
               <tr style={{ borderTop: '2px solid #e0e0e0', background: '#fafafa' }}>
                 <td colSpan={5} style={{ padding: '10px 12px', fontSize: '13px', fontWeight: 800 }}>ESTIMATED TOTAL (CAD)</td>
                 <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '15px', fontWeight: 800, color: G }}>${price.toFixed(2)}</td>
               </tr>
-              <tr style={{ background: '#f0f7f3' }}>
-                <td colSpan={6} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
-                  All applicable taxes included (GST)
-                </td>
-              </tr>
+              {gstEnabled ? (
+                <tr style={{ background: '#f0f7f3' }}>
+                  <td colSpan={6} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
+                    GST (5%) is included in the total above
+                  </td>
+                </tr>
+              ) : (
+                <tr style={{ background: '#f0f7f3' }}>
+                  <td colSpan={6} style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 700, color: G }}>
+                    GST not charged on this estimate
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           )}

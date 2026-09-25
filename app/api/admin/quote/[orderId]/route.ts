@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { calcDetailedQuote, isValidDetailedQuoteInputs } from '@/lib/quote-pricing'
+import { calcDetailedQuote, calcStandardQuote, isValidDetailedQuoteInputs } from '@/lib/quote-pricing'
 
 export async function POST(
   request: NextRequest,
@@ -39,7 +39,7 @@ export async function POST(
     return NextResponse.json({ ok: true })
   }
 
-  const { hourly_rate, estimated_hours, additional_fees } = body
+  const { hourly_rate, estimated_hours, additional_fees, num_trucks, gst } = body
 
   if (typeof hourly_rate !== 'number' || hourly_rate <= 0) {
     return NextResponse.json({ error: 'Invalid hourly rate' }, { status: 400 })
@@ -50,8 +50,19 @@ export async function POST(
   if (typeof additional_fees !== 'number' || additional_fees < 0) {
     return NextResponse.json({ error: 'Invalid additional fees' }, { status: 400 })
   }
+  if (num_trucks !== undefined && (typeof num_trucks !== 'number' || !Number.isInteger(num_trucks) || num_trucks < 1)) {
+    return NextResponse.json({ error: 'Invalid number of trucks' }, { status: 400 })
+  }
+  if (gst !== undefined && typeof gst !== 'boolean') {
+    return NextResponse.json({ error: 'Invalid GST flag' }, { status: 400 })
+  }
 
-  const estimated_price = Math.round((hourly_rate * estimated_hours + additional_fees) * 100) / 100
+  const { total: estimated_price } = calcStandardQuote({
+    hourlyRate: hourly_rate,
+    hours: estimated_hours,
+    fees: additional_fees,
+    gst: !!gst,
+  })
 
   const { error } = await supabase
     .from('orders')
@@ -61,6 +72,8 @@ export async function POST(
       hourly_rate,
       estimated_hours,
       additional_fees,
+      num_trucks: num_trucks ?? 1,
+      gst: !!gst,
       estimated_price,
       quote_generated_at: new Date().toISOString(),
     })

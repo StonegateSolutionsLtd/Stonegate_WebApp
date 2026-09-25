@@ -3,7 +3,8 @@
     "allow": [
       "PowerShell(npm *)",
       "PowerShell(winget *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
     ]
   }
 }

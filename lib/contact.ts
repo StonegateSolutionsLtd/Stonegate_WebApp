@@ -6,3 +6,8 @@ export const CONTACT_PHONES = [
 ]
 
 export const CONTACT_EMAIL = 'orders@stonegatemoving.com'
+
+// Fallback contact info used when an admin creates an order without full
+// customer details on file (e.g. a lead with no email or phone yet).
+export const FALLBACK_ORDER_PHONE = CONTACT_PHONES[2]
+export const FALLBACK_ORDER_EMAIL = CONTACT_EMAIL

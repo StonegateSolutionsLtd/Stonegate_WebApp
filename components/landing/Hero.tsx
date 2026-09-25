@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, ArrowRight } from 'lucide-react'
+import { CONTACT_PHONES } from '@/lib/contact'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import BeforeAfterCarousel from '@/components/landing/BeforeAfterCarousel'
@@ -404,9 +405,11 @@ export default function Hero() {
                 <a href="mailto:orders@stonegatemoving.com" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714' }}>
                   orders@stonegatemoving.com
                 </a>
-                <a href="tel:+16043546479" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714', fontVariantNumeric: 'lining-nums tabular-nums' }}>
-                  +1-604-354-6479
-                </a>
+                {CONTACT_PHONES.map(phone => (
+                  <a key={phone} href={`tel:${phone.replace(/\D/g, '')}`} className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714', fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                    {phone}
+                  </a>
+                ))}
               </div>
             </div>
             </FadeIn>

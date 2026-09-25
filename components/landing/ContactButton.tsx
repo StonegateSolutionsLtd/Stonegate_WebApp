@@ -6,7 +6,7 @@ import { X, Phone, Mail } from 'lucide-react'
 import { CONTACT_PHONES, CONTACT_EMAIL } from '@/lib/contact'
 
 interface ContactButtonProps {
-  label?: string
+  label?: React.ReactNode
   className?: string
   style?: React.CSSProperties
 }

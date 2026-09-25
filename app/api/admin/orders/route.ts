@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import type { OrderFormData } from '@/lib/types'
+import { FALLBACK_ORDER_EMAIL, FALLBACK_ORDER_PHONE } from '@/lib/contact'
 
 export async function POST(request: NextRequest) {
   let body: OrderFormData
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
   }
 
   const required: (keyof OrderFormData)[] = [
-    'customerName', 'customerEmail', 'phone',
+    'customerName',
     'pickupAddress', 'dropoffAddress', 'apartmentSize', 'movingDate', 'movingTime',
   ]
   for (const field of required) {
@@ -26,8 +27,8 @@ export async function POST(request: NextRequest) {
     .from('orders')
     .insert({
       customer_name: body.customerName,
-      customer_email: body.customerEmail,
-      phone: body.phone,
+      customer_email: body.customerEmail || FALLBACK_ORDER_EMAIL,
+      phone: body.phone || FALLBACK_ORDER_PHONE,
       pickup_address: body.pickupAddress,
       pickup_floor: body.pickupFloor ?? 1,
       pickup_has_elevator: body.pickupHasElevator ?? false,
