@@ -48,6 +48,9 @@ export default function MoverCard({ mover, assignments, payments, carryover, per
   const owed = assignments.reduce((sum, a) => sum + (a.amount_override != null ? Number(a.amount_override) : (a.hours ?? 0) * mover.hourly_rate), 0)
   const paid = payments.reduce((sum, p) => sum + Number(p.amount), 0)
   const remaining = carryover + owed - paid
+  // This week's payments pay off old debt first, so the carryover warning
+  // reflects what's still outstanding, not the original balance.
+  const carryoverRemaining = carryover > 0.004 ? Math.max(carryover - paid, 0) : carryover
 
   async function saveHours(assignmentId: string, value: string) {
     setSavingId(assignmentId)
@@ -186,11 +189,11 @@ export default function MoverCard({ mover, assignments, payments, carryover, per
           </div>
         )}
 
-        {Math.abs(carryover) > 0.004 && (
-          <p style={{ fontSize: '12px', color: carryover > 0 ? '#9A4B12' : '#254220', margin: '0 0 8px' }}>
-            {carryover > 0
-              ? `Carried over from before: ${money(carryover)} still unpaid`
-              : `Carried over from before: ${money(Math.abs(carryover))} credit (overpaid)`}
+        {Math.abs(carryoverRemaining) > 0.004 && (
+          <p style={{ fontSize: '12px', color: carryoverRemaining > 0 ? '#9A4B12' : '#254220', margin: '0 0 8px' }}>
+            {carryoverRemaining > 0
+              ? `Carried over from before: ${money(carryoverRemaining)} still unpaid`
+              : `Carried over from before: ${money(Math.abs(carryoverRemaining))} credit (overpaid)`}
           </p>
         )}
 
