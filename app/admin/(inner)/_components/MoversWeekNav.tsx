@@ -12,7 +12,9 @@ function shiftWeek(weekStartStr: string, deltaWeeks: number) {
 
 function currentWeekStart() {
   const now = new Date()
-  return fmt(new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()))
+  // Monday-start week, so Sunday falls at the end of the week rather than starting a new one.
+  const offset = (now.getDay() + 6) % 7
+  return fmt(new Date(now.getFullYear(), now.getMonth(), now.getDate() - offset))
 }
 
 export default function MoversWeekNav({ weekStartStr, label }: { weekStartStr: string; label: string }) {

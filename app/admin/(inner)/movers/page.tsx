@@ -19,7 +19,9 @@ export default async function MoversPage({ searchParams }: { searchParams: Promi
   const { week } = await searchParams
   const anchor = week && /^\d{4}-\d{2}-\d{2}$/.test(week) ? parseDateLocal(week) : new Date()
 
-  const weekStart = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() - anchor.getDay())
+  // Monday-start week, so Sunday falls at the end of the week rather than starting a new one.
+  const weekStartOffset = (anchor.getDay() + 6) % 7
+  const weekStart = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate() - weekStartOffset)
   const weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 6)
   const weekStartStr = fmt(weekStart)
   const weekEndStr = fmt(weekEnd)

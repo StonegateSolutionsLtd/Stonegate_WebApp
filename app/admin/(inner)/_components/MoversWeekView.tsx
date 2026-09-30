@@ -55,11 +55,11 @@ export default function MoversWeekView({ movers, assignments, payments, carryove
           <div style={{ fontSize: '18px', fontWeight: 700, color: '#254220' }}>{totals.hours.toFixed(2)}</div>
         </div>
         <div style={{ flex: '1 1 140px', background: 'white', border: '1px solid #F5F0EB', borderRadius: '10px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '11px', color: '#9A8E83', fontWeight: 700, letterSpacing: '0.4px' }}>TOTAL OWED</div>
+          <div style={{ fontSize: '11px', color: '#9A8E83', fontWeight: 700, letterSpacing: '0.4px' }}>OWED THIS WEEK</div>
           <div style={{ fontSize: '18px', fontWeight: 700, color: '#254220' }}>{money(totals.owed)}</div>
         </div>
         <div style={{ flex: '1 1 140px', background: 'white', border: '1px solid #F5F0EB', borderRadius: '10px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '11px', color: '#9A8E83', fontWeight: 700, letterSpacing: '0.4px' }}>PAID SO FAR</div>
+          <div style={{ fontSize: '11px', color: '#9A8E83', fontWeight: 700, letterSpacing: '0.4px' }}>PAID THIS WEEK</div>
           <div style={{ fontSize: '18px', fontWeight: 700, color: '#254220' }}>{money(totals.paid)}</div>
         </div>
         <div style={{ flex: '1 1 140px', background: totals.remaining > 0.004 ? '#FDE4C8' : '#D6E8D3', border: '1px solid #F5F0EB', borderRadius: '10px', padding: '12px 14px' }}>
