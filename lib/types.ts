@@ -52,6 +52,7 @@ export interface CalendarJob {
   job_type: CalendarJobType
   event_date: string
   event_time: string | null
+  duration_minutes: number | null
   is_subcontract: boolean
   company_name: string | null
   pickup_address: string | null

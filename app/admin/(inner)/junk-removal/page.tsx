@@ -6,6 +6,8 @@ import DeleteButton from '../_components/DeleteButton'
 import AddServiceOrderModal from '../_components/AddServiceOrderModal'
 import AddToCalendarButton from '../_components/AddToCalendarButton'
 import StatusFilter from '../_components/StatusFilter'
+import DurationSelect from '../_components/DurationSelect'
+import { durationFor } from '@/lib/scheduling'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,12 +23,12 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
   const onCalendar = new Set((calendarLinks ?? []).map(c => c.service_order_id))
 
   return (
-    <div className="jr-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto', position: 'relative', left: '-50px' }}>
+    <div className="jr-wrap" style={{ padding: '24px 20px', maxWidth: '1200px', margin: '0 auto' }}>
       <style>{`
         .so-table { display: block; }
         .so-cards { display: none; }
         @media (max-width: 768px) {
-          .jr-wrap { left: 0 !important; padding: 16px 12px !important; }
+          .jr-wrap { padding: 16px 12px !important; }
           .so-table { display: none; }
           .so-cards { display: flex; flex-direction: column; gap: 12px; }
         }
@@ -46,12 +48,12 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
       </div>
 
       {/* Desktop Table */}
-      <div className="so-table" style={{ background: 'white', borderRadius: '12px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #F5F0EB' }}>
+      <div className="so-table" style={{ background: 'white', borderRadius: '12px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #F5F0EB', overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#254220' }}>
-              {['Order #', 'Submitted', 'Customer', 'Service Date', 'Status', 'Quote', ''].map((h, i) => (
-                <th key={h || i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', whiteSpace: 'nowrap', borderRadius: i === 0 ? '11px 0 0 0' : i === 6 ? '0 11px 0 0' : undefined }}>{h}</th>
+              {['Order #', 'Submitted', 'Customer', 'Service Date', 'Duration', 'Status', 'Quote', ''].map((h, i) => (
+                <th key={h || i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', whiteSpace: 'nowrap', borderRadius: i === 0 ? '11px 0 0 0' : i === 7 ? '0 11px 0 0' : undefined }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -71,6 +73,9 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                   </td>
                   <td style={{ padding: '14px 16px', fontSize: '13px', color: '#1A1714', whiteSpace: 'nowrap' }}>{new Date(order.service_date + 'T12:00:00').toLocaleDateString('en-CA')}</td>
                   <td style={{ padding: '14px 16px' }}>
+                    <DurationSelect orderId={order.id} current={durationFor('junk_removal', order.duration_minutes)} apiPath="/api/admin/service-orders" />
+                  </td>
+                  <td style={{ padding: '14px 16px' }}>
                     <StatusSelect orderId={order.id} current={order.status} apiPath="/api/admin/service-orders" />
                   </td>
                   <td style={{ padding: '14px 16px' }}>
@@ -82,13 +87,13 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                   </td>
                   <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '96px 96px auto', gap: '8px', alignItems: 'center' }}>
                         {order.estimated_price != null && (
-                          <Link href={`/admin/service-quote/${order.id}/print`} target="_blank" style={{ background: 'white', color: '#254220', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid #254220' }}>
+                          <Link href={`/admin/service-quote/${order.id}/print`} target="_blank" style={{ background: 'white', color: '#254220', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid #254220', textAlign: 'center', boxSizing: 'border-box' }}>
                             View PDF
                           </Link>
                         )}
-                        <Link href={`/admin/service-quote/${order.id}`} style={{ background: '#254220', color: 'white', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+                        <Link href={`/admin/service-quote/${order.id}`} style={{ background: '#254220', color: 'white', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', textAlign: 'center', boxSizing: 'border-box', gridColumn: order.estimated_price != null ? undefined : '1 / 3' }}>
                           {order.estimated_price != null ? 'Edit' : 'Generate Quote'}
                         </Link>
                         <DeleteButton orderId={order.id} customerName={order.customer_name} apiPath="/api/admin/service-orders" />
@@ -102,6 +107,7 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                             event_time: order.service_time,
                             pickup_address: order.address,
                             customer_name: order.customer_name,
+                            duration_minutes: order.duration_minutes,
                             service_order_id: order.id,
                           }}
                         />
@@ -112,7 +118,7 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
               )
             })}
             {(!orders || orders.length === 0) && (
-              <tr><td colSpan={7} style={{ padding: '48px', textAlign: 'center', color: '#9A8E83', fontSize: '14px' }}>No junk removal orders yet.</td></tr>
+              <tr><td colSpan={8} style={{ padding: '48px', textAlign: 'center', color: '#9A8E83', fontSize: '14px' }}>No junk removal orders yet.</td></tr>
             )}
           </tbody>
         </table>
@@ -131,7 +137,10 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
             <div key={order.id} style={{ background: 'white', borderRadius: '12px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '1px solid #F5F0EB' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 700, color: '#254220' }}>{orderNum}</span>
-                <StatusSelect orderId={order.id} current={order.status} apiPath="/api/admin/service-orders" />
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <DurationSelect orderId={order.id} current={durationFor('junk_removal', order.duration_minutes)} apiPath="/api/admin/service-orders" />
+                  <StatusSelect orderId={order.id} current={order.status} apiPath="/api/admin/service-orders" />
+                </div>
               </div>
               <div style={{ marginBottom: '12px' }}>
                 <div style={{ fontSize: '15px', fontWeight: 600, color: '#1A1714' }}>{order.customer_name}</div>
@@ -173,6 +182,7 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                       event_time: order.service_time,
                       pickup_address: order.address,
                       customer_name: order.customer_name,
+                      duration_minutes: order.duration_minutes,
                       service_order_id: order.id,
                     }}
                   />

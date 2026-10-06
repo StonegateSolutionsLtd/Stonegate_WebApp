@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { X, Phone, Menu, ChevronDown, ChevronRight, Home } from 'lucide-react'
+import { X, Phone, Menu, ChevronDown, ChevronRight, Home, Truck, Trash2, ArrowRight } from 'lucide-react'
 import { CONTACT_PHONES } from '@/lib/contact'
 
 interface NavLink {
@@ -236,43 +236,56 @@ export default function Navbar() {
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={() => setQuoteOpen(false)}
         >
-          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(26,23,20,0.55)' }} />
+          <div className="absolute inset-0 backdrop-blur-sm animate-in fade-in duration-200" style={{ backgroundColor: 'rgba(26,23,20,0.6)' }} />
           <div
-            className="relative rounded-2xl p-8 w-full max-w-sm shadow-xl"
-            style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8E0D5' }}
+            className="relative rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-200"
+            style={{ backgroundColor: '#FAF7F2' }}
             onClick={e => e.stopPropagation()}
           >
-            <button
-              onClick={() => setQuoteOpen(false)}
-              className="absolute top-4 right-4 cursor-pointer transition-opacity hover:opacity-60"
-              style={{ background: 'none', border: 'none', padding: '4px' }}
-            >
-              <X size={18} style={{ color: '#1A1714' }} />
-            </button>
-            <h2 className="text-2xl font-extrabold mb-6" style={{ color: '#1A1714' }}>What do you need?</h2>
-            <div className="flex flex-col gap-3">
-              <Link
-                href="/order"
+            {/* Header band */}
+            <div className="relative px-8 pt-8 pb-7" style={{ background: 'linear-gradient(135deg, #014421 0%, #0B2E1A 100%)' }}>
+              <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full" style={{ background: 'radial-gradient(circle, rgba(201,138,69,0.35) 0%, transparent 70%)' }} />
+              <button
                 onClick={() => setQuoteOpen(false)}
-                className="flex items-center gap-4 p-4 rounded-xl border transition-colors hover:border-[#014421] group"
-                style={{ border: '1.5px solid #E8E0D5', textDecoration: 'none' }}
+                aria-label="Close"
+                className="absolute top-4 right-4 cursor-pointer rounded-full p-1.5 transition-colors hover:bg-white/10"
+                style={{ background: 'none', border: 'none' }}
               >
-                <div>
-                  <p className="font-bold text-sm" style={{ color: '#1A1714' }}>Moving</p>
-                  <p className="text-xs" style={{ color: '#9A8E83' }}>Apartment & house moves across Metro Vancouver</p>
-                </div>
-              </Link>
-              <Link
-                href="/book-service?type=junk-removal"
-                onClick={() => setQuoteOpen(false)}
-                className="flex items-center gap-4 p-4 rounded-xl border transition-colors hover:border-[#014421] group"
-                style={{ border: '1.5px solid #E8E0D5', textDecoration: 'none' }}
-              >
-                <div>
-                  <p className="font-bold text-sm" style={{ color: '#1A1714' }}>Junk Removal</p>
-                  <p className="text-xs" style={{ color: '#9A8E83' }}>Furniture, appliances & estate cleanouts</p>
-                </div>
-              </Link>
+                <X size={18} style={{ color: '#FAF7F2' }} />
+              </button>
+              <p className="relative text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#C98A45' }}>Free quote · No hidden fees</p>
+              <h2 className="relative text-3xl font-extrabold" style={{ color: '#FAF7F2' }}>What do you need?</h2>
+            </div>
+
+            <div className="flex flex-col gap-3 p-6">
+              {[
+                { href: '/order', title: 'Moving', desc: 'Apartment & house moves across Metro Vancouver', Icon: Truck, accent: '#014421', tint: 'rgba(1,68,33,0.08)' },
+                { href: '/book-service?type=junk-removal', title: 'Junk Removal', desc: 'Furniture, appliances & estate cleanouts', Icon: Trash2, accent: '#C98A45', tint: 'rgba(201,138,69,0.14)' },
+              ].map(({ href, title, desc, Icon, accent, tint }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setQuoteOpen(false)}
+                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white border-[1.5px] border-[#E8E0D5] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-[var(--accent)]"
+                  style={{ textDecoration: 'none', ['--accent' as string]: accent }}
+                >
+                  <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 transition-transform duration-200 group-hover:scale-110" style={{ backgroundColor: tint }}>
+                    <Icon size={22} style={{ color: accent }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-base" style={{ color: '#1A1714' }}>{title}</p>
+                    <p className="text-sm" style={{ color: '#6B5E54' }}>{desc}</p>
+                  </div>
+                  <ArrowRight size={18} className="shrink-0 transition-transform duration-200 group-hover:translate-x-1" style={{ color: accent }} />
+                </Link>
+              ))}
+            </div>
+
+            <div className="px-6 pb-6 -mt-1 text-center text-sm" style={{ color: '#6B5E54' }}>
+              Prefer to talk?{' '}
+              <a href={`tel:${CONTACT_PHONES[2].replace(/\D/g, '')}`} className="font-bold hover:underline" style={{ color: '#014421' }}>
+                Call {CONTACT_PHONES[2]}
+              </a>
             </div>
           </div>
         </div>

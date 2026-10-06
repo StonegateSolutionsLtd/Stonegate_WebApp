@@ -4,19 +4,17 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { EMPTY_ORDER_FORM, type ApartmentSize, type OrderFormData } from '@/lib/types'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from '@/components/ui/select'
-import DatePicker from './DatePicker'
+import TimeSlotPicker from './TimeSlotPicker'
 import {
   MapPin, Building2, User, Mail, Phone, ArrowRight, Check,
 } from 'lucide-react'
 
 
 const STEPS = [
-  { short: 'Pickup',   title: 'Pickup location',        desc: 'Where are we picking up from?' },
-  { short: 'Drop-off', title: 'Drop-off & move details', desc: 'Where are we delivering to, and when?' },
-  { short: 'You',      title: 'Your information',        desc: 'How can we reach you?' },
+  { short: 'Schedule', title: 'When works best for you?', desc: 'Pick a day and an open start time.' },
+  { short: 'Pickup',   title: 'Pickup location',          desc: 'Where are we picking up from?' },
+  { short: 'Drop-off', title: 'Drop-off & move details',  desc: 'Where are we delivering to?' },
+  { short: 'You',      title: 'Your information',         desc: 'How can we reach you?' },
 ]
 
 const APARTMENT_SIZES = [
@@ -26,17 +24,6 @@ const APARTMENT_SIZES = [
   { value: '3br',    label: '3 BR'   },
   { value: '4br+',   label: '4+ BR'  },
 ]
-
-const TIME_SLOTS = Array.from({ length: 33 }, (_, i) => {
-  const total = 6 * 60 + i * 30
-  const h = Math.floor(total / 60)
-  const m = total % 60
-  return {
-    value: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`,
-    label:  `${h > 12 ? h - 12 : h}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`,
-  }
-})
-
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -176,12 +163,11 @@ export default function OrderForm() {
   }
 
   function canAdvance() {
-    if (step === 0) return form.pickupAddress.trim().length > 0
-    if (step === 1) return (
+    if (step === 0) return form.movingDate !== '' && form.movingTime !== ''
+    if (step === 1) return form.pickupAddress.trim().length > 0
+    if (step === 2) return (
       form.dropoffAddress.trim().length > 0 &&
-      form.apartmentSize !== '' &&
-      form.movingDate !== '' &&
-      form.movingTime !== ''
+      form.apartmentSize !== ''
     )
     return (
       form.customerName.trim().length > 0 &&
@@ -201,8 +187,7 @@ export default function OrderForm() {
     router.push('/order/confirm')
   }
 
-  const today = new Date().toISOString().split('T')[0]
-  const ready  = canAdvance()
+  const ready = canAdvance()
 
   return (
     <div className="w-full">
@@ -220,8 +205,18 @@ export default function OrderForm() {
 
         <div className="flex flex-col gap-5">
 
-          {/* â"€â"€ Step 1: Pickup â"€â"€ */}
+          {/* â"€â"€ Step 1: Schedule â"€â"€ */}
           {step === 0 && (
+            <TimeSlotPicker
+              jobType="moving"
+              date={form.movingDate}
+              time={form.movingTime}
+              onChange={(date, time) => setForm(prev => ({ ...prev, movingDate: date, movingTime: time }))}
+            />
+          )}
+
+          {/* â"€â"€ Step 2: Pickup â"€â"€ */}
+          {step === 1 && (
             <>
               <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress">
                 <StyledInput
@@ -249,8 +244,8 @@ export default function OrderForm() {
             </>
           )}
 
-          {/* â"€â"€ Step 2: Drop-off â"€â"€ */}
-          {step === 1 && (
+          {/* â"€â"€ Step 3: Drop-off â"€â"€ */}
+          {step === 2 && (
             <>
               <FieldIcon icon={MapPin} label="Drop-off address" id="dropoffAddress">
                 <StyledInput
@@ -290,30 +285,11 @@ export default function OrderForm() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Moving date</span>
-                  <DatePicker id="movingDate" value={form.movingDate} onChange={v => set('movingDate', v)} min={today} />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Arrival time</span>
-                  <Select value={form.movingTime} onValueChange={v => set('movingTime', v ?? '')}>
-                    <SelectTrigger className="h-9 bg-white border-[#E0D8D0] text-[#1A1714] rounded-xl">
-                      <SelectValue placeholder="Select time" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TIME_SLOTS.map(({ value, label }) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
             </>
           )}
 
-          {/* â"€â"€ Step 3: Contact â"€â"€ */}
-          {step === 2 && (
+          {/* â"€â"€ Step 4: Contact â"€â"€ */}
+          {step === 3 && (
             <>
               <FieldIcon icon={User} label="Full name" id="customerName">
                 <StyledInput

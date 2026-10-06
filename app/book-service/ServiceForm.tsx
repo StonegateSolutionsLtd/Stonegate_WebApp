@@ -7,20 +7,9 @@ import Navbar from '@/components/landing/Navbar'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import DatePicker from '@/components/order/DatePicker'
-import { MapPin, User, Mail, Phone, FileText } from 'lucide-react'
-
-const today = new Date().toISOString().split('T')[0]
-
-const TIME_SLOTS = Array.from({ length: 33 }, (_, i) => {
-  const total = 6 * 60 + i * 30
-  const h = Math.floor(total / 60)
-  const m = total % 60
-  const label = `${h % 12 || 12}:${m.toString().padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`
-  const value = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
-  return { value, label }
-})
+import TimeSlotPicker from '@/components/order/TimeSlotPicker'
+import { DEFAULT_DURATION_MIN, formatSlotRange, timeToMinutes } from '@/lib/scheduling'
+import { MapPin, User, Mail, Phone, FileText, ArrowRight } from 'lucide-react'
 
 const SERVICE_LABELS: Record<string, string> = {
   'junk-removal': 'Junk Removal',
@@ -32,6 +21,7 @@ export default function ServiceForm() {
   const serviceType = params.get('type') ?? 'junk-removal'
   const serviceLabel = SERVICE_LABELS[serviceType] ?? 'Service'
 
+  const [scheduled, setScheduled] = useState(false)
   const [form, setForm] = useState({ address: '', date: '', time: '', customerName: '', customerEmail: '', phone: '', notes: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
@@ -44,8 +34,6 @@ export default function ServiceForm() {
   function validate() {
     const e: Record<string, string> = {}
     if (!form.address.trim()) e.address = 'Address is required'
-    if (!form.date) e.date = 'Date is required'
-    if (!form.time) e.time = 'Time is required'
     if (!form.customerName.trim()) e.customerName = 'Name is required'
     if (!form.customerEmail.trim()) e.customerEmail = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(form.customerEmail)) e.customerEmail = 'Enter a valid email'
@@ -64,9 +52,16 @@ export default function ServiceForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serviceType, ...form }),
       })
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 409) {
+        setScheduled(false)
+        setForm(prev => ({ ...prev, time: '' }))
+        setErrors({ form: data.error ?? 'That time was just booked. Please pick another slot.' })
+        setSubmitting(false)
+        return
+      }
       if (!res.ok) throw new Error()
-      const { orderId } = await res.json()
-      router.push(`/book-service/success?id=${orderId}`)
+      router.push(`/book-service/success?id=${data.orderId}`)
     } catch {
       setErrors({ form: 'Something went wrong. Please try again.' })
       setSubmitting(false)
@@ -96,10 +91,64 @@ export default function ServiceForm() {
             Book {serviceLabel}
           </h1>
           <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
-            Fill in the details below and we&apos;ll get back to you the same day with a quote.
+            {scheduled
+              ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
+              : 'Start by picking an open time — we only show slots our crew can actually make.'}
           </p>
 
+          {!scheduled ? (
+            <div>
+              {errors.form && (
+                <p className="text-sm mb-4 rounded-xl px-4 py-3" style={{ color: '#9A4B12', backgroundColor: '#FDE4C8' }}>
+                  {errors.form}
+                </p>
+              )}
+              <div className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+                <TimeSlotPicker
+                  jobType="junk_removal"
+                  date={form.date}
+                  time={form.time}
+                  onChange={(date, time) => setForm(prev => ({ ...prev, date, time }))}
+                />
+              </div>
+              <Button
+                type="button"
+                onClick={() => setScheduled(true)}
+                disabled={!form.date || !form.time}
+                className="rounded-full text-sm font-bold py-6 border-0 w-full mt-6 disabled:opacity-40"
+                style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
+              >
+                Continue <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5" />
+              </Button>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-9">
+
+            {/* Chosen slot */}
+            <div
+              className="flex items-center justify-between gap-4 rounded-2xl px-5 py-4"
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
+            >
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#254220' }}>
+                  Your Slot
+                </p>
+                <p className="text-sm font-semibold" style={{ color: '#1A1714' }}>
+                  {new Date(form.date + 'T12:00:00').toLocaleDateString('en-CA', {
+                    weekday: 'short', month: 'short', day: 'numeric',
+                  })} · {formatSlotRange(timeToMinutes(form.time), DEFAULT_DURATION_MIN.junk_removal)}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setScheduled(false)}
+                className="text-sm font-semibold underline shrink-0"
+                style={{ color: '#254220' }}
+              >
+                Change
+              </button>
+            </div>
+
 
             {/* Address */}
             <div>
@@ -120,37 +169,6 @@ export default function ServiceForm() {
                 />
               </div>
               {errors.address && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.address}</p>}
-            </div>
-
-            {/* Date & Time */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                  Date <span style={{ color: '#254220' }}>*</span>
-                </label>
-                <DatePicker
-                  value={form.date}
-                  onChange={v => set('date', v)}
-                  min={today}
-                />
-                {errors.date && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.date}</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                  Time <span style={{ color: '#254220' }}>*</span>
-                </label>
-                <Select value={form.time} onValueChange={v => set('time', v ?? '')}>
-                  <SelectTrigger className="h-9 bg-white border-[#E0D8D0] text-[#1A1714] rounded-xl" style={{ borderColor: errors.time ? '#ef4444' : '#E0D8D0' }}>
-                    <SelectValue placeholder="Select time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TIME_SLOTS.map(({ value, label }) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.time && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.time}</p>}
-              </div>
             </div>
 
             {/* Contact info */}
@@ -244,6 +262,7 @@ export default function ServiceForm() {
               {submitting ? 'Sending…' : 'Submit Request'}
             </Button>
           </form>
+          )}
         </div>
       </main>
 
