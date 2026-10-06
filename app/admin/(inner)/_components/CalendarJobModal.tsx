@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import type { CalendarJob, CalendarJobType, Mover } from '@/lib/types'
+import { DEFAULT_DURATION_MIN, DURATION_OPTIONS_MIN, UNSCHEDULED_JOB_BLOCK_MIN, formatDuration } from '@/lib/scheduling'
 
 const SIZES = [
   { value: '', label: 'Not set' },
@@ -29,6 +30,7 @@ interface FormState {
   jobType: CalendarJobType
   eventDate: string
   eventTime: string
+  durationMinutes: string
   isSubcontract: boolean
   companyName: string
   pickupAddress: string
@@ -42,6 +44,7 @@ function emptyForm(defaultDate?: string): FormState {
     jobType: 'moving',
     eventDate: defaultDate || '',
     eventTime: '',
+    durationMinutes: '',
     isSubcontract: false,
     companyName: '',
     pickupAddress: '',
@@ -55,7 +58,9 @@ function formFromJob(job: CalendarJob): FormState {
   return {
     jobType: job.job_type,
     eventDate: job.event_date,
-    eventTime: job.event_time ?? '',
+    // Postgres returns TIME columns as "HH:MM:SS"; the dropdown's values are "HH:MM".
+    eventTime: job.event_time ? job.event_time.slice(0, 5) : '',
+    durationMinutes: job.duration_minutes != null ? String(job.duration_minutes) : '',
     isSubcontract: job.is_subcontract,
     companyName: job.company_name ?? '',
     pickupAddress: job.pickup_address ?? '',
@@ -116,6 +121,7 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
       job_type: form.jobType,
       event_date: form.eventDate,
       event_time: form.eventTime || null,
+      duration_minutes: form.durationMinutes || null,
       is_subcontract: form.isSubcontract,
       company_name: form.isSubcontract ? form.companyName : '',
       pickup_address: form.pickupAddress,
@@ -217,6 +223,23 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
                 {TIMES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={lbl}>Duration</label>
+            <select style={inp} value={form.durationMinutes} onChange={e => set('durationMinutes', e.target.value)}>
+              <option value="">
+                Default ({formatDuration(form.eventTime ? DEFAULT_DURATION_MIN[form.jobType] : UNSCHEDULED_JOB_BLOCK_MIN)})
+              </option>
+              {DURATION_OPTIONS_MIN.map(m => (
+                <option key={m} value={String(m)}>{formatDuration(m)}</option>
+              ))}
+            </select>
+            <p style={{ fontSize: '11.5px', color: '#9A8E83', margin: '5px 0 0' }}>
+              {form.eventTime
+                ? 'Blocks this window from the public booking form.'
+                : `With no time set, this blocks ${formatDuration(form.durationMinutes ? Number(form.durationMinutes) : UNSCHEDULED_JOB_BLOCK_MIN)} starting at opening, not the whole day.`}
+            </p>
           </div>
 
           <div style={{ marginBottom: '16px' }}>

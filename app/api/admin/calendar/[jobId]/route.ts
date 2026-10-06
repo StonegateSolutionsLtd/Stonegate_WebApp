@@ -4,6 +4,13 @@ import type { CalendarJobType } from '@/lib/types'
 
 const VALID_JOB_TYPES: CalendarJobType[] = ['moving', 'junk_removal']
 
+function normalizeDuration(value: unknown): number | null {
+  if (value === undefined || value === null || value === '') return null
+  const mins = Number(value)
+  if (!Number.isFinite(mins) || mins <= 0 || mins > 960) return null
+  return Math.round(mins)
+}
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ jobId: string }> }
@@ -18,7 +25,7 @@ export async function PATCH(
 
   const {
     job_type, event_date, event_time, is_subcontract, company_name,
-    pickup_address, size, customer_name, notes,
+    pickup_address, size, customer_name, notes, duration_minutes,
   } = body
 
   if (!VALID_JOB_TYPES.includes(job_type as CalendarJobType)) {
@@ -41,6 +48,7 @@ export async function PATCH(
       size: size || null,
       customer_name: customer_name || null,
       notes: notes || null,
+      duration_minutes: normalizeDuration(duration_minutes),
     })
     .eq('id', jobId)
 

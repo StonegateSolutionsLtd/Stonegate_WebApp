@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isSlotAvailable } from '@/lib/availability'
 import { sendOwnerOrderNotification, sendCustomerOrderConfirmation } from '@/lib/email'
 import type { OrderFormData } from '@/lib/types'
 
@@ -19,6 +20,21 @@ export async function POST(request: NextRequest) {
     if (!body[field]) {
       return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 })
     }
+  }
+
+  try {
+    if (!(await isSlotAvailable('moving', body.movingDate, body.movingTime))) {
+      return NextResponse.json(
+        { error: 'That time was just booked. Please pick another slot.' },
+        { status: 409 }
+      )
+    }
+  } catch (err) {
+    console.error('Availability check failed:', err)
+    return NextResponse.json(
+      { error: 'Could not verify that time is still open. Please try again.' },
+      { status: 503 }
+    )
   }
 
   const supabase = createServiceClient()

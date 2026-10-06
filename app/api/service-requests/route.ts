@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { isSlotAvailable } from '@/lib/availability'
 import { sendOwnerServiceRequestNotification, sendCustomerServiceRequestConfirmation } from '@/lib/email'
 
 const TYPE_MAP: Record<string, string> = {
@@ -22,6 +23,21 @@ export async function POST(request: NextRequest) {
   const orderType = TYPE_MAP[serviceType]
   if (!orderType) {
     return NextResponse.json({ error: 'Unknown service type' }, { status: 400 })
+  }
+
+  try {
+    if (!(await isSlotAvailable('junk_removal', date, time))) {
+      return NextResponse.json(
+        { error: 'That time was just booked. Please pick another slot.' },
+        { status: 409 }
+      )
+    }
+  } catch (err) {
+    console.error('Availability check failed:', err)
+    return NextResponse.json(
+      { error: 'Could not verify that time is still open. Please try again.' },
+      { status: 503 }
+    )
   }
 
   // Save to database

@@ -67,19 +67,19 @@ export default function Hero() {
           {/* Full-screen image */}
           <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
             <Image
-              src="/hero-truck.jpg"
+              src="/hero-truck-home-natural.jpg"
               alt="Stonegate Moving Solutions truck outside a home"
               fill
               priority
               quality={90}
               sizes="(max-width: 1024px) 200vw, 100vw"
-              className="object-cover"
+              className="object-cover object-[80%_center] lg:object-center"
               style={{ filter: 'brightness(0.8)' }}
             />
           </div>
 
           {/* Left-side darkening gradient */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.45) 20%, transparent 40%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.2) 45%, transparent 60%)' }} />
 
           {/* Text - left side, vertically centered */}
           <div className="relative z-10 flex flex-col pl-8 sm:pl-16 lg:pl-24 py-24" style={{ maxWidth: '680px' }}>
@@ -88,13 +88,13 @@ export default function Hero() {
                 <span className="block text-xs font-bold normal-case tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
                   Metro Vancouver
                 </span>
-                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#FFFFFF' }}>Moving</span>
+                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
                   <span style={{ flex: 0.6, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
                   <span className="font-extrabold [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
                   <span style={{ flex: 1.4, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
                 </span>
-                <span className="[text-shadow:0_2px_10px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.9)]" style={{ color: '#A9743F', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
+                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
               </h1>
               <p className="text-base leading-relaxed mb-8 [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: '380px' }}>
                 Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
@@ -104,12 +104,12 @@ export default function Hero() {
               <div className="flex flex-col sm:flex-row gap-3 mb-8">
                 <Link href="/book-service?type=junk-removal">
                   <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <Trash2 size={15} /> Junk Removal Quote →
+                    <Trash2 size={15} /> Book Your Junk Removal →
                   </Button>
                 </Link>
                 <Link href="/order">
                   <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <CalendarDays size={15} /> Request Your Move →
+                    <CalendarDays size={15} /> Book Your Move →
                   </Button>
                 </Link>
               </div>

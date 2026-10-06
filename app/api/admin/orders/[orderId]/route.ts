@@ -8,16 +8,33 @@ export async function PATCH(
   { params }: { params: Promise<{ orderId: string }> }
 ) {
   const { orderId } = await params
-  const { status } = await request.json()
+  const { status, duration_minutes } = await request.json()
 
-  if (!VALID_STATUSES.includes(status)) {
-    return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+  const update: { status?: string; duration_minutes?: number } = {}
+
+  if (status !== undefined) {
+    if (!VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    }
+    update.status = status
+  }
+
+  if (duration_minutes !== undefined) {
+    const mins = Number(duration_minutes)
+    if (!Number.isFinite(mins) || mins <= 0 || mins > 960) {
+      return NextResponse.json({ error: 'Invalid duration' }, { status: 400 })
+    }
+    update.duration_minutes = Math.round(mins)
+  }
+
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
   }
 
   const supabase = createServiceClient()
   const { error } = await supabase
     .from('orders')
-    .update({ status })
+    .update(update)
     .eq('id', orderId)
 
   if (error) {

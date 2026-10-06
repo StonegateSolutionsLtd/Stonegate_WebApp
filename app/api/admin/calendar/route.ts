@@ -4,6 +4,13 @@ import type { CalendarJobType } from '@/lib/types'
 
 const VALID_JOB_TYPES: CalendarJobType[] = ['moving', 'junk_removal']
 
+function normalizeDuration(value: unknown): number | null {
+  if (value === undefined || value === null || value === '') return null
+  const mins = Number(value)
+  if (!Number.isFinite(mins) || mins <= 0 || mins > 960) return null
+  return Math.round(mins)
+}
+
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown>
   try {
@@ -14,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   const {
     job_type, event_date, event_time, is_subcontract, company_name,
-    pickup_address, size, customer_name, notes, order_id, service_order_id,
+    pickup_address, size, customer_name, notes, order_id, service_order_id, duration_minutes,
   } = body
 
   if (!VALID_JOB_TYPES.includes(job_type as CalendarJobType)) {
@@ -38,6 +45,7 @@ export async function POST(request: NextRequest) {
       size: size || null,
       customer_name: customer_name || null,
       notes: notes || null,
+      duration_minutes: normalizeDuration(duration_minutes),
       order_id: order_id || null,
       service_order_id: service_order_id || null,
     })
