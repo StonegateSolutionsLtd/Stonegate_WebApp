@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/supabase/server'
+import { LOCAL_WITHOUT_SUPABASE, createServiceClient } from '@/lib/supabase/server'
 import {
   BUSINESS_START_MIN,
   DEFAULT_DURATION_MIN,
@@ -19,6 +19,8 @@ export async function loadBusyByDate(
   startDate: string,
   endDate: string
 ): Promise<Record<string, BusyInterval[]>> {
+  if (LOCAL_WITHOUT_SUPABASE) return {}
+
   const supabase = createServiceClient()
 
   const [ordersRes, serviceOrdersRes, calendarJobsRes] = await Promise.all([

@@ -27,6 +27,11 @@ export async function createClient() {
   )
 }
 
+// Local dev without Supabase configured: callers fall back to stand-ins (all
+// slots open, orders written to data/orders/) so the booking flow still works.
+export const LOCAL_WITHOUT_SUPABASE =
+  process.env.NODE_ENV === 'development' && !process.env.NEXT_PUBLIC_SUPABASE_URL
+
 // Bypasses RLS - use only in server-side API routes, never expose to the client
 export function createServiceClient() {
   return createSupabaseClient(

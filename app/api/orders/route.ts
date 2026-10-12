@@ -1,5 +1,8 @@
+import { randomUUID } from 'node:crypto'
+import { mkdir, writeFile } from 'node:fs/promises'
+import path from 'node:path'
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { LOCAL_WITHOUT_SUPABASE, createServiceClient } from '@/lib/supabase/server'
 import { isSlotAvailable } from '@/lib/availability'
 import { sendOwnerOrderNotification, sendCustomerOrderConfirmation } from '@/lib/email'
 import type { OrderFormData } from '@/lib/types'
@@ -35,6 +38,17 @@ export async function POST(request: NextRequest) {
       { error: 'Could not verify that time is still open. Please try again.' },
       { status: 503 }
     )
+  }
+
+  if (LOCAL_WITHOUT_SUPABASE) {
+    const orderId = randomUUID()
+    const dir = path.join(process.cwd(), 'data', 'orders')
+    await mkdir(dir, { recursive: true })
+    await writeFile(
+      path.join(dir, `${orderId}.txt`),
+      JSON.stringify({ orderId, createdAt: new Date().toISOString(), status: 'pending', ...body }, null, 2),
+    )
+    return NextResponse.json({ orderId }, { status: 201 })
   }
 
   const supabase = createServiceClient()
