@@ -1,66 +1,37 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/seo/site'
+import { JUNK_ITEMS, junkItemHref } from '@/lib/seo/junk-items'
+import { TEMPLATE_CITIES } from '@/lib/seo/cities'
+
+type Entry = [path: string, priority: number, freq?: MetadataRoute.Sitemap[number]['changeFrequency']]
+
+const STATIC: Entry[] = [
+  ['', 1],
+  ['/junk-removal', 0.95],
+  ['/moving', 0.9],
+  ['/pricing', 0.8],
+  ['/pricing/junk-removal', 0.9],
+  ['/pricing/moving', 0.85],
+  ['/junk-removal/what-we-take', 0.85],
+  ['/locations', 0.8],
+  ['/about', 0.6],
+  ['/order', 0.7, 'yearly'],
+  ['/book-service', 0.6, 'yearly'],
+]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: 'https://www.stonegatemoving.com',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/burnaby-movers',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/burnaby-junk-removal',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/pricing',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/moving',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.85,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/junk-removal',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/locations',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/about',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/order',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.7,
-    },
-    {
-      url: 'https://www.stonegatemoving.com/book-service',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.6,
-    },
+  const lastModified = new Date()
+  const entries: Entry[] = [
+    ...STATIC,
+    ['/burnaby-movers', 0.85],
+    ['/burnaby-junk-removal', 0.85],
+    ...TEMPLATE_CITIES.map((c): Entry => [`/locations/${c.slug}`, 0.85]),
+    ...JUNK_ITEMS.map((i): Entry => [junkItemHref(i.slug), 0.8]),
   ]
+  return entries.map(([path, priority, freq = 'monthly']) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency: freq,
+    priority,
+  }))
 }

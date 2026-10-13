@@ -9,7 +9,41 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import TimeSlotPicker from '@/components/order/TimeSlotPicker'
 import { DEFAULT_DURATION_MIN, formatSlotRange, timeToMinutes } from '@/lib/scheduling'
-import { MapPin, User, Mail, Phone, FileText, ArrowRight } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { MapPin, User, Mail, Phone, FileText, ArrowRight, CheckCircle2, Clock } from 'lucide-react'
+
+function FieldIcon({ icon: Icon, label, required, valid, error, children }: {
+  icon: React.ElementType; label: string; required?: boolean; valid?: boolean; error?: string; children: React.ReactNode
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-1.5 mb-1.5">
+        <label className="block text-sm font-semibold" style={{ color: '#1A1714' }}>
+          {label} {required && <span style={{ color: '#254220' }}>*</span>}
+        </label>
+        {valid && (
+          <CheckCircle2
+            key="valid"
+            size={14}
+            strokeWidth={2.5}
+            className="animate-in zoom-in-50 fade-in duration-200"
+            style={{ color: '#3FA34D' }}
+          />
+        )}
+      </div>
+      <div className="relative">
+        <span
+          className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center pointer-events-none z-10 transition-colors duration-300"
+          style={{ backgroundColor: valid ? '#D6E8D3' : '#F5F0EB' }}
+        >
+          <Icon size={14} style={{ color: valid ? '#254220' : '#9A8E83' }} />
+        </span>
+        {children}
+      </div>
+      {error && <p className="text-xs mt-1.5 animate-in fade-in" style={{ color: '#ef4444' }}>{error}</p>}
+    </div>
+  )
+}
 
 const SERVICE_LABELS: Record<string, string> = {
   'junk-removal': 'Junk Removal',
@@ -22,6 +56,7 @@ export default function ServiceForm() {
   const serviceLabel = SERVICE_LABELS[serviceType] ?? 'Service'
 
   const [scheduled, setScheduled] = useState(false)
+  const [direction, setDirection] = useState<'forward' | 'back'>('forward')
   const [form, setForm] = useState({ address: '', date: '', time: '', customerName: '', customerEmail: '', phone: '', notes: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
@@ -71,31 +106,48 @@ export default function ServiceForm() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
       <Navbar />
-      <main className="flex-1">
-        <div className="max-w-xl mx-auto px-6 py-16">
+      <main className="flex-1 relative">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #C4B8AC 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+            opacity: 0.3,
+          }}
+        />
+        <div className="relative max-w-xl mx-auto px-6 py-16">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-sm font-semibold mb-10 transition-opacity hover:opacity-60"
+            className="flex items-center gap-1.5 text-sm font-semibold mb-10 transition-all hover:opacity-60 hover:-translate-x-0.5"
             style={{ color: '#6B5E54' }}
           >
             ← Back
           </Link>
 
-          <span
-            className="inline-block text-xs font-semibold uppercase tracking-widest mb-5 border rounded-full px-4 py-1.5"
-            style={{ color: '#254220', borderColor: '#B5C9B0' }}
-          >
-            {serviceLabel}
-          </span>
-          <h1 className="text-4xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>
-            Book {serviceLabel}
-          </h1>
-          <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
-            {scheduled
-              ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
-              : 'Start by picking an open time — we only show slots our crew can actually make.'}
-          </p>
+          <div className="animate-in fade-in slide-in-from-bottom-3 duration-500">
+            <span
+              className="inline-block text-xs font-semibold uppercase tracking-widest mb-5 border rounded-full px-4 py-1.5"
+              style={{ color: '#254220', borderColor: '#B5C9B0' }}
+            >
+              {serviceLabel}
+            </span>
+            <h1 className="text-4xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>
+              Book {serviceLabel}
+            </h1>
+            <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
+              {scheduled
+                ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
+                : 'Start by picking an open time — we only show slots our crew can actually make.'}
+            </p>
+          </div>
 
+          <div
+            key={String(scheduled)}
+            className={cn(
+              'animate-in fade-in duration-300',
+              direction === 'forward' ? 'slide-in-from-right-8' : 'slide-in-from-left-8'
+            )}
+          >
           {!scheduled ? (
             <div>
               {errors.form && (
@@ -103,7 +155,7 @@ export default function ServiceForm() {
                   {errors.form}
                 </p>
               )}
-              <div className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+              <div className="rounded-2xl p-5 sm:p-6 animate-in fade-in slide-in-from-bottom-3 duration-500" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
                 <TimeSlotPicker
                   jobType="junk_removal"
                   date={form.date}
@@ -113,12 +165,15 @@ export default function ServiceForm() {
               </div>
               <Button
                 type="button"
-                onClick={() => setScheduled(true)}
+                onClick={() => { setDirection('forward'); setScheduled(true) }}
                 disabled={!form.date || !form.time}
-                className="rounded-full text-sm font-bold py-6 border-0 w-full mt-6 disabled:opacity-40"
+                className={cn(
+                  'group rounded-full text-sm font-bold py-6 border-0 w-full mt-6 transition-all duration-200 disabled:opacity-40',
+                  form.date && form.time && 'hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98]'
+                )}
                 style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
               >
-                Continue <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5" />
+                Continue <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5 transition-transform duration-200 group-hover:translate-x-1" />
               </Button>
             </div>
           ) : (
@@ -126,23 +181,28 @@ export default function ServiceForm() {
 
             {/* Chosen slot */}
             <div
-              className="flex items-center justify-between gap-4 rounded-2xl px-5 py-4"
+              className="flex items-center justify-between gap-4 rounded-2xl px-5 py-4 animate-in fade-in zoom-in-95 duration-300"
               style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
             >
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#254220' }}>
-                  Your Slot
-                </p>
-                <p className="text-sm font-semibold" style={{ color: '#1A1714' }}>
-                  {new Date(form.date + 'T12:00:00').toLocaleDateString('en-CA', {
-                    weekday: 'short', month: 'short', day: 'numeric',
-                  })} · {formatSlotRange(timeToMinutes(form.time), DEFAULT_DURATION_MIN.junk_removal)}
-                </p>
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#D6E8D3' }}>
+                  <Clock size={16} style={{ color: '#254220' }} />
+                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-0.5" style={{ color: '#254220' }}>
+                    Your Slot
+                  </p>
+                  <p className="text-sm font-semibold" style={{ color: '#1A1714' }}>
+                    {new Date(form.date + 'T12:00:00').toLocaleDateString('en-CA', {
+                      weekday: 'short', month: 'short', day: 'numeric',
+                    })} · {formatSlotRange(timeToMinutes(form.time), DEFAULT_DURATION_MIN.junk_removal)}
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
-                onClick={() => setScheduled(false)}
-                className="text-sm font-semibold underline shrink-0"
+                onClick={() => { setDirection('back'); setScheduled(false) }}
+                className="text-sm font-semibold underline shrink-0 transition-opacity hover:opacity-70"
                 style={{ color: '#254220' }}
               >
                 Change
@@ -151,15 +211,11 @@ export default function ServiceForm() {
 
 
             {/* Address */}
-            <div>
+            <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '0ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#254220' }}>
                 Service Address
               </p>
-              <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                Address <span style={{ color: '#254220' }}>*</span>
-              </label>
-              <div className="relative">
-                <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
+              <FieldIcon icon={MapPin} label="Address" required valid={form.address.trim().length > 0} error={errors.address}>
                 <Input
                   placeholder="Street address, city"
                   value={form.address}
@@ -167,79 +223,52 @@ export default function ServiceForm() {
                   className="pl-10"
                   style={{ borderColor: errors.address ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
                 />
-              </div>
-              {errors.address && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.address}</p>}
+              </FieldIcon>
             </div>
 
             {/* Contact info */}
-            <div>
+            <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '60ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#254220' }}>
                 Your Information
               </p>
               <div className="flex flex-col gap-4">
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Full Name <span style={{ color: '#254220' }}>*</span>
-                  </label>
-                  <div className="relative">
-                    <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
-                    <Input
-                      placeholder="Your full name"
-                      value={form.customerName}
-                      onChange={e => set('customerName', e.target.value)}
-                      className="pl-10"
-                      style={{ borderColor: errors.customerName ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                  {errors.customerName && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.customerName}</p>}
-                </div>
+                <FieldIcon icon={User} label="Full Name" required valid={form.customerName.trim().length > 0} error={errors.customerName}>
+                  <Input
+                    placeholder="Your full name"
+                    value={form.customerName}
+                    onChange={e => set('customerName', e.target.value)}
+                    className="pl-10"
+                    style={{ borderColor: errors.customerName ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
+                  />
+                </FieldIcon>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Email <span style={{ color: '#254220' }}>*</span>
-                  </label>
-                  <div className="relative">
-                    <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      value={form.customerEmail}
-                      onChange={e => set('customerEmail', e.target.value)}
-                      className="pl-10"
-                      style={{ borderColor: errors.customerEmail ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                  {errors.customerEmail && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.customerEmail}</p>}
-                </div>
+                <FieldIcon icon={Mail} label="Email" required valid={/\S+@\S+\.\S+/.test(form.customerEmail)} error={errors.customerEmail}>
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={form.customerEmail}
+                    onChange={e => set('customerEmail', e.target.value)}
+                    className="pl-10"
+                    style={{ borderColor: errors.customerEmail ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
+                  />
+                </FieldIcon>
 
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Phone <span style={{ color: '#254220' }}>*</span>
-                  </label>
-                  <div className="relative">
-                    <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
-                    <Input
-                      type="tel"
-                      placeholder="+1 (604) 000-0000"
-                      value={form.phone}
-                      onChange={e => set('phone', e.target.value)}
-                      className="pl-10"
-                      style={{ borderColor: errors.phone ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
-                    />
-                  </div>
-                  {errors.phone && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.phone}</p>}
-                </div>
+                <FieldIcon icon={Phone} label="Phone" required valid={form.phone.trim().length > 0} error={errors.phone}>
+                  <Input
+                    type="tel"
+                    placeholder="+1 (604) 000-0000"
+                    value={form.phone}
+                    onChange={e => set('phone', e.target.value)}
+                    className="pl-10"
+                    style={{ borderColor: errors.phone ? '#ef4444' : '#E8E0D5', backgroundColor: '#FFFFFF' }}
+                  />
+                </FieldIcon>
               </div>
             </div>
 
             {/* Notes */}
-            <div>
-              <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                What Junk Do You Need Removed?{' '}
-                <span className="font-normal" style={{ color: '#B5A99E' }}>(optional)</span>
-              </label>
-              <div className="relative">
-                <FileText size={16} className="absolute left-3.5 top-3.5 pointer-events-none" style={{ color: '#B5C9B0' }} />
+            <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '120ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
+              <FieldIcon icon={FileText} label="What Junk Do You Need Removed?">
                 <Textarea
                   placeholder="Tell us what items and roughly how much (e.g. a couch, mattress, and a few boxes)"
                   value={form.notes}
@@ -248,21 +277,23 @@ export default function ServiceForm() {
                   rows={3}
                   style={{ borderColor: '#E8E0D5', backgroundColor: '#FFFFFF' }}
                 />
-              </div>
+              </FieldIcon>
+              <p className="text-xs mt-1" style={{ color: '#B5A99E' }}>Optional</p>
             </div>
 
-            {errors.form && <p className="text-sm" style={{ color: '#ef4444' }}>{errors.form}</p>}
+            {errors.form && <p className="text-sm animate-in fade-in" style={{ color: '#ef4444' }}>{errors.form}</p>}
 
             <Button
               type="submit"
               disabled={submitting}
-              className="rounded-full text-sm font-bold py-6 border-0"
+              className="rounded-full text-sm font-bold py-6 border-0 transition-all duration-200 disabled:opacity-60 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98]"
               style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
               {submitting ? 'Sending…' : 'Submit Request'}
             </Button>
           </form>
           )}
+          </div>
         </div>
       </main>
 

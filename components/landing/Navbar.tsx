@@ -4,8 +4,9 @@ import { useState, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { X, Phone, Menu, ChevronDown, ChevronRight, Home, Truck, Trash2, ArrowRight } from 'lucide-react'
+import { X, Phone, Menu, ChevronDown, ChevronRight, Home } from 'lucide-react'
 import { CONTACT_PHONES } from '@/lib/contact'
+import { CITIES, cityHref } from '@/lib/seo/cities'
 
 interface NavLink {
   label: string
@@ -28,6 +29,7 @@ const movingGroup: NavGroup = {
     { label: 'Commercial & Office Moving', href: '/moving#commercial-moving' },
     { label: 'Small Moves', href: '/moving#small-moves' },
     { label: 'Long-Distance Moving', href: '/moving#long-distance-moving' },
+    { label: 'Moving Pricing', href: '/pricing/moving' },
   ],
 }
 
@@ -36,11 +38,14 @@ const junkGroup: NavGroup = {
   href: '/junk-removal',
   links: [
     { label: 'Junk Removal Services', href: '/junk-removal' },
-    { label: 'Furniture Removal', href: '/junk-removal#furniture-removal' },
-    { label: 'Appliance Removal', href: '/junk-removal#appliance-removal' },
-    { label: 'Property Cleanouts', href: '/junk-removal#property-cleanouts' },
-    { label: 'Commercial Junk Removal', href: '/junk-removal#commercial-junk-removal' },
-    { label: 'Construction Debris Removal', href: '/junk-removal#construction-debris-removal' },
+    { label: 'What We Take', href: '/junk-removal/what-we-take' },
+    { label: 'Furniture Removal', href: '/junk-removal/furniture-removal' },
+    { label: 'Appliance Removal', href: '/junk-removal/appliance-removal' },
+    { label: 'Mattress Removal', href: '/junk-removal/mattress-removal' },
+    { label: 'Garage & Estate Cleanouts', href: '/junk-removal/what-we-take#cleanouts' },
+    { label: 'Construction Debris Removal', href: '/junk-removal/construction-debris-removal' },
+    { label: 'Commercial Junk Removal', href: '/junk-removal/commercial-junk-removal' },
+    { label: 'Junk Removal Pricing', href: '/pricing/junk-removal' },
   ],
 }
 
@@ -48,13 +53,21 @@ const locationsGroup: NavGroup = {
   label: 'Locations',
   href: '/locations',
   links: [
-    { label: 'Areas We Serve', href: '/locations' },
-    { label: 'Burnaby Movers', href: '/burnaby-movers' },
-    { label: 'Burnaby Junk Removal', href: '/burnaby-junk-removal' },
+    { label: 'All Areas We Serve', href: '/locations' },
+    ...CITIES.map(c => ({ label: c.name, href: cityHref(c) })),
   ],
 }
 
-const groups = [movingGroup, junkGroup, locationsGroup]
+const pricingGroup: NavGroup = {
+  label: 'Pricing',
+  href: '/pricing',
+  links: [
+    { label: 'Junk Removal Pricing', href: '/pricing/junk-removal' },
+    { label: 'Moving Pricing', href: '/pricing/moving' },
+  ],
+}
+
+const groups = [movingGroup, junkGroup, locationsGroup, pricingGroup]
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)
@@ -72,7 +85,7 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
     <div className="relative" onMouseEnter={openNow} onMouseLeave={closeSoon}>
       <Link
         href={group.href}
-        className="flex items-center gap-1 text-base font-extrabold transition-opacity hover:opacity-60"
+        className="flex items-center gap-1 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60"
         style={{ color: '#1A1714' }}
       >
         {group.label}
@@ -80,10 +93,10 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
       </Link>
       {open && (
         <div
-          className="absolute left-0 top-full pt-3"
-          style={{ minWidth: '260px' }}
+          className={`absolute top-full pt-3 ${group.links.length > 10 ? 'left-1/2 -translate-x-1/2' : 'left-0'}`}
+          style={{ minWidth: group.links.length > 10 ? '460px' : '260px' }}
         >
-          <div className="rounded-2xl overflow-hidden py-2" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 12px 32px rgba(26,23,20,0.12)' }}>
+          <div className={`rounded-2xl overflow-hidden py-2 ${group.links.length > 10 ? 'grid grid-cols-2' : ''}`} style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 12px 32px rgba(26,23,20,0.12)' }}>
             {group.links.map(link => (
               <Link
                 key={link.href}
@@ -147,22 +160,19 @@ export default function Navbar() {
 
           <Link href="/" className="flex shrink-0 items-center gap-3">
             <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover" />
-            <span className="hidden md:inline font-extrabold text-lg tracking-tight lg:text-xl" style={{ color: '#1A1714' }}>
+            <span className="hidden min-[1400px]:inline whitespace-nowrap font-extrabold text-xl tracking-tight" style={{ color: '#1A1714' }}>
               Stonegate Moving Solutions
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
             {!isHome && (
-              <Link href="/" className="flex items-center gap-1.5 text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+              <Link href="/" className="flex items-center gap-1.5 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
                 <Home size={16} /> Home
               </Link>
             )}
             {groups.map(group => <DesktopDropdown key={group.label} group={group} />)}
-            <Link href="/pricing" className="text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
-              Pricing
-            </Link>
-            <Link href="/about" className="text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+            <Link href="/about" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
               About
             </Link>
             <a
@@ -175,28 +185,48 @@ export default function Navbar() {
             </a>
             <button
               onClick={() => setQuoteOpen(true)}
-              className="rounded-full text-sm font-extrabold px-6 py-3 cursor-pointer transition-transform duration-200 hover:scale-105 border-0"
+              className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 cursor-pointer transition-transform duration-200 hover:scale-105 border-0"
               style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
             >
               Make a Request
             </button>
           </nav>
 
-          <button
-            onClick={() => setMenuOpen(o => !o)}
-            className="flex md:hidden cursor-pointer p-1"
-            style={{ background: 'none', border: 'none' }}
-            aria-label="Toggle menu"
-          >
-            {menuOpen
-              ? <X size={24} style={{ color: '#1A1714' }} />
-              : <Menu size={24} style={{ color: '#1A1714' }} />
-            }
-          </button>
+          <div className="flex lg:hidden items-center gap-2.5">
+            <a
+              href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
+              aria-label="Call Stonegate"
+              className="flex items-center gap-1.5 rounded-full font-extrabold transition-transform hover:scale-105"
+              style={{ padding: '11px 18px', backgroundColor: '#014421', color: '#FAF7F2' }}
+            >
+              <Phone size={16} fill="currentColor" style={{ color: '#FAF7F2' }} />
+              <span className="text-[15px]">Call</span>
+            </a>
+
+            <button
+              onClick={() => setQuoteOpen(true)}
+              className="rounded-full font-extrabold text-[15px] cursor-pointer transition-transform hover:scale-105"
+              style={{ padding: '11px 18px', backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
+            >
+              Free Quote
+            </button>
+
+            <button
+              onClick={() => setMenuOpen(o => !o)}
+              className="flex cursor-pointer p-1"
+              style={{ background: 'none', border: 'none' }}
+              aria-label="Toggle menu"
+            >
+              {menuOpen
+                ? <X size={24} style={{ color: '#1A1714' }} />
+                : <Menu size={24} style={{ color: '#1A1714' }} />
+              }
+            </button>
+          </div>
         </div>
 
         {menuOpen && (
-          <div className="md:hidden max-h-[calc(100vh-68px)] overflow-y-auto" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="lg:hidden max-h-[calc(100vh-68px)] overflow-y-auto" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
             <div className="px-5 py-2 flex flex-col">
               {!isHome && (
                 <Link href="/" onClick={closeMenu} className="flex items-center gap-2 py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
@@ -206,9 +236,6 @@ export default function Navbar() {
               {groups.map(group => (
                 <MobileGroup key={group.label} group={group} onNavigate={closeMenu} />
               ))}
-              <Link href="/pricing" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
-                Pricing
-              </Link>
               <Link href="/about" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 About
               </Link>
@@ -236,57 +263,62 @@ export default function Navbar() {
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={() => setQuoteOpen(false)}
         >
-          <div className="absolute inset-0 backdrop-blur-sm animate-in fade-in duration-200" style={{ backgroundColor: 'rgba(26,23,20,0.6)' }} />
+          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(26,23,20,0.6)' }} />
           <div
-            className="relative rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-200"
+            className="relative rounded-xl w-full max-w-lg p-6 sm:p-7 shadow-xl"
             style={{ backgroundColor: '#FAF7F2' }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Header band */}
-            <div className="relative px-8 pt-8 pb-7" style={{ background: 'linear-gradient(135deg, #014421 0%, #0B2E1A 100%)' }}>
-              <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full" style={{ background: 'radial-gradient(circle, rgba(201,138,69,0.35) 0%, transparent 70%)' }} />
-              <button
-                onClick={() => setQuoteOpen(false)}
-                aria-label="Close"
-                className="absolute top-4 right-4 cursor-pointer rounded-full p-1.5 transition-colors hover:bg-white/10"
-                style={{ background: 'none', border: 'none' }}
-              >
-                <X size={18} style={{ color: '#FAF7F2' }} />
-              </button>
-              <p className="relative text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#C98A45' }}>Free quote · No hidden fees</p>
-              <h2 className="relative text-3xl font-extrabold" style={{ color: '#FAF7F2' }}>What do you need?</h2>
-            </div>
+            <button
+              onClick={() => setQuoteOpen(false)}
+              aria-label="Close"
+              className="absolute top-4 right-4 cursor-pointer transition-opacity hover:opacity-60"
+              style={{ background: 'none', border: 'none', padding: '4px' }}
+            >
+              <X size={18} style={{ color: '#1A1714' }} />
+            </button>
+            <h2 className="text-2xl font-extrabold mb-5" style={{ color: '#1A1714' }}>What do you need?</h2>
 
-            <div className="flex flex-col gap-3 p-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {[
-                { href: '/order', title: 'Moving', desc: 'Apartment & house moves across Metro Vancouver', Icon: Truck, accent: '#014421', tint: 'rgba(1,68,33,0.08)' },
-                { href: '/book-service?type=junk-removal', title: 'Junk Removal', desc: 'Furniture, appliances & estate cleanouts', Icon: Trash2, accent: '#C98A45', tint: 'rgba(201,138,69,0.14)' },
-              ].map(({ href, title, desc, Icon, accent, tint }) => (
+                { href: '/order', title: 'Moving', desc: 'Apartments & houses', cta: 'Check moving availability', img: '/crew-walking-truck.jpg', pos: 'center 55%', color: '#014421', ctaText: '#FFFFFF' },
+                { href: '/book-service?type=junk-removal', title: 'Junk Removal', desc: 'Furniture, appliances, cleanouts', cta: 'Get a free junk removal quote', img: '/truck-bed-loaded.jpg', pos: 'center 55%', color: '#C98A45', ctaText: '#1A1714' },
+              ].map(({ href, title, desc, cta, img, pos, color, ctaText }) => (
                 <Link
                   key={href}
                   href={href}
                   onClick={() => setQuoteOpen(false)}
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white border-[1.5px] border-[#E8E0D5] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-[var(--accent)]"
-                  style={{ textDecoration: 'none', ['--accent' as string]: accent }}
+                  className="group flex flex-col rounded-lg overflow-hidden transition-shadow hover:shadow-lg"
+                  style={{ textDecoration: 'none', border: `2px solid ${color}` }}
                 >
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0 transition-transform duration-200 group-hover:scale-110" style={{ backgroundColor: tint }}>
-                    <Icon size={22} style={{ color: accent }} />
+                  <div className="relative aspect-[4/5] overflow-hidden" style={{ backgroundColor: '#E8E0D5' }}>
+                    <Image
+                      src={img}
+                      alt=""
+                      fill
+                      sizes="(max-width: 640px) 45vw, 240px"
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+                      style={{ objectPosition: pos }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-3/5" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }} />
+                    <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
+                      <p className="font-extrabold text-xl sm:text-2xl leading-tight" style={{ color: '#FFFFFF' }}>{title}</p>
+                      <p className="text-xs sm:text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{desc}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-base" style={{ color: '#1A1714' }}>{title}</p>
-                    <p className="text-sm" style={{ color: '#6B5E54' }}>{desc}</p>
-                  </div>
-                  <ArrowRight size={18} className="shrink-0 transition-transform duration-200 group-hover:translate-x-1" style={{ color: accent }} />
+                  <span className="flex-1 flex items-center justify-center py-3 px-3 text-center text-sm font-bold" style={{ backgroundColor: color, color: ctaText }}>
+                    {cta} →
+                  </span>
                 </Link>
               ))}
             </div>
 
-            <div className="px-6 pb-6 -mt-1 text-center text-sm" style={{ color: '#6B5E54' }}>
-              Prefer to talk?{' '}
-              <a href={`tel:${CONTACT_PHONES[2].replace(/\D/g, '')}`} className="font-bold hover:underline" style={{ color: '#014421' }}>
-                Call {CONTACT_PHONES[2]}
+            <p className="mt-6 pt-5 text-sm border-t" style={{ color: '#6B5E54', borderColor: '#E8E0D5' }}>
+              Or call us:{' '}
+              <a href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`} className="font-bold hover:underline" style={{ color: '#014421' }}>
+                {CONTACT_PHONES[0]}
               </a>
-            </div>
+            </p>
           </div>
         </div>
       )}

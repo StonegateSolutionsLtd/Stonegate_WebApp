@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
+import { CITIES, cityHref } from '@/lib/seo/cities'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
@@ -16,9 +17,9 @@ const beforeAfterPairs = [
 ]
 
 const steps = [
-  { number: '01', title: 'Request Your Quote', description: 'Tell us about your move or junk removal. Get your free estimate in minutes.', Icon: ClipboardList },
-  { number: '02', title: 'Schedule Your Move', description: 'Choose a time that works for you. We\'ll handle the rest.', Icon: CalendarDays },
-  { number: '03', title: 'We Get The Job Done', description: 'Our professional team shows up on time and gets it done right. You relax, we carry the load.', Icon: Truck },
+  { number: '01', title: 'Book Your Move or Junk Removal', description: 'Pick an available day and time online in minutes - no hidden fees, no stress.', Icon: CalendarDays },
+  { number: '02', title: 'Get a Free, No-Pressure Estimate', description: 'We\'ll confirm the details and give you a clear, upfront price before we start.', Icon: ClipboardList },
+  { number: '03', title: 'We Show Up & Get It Done', description: 'Our uniformed crew arrives on time, handles the heavy lifting, and you relax.', Icon: Truck },
 ]
 
 const reviews = [
@@ -62,7 +63,7 @@ export default function Hero() {
       <main className="flex-1">
 
         {/* Hero - full-screen video with text overlay */}
-        <section className="relative flex items-center min-h-[calc(100vh-65px)] lg:min-h-[calc(110vh-65px)]" style={{ overflow: 'hidden' }}>
+        <section className="relative flex items-start min-h-[calc(70vh-65px)] lg:min-h-[calc(96vh-65px)]" style={{ overflow: 'hidden' }}>
 
           {/* Full-screen image */}
           <div className="absolute inset-0 overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
@@ -73,73 +74,75 @@ export default function Hero() {
               priority
               quality={90}
               sizes="(max-width: 1024px) 200vw, 100vw"
-              className="object-cover object-[80%_center] lg:object-center"
-              style={{ filter: 'brightness(0.8)' }}
+              className="object-cover object-[42%_center] lg:object-[60%_center]"
+              style={{ filter: 'brightness(0.95)' }}
             />
           </div>
 
           {/* Left-side darkening gradient */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.2) 45%, transparent 60%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.79) 18%, rgba(0,0,0,0.7) 32%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.12) 75%, rgba(0,0,0,0.04) 84%, transparent 92%)' }} />
 
           {/* Text - left side, vertically centered */}
-          <div className="relative z-10 flex flex-col pl-8 sm:pl-16 lg:pl-24 py-24" style={{ maxWidth: '680px' }}>
-            <div className="flex flex-col">
-              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-6 w-fit" style={{ fontSize: 'clamp(2.25rem, 8vw, 5rem)' }}>
-                <span className="block text-xs font-bold normal-case tracking-widest mb-5" style={{ color: '#FFFFFF' }}>
+          <div className="relative z-20 self-stretch flex flex-col pl-8 sm:pl-16 lg:pl-24 pt-12 pb-16 lg:pt-16 lg:pb-[140px] max-w-[680px] lg:max-w-[1040px]">
+            <div className="flex flex-col flex-1">
+              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit" style={{ fontSize: 'clamp(2.05rem, 7.3vw, 4.55rem)' }}>
+                <span className="block text-xs font-bold normal-case tracking-widest mb-3 lg:mb-5" style={{ color: '#FFFFFF' }}>
                   Metro Vancouver
                 </span>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Moving</span>
-                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.6em 0', letterSpacing: '0.35em' }}>
+                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.65rem, 2vw, 1.1rem)', margin: '0.3em 0', letterSpacing: '0.35em' }}>
                   <span style={{ flex: 0.6, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
                   <span className="font-extrabold [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF', flexShrink: 0 }}>AND</span>
                   <span style={{ flex: 1.4, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
                 </span>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Junk Removal</span>
               </h1>
-              <p className="text-base leading-relaxed mb-8 [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: 'rgba(255,255,255,0.9)', maxWidth: '380px' }}>
+              <p className="sm:hidden text-[18px] font-medium leading-tight mb-3 max-w-[320px] [text-shadow:0_0_2px_rgba(0,0,0,1),0_1px_3px_rgba(0,0,0,1),0_2px_10px_rgba(0,0,0,0.95),0_0_24px_rgba(0,0,0,0.7)]" style={{ color: '#FFFFFF' }}>
+                Fast, reliable moving &amp; junk removal in Metro Vancouver.
+              </p>
+              <p className="hidden sm:block text-[22px] font-medium leading-tight mb-4 lg:mb-6 max-w-[320px] lg:max-w-[560px] [text-shadow:0_0_2px_rgba(0,0,0,1),0_1px_3px_rgba(0,0,0,1),0_2px_10px_rgba(0,0,0,0.95),0_0_24px_rgba(0,0,0,0.7)]" style={{ color: '#FFFFFF' }}>
                 Professional moving and junk removal across Metro Vancouver. No hidden fees, no stress.
               </p>
 
               {/* Buttons - side by side */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="flex flex-col sm:flex-row gap-4 mb-3 mt-1 lg:gap-3 lg:mb-6 lg:mt-2">
                 <Link href="/book-service?type=junk-removal">
-                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <Trash2 size={15} /> Book Your Junk Removal →
+                  <Button className="text-[15px] py-3.5 px-5 lg:text-base lg:py-7 lg:px-5 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                    <Trash2 size={16} /> Get a Junk Removal Quote →
                   </Button>
                 </Link>
                 <Link href="/order">
-                  <Button className="text-sm sm:text-base py-6 sm:py-7 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <CalendarDays size={15} /> Book Your Move →
+                  <Button className="text-[15px] py-3.5 px-5 lg:text-base lg:py-7 lg:px-5 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#FAF7F2', color: '#014421' }}>
+                    <CalendarDays size={16} /> Check Moving Availability →
                   </Button>
                 </Link>
               </div>
 
               {/* Trust badges */}
-              <div className="flex flex-row flex-wrap gap-x-6 gap-y-3 mb-6">
+              <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 mt-auto pt-2 lg:gap-y-3 lg:mb-3">
                 {([
                   { Icon: Shield, label: 'Fully Insured' },
                   { Icon: Star, label: '5-Star Rated' },
-                  { Icon: Trash2, label: 'Same-Day Junk Pickup' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2">
-                    <Icon size={14} style={{ color: 'rgba(255,255,255,0.65)' }} />
-                    <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>{label}</span>
+                    <Icon size={14} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
+                    <span className="text-xs font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{label}</span>
                   </div>
                 ))}
               </div>
 
               {/* Serving area */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-1 lg:mt-3">
                 <div className="flex items-center gap-2 shrink-0">
-                  <MapPin size={13} style={{ color: '#FFFFFF' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FFFFFF' }}>Serving Metro Vancouver</span>
+                  <MapPin size={13} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
+                  <span className="text-[11px] font-semibold uppercase tracking-widest [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: 'rgba(255,255,255,0.8)' }}>Serving Metro Vancouver</span>
                 </div>
                 <div className="hidden sm:flex flex-wrap items-center gap-y-1">
                   {['Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam', 'North Vancouver', 'West Vancouver', '& More'].map((city, i, arr) => (
                     <span key={city} className="flex items-center whitespace-nowrap">
-                      <span className="text-sm font-medium px-3" style={{ color: 'rgba(255,255,255,0.85)' }}>{city}</span>
-                      {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.25)' }}>|</span>}
+                      <span className="text-sm font-medium px-3 [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_6px_rgba(0,0,0,0.8)]" style={{ color: 'rgba(255,255,255,0.95)' }}>{city}</span>
+                      {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>}
                     </span>
                   ))}
                 </div>
@@ -148,14 +151,14 @@ export default function Hero() {
           </div>
 
           {/* Solid cream strip - smooth transition into next section */}
-          <div className="absolute bottom-0 inset-x-0" style={{ height: '110px', backgroundColor: '#FAF7F2' }} />
+          <div className="absolute bottom-0 inset-x-0 h-10 lg:h-[110px]" style={{ backgroundColor: '#FAF7F2' }} />
 
         </section>
 
         {/* Real Crew */}
-        <section style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10, marginTop: '-110px' }}>
+        <section className="-mt-10 lg:-mt-[110px]" style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10 }}>
           <div className="max-w-6xl mx-auto px-6 pt-10 sm:pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
-            <FadeIn>
+            <FadeIn className="order-2 md:order-1">
               <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
                 <Image
                   src="/team-with-truck.jpg"
@@ -166,13 +169,13 @@ export default function Hero() {
                 />
               </div>
             </FadeIn>
-            <FadeIn delay={120}>
+            <FadeIn delay={120} className="order-1 md:order-2">
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>
                   Who shows up
                 </p>
                 <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
-                  A Real, Local Crew - Not Contractors.
+                  Professional and Fast<br />Every Time.
                 </h2>
                 <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>
                   Every job is handled by our own uniformed team in our fully-equipped truck - no subcontractors, no surprises. Based right here in Metro Vancouver.
@@ -311,11 +314,11 @@ export default function Hero() {
                   </span>
                   <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Moving</p>
                   <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $110/hr + GST.
+                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $120/hr + GST.
                   </p>
                   <Link href="/order" className="mt-auto">
                     <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                      Book a Move
+                      Check Moving Availability
                     </Button>
                   </Link>
                 </div>
@@ -344,7 +347,7 @@ export default function Hero() {
                   </p>
                   <Link href="/book-service?type=junk-removal" className="mt-auto">
                     <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                      Book Junk Removal
+                      Get a Free Junk Removal Quote
                     </Button>
                   </Link>
                 </div>
@@ -355,41 +358,30 @@ export default function Hero() {
           </div>
         </section>
 
-        {/* Burnaby - dedicated local pages */}
+        {/* Service areas */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Based in Burnaby</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Local to Burnaby, Serving All of Metro Vancouver</h2>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Service areas</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>Junk Removal Across Metro Vancouver</h2>
+              <p className="text-base leading-relaxed max-w-2xl mb-8" style={{ color: '#6B5E54' }}>
+                Same-day and next-day junk removal in every city. Pick yours to see local details.
+              </p>
             </FadeIn>
-            <div className="grid sm:grid-cols-2 gap-6">
-              <FadeIn delay={0}>
-                <Link
-                  href="/burnaby-movers"
-                  className="group flex items-center justify-between gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
-                  style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
-                >
-                  <div>
-                    <p className="font-bold text-lg mb-1" style={{ color: '#1A1714' }}>Burnaby Movers</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>Professional local movers based right in Burnaby.</p>
-                  </div>
-                  <ArrowRight size={20} className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1" style={{ color: '#014421' }} />
+            <ul className="flex flex-wrap gap-2.5">
+              {CITIES.map(c => (
+                <li key={c.slug}>
+                  <Link href={cityHref(c)} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', color: '#1A1714' }}>
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/locations" className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold" style={{ color: '#014421' }}>
+                  All areas <ArrowRight size={14} />
                 </Link>
-              </FadeIn>
-              <FadeIn delay={100}>
-                <Link
-                  href="/burnaby-junk-removal"
-                  className="group flex items-center justify-between gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
-                  style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}
-                >
-                  <div>
-                    <p className="font-bold text-lg mb-1" style={{ color: '#1A1714' }}>Burnaby Junk Removal</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>Same-day junk removal for Burnaby homes and businesses.</p>
-                  </div>
-                  <ArrowRight size={20} className="flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1" style={{ color: '#014421' }} />
-                </Link>
-              </FadeIn>
-            </div>
+              </li>
+            </ul>
           </div>
         </section>
 
@@ -404,8 +396,8 @@ export default function Hero() {
                 <a href="mailto:orders@stonegatemoving.com" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714' }}>
                   orders@stonegatemoving.com
                 </a>
-                <a href="tel:+16043546479" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714', fontVariantNumeric: 'lining-nums tabular-nums' }}>
-                  +1-604-354-6479
+                <a href="tel:+16723360022" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714', fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                  +1-672-336-0022
                 </a>
               </div>
             </div>
