@@ -204,7 +204,7 @@ export default async function ServicePrintPage({ params }: { params: Promise<{ o
         {/* Footer */}
         <div style={{ marginTop: 'auto' }}>
           <div style={{ borderTop: '1.5px solid #e0e0e0', paddingTop: '8px', display: 'flex', justifyContent: 'center', gap: '32px', marginBottom: '8px' }}>
-            <FooterContact icon={<PhoneIcon />} text="(604) 354-6479" />
+            <FooterContact icon={<PhoneIcon />} text="(672) 336-0022" />
             <div style={{ width: '1px', background: '#ccc' }} />
             <FooterContact icon={<MailIcon />} text="orders@stonegatemoving.com" />
             <div style={{ width: '1px', background: '#ccc' }} />

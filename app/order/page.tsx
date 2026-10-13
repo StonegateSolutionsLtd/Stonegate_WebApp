@@ -2,7 +2,11 @@
 import Image from 'next/image'
 import OrderForm from '@/components/order/OrderForm'
 
-export const metadata = { title: 'Book Your Move - Stonegate Moving Solutions' }
+export const metadata = {
+  title: 'Book Your Move Online',
+  description: 'Book your Metro Vancouver move online. 2 movers with a fully equipped truck from $120/hr + GST - pick your date and time in minutes.',
+  alternates: { canonical: 'https://www.stonegatemoving.com/order' },
+}
 
 export default function OrderPage() {
   return (

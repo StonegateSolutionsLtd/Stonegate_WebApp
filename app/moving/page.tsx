@@ -12,7 +12,7 @@ import ReviewsRow from '@/components/landing/ReviewsRow'
 
 export const metadata: Metadata = {
   title: { absolute: 'Moving Services in Metro Vancouver | Stonegate Moving Solutions' },
-  description: 'Professional moving services across Metro Vancouver - apartments, houses, and small moves. 2 uniformed movers with a fully-equipped truck from $110/hr + GST.',
+  description: 'Professional moving services across Metro Vancouver - apartments, houses, and small moves. 2 uniformed movers with a fully-equipped truck from $120/hr + GST.',
   alternates: { canonical: 'https://www.stonegatemoving.com/moving' },
 }
 
@@ -32,7 +32,7 @@ const reviews = [
 ]
 
 const faqs = [
-  { q: 'How much does moving cost in Metro Vancouver?', a: 'Moving is $110/hr + GST for 2 professional movers and a fully-equipped truck, with a 3-hour minimum, no matter where in Metro Vancouver you\'re moving.' },
+  { q: 'How much does moving cost in Metro Vancouver?', a: 'Moving is $120/hr + GST for 2 professional movers and a fully-equipped truck, or $160/hr + GST for 3 movers with a 16\' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time.' },
   { q: 'What\'s included in the hourly rate?', a: 'The truck, moving blankets, straps, dollies, and basic furniture disassembly/reassembly are all included - no separate vehicle or equipment fees.' },
   { q: 'Do you move outside Metro Vancouver?', a: 'Our standard service covers Metro Vancouver. If your move is further out, contact us directly and we\'ll let you know if we can help.' },
   { q: 'How do I book?', a: 'Request a free quote online and we\'ll confirm a date and time that works for you.' },
@@ -168,7 +168,7 @@ export default function MovingPage() {
                 <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
                   Have an office or commercial move in mind? Contact us directly with the details and we&apos;ll let you know if we&apos;re the right fit.
                 </p>
-                <a href="tel:+16043546479" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
+                <a href="tel:+16723360022" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
                   <MessageCircleQuestion size={16} /> Ask About Your Move
                 </a>
               </div>
@@ -182,7 +182,7 @@ export default function MovingPage() {
                 <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
                   Moving outside Metro Vancouver? Get in touch with your route and timeline and we&apos;ll confirm whether we can take it on.
                 </p>
-                <a href="tel:+16043546479" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
+                <a href="tel:+16723360022" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
                   <MessageCircleQuestion size={16} /> Ask About Your Move
                 </a>
               </div>
@@ -221,12 +221,12 @@ export default function MovingPage() {
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Moving pricing</p>
                   <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$110</span>
-                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>/hr + GST</span>
+                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$120</span>
+                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>/hr and up</span>
                   </div>
-                  <p className="text-sm" style={{ color: '#B5C9B0' }}>2 movers, fully-equipped truck, 3-hour minimum.</p>
+                  <p className="text-sm" style={{ color: '#B5C9B0' }}>2 movers from $120/hr, or 3 movers + 16&apos; truck from $160/hr. Plus a one-time flat-rate travel fee, explained upfront.</p>
                 </div>
-                <Link href="/pricing" className="flex-shrink-0">
+                <Link href="/pricing/moving" className="flex-shrink-0">
                   <Button className="rounded-full text-sm font-bold px-7 py-6 border-0" style={{ backgroundColor: '#FAF7F2', color: '#254220' }}>See Full Pricing</Button>
                 </Link>
               </div>
@@ -255,7 +255,7 @@ export default function MovingPage() {
             <FadeIn>
               <h2 className="text-3xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>Moving Across Metro Vancouver</h2>
               <p className="text-base leading-relaxed max-w-xl mx-auto mb-8" style={{ color: '#6B5E54' }}>
-                We&apos;re based in Burnaby and move households throughout Metro Vancouver.
+                We move households in every city across Metro Vancouver.
               </p>
               <Link href="/locations" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: '#254220' }}>
                 <MapPinned size={16} /> See All Areas We Serve

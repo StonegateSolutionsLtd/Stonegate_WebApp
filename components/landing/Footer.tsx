@@ -1,6 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { CONTACT_PHONES, CONTACT_EMAIL } from '@/lib/contact'
+import { JUNK_ITEM_BY_SLUG, junkItemHref } from '@/lib/seo/junk-items'
+import { CITIES, cityHref } from '@/lib/seo/cities'
+
+const FOOTER_JUNK_SLUGS = [
+  'furniture-removal', 'couch-removal', 'mattress-removal', 'appliance-removal', 'hot-tub-removal',
+  'garage-cleanout', 'estate-cleanout', 'construction-debris-removal', 'commercial-junk-removal',
+]
 
 const columns = [
   {
@@ -18,17 +25,14 @@ const columns = [
     title: 'Junk Removal',
     links: [
       { label: 'Junk Removal', href: '/junk-removal' },
-      { label: 'Furniture Removal', href: '/junk-removal#furniture-removal' },
-      { label: 'Appliance Removal', href: '/junk-removal#appliance-removal' },
-      { label: 'Property Cleanouts', href: '/junk-removal#property-cleanouts' },
-      { label: 'Commercial Junk Removal', href: '/junk-removal#commercial-junk-removal' },
-      { label: 'Construction Debris Removal', href: '/junk-removal#construction-debris-removal' },
+      { label: 'What We Take', href: '/junk-removal/what-we-take' },
+      ...FOOTER_JUNK_SLUGS.map(s => ({ label: JUNK_ITEM_BY_SLUG.get(s)!.name, href: junkItemHref(s) })),
     ],
   },
   {
     title: 'Service Areas',
     links: [
-      { label: 'Burnaby', href: '/burnaby-movers' },
+      ...CITIES.map(c => ({ label: c.name, href: cityHref(c) })),
       { label: 'View All Areas', href: '/locations' },
     ],
   },
@@ -36,7 +40,8 @@ const columns = [
     title: 'Company',
     links: [
       { label: 'About', href: '/about' },
-      { label: 'Pricing', href: '/pricing' },
+      { label: 'Junk Removal Prices', href: '/pricing/junk-removal' },
+      { label: 'Moving Prices', href: '/pricing/moving' },
     ],
   },
 ]

@@ -10,6 +10,9 @@ import {
   AlertTriangle, MessageCircleQuestion,
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
+import { CityChips } from '@/components/seo/SeoBlocks'
+import { JUNK_ITEMS, junkItemHref } from '@/lib/seo/junk-items'
+import { CITIES, cityJunkHref } from '@/lib/seo/cities'
 
 export const metadata: Metadata = {
   title: { absolute: 'Junk Removal Services in Metro Vancouver | Stonegate Moving Solutions' },
@@ -25,47 +28,70 @@ const junkFeatures = [
   'We donate and recycle before the landfill',
 ]
 
+const junkSteps = [
+  {
+    number: 1,
+    title: 'Schedule Appointment',
+    items: ['Book online or call us', 'No deposit required', 'Same-day service available'],
+  },
+  {
+    number: 2,
+    title: 'Get An In-Person Estimate',
+    items: ['Two-person crew', 'Two-hour arrival window', 'Price confirmed in person - no obligation'],
+  },
+  {
+    number: 3,
+    title: 'Watch Us Get To Work',
+    items: ['Zero prep needed', 'We do all the heavy lifting', 'We sweep up after'],
+  },
+  {
+    number: 4,
+    title: 'Responsible Disposal',
+    items: ['Donation drop-off to local charities', 'Recycling taken to local facilities', 'We handle all the sorting'],
+  },
+]
+
 const junkGroups = [
   {
     id: 'furniture-removal',
     title: 'Furniture Removal',
     items: [
-      { label: 'Couches & Big Furniture', desc: 'Too heavy to move alone? That\'s our job.', Icon: Sofa },
-      { label: 'Beds & Box Springs', desc: 'One mattress or a whole guest room.', Icon: BedDouble },
+      { href: '/junk-removal/couch-removal', label: 'Couches & Big Furniture', desc: 'Too heavy to move alone? That\'s our job.', Icon: Sofa },
+      { href: '/junk-removal/mattress-removal', label: 'Beds & Box Springs', desc: 'One mattress or a whole guest room.', Icon: BedDouble },
     ],
   },
   {
     id: 'appliance-removal',
     title: 'Appliance Removal',
     items: [
-      { label: 'Fridges, Washers & Stoves', desc: 'We disconnect and haul the big stuff too.', Icon: Refrigerator },
-      { label: 'Old TVs & Gadgets', desc: 'Screens, computers and other e-waste.', Icon: Tv },
+      { href: '/junk-removal/appliance-removal', label: 'Fridges, Washers & Stoves', desc: 'We disconnect and haul the big stuff too.', Icon: Refrigerator },
+      { href: '/junk-removal/electronics-removal', label: 'Old TVs & Gadgets', desc: 'Screens, computers and other e-waste.', Icon: Tv },
     ],
   },
   {
     id: 'property-cleanouts',
     title: 'Property Cleanouts',
     items: [
-      { label: 'Whole-Property Cleanouts', desc: 'Estate sales, foreclosures and more.', Icon: Warehouse },
-      { label: 'General Clutter', desc: 'Boxes, bags - if it\'s in the way, it\'s gone.', Icon: Package },
-      { label: 'Home Gym Gear', desc: 'Treadmills and weights you\'ll never lift.', Icon: Dumbbell },
-      { label: 'Patio & BBQ Leftovers', desc: 'Includes safe propane tank disposal.', Icon: Flame },
-      { label: 'Oversized & Awkward Items', desc: 'Hot tubs, pianos - ask and we\'ll haul it.', Icon: Waves },
+      { href: '/junk-removal/estate-cleanout', label: 'Whole-Property Cleanouts', desc: 'Estate sales, foreclosures and more.', Icon: Warehouse },
+      { href: '/junk-removal/household-junk-removal', label: 'General Clutter', desc: 'Boxes, bags - if it\'s in the way, it\'s gone.', Icon: Package },
+      { href: '/junk-removal/exercise-equipment-removal', label: 'Home Gym Gear', desc: 'Treadmills and weights you\'ll never lift.', Icon: Dumbbell },
+      { href: '/junk-removal/bbq-removal', label: 'Patio & BBQ Leftovers', desc: 'Includes safe propane tank disposal.', Icon: Flame },
+      { href: '/junk-removal/hot-tub-removal', label: 'Oversized & Awkward Items', desc: 'Hot tubs, pianos - ask and we\'ll haul it.', Icon: Waves },
     ],
   },
   {
     id: 'commercial-junk-removal',
     title: 'Commercial Junk Removal',
     items: [
-      { label: 'Business Cleanouts', desc: 'Desks, chairs and office move-outs.', Icon: Building2 },
+      { href: '/junk-removal/office-cleanout', label: 'Business Cleanouts', desc: 'Desks, chairs and office move-outs.', Icon: Building2 },
     ],
   },
   {
     id: 'construction-debris-removal',
     title: 'Construction Debris Removal',
     items: [
-      { label: 'Reno Leftovers', desc: 'Drywall, cabinets and old fixtures.', Icon: Wrench },
-      { label: 'Yard Debris', desc: 'Fence boards, branches and dirt piles.', Icon: Leaf },
+      { href: '/junk-removal/construction-debris-removal', label: 'Reno Leftovers', desc: 'Drywall, cabinets and old fixtures.', Icon: Wrench },
+      { href: '/junk-removal/yard-waste-removal', label: 'Yard Debris', desc: 'Fence boards, branches and dirt piles.', Icon: Leaf },
     ],
   },
 ]
@@ -91,6 +117,40 @@ export default function JunkRemovalPage() {
             <p className="text-lg leading-relaxed max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
               We go beyond moving day. Keep your home clean and clutter-free with professional junk removal across Metro Vancouver.
             </p>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section style={{ borderBottom: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <FadeIn>
+              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#A9743F' }}>How it works</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center mb-12" style={{ color: '#1A1714' }}>
+                From Booking To Hauled Away
+              </h2>
+            </FadeIn>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {junkSteps.map((step, i) => (
+                <FadeIn key={step.number} delay={i * 80}>
+                  <div className="h-full rounded-2xl p-7" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 2px 10px rgba(37,66,32,0.05)' }}>
+                    <div className="flex items-center gap-4 mb-5">
+                      <span className="w-11 h-11 rounded-full flex items-center justify-center text-base font-extrabold shrink-0" style={{ backgroundColor: '#E8F0E6', color: '#254220' }}>
+                        {step.number}
+                      </span>
+                      <p className="font-extrabold text-lg" style={{ color: '#1A1714' }}>{step.title}</p>
+                    </div>
+                    <ul className="flex flex-col gap-3">
+                      {step.items.map(item => (
+                        <li key={item} className="flex items-start gap-3">
+                          <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#254220' }} />
+                          <span className="text-sm font-medium" style={{ color: '#4A3F38' }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -174,10 +234,11 @@ export default function JunkRemovalPage() {
                 <div key={group.id} id={group.id} style={{ scrollMarginTop: '80px' }}>
                   <h3 className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>{group.title}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {group.items.map(({ label, desc, Icon }, i) => (
+                    {group.items.map(({ href, label, desc, Icon }, i) => (
                       <FadeIn key={label} delay={i * 40}>
-                        <div
-                          className="group h-full rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
+                        <Link
+                          href={href}
+                          className="group block h-full rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
                           style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 2px 10px rgba(37,66,32,0.05)' }}
                         >
                           <div
@@ -188,12 +249,28 @@ export default function JunkRemovalPage() {
                           </div>
                           <p className="font-bold text-sm mb-1" style={{ color: '#1A1714' }}>{label}</p>
                           <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
-                        </div>
+                        </Link>
                       </FadeIn>
                     ))}
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-12 rounded-3xl p-7 sm:p-8" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+              <div className="flex flex-wrap items-baseline justify-between gap-3 mb-5">
+                <h3 className="text-xl font-extrabold" style={{ color: '#1A1714' }}>Every item we take</h3>
+                <Link href="/junk-removal/what-we-take" className="text-sm font-extrabold underline" style={{ color: '#014421' }}>Browse by category →</Link>
+              </div>
+              <ul className="flex flex-wrap gap-2">
+                {JUNK_ITEMS.map(i => (
+                  <li key={i.slug}>
+                    <Link href={junkItemHref(i.slug)} className="inline-block rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors hover:bg-[#E8F0E6]" style={{ border: '1px solid #E8E0D5', color: '#014421' }}>
+                      {i.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <FadeIn delay={480}>
@@ -248,6 +325,13 @@ export default function JunkRemovalPage() {
                 </div>
               </div>
             </FadeIn>
+          </div>
+        </section>
+
+        {/* Cities */}
+        <section style={{ borderBottom: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
+          <div className="max-w-6xl mx-auto px-6 py-16">
+            <CityChips heading="Junk removal across Metro Vancouver" links={CITIES.map(c => ({ href: cityJunkHref(c), label: c.name }))} />
           </div>
         </section>
 

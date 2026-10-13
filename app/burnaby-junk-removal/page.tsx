@@ -13,18 +13,18 @@ import ReviewsRow from '@/components/landing/ReviewsRow'
 
 export const metadata: Metadata = {
   title: { absolute: 'Junk Removal Burnaby | Stonegate Moving Solutions' },
-  description: 'Fast, same-day junk removal in Burnaby, BC. Furniture, appliances, and property cleanouts hauled away starting at $145. Fully insured, transparent pricing.',
+  description: 'Fast, same-day junk removal in Burnaby, BC. Furniture, appliances, and property cleanouts hauled away starting at $150. Fully insured, transparent pricing.',
   alternates: { canonical: 'https://www.stonegatemoving.com/burnaby-junk-removal' },
 }
 
 const whatWeRemove = [
-  { label: 'Furniture', desc: 'Couches, tables, and bulky pieces too heavy to move alone.', Icon: Sofa },
-  { label: 'Appliances', desc: 'Fridges, washers, stoves - disconnected and hauled.', Icon: Refrigerator },
-  { label: 'Electronics', desc: 'Old TVs, computers, and other e-waste.', Icon: Tv },
-  { label: 'Mattresses', desc: 'One mattress or a whole guest room clear-out.', Icon: BedDouble },
-  { label: 'Office Furniture', desc: 'Desks, chairs, and full office move-outs.', Icon: Building2 },
-  { label: 'Renovation Debris', desc: 'Drywall, cabinets, and old fixtures.', Icon: Wrench },
-  { label: 'Property Cleanouts', desc: 'Estate cleanouts and full-property clear-outs.', Icon: Warehouse },
+  { href: '/junk-removal/furniture-removal', label: 'Furniture', desc: 'Couches, tables, and bulky pieces too heavy to move alone.', Icon: Sofa },
+  { href: '/junk-removal/appliance-removal', label: 'Appliances', desc: 'Fridges, washers, stoves - disconnected and hauled.', Icon: Refrigerator },
+  { href: '/junk-removal/electronics-removal', label: 'Electronics', desc: 'Old TVs, computers, and other e-waste.', Icon: Tv },
+  { href: '/junk-removal/mattress-removal', label: 'Mattresses', desc: 'One mattress or a whole guest room clear-out.', Icon: BedDouble },
+  { href: '/junk-removal/office-furniture-removal', label: 'Office Furniture', desc: 'Desks, chairs, and full office move-outs.', Icon: Building2 },
+  { href: '/junk-removal/construction-debris-removal', label: 'Renovation Debris', desc: 'Drywall, cabinets, and old fixtures.', Icon: Wrench },
+  { href: '/junk-removal/estate-cleanout', label: 'Property Cleanouts', desc: 'Estate cleanouts and full-property clear-outs.', Icon: Warehouse },
 ]
 
 const reviews = [
@@ -54,7 +54,7 @@ const faqs = [
   },
   {
     q: 'How much does junk removal cost in Burnaby?',
-    a: 'We price by truck space (from $145 for a small load up to $700 for a full truck) or by weight ($550 per 1,000 kg) for heavier items like dirt or concrete. See our full pricing page for details.',
+    a: 'Junk removal starts at $150 and is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos and confirm the price on-site before we start.',
   },
   {
     q: 'Do you offer a better rate for Burnaby jobs?',
@@ -87,16 +87,10 @@ const jsonLd = {
   provider: {
     '@type': 'MovingCompany',
     name: 'Stonegate Moving Solutions',
-    telephone: '+16043546479',
+    telephone: '+16723360022',
     email: 'orders@stonegatemoving.com',
     url: 'https://www.stonegatemoving.com',
     address: { '@type': 'PostalAddress', addressLocality: 'Burnaby', addressRegion: 'BC', addressCountry: 'CA' },
-  },
-  offers: {
-    '@type': 'Offer',
-    priceCurrency: 'CAD',
-    price: '145',
-    description: 'Junk removal starting price for the smallest truck-space tier',
   },
 }
 
@@ -189,15 +183,15 @@ export default function BurnabyJunkRemovalPage() {
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>What We Remove</h2>
             </FadeIn>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-              {whatWeRemove.map(({ label, desc, Icon }, i) => (
+              {whatWeRemove.map(({ href, label, desc, Icon }, i) => (
                 <FadeIn key={label} delay={i * 50}>
-                  <div className="h-full rounded-2xl p-5" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+                  <Link href={href} className="block h-full rounded-2xl p-5 transition-transform hover:-translate-y-1" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
                     <span className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#E8F0E6' }}>
                       <Icon size={20} style={{ color: '#254220' }} />
                     </span>
                     <p className="font-bold text-sm mb-1" style={{ color: '#1A1714' }}>{label}</p>
                     <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
-                  </div>
+                  </Link>
                 </FadeIn>
               ))}
             </div>
@@ -221,12 +215,12 @@ export default function BurnabyJunkRemovalPage() {
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Junk removal pricing</p>
                   <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$145</span>
+                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$150</span>
                     <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>and up</span>
                   </div>
-                  <p className="text-sm" style={{ color: '#B5C9B0' }}>Priced by truck space (up to $700 for a full load) or by weight at $550/1,000 kg.</p>
+                  <p className="text-sm" style={{ color: '#B5C9B0' }}>Free estimate from photos - final price confirmed on-site before we start.</p>
                 </div>
-                <Link href="/pricing#junk-pricing" className="flex-shrink-0">
+                <Link href="/pricing/junk-removal" className="flex-shrink-0">
                   <Button className="rounded-full text-sm font-bold px-7 py-6 border-0" style={{ backgroundColor: '#FAF7F2', color: '#254220' }}>
                     See Full Pricing <ArrowRight size={15} className="ml-1" />
                   </Button>
@@ -352,12 +346,11 @@ export default function BurnabyJunkRemovalPage() {
                     Get a Free Quote
                   </Button>
                 </Link>
-                <Link href="/burnaby-movers">
-                  <Button className="text-base px-10 py-6 rounded-full font-bold" style={{ backgroundColor: 'transparent', color: '#254220', border: '2px solid #254220' }}>
-                    Need Movers Instead?
-                  </Button>
-                </Link>
               </div>
+              <p className="text-sm mt-8" style={{ color: '#6B5E54' }}>
+                Moving within Burnaby?{' '}
+                <Link href="/burnaby-movers" className="font-bold underline" style={{ color: '#014421' }}>See our Burnaby movers</Link>.
+              </p>
             </div>
           </FadeIn>
         </section>

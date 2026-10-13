@@ -13,7 +13,7 @@ import ReviewsRow from '@/components/landing/ReviewsRow'
 
 export const metadata: Metadata = {
   title: { absolute: 'Burnaby Movers | Local Moving Company | Stonegate Moving Solutions' },
-  description: 'Professional local movers in Burnaby, BC. 2 uniformed movers with a fully-equipped truck from $110/hr + GST. Transparent pricing, fully insured, no hidden fees.',
+  description: 'Professional local movers in Burnaby, BC. 2 uniformed movers with a fully-equipped truck from $120/hr + GST. Transparent pricing, fully insured, no hidden fees.',
   alternates: { canonical: 'https://www.stonegatemoving.com/burnaby-movers' },
 }
 
@@ -66,7 +66,7 @@ const reviews = [
 const faqs = [
   {
     q: 'How much do movers cost in Burnaby?',
-    a: 'Moving is $110/hr + GST for 2 professional movers and a fully-equipped truck, with a 3-hour minimum. Since we\'re based in Burnaby, local jobs often work out more affordably too - see our full pricing breakdown for details.',
+    a: 'Moving is $120/hr + GST for 2 professional movers and a fully-equipped truck, or $160/hr + GST for 3 movers with a 16\' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time. Since we\'re based in Burnaby, local jobs often work out more affordably too - see our full pricing breakdown for details.',
   },
   {
     q: 'Do you provide moving blankets and equipment?',
@@ -103,7 +103,7 @@ const jsonLd = {
   provider: {
     '@type': 'MovingCompany',
     name: 'Stonegate Moving Solutions',
-    telephone: '+16043546479',
+    telephone: '+16723360022',
     email: 'orders@stonegatemoving.com',
     url: 'https://www.stonegatemoving.com',
     address: { '@type': 'PostalAddress', addressLocality: 'Burnaby', addressRegion: 'BC', addressCountry: 'CA' },
@@ -328,12 +328,12 @@ export default function BurnabyMoversPage() {
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Moving pricing</p>
                   <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$110</span>
-                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>/hr + GST</span>
+                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$120</span>
+                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>/hr and up</span>
                   </div>
-                  <p className="text-sm" style={{ color: '#B5C9B0' }}>2 movers, fully-equipped truck, 3-hour minimum. No hidden fees.</p>
+                  <p className="text-sm" style={{ color: '#B5C9B0' }}>2 movers from $120/hr, or 3 movers + 16&apos; truck from $160/hr. Plus a one-time flat-rate travel fee, explained upfront.</p>
                 </div>
-                <Link href="/pricing" className="flex-shrink-0">
+                <Link href="/pricing/moving" className="flex-shrink-0">
                   <Button className="rounded-full text-sm font-bold px-7 py-6 border-0" style={{ backgroundColor: '#FAF7F2', color: '#254220' }}>
                     See Full Pricing <ArrowRight size={15} className="ml-1" />
                   </Button>
