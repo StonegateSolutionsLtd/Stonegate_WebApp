@@ -3,10 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { EMPTY_ORDER_FORM, type ApartmentSize, type OrderFormData } from '@/lib/types'
-import { postOrderChat, type UnsureField } from '@/lib/order-chat'
 import { Textarea } from '@/components/ui/textarea'
 import TimeSlotPicker from './TimeSlotPicker'
-import OrderChat from './OrderChat'
 import {
   MapPin, Building2, User, Mail, Phone, ArrowRight, Check,
 } from 'lucide-react'
@@ -113,14 +111,12 @@ function SizeCard({ label, selected, onClick }: {
   )
 }
 
-// `null` = "Not sure"; the order chat works out the real answer.
-function ElevatorPicker({ value, onChange }: { value: boolean | null; onChange: (v: boolean | null) => void }) {
+function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-2 gap-3">
       {[
         { label: 'No elevator',  val: false },
         { label: 'Has elevator', val: true  },
-        { label: 'Not sure',     val: null  },
       ].map(opt => (
         <button
           key={String(opt.val)}
@@ -141,35 +137,11 @@ function ElevatorPicker({ value, onChange }: { value: boolean | null; onChange: 
   )
 }
 
-function NotSureToggle({ active, onClick }: { active: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className="self-start flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors duration-150 hover:border-[#254220]"
-      style={{
-        backgroundColor: active ? '#254220' : '#FFFFFF',
-        borderColor:     active ? '#254220' : '#E0D8D0',
-        color:           active ? '#FAF7F2' : '#6B5E54',
-      }}
-    >
-      {active && <Check size={12} strokeWidth={3} />}
-      Not sure
-    </button>
-  )
-}
-
 
 export default function OrderForm() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<OrderFormData>(EMPTY_ORDER_FORM)
-  // Fields answered "Not sure" — resolved by the order chat before confirm.
-  const [unsure, setUnsure] = useState<Set<UnsureField>>(new Set())
-  const [chat, setChat] = useState<{ sessionId: string; question: string } | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState('')
 
   // Seed the current history entry with step:0 so back button works correctly
   useEffect(() => {
@@ -180,10 +152,7 @@ export default function OrderForm() {
   useEffect(() => {
     const onPop = (e: PopStateEvent) => {
       const target = e.state?.step
-      if (typeof target === 'number') {
-        setChat(null)
-        setStep(target)
-      }
+      if (typeof target === 'number') setStep(target)
     }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
@@ -191,21 +160,6 @@ export default function OrderForm() {
 
   function set<K extends keyof OrderFormData>(key: K, value: OrderFormData[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
-    if (unsure.has(key as UnsureField)) markUnsure(key as UnsureField, false)
-  }
-
-  function markUnsure(field: UnsureField, on: boolean) {
-    setUnsure(prev => {
-      const next = new Set(prev)
-      if (on) next.add(field)
-      else next.delete(field)
-      return next
-    })
-  }
-
-  function setElevator(field: 'pickupHasElevator' | 'dropoffHasElevator', value: boolean | null) {
-    if (value === null) markUnsure(field, true)
-    else set(field, value)
   }
 
   function canAdvance() {
@@ -213,7 +167,7 @@ export default function OrderForm() {
     if (step === 1) return form.pickupAddress.trim().length > 0
     if (step === 2) return (
       form.dropoffAddress.trim().length > 0 &&
-      (form.apartmentSize !== '' || unsure.has('apartmentSize'))
+      form.apartmentSize !== ''
     )
     return (
       form.customerName.trim().length > 0 &&
@@ -222,39 +176,18 @@ export default function OrderForm() {
     )
   }
 
-  async function handleNext() {
+  function handleNext() {
     if (step < STEPS.length - 1) {
       const next = step + 1
       window.history.pushState({ step: next }, '')
       setStep(next)
       return
     }
-
-    const unsureFields = [...unsure]
-    setSubmitting(true)
-    setSubmitError('')
-    try {
-      const reply = await postOrderChat({ action: 'start', form, unsure: unsureFields })
-      if (reply.done) finish(reply.variables)
-      else setChat({ sessionId: reply.sessionId, question: reply.question ?? '' })
-    } catch (err) {
-      // The assistant is only essential when something was marked "Not sure".
-      if (unsureFields.length === 0) finish(form)
-      else setSubmitError(err instanceof Error ? err.message : 'Something went wrong')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  // Take the chat's answers for the "Not sure" fields; everything else stays as typed.
-  function finish(variables: OrderFormData) {
-    const resolved = { ...form }
-    for (const field of unsure) Object.assign(resolved, { [field]: variables[field] })
-    sessionStorage.setItem('pendingOrder', JSON.stringify(resolved))
+    sessionStorage.setItem('pendingOrder', JSON.stringify(form))
     router.push('/order/confirm')
   }
 
-  const ready = canAdvance() && !submitting
+  const ready = canAdvance()
 
   return (
     <div className="w-full">
@@ -266,22 +199,10 @@ export default function OrderForm() {
 
         {/* Header */}
         <div className="mb-7 pb-6" style={{ borderBottom: '1px solid #F0EBE3' }}>
-          <h2 className="text-xl font-bold" style={{ color: '#1A1714' }}>
-            {chat ? 'A few quick questions' : STEPS[step].title}
-          </h2>
-          <p className="text-sm mt-1" style={{ color: '#9A8E83' }}>
-            {chat ? 'Help us fill in the details you weren\'t sure about.' : STEPS[step].desc}
-          </p>
+          <h2 className="text-xl font-bold" style={{ color: '#1A1714' }}>{STEPS[step].title}</h2>
+          <p className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEPS[step].desc}</p>
         </div>
 
-        {chat ? (
-          <OrderChat
-            sessionId={chat.sessionId}
-            firstQuestion={chat.question}
-            onComplete={finish}
-            onBack={() => setChat(null)}
-          />
-        ) : (
         <div className="flex flex-col gap-5">
 
           {/* â"€â"€ Step 1: Schedule â"€â"€ */}
@@ -306,30 +227,19 @@ export default function OrderForm() {
                 />
               </FieldIcon>
 
-              <div className="flex flex-col gap-2">
-                <FieldIcon icon={Building2} label="Floor number" id="pickupFloor">
-                  <StyledInput
-                    id="pickupFloor"
-                    type="number"
-                    min={1} max={50}
-                    disabled={unsure.has('pickupFloor')}
-                    value={unsure.has('pickupFloor') ? '' : form.pickupFloor}
-                    onChange={e => set('pickupFloor', Number(e.target.value))}
-                    className="disabled:opacity-50"
-                  />
-                </FieldIcon>
-                <NotSureToggle
-                  active={unsure.has('pickupFloor')}
-                  onClick={() => markUnsure('pickupFloor', !unsure.has('pickupFloor'))}
+              <FieldIcon icon={Building2} label="Floor number" id="pickupFloor">
+                <StyledInput
+                  id="pickupFloor"
+                  type="number"
+                  min={1} max={50}
+                  value={form.pickupFloor}
+                  onChange={e => set('pickupFloor', Number(e.target.value))}
                 />
-              </div>
+              </FieldIcon>
 
               <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Elevator available?</span>
-                <ElevatorPicker
-                  value={unsure.has('pickupHasElevator') ? null : form.pickupHasElevator}
-                  onChange={v => setElevator('pickupHasElevator', v)}
-                />
+                <ElevatorPicker value={form.pickupHasElevator} onChange={v => set('pickupHasElevator', v)} />
               </div>
             </>
           )}
@@ -346,48 +256,32 @@ export default function OrderForm() {
                 />
               </FieldIcon>
 
-              <div className="flex flex-col gap-2">
-                <FieldIcon icon={Building2} label="Floor number" id="dropoffFloor">
-                  <StyledInput
-                    id="dropoffFloor"
-                    type="number"
-                    min={1} max={50}
-                    disabled={unsure.has('dropoffFloor')}
-                    value={unsure.has('dropoffFloor') ? '' : form.dropoffFloor}
-                    onChange={e => set('dropoffFloor', Number(e.target.value))}
-                    className="disabled:opacity-50"
-                  />
-                </FieldIcon>
-                <NotSureToggle
-                  active={unsure.has('dropoffFloor')}
-                  onClick={() => markUnsure('dropoffFloor', !unsure.has('dropoffFloor'))}
+              <FieldIcon icon={Building2} label="Floor number" id="dropoffFloor">
+                <StyledInput
+                  id="dropoffFloor"
+                  type="number"
+                  min={1} max={50}
+                  value={form.dropoffFloor}
+                  onChange={e => set('dropoffFloor', Number(e.target.value))}
                 />
-              </div>
+              </FieldIcon>
 
               <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Elevator available?</span>
-                <ElevatorPicker
-                  value={unsure.has('dropoffHasElevator') ? null : form.dropoffHasElevator}
-                  onChange={v => setElevator('dropoffHasElevator', v)}
-                />
+                <ElevatorPicker value={form.dropoffHasElevator} onChange={v => set('dropoffHasElevator', v)} />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Apartment size</span>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                <div className="grid grid-cols-5 gap-2">
                   {APARTMENT_SIZES.map(s => (
                     <SizeCard
                       key={s.value}
                       label={s.label}
-                      selected={!unsure.has('apartmentSize') && form.apartmentSize === s.value}
+                      selected={form.apartmentSize === s.value}
                       onClick={() => set('apartmentSize', s.value as ApartmentSize)}
                     />
                   ))}
-                  <SizeCard
-                    label="Not sure"
-                    selected={unsure.has('apartmentSize')}
-                    onClick={() => markUnsure('apartmentSize', true)}
-                  />
                 </div>
               </div>
 
@@ -468,16 +362,11 @@ export default function OrderForm() {
                 boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
               }}
             >
-              {step < STEPS.length - 1 ? 'Continue' : submitting ? 'Checking…' : 'Review Quote'}
+              {step < STEPS.length - 1 ? 'Continue' : 'Review Quote'}
               <ArrowRight size={14} strokeWidth={2.5} />
             </button>
           </div>
-
-          {submitError && (
-            <p className="text-sm text-right" style={{ color: '#B42318' }}>{submitError}</p>
-          )}
         </div>
-        )}
       </div>
     </div>
   )

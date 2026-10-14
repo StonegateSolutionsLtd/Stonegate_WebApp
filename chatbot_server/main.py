@@ -1,8 +1,10 @@
-"""Order chat server.
+"""Junk removal chat server.
 
-Takes the booking form from /order, saves it as variables in a per-session
-.txt file (JSON), and for every field the customer marked "Not sure" uses
-OpenAI to ask follow-up questions one at a time until each value is decided.
+Takes the junk removal form from /book-service, saves it as variables in a
+per-session .txt file (JSON), and for every field the customer marked
+"Not sure" uses OpenAI to ask follow-up questions one at a time until each
+value is decided. If no photos of the junk were added on the form, the chat
+then asks for some (the customer may skip).
 
 Run:  uvicorn main:app --port 8000   (from this directory)
 """
@@ -27,115 +29,139 @@ SESSIONS_DIR = Path(os.getenv("SESSIONS_DIR", Path(__file__).parent / "data" / "
 # After this many questions the model must commit to its best estimate.
 MAX_QUESTIONS = 8
 
-APARTMENT_SIZES = ["studio", "1br", "2br", "3br", "4br+"]
-UnsureField = Literal["pickupFloor", "pickupHasElevator", "dropoffFloor", "dropoffHasElevator", "apartmentSize"]
+# Same labels as TRUCK_FRACTIONS in lib/quote-pricing.ts.
+LOAD_SIZES = ["1/8 Truck", "1/4 Truck", "1/2 Truck", "3/4 Truck", "Full Truck"]
+UnsureField = Literal["loadSize", "floor", "hasElevator"]
 
 FIELD_SCHEMAS = {
-    "pickupFloor": {"type": ["integer", "null"]},
-    "dropoffFloor": {"type": ["integer", "null"]},
-    "pickupHasElevator": {"type": ["boolean", "null"]},
-    "dropoffHasElevator": {"type": ["boolean", "null"]},
-    "apartmentSize": {"anyOf": [{"type": "string", "enum": APARTMENT_SIZES}, {"type": "null"}]},
+    "loadSize": {"anyOf": [{"type": "string", "enum": LOAD_SIZES}, {"type": "null"}]},
+    "floor": {"type": ["integer", "null"]},
+    "hasElevator": {"type": ["boolean", "null"]},
 }
 
 # Used only if the model still can't decide after MAX_QUESTIONS; recorded in
 # the session file under "defaulted" so staff know to double-check.
 FALLBACK_VALUES = {
-    "pickupFloor": 1,
-    "dropoffFloor": 1,
-    "pickupHasElevator": False,
-    "dropoffHasElevator": False,
-    "apartmentSize": "2br",
+    "loadSize": "1/4 Truck",
+    "floor": 1,
+    "hasElevator": False,
 }
 
 # Asked when a field is still open but the model offered no question (usually
 # because its guess was discarded for lack of evidence).
 FALLBACK_QUESTIONS = {
-    "pickupFloor": "Which floor is your current home on?",
-    "dropoffFloor": "Which floor is your new home on?",
-    "pickupHasElevator": "Is there an elevator we can use at the pickup address?",
-    "dropoffHasElevator": "Is there an elevator we can use at the drop-off address?",
-    "apartmentSize": "How many bedrooms does your current home have, and is it fully furnished?",
+    "loadSize": "What items do you need removed, and roughly how many?",
+    "floor": "Where is the junk right now: on the ground floor, in a garage or at the curb, or upstairs or in a basement?",
+    "hasElevator": "Is there an elevator we can use to bring the junk down?",
 }
 
+# Asked last, when the form had no photos. The button names match the chat UI.
+PHOTO_QUESTION = (
+    "Could you add a few photos of the junk, ideally from different angles? "
+    "They help our team see exactly what needs to go and give you an accurate quote. "
+    'Use the "Add photos" button below, or "Skip" if you can\'t right now.'
+)
+
+PHOTO_PROMPT = """\
+You help Stonegate Moving Solutions (Burnaby, BC) complete a junk removal
+booking. The customer was asked to add photos of their junk, but wrote a
+message instead. Reply in at most three short sentences:
+- If they asked something, answer briefly and honestly. Photos help the team
+  see exactly what needs to be removed, how much there is and how hard it is
+  to reach, so the quote is accurate. For anything you can't answer (exact
+  prices, availability, which items we accept), say the team will follow up
+  after the booking.
+- Then ask again for photos, ideally from different angles, using the
+  "Add photos" button below the chat, or "Skip" if they can't take any now.
+- Never pressure them; skipping is fine.
+"""
+
 SYSTEM_PROMPT = """\
-You help Stonegate Moving Solutions (Burnaby, BC) complete a moving booking.
-The customer filled in a booking form but marked some fields as "Not sure".
-Using everything they have told us (the form, their special notes and their
-chat answers), decide the best value for each of those fields.
+You help Stonegate Moving Solutions (Burnaby, BC) complete a junk removal
+booking. The customer filled in a booking form but marked some fields as
+"Not sure". Using everything they have told us (the form, their notes and
+their chat answers), decide the best value for each of those fields.
 
 Field meanings:
-- pickupFloor / dropoffFloor: integer 1-50. Floor of the unit, 1 = ground
-  level. For a multi-storey house, use the number of storeys belongings must
-  be carried across (a 2-storey house = 2).
-- pickupHasElevator / dropoffHasElevator: true only if an elevator can be used
-  for the move. Houses and townhouses are false.
-- apartmentSize: one of studio, 1br, 2br, 3br, 4br+. Pick the size whose
-  amount of belongings best matches what the customer is moving, even if the
-  home is not an apartment (e.g. a 2-bedroom house with a full garage -> 3br).
+- loadSize: one of 1/8 Truck, 1/4 Truck, 1/2 Truck, 3/4 Truck, Full Truck.
+  How much of our junk removal truck the items will fill. Rough guide: a
+  few small items or bags -> 1/8; a couch or mattress plus some boxes ->
+  1/4; the contents of a full room or a small garage clean-out -> 1/2;
+  several rooms -> 3/4; a whole home, basement or large garage -> Full.
+- floor: integer 1-50. The floor the junk is on, 1 = ground level. Junk in a
+  garage, yard, driveway or at the curb is 1. A basement or an upper floor
+  means stairs: use the number of floors it must be carried across (a
+  basement or a 2nd floor = 2).
+- hasElevator: true only if an elevator can be used to bring the junk down.
+  Houses, townhouses and anything on the ground floor are false.
 
 Why we ask (use this when the customer asks why something matters):
-- Floors and elevators decide how long carrying takes. Stairs and long
-  elevator rides add labour time, so they affect the crew size and the price.
-- Apartment size tells us how much there is to move, which decides the truck
-  size, how many movers to send and how long to reserve.
-- Everything is only used to plan the move and prepare an accurate quote; the
-  team confirms the final price with the customer before the move.
+- Load size decides how much truck space and disposal we need, which is the
+  main part of the price.
+- Floors and elevators decide how long carrying takes. Stairs add labour
+  time, so they affect the crew size and the price.
+- Everything is only used to plan the job and prepare an accurate quote; the
+  team confirms the final price with the customer before the job.
 
 Rules:
 - Infer a value whenever something the customer actually said supports it
-  instead of asking (e.g. "detached house" -> no elevator). Never guess: if
-  they have said nothing about a field (e.g. nothing about bedrooms or how
-  much they own for apartmentSize), it stays null.
+  instead of asking (e.g. "it's all in the garage" -> floor 1, no elevator;
+  "an old couch and a mattress" -> 1/4 Truck). Never guess: if they have said
+  nothing about a field (e.g. nothing about what or how much they are
+  throwing out for loadSize), it stays null.
 - If the customer asks you something instead of answering (why it matters,
   what a term means, whether a guess is fine), first answer it briefly and
   honestly in one or two sentences, then ask your question again, ideally
   reworded to be easier to answer. Both go in "question", as one message.
 - For questions you can't answer from the information above (exact prices,
-  availability, special services), say the team will follow up after the
-  booking, then continue. Never ignore a question from the customer. Example:
-  customer: "how much will it cost?" -> "Our team will send you an exact
-  quote after you book. To make it accurate: is it a house or an apartment?"
+  availability, which items we accept, special services), say the team will
+  follow up after the booking, then continue. Never ignore a question from
+  the customer. Example: customer: "how much will it cost?" -> "Our team will
+  send you an exact quote after you book. To make it accurate: what items do
+  you need removed?"
 - If the customer simply didn't answer your last question, ask it again.
 - For every value you fill in, set evidence to the exact words the customer
   wrote that support it, copied verbatim (a short phrase). Values without
   real evidence are discarded.
 - If anything is still null, ask exactly ONE short, friendly question about
-  the most important unknown. Ask about things the customer knows ("Is it a
-  house or an apartment building?", "How many bedrooms, and is it fully
-  furnished?"), not for the technical value itself.
+  the most important unknown. Ask about things the customer knows ("What
+  items do you need removed?", "Is the junk in a garage, a basement or an
+  apartment?"), not for the technical value itself.
 - If an answer is vague or contradictory, ask a follow-up question.
 - When every value is filled in, question must be null.
 - Only collect these fields. Never change or ask about anything else.
 """
 
 
-class OrderForm(BaseModel):
-    pickupAddress: str = Field(max_length=300)
-    pickupFloor: int
-    pickupHasElevator: bool
-    dropoffAddress: str = Field(max_length=300)
-    dropoffFloor: int
-    dropoffHasElevator: bool
-    apartmentSize: str
-    movingDate: str
-    movingTime: str
+class ServiceForm(BaseModel):
+    address: str = Field(max_length=300)
+    date: str
+    time: str
     customerName: str = Field(max_length=200)
     customerEmail: str = Field(max_length=200)
     phone: str = Field(max_length=50)
-    specialNotes: str = Field(max_length=2000)
+    notes: str = Field(max_length=2000)
+    loadSize: str
+    floor: int
+    hasElevator: bool
 
 
 class StartRequest(BaseModel):
-    form: OrderForm
+    form: ServiceForm
     unsure: list[UnsureField] = Field(default_factory=list)
+    photoCount: int = Field(default=0, ge=0, le=20)
 
 
 class AnswerRequest(BaseModel):
     answer: str = Field(min_length=1, max_length=1000)
 
 
-app = FastAPI(title="Stonegate order chat")
+class PhotosRequest(BaseModel):
+    # 0 = the customer skipped adding photos.
+    count: int = Field(ge=0, le=20)
+
+
+app = FastAPI(title="Stonegate junk removal chat")
 _client: OpenAI | None = None
 
 
@@ -175,12 +201,12 @@ def clean_value(field: str, value):
     """Reject anything that doesn't fit the form's own constraints."""
     if value is None:
         return None
-    if field in ("pickupFloor", "dropoffFloor"):
+    if field == "floor":
         return value if isinstance(value, int) and not isinstance(value, bool) and 1 <= value <= 50 else None
-    if field in ("pickupHasElevator", "dropoffHasElevator"):
+    if field == "hasElevator":
         return value if isinstance(value, bool) else None
-    if field == "apartmentSize":
-        return value if value in APARTMENT_SIZES else None
+    if field == "loadSize":
+        return value if value in LOAD_SIZES else None
     return None
 
 
@@ -221,7 +247,7 @@ def ask_model(session: dict) -> None:
         {"role": "system", "content": SYSTEM_PROMPT},
         {
             "role": "user",
-            "content": "Booking form (fields the customer was sure about):\n"
+            "content": "Junk removal booking form (fields the customer was sure about):\n"
             + json.dumps(form_for_model, indent=2)
             + "\n\nFields marked \"Not sure\": "
             + ", ".join(unsure),
@@ -241,15 +267,14 @@ def ask_model(session: dict) -> None:
         messages=messages,
         response_format={
             "type": "json_schema",
-            "json_schema": {"name": "order_fields", "strict": True, "schema": response_schema(unsure)},
+            "json_schema": {"name": "junk_fields", "strict": True, "schema": response_schema(unsure)},
         },
     )
     result = json.loads(completion.choices[0].message.content)
 
     customer_text = normalize(" ".join([
-        session["form"]["pickupAddress"],
-        session["form"]["dropoffAddress"],
-        session["form"]["specialNotes"],
+        session["form"]["address"],
+        session["form"]["notes"],
         *(m["content"] for m in session["messages"] if m["role"] == "user"),
     ]))
     for field in unsure:
@@ -273,10 +298,37 @@ def ask_model(session: dict) -> None:
         question = FALLBACK_QUESTIONS[pending[0]]
 
     session["pending"] = pending
-    session["done"] = not pending
-    session["question"] = None if session["done"] else question
-    if session["question"]:
-        session["messages"].append({"role": "assistant", "content": session["question"]})
+    if pending:
+        ask(session, question)
+    else:
+        advance(session)
+
+
+def ask(session: dict, question: str) -> None:
+    session["done"] = False
+    session["question"] = question
+    session["messages"].append({"role": "assistant", "content": question})
+
+
+def advance(session: dict) -> None:
+    """Every field is decided: ask for photos if there are none yet, else finish."""
+    if session["photoCount"] == 0 and not session["photosSkipped"]:
+        session["awaitingPhotos"] = True
+        ask(session, PHOTO_QUESTION)
+    else:
+        session["awaitingPhotos"] = False
+        session["done"] = True
+        session["question"] = None
+
+
+def reply_about_photos(session: dict) -> None:
+    """The customer typed instead of adding photos: answer them and ask again."""
+    completion = openai_client().chat.completions.create(
+        model=MODEL,
+        messages=[{"role": "system", "content": PHOTO_PROMPT}, *session["messages"]],
+    )
+    question = (completion.choices[0].message.content or "").strip() or PHOTO_QUESTION
+    ask(session, question)
 
 
 def public_view(session: dict) -> dict:
@@ -284,6 +336,7 @@ def public_view(session: dict) -> dict:
         "sessionId": session["sessionId"],
         "done": session["done"],
         "question": session["question"],
+        "awaitingPhotos": session["awaitingPhotos"],
         "variables": session["variables"],
     }
 
@@ -307,12 +360,17 @@ def start_session(body: StartRequest):
         "variables": variables,
         "pending": unsure,
         "defaulted": [],
+        "photoCount": body.photoCount,
+        "photosSkipped": False,
+        "awaitingPhotos": False,
         "messages": [],
         "question": None,
-        "done": not unsure,
+        "done": False,
     }
     if unsure:
         ask_model(session)
+    else:
+        advance(session)
     save_session(session)
     return public_view(session)
 
@@ -323,6 +381,23 @@ def answer(session_id: str, body: AnswerRequest):
     if session["done"]:
         raise HTTPException(status_code=409, detail="Session already complete")
     session["messages"].append({"role": "user", "content": body.answer.strip()})
-    ask_model(session)
+    if session["awaitingPhotos"]:
+        reply_about_photos(session)
+    else:
+        ask_model(session)
+    save_session(session)
+    return public_view(session)
+
+
+@app.post("/sessions/{session_id}/photos")
+def photos(session_id: str, body: PhotosRequest):
+    session = load_session(session_id)
+    if not session["awaitingPhotos"]:
+        raise HTTPException(status_code=409, detail="Not waiting for photos")
+    session["photoCount"] = body.count
+    session["photosSkipped"] = body.count == 0
+    note = f"[Added {body.count} photo(s)]" if body.count else "[Skipped adding photos]"
+    session["messages"].append({"role": "user", "content": note})
+    advance(session)
     save_session(session)
     return public_view(session)

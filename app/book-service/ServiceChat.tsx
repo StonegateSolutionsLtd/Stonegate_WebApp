@@ -1,23 +1,27 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight } from 'lucide-react'
-import type { OrderFormData } from '@/lib/types'
-import { postOrderChat } from '@/lib/order-chat'
+import { ArrowRight, Camera } from 'lucide-react'
+import { postServiceChat, type ServiceChatReply, type ServiceFormData } from '@/lib/service-chat'
+import { MAX_PHOTOS, shrinkPhoto } from '@/lib/photos'
 
 type Message = { role: 'assistant' | 'user'; content: string }
 
-export default function OrderChat({ sessionId, firstQuestion, onComplete, onBack }: {
+export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPhotos, onComplete, onBack }: {
   sessionId: string
   firstQuestion: string
-  onComplete: (variables: OrderFormData) => void
+  firstAwaitingPhotos: boolean
+  // `photos` = any photos the customer added in the chat.
+  onComplete: (variables: ServiceFormData, photos: File[]) => void
   onBack: () => void
 }) {
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', content: firstQuestion }])
+  const [awaitingPhotos, setAwaitingPhotos] = useState(firstAwaitingPhotos)
   const [answer, setAnswer] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -35,16 +39,40 @@ export default function OrderChat({ sessionId, firstQuestion, onComplete, onBack
     setError('')
     setSending(true)
     try {
-      const reply = await postOrderChat({ action: 'answer', sessionId, answer: text })
-      if (reply.done) {
-        onComplete(reply.variables)
-        return
-      }
-      setMessages(prev => [...prev, { role: 'assistant', content: reply.question ?? '' }])
+      const reply = await postServiceChat({ action: 'answer', sessionId, answer: text })
+      handleReply(reply, [])
     } catch (err) {
       // Put the answer back so the customer can resend it.
       setMessages(prev => prev.slice(0, -1))
       setAnswer(text)
+      setError(err instanceof Error ? err.message : 'Something went wrong')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  function handleReply(reply: ServiceChatReply, photos: File[]) {
+    if (reply.done) {
+      onComplete(reply.variables, photos)
+      return
+    }
+    setAwaitingPhotos(reply.awaitingPhotos)
+    setMessages(prev => [...prev, { role: 'assistant', content: reply.question ?? '' }])
+  }
+
+  // files = [] means the customer skipped adding photos.
+  async function sendPhotos(files: File[]) {
+    if (sending) return
+    const photos = await Promise.all(files.slice(0, MAX_PHOTOS).map(shrinkPhoto))
+    const note = photos.length ? `Added ${photos.length} photo${photos.length === 1 ? '' : 's'}` : 'Skip for now'
+    setMessages(prev => [...prev, { role: 'user', content: note }])
+    setError('')
+    setSending(true)
+    try {
+      const reply = await postServiceChat({ action: 'photos', sessionId, count: photos.length })
+      handleReply(reply, photos)
+    } catch (err) {
+      setMessages(prev => prev.slice(0, -1))
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setSending(false)
@@ -77,6 +105,42 @@ export default function OrderChat({ sessionId, firstQuestion, onComplete, onBack
       </div>
 
       {error && <p className="text-sm" style={{ color: '#B42318' }}>{error}</p>}
+
+      {awaitingPhotos && (
+        <div className="flex gap-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            multiple
+            hidden
+            onChange={e => {
+              const files = [...(e.target.files ?? [])]
+              e.target.value = ''
+              if (files.length) sendPhotos(files)
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={sending}
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-bold transition-opacity disabled:opacity-40"
+            style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
+          >
+            <Camera size={15} strokeWidth={2.5} />
+            Add photos
+          </button>
+          <button
+            type="button"
+            onClick={() => sendPhotos([])}
+            disabled={sending}
+            className="px-5 h-11 rounded-xl border text-sm font-semibold transition-colors hover:border-[#254220] disabled:opacity-40"
+            style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#6B5E54' }}
+          >
+            Skip
+          </button>
+        </div>
+      )}
 
       <form onSubmit={handleSend} className="flex gap-2">
         <input

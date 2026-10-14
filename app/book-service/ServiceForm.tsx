@@ -9,10 +9,34 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import TimeSlotPicker from '@/components/order/TimeSlotPicker'
 import { DEFAULT_DURATION_MIN, formatSlotRange, timeToMinutes } from '@/lib/scheduling'
-import { MapPin, User, Mail, Phone, FileText, ArrowRight } from 'lucide-react'
+import { TRUCK_FRACTIONS } from '@/lib/quote-pricing'
+import { EMPTY_SERVICE_FORM, postServiceChat, type ServiceFormData, type UnsureField } from '@/lib/service-chat'
+import ServiceChat from './ServiceChat'
+import PhotoField from './PhotoField'
+import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES } from '@/lib/photos'
+import { MapPin, User, Mail, Phone, FileText, ArrowRight, Building2 } from 'lucide-react'
 
 const SERVICE_LABELS: Record<string, string> = {
   'junk-removal': 'Junk Removal',
+}
+
+// Shared look for the load size / elevator / "Not sure" option buttons.
+function OptionButton({ label, selected, onClick }: { label: string; selected: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className="h-11 px-3 rounded-xl border text-sm font-semibold transition-colors duration-150 hover:border-[#254220]"
+      style={{
+        backgroundColor: selected ? '#254220' : '#FFFFFF',
+        borderColor:     selected ? '#254220' : '#E8E0D5',
+        color:           selected ? '#FAF7F2' : '#6B5E54',
+      }}
+    >
+      {label}
+    </button>
+  )
 }
 
 export default function ServiceForm() {
@@ -22,18 +46,34 @@ export default function ServiceForm() {
   const serviceLabel = SERVICE_LABELS[serviceType] ?? 'Service'
 
   const [scheduled, setScheduled] = useState(false)
-  const [form, setForm] = useState({ address: '', date: '', time: '', customerName: '', customerEmail: '', phone: '', notes: '' })
+  const [form, setForm] = useState<ServiceFormData>(EMPTY_SERVICE_FORM)
+  // Fields answered "Not sure" — resolved by the service chat before submitting.
+  const [unsure, setUnsure] = useState<Set<UnsureField>>(new Set())
+  const [photos, setPhotos] = useState<File[]>([])
+  const [chat, setChat] = useState<{ sessionId: string; question: string; awaitingPhotos: boolean } | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
 
-  function set(field: string, value: string) {
+  function set<K extends keyof ServiceFormData>(field: K, value: ServiceFormData[K]) {
     setForm(prev => ({ ...prev, [field]: value }))
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }))
+    if (unsure.has(field as UnsureField)) markUnsure(field as UnsureField, false)
+  }
+
+  function markUnsure(field: UnsureField, on: boolean) {
+    setUnsure(prev => {
+      const next = new Set(prev)
+      if (on) next.add(field)
+      else next.delete(field)
+      return next
+    })
+    if (on && errors[field]) setErrors(prev => ({ ...prev, [field]: '' }))
   }
 
   function validate() {
     const e: Record<string, string> = {}
     if (!form.address.trim()) e.address = 'Address is required'
+    if (!form.loadSize && !unsure.has('loadSize')) e.loadSize = 'Pick a load size, or "Not sure"'
     if (!form.customerName.trim()) e.customerName = 'Name is required'
     if (!form.customerEmail.trim()) e.customerEmail = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(form.customerEmail)) e.customerEmail = 'Enter a valid email'
@@ -45,17 +85,57 @@ export default function ServiceForm() {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length > 0) { setErrors(errs); return }
+
+    const unsureFields = [...unsure]
+    setSubmitting(true)
+    setErrors({})
+    try {
+      const reply = await postServiceChat({ action: 'start', form, unsure: unsureFields, photoCount: photos.length })
+      if (reply.done) await finish(reply.variables, [])
+      else {
+        setChat({ sessionId: reply.sessionId, question: reply.question ?? '', awaitingPhotos: reply.awaitingPhotos })
+        setSubmitting(false)
+      }
+    } catch (err) {
+      // The assistant is only essential when something was marked "Not sure";
+      // asking for photos is a nice-to-have.
+      if (unsureFields.length === 0) await finish(form, [])
+      else {
+        setErrors({ form: err instanceof Error ? err.message : 'Something went wrong' })
+        setSubmitting(false)
+      }
+    }
+  }
+
+  // Take the chat's answers for the "Not sure" fields; everything else stays as typed.
+  // `chatPhotos` = photos added in the chat, on top of the ones from the form.
+  async function finish(variables: ServiceFormData, chatPhotos: File[]) {
+    const resolved = { ...form }
+    for (const field of unsure) Object.assign(resolved, { [field]: variables[field] })
+    const allPhotos = [...photos, ...chatPhotos].slice(0, MAX_PHOTOS)
+    if (allPhotos.reduce((sum, p) => sum + p.size, 0) > MAX_PHOTOS_TOTAL_BYTES) {
+      setForm(resolved)
+      setUnsure(new Set())
+      setPhotos(allPhotos)
+      setChat(null)
+      setErrors({ form: 'Your photos are too large to upload together. Please remove one or two and try again.' })
+      setSubmitting(false)
+      return
+    }
     setSubmitting(true)
     try {
-      const res = await fetch('/api/service-requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serviceType, ...form }),
-      })
+      const body = new FormData()
+      body.append('data', JSON.stringify({ serviceType, ...resolved }))
+      for (const photo of allPhotos) body.append('photos', photo)
+      const res = await fetch('/api/service-requests', { method: 'POST', body })
       const data = await res.json().catch(() => ({}))
       if (res.status === 409) {
+        // The chat's answers and photos are kept so the customer isn't asked again.
+        setForm({ ...resolved, time: '' })
+        setPhotos(allPhotos)
+        setUnsure(new Set())
+        setChat(null)
         setScheduled(false)
-        setForm(prev => ({ ...prev, time: '' }))
         setErrors({ form: data.error ?? 'That time was just booked. Please pick another slot.' })
         setSubmitting(false)
         return
@@ -63,6 +143,7 @@ export default function ServiceForm() {
       if (!res.ok) throw new Error()
       router.push(`/book-service/success?id=${data.orderId}`)
     } catch {
+      setChat(null)
       setErrors({ form: 'Something went wrong. Please try again.' })
       setSubmitting(false)
     }
@@ -91,12 +172,24 @@ export default function ServiceForm() {
             Book {serviceLabel}
           </h1>
           <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
-            {scheduled
+            {chat
+              ? 'A few quick questions before we send your request.'
+              : scheduled
               ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
               : 'Start by picking an open time — we only show slots our crew can actually make.'}
           </p>
 
-          {!scheduled ? (
+          {chat ? (
+            <div className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+              <ServiceChat
+                sessionId={chat.sessionId}
+                firstQuestion={chat.question}
+                firstAwaitingPhotos={chat.awaitingPhotos}
+                onComplete={finish}
+                onBack={() => setChat(null)}
+              />
+            </div>
+          ) : !scheduled ? (
             <div>
               {errors.form && (
                 <p className="text-sm mb-4 rounded-xl px-4 py-3" style={{ color: '#9A4B12', backgroundColor: '#FDE4C8' }}>
@@ -169,6 +262,102 @@ export default function ServiceForm() {
                 />
               </div>
               {errors.address && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.address}</p>}
+            </div>
+
+            {/* Junk details — "Not sure" answers are worked out by the service chat */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#254220' }}>
+                Junk Details
+              </p>
+              <div className="flex flex-col gap-6">
+                <div>
+                  <label className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
+                    Load Size <span style={{ color: '#254220' }}>*</span>
+                  </label>
+                  <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
+                    Roughly how much of our truck will your junk fill?
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {TRUCK_FRACTIONS.map(f => (
+                      <OptionButton
+                        key={f.label}
+                        label={f.label}
+                        selected={!unsure.has('loadSize') && form.loadSize === f.label}
+                        onClick={() => set('loadSize', f.label)}
+                      />
+                    ))}
+                    <OptionButton
+                      label="Not sure"
+                      selected={unsure.has('loadSize')}
+                      onClick={() => markUnsure('loadSize', true)}
+                    />
+                  </div>
+                  {errors.loadSize && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.loadSize}</p>}
+                </div>
+
+                <div>
+                  <label htmlFor="floor" className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
+                    Floor the Junk Is On
+                  </label>
+                  <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
+                    1 = ground level, garage or curbside.
+                  </p>
+                  <div className="grid grid-cols-[1fr_auto] gap-2">
+                    <div className="relative">
+                      <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
+                      <Input
+                        id="floor"
+                        type="number"
+                        min={1} max={50}
+                        disabled={unsure.has('floor')}
+                        value={unsure.has('floor') ? '' : form.floor}
+                        onChange={e => set('floor', Math.min(50, Math.max(1, Number(e.target.value) || 1)))}
+                        className="pl-10 h-11 disabled:opacity-50"
+                        style={{ borderColor: '#E8E0D5', backgroundColor: '#FFFFFF' }}
+                      />
+                    </div>
+                    <OptionButton
+                      label="Not sure"
+                      selected={unsure.has('floor')}
+                      onClick={() => markUnsure('floor', !unsure.has('floor'))}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <span className="block text-sm font-semibold mb-2.5" style={{ color: '#1A1714' }}>
+                    Elevator Available?
+                  </span>
+                  <div className="grid grid-cols-3 gap-2">
+                    <OptionButton
+                      label="No elevator"
+                      selected={!unsure.has('hasElevator') && !form.hasElevator}
+                      onClick={() => set('hasElevator', false)}
+                    />
+                    <OptionButton
+                      label="Has elevator"
+                      selected={!unsure.has('hasElevator') && form.hasElevator}
+                      onClick={() => set('hasElevator', true)}
+                    />
+                    <OptionButton
+                      label="Not sure"
+                      selected={unsure.has('hasElevator')}
+                      onClick={() => markUnsure('hasElevator', true)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <span className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
+                    Photos of the Junk{' '}
+                    <span className="font-normal" style={{ color: '#B5A99E' }}>(recommended)</span>
+                  </span>
+                  <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
+                    A few shots from different angles help us give you an accurate quote.
+                  </p>
+                  <PhotoField photos={photos} onChange={setPhotos} />
+                </div>
+              </div>
             </div>
 
             {/* Contact info */}
@@ -259,7 +448,7 @@ export default function ServiceForm() {
               className="rounded-full text-sm font-bold py-6 border-0"
               style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
-              {submitting ? 'Sending…' : 'Submit Request'}
+              {submitting ? (unsure.size > 0 ? 'Checking…' : 'Sending…') : 'Submit Request'}
             </Button>
           </form>
           )}

@@ -33,6 +33,9 @@ interface Order {
   service_date: string
   service_time: string
   notes: string | null
+  load_size: string | null
+  floor: number | null
+  has_elevator: boolean | null
   status: string
   hourly_rate: number | null
   estimated_hours: number | null
@@ -48,7 +51,7 @@ function findLoadByPrice(price: number | null) {
   return TRUCK_LOADS.find(l => l.price === price) ?? null
 }
 
-export default function ServiceQuoteEditor({ order }: { order: Order }) {
+export default function ServiceQuoteEditor({ order, photoUrls }: { order: Order; photoUrls: string[] }) {
   const [tab, setTab] = useState<'standard' | 'detailed'>(order.quote_type === 'detailed' ? 'detailed' : 'standard')
 
   const existingLoad = findLoadByPrice(order.hourly_rate)
@@ -162,10 +165,26 @@ export default function ServiceQuoteEditor({ order }: { order: Order }) {
           <Row label="Address" value={order.address} />
           <Row label="Date" value={new Date(order.service_date + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} />
           <Row label="Time" value={order.service_time} />
+          {order.load_size && <Row label="Load Size" value={order.load_size} />}
+          {order.floor !== null && <Row label="Floor" value={String(order.floor)} />}
+          {order.has_elevator !== null && <Row label="Elevator" value={order.has_elevator ? 'Yes' : 'No'} />}
           {order.notes && (
             <div style={{ marginTop: '16px', padding: '12px 16px', background: '#FAF7F2', borderRadius: '8px', fontSize: '13px', color: '#6B5E54' }}>
               <strong>Notes:</strong> {order.notes}
             </div>
+          )}
+          {photoUrls.length > 0 && (
+            <>
+              <div style={{ marginTop: '20px', fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px', marginBottom: '12px' }}>PHOTOS</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                {photoUrls.map((url, i) => (
+                  <a key={url} href={url} target="_blank" rel="noreferrer">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- signed Storage URL */}
+                    <img src={url} alt={`Customer photo ${i + 1}`} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: '8px', border: '1px solid #E8E0D5' }} />
+                  </a>
+                ))}
+              </div>
+            </>
           )}
         </div>
 

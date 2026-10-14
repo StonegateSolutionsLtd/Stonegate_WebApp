@@ -119,6 +119,10 @@ export interface ServiceRequestData {
   customerEmail: string
   phone: string
   notes?: string
+  loadSize?: string
+  floor?: number
+  hasElevator?: boolean
+  photoCount?: number
 }
 
 export async function sendOwnerServiceRequestNotification(req: ServiceRequestData) {
@@ -142,6 +146,14 @@ export async function sendOwnerServiceRequestNotification(req: ServiceRequestDat
         <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
         <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
         <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
+        ${req.loadSize ? `
+        <tr><td style="padding: 8px 12px; color: #374151;">Load Size</td><td style="padding: 8px 12px;">${req.loadSize}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Floor</td><td style="padding: 8px 12px;">${req.floor}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Elevator</td><td style="padding: 8px 12px;">${req.hasElevator ? 'Yes' : 'No'}</td></tr>
+        ` : ''}
+        ${req.photoCount !== undefined ? `
+        <tr><td style="padding: 8px 12px; color: #374151;">Photos</td><td style="padding: 8px 12px;">${req.photoCount ? `${req.photoCount} (view on the admin quote page)` : 'None'}</td></tr>
+        ` : ''}
         ${req.notes ? `
         <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Notes</td></tr>
         <tr><td colspan="2" style="padding: 8px 12px;">${req.notes}</td></tr>
