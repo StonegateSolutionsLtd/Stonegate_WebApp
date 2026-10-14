@@ -139,9 +139,9 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
       <div className="my-5 h-px" style={{ backgroundColor: '#F0EBE3' }} />
 
       <div className="flex items-baseline justify-between mb-3.5">
-        <span className="text-sm font-bold" style={{ color: '#1A1714' }}>Select a time slot</span>
+        <span className="text-sm font-bold" style={{ color: '#1A1714' }}>When works for you?</span>
         <span className="text-xs" style={{ color: '#9A8E83' }}>
-          Reserves about {formatDuration(DEFAULT_DURATION_MIN[jobType])}
+          Usually about {formatDuration(DEFAULT_DURATION_MIN[jobType])}
         </span>
       </div>
 
@@ -167,10 +167,10 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
       ) : slots.length === 0 ? (
         <div className="rounded-xl px-4 py-3.5 animate-in fade-in zoom-in-95 duration-300" style={{ backgroundColor: '#FDE4C8' }}>
           <p className="text-sm font-semibold" style={{ color: '#9A4B12' }}>
-            {longDate(date)} is fully booked.
+            No openings left on {longDate(date)}.
           </p>
           <p className="text-sm mt-0.5" style={{ color: '#9A4B12' }}>
-            Please pick another day.
+            Try another day - or give us a call, we can often fit you in.
           </p>
         </div>
       ) : (

@@ -82,7 +82,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         <section>
           <div className="max-w-4xl mx-auto px-6 pt-10 pb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-6" style={{ color: '#1A1714' }}>
-              The <span style={{ color: '#C98A45' }}>5-Star Rated</span> Junk Removal Team in {city.name}
+              The <span style={{ color: '#C98A45' }}>4.9-Star Rated</span> Junk Removal Team in {city.name}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed mb-4" style={{ color: '#4A3F38' }}>
               <Link href="/about" className="font-bold underline" style={{ color: '#014421' }}>Stonegate Moving Solutions</Link> is a

@@ -122,7 +122,7 @@ export default function Hero() {
               <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 mt-auto pt-2 lg:gap-y-3 lg:mb-3">
                 {([
                   { Icon: Shield, label: 'Fully Insured' },
-                  { Icon: Star, label: '5-Star Rated' },
+                  { Icon: Star, label: '4.9-Star Rated' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2">
@@ -257,7 +257,7 @@ export default function Hero() {
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>5.0 from Google reviews</span>
+                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
               </div>
             </FadeIn>
 
