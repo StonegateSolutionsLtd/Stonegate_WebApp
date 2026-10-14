@@ -18,7 +18,7 @@ function rng(seed: string) {
 const W = 1440
 const H = 560
 
-function Skyline({ seed, style }: { seed: string; style: SkylineStyle }) {
+export function Skyline({ seed, style }: { seed: string; style: SkylineStyle }) {
   const r = rng(seed)
 
   // Far layer: North Shore-style mountain ridge
@@ -118,7 +118,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-1.5">
               {([
-                { Icon: Star, label: '5.0 Google Rating' },
+                { Icon: Star, label: '4.9 Google Rating' },
                 { Icon: Shield, label: 'Fully Insured' },
                 { Icon: Zap, label: 'Same-Day Available' },
               ] as const).map(({ Icon, label }) => (

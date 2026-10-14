@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   try {
     if (!(await isSlotAvailable('junk_removal', date, time))) {
       return NextResponse.json(
-        { error: 'That time was just booked. Please pick another slot.' },
+        { error: 'Someone just grabbed that time. Please pick another one.' },
         { status: 409 }
       )
     }

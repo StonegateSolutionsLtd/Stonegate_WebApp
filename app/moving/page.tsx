@@ -242,7 +242,7 @@ export default function MovingPage() {
                 <div className="flex items-center gap-1">
                   {Array.from({ length: 5 }, (_, i) => <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />)}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>5.0 from Google reviews</span>
+                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
               </div>
             </FadeIn>
             <ReviewsRow reviews={reviews} />

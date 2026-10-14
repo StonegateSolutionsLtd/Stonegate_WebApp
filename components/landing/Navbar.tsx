@@ -145,7 +145,7 @@ function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () =>
   )
 }
 
-export default function Navbar() {
+export default function Navbar({ minimalMobile = false }: { minimalMobile?: boolean } = {}) {
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [menuOpen, setMenuOpen] = useState(false)
@@ -192,12 +192,22 @@ export default function Navbar() {
             </button>
           </nav>
 
-          <div className="flex lg:hidden items-center gap-2.5">
+          <div className="flex lg:hidden items-center gap-1.5 min-[360px]:gap-2.5">
+            {minimalMobile ? (
+              <a
+                href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
+                aria-label="Call Stonegate"
+                className="flex items-center justify-center rounded-full"
+                style={{ width: '44px', height: '44px', backgroundColor: '#014421' }}
+              >
+                <Phone size={18} fill="currentColor" style={{ color: '#FAF7F2' }} />
+              </a>
+            ) : (<>
             <a
               href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
               aria-label="Call Stonegate"
-              className="flex items-center gap-1.5 rounded-full font-extrabold transition-transform hover:scale-105"
-              style={{ padding: '11px 18px', backgroundColor: '#014421', color: '#FAF7F2' }}
+              className="flex items-center gap-1.5 whitespace-nowrap rounded-full font-extrabold transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
+              style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
             >
               <Phone size={16} fill="currentColor" style={{ color: '#FAF7F2' }} />
               <span className="text-[15px]">Call</span>
@@ -205,11 +215,12 @@ export default function Navbar() {
 
             <button
               onClick={() => setQuoteOpen(true)}
-              className="rounded-full font-extrabold text-[15px] cursor-pointer transition-transform hover:scale-105"
-              style={{ padding: '11px 18px', backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
+              className="whitespace-nowrap rounded-full font-extrabold text-[15px] cursor-pointer transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
+              style={{ backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
             >
               Free Quote
             </button>
+            </>)}
 
             <button
               onClick={() => setMenuOpen(o => !o)}

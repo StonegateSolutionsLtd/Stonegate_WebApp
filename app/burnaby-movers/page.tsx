@@ -155,7 +155,7 @@ export default function BurnabyMoversPage() {
                 </div>
                 <div className="flex flex-wrap gap-x-6 gap-y-3">
                   {([
-                    { Icon: Star, label: '5.0 Google Rating' },
+                    { Icon: Star, label: '4.9 Google Rating' },
                     { Icon: Shield, label: 'Fully Insured' },
                     { Icon: DollarSign, label: 'Transparent Pricing' },
                     { Icon: Users, label: 'Local Crew' },
@@ -303,7 +303,7 @@ export default function BurnabyMoversPage() {
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>5.0 from Google reviews</span>
+                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
               </div>
             </FadeIn>
             <ReviewsRow reviews={reviews} />

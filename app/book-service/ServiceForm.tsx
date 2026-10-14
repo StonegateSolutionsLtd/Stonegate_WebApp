@@ -91,7 +91,7 @@ export default function ServiceForm() {
       if (res.status === 409) {
         setScheduled(false)
         setForm(prev => ({ ...prev, time: '' }))
-        setErrors({ form: data.error ?? 'That time was just booked. Please pick another slot.' })
+        setErrors({ form: data.error ?? 'Someone just grabbed that time. Please pick another one.' })
         setSubmitting(false)
         return
       }
@@ -132,12 +132,12 @@ export default function ServiceForm() {
               {serviceLabel}
             </span>
             <h1 className="text-4xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>
-              Book {serviceLabel}
+              Request a Free In-Person Estimate
             </h1>
             <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
               {scheduled
-                ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
-                : 'Start by picking an open time — we only show slots our crew can actually make.'}
+                ? 'Almost done - add your details and we’ll confirm your visit the same day.'
+                : 'Pick a time that suits you. Our crew comes by, gives you an exact price on the spot, and can haul it away right then. No deposit, no obligation.'}
             </p>
           </div>
 
@@ -289,7 +289,7 @@ export default function ServiceForm() {
               className="rounded-full text-sm font-bold py-6 border-0 transition-all duration-200 disabled:opacity-60 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98]"
               style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
-              {submitting ? 'Sending…' : 'Submit Request'}
+              {submitting ? 'Sending…' : 'Request My Free Estimate'}
             </Button>
           </form>
           )}
