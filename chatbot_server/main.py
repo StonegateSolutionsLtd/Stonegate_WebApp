@@ -3,12 +3,14 @@
 Takes the junk removal form from /book-service, saves it as variables in a
 per-session .txt file (JSON), and for every field the customer marked
 "Not sure" uses OpenAI to ask follow-up questions one at a time until each
-value is decided. If no photos of the junk were added on the form, the chat
-then asks for some (the customer may skip).
+value is decided. Photos of the junk are required: the model checks they are
+good enough to estimate the volume and, if not, explains what's wrong and
+asks for new or more photos.
 
 Run:  uvicorn main:app --port 8000   (from this directory)
 """
 
+import base64
 import json
 import os
 import re
@@ -25,9 +27,18 @@ from pydantic import BaseModel, Field
 load_dotenv(Path(__file__).with_name(".env"))
 
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+# Checks the customer's photos.
+PHOTO_MODEL = os.getenv("OPENAI_PHOTO_MODEL", "gpt-4.1")
 SESSIONS_DIR = Path(os.getenv("SESSIONS_DIR", Path(__file__).parent / "data" / "sessions"))
 # After this many questions the model must commit to its best estimate.
 MAX_QUESTIONS = 8
+# Same limit as MAX_PHOTOS in lib/photos.ts.
+MAX_PHOTOS = 6
+# After this many failed photo checks the photos are accepted as they are and
+# flagged for staff, so a customer is never stuck unable to book.
+MAX_PHOTO_CHECKS = 3
+PHOTO_TYPES = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif"}
+DATA_URL = re.compile(r"data:(image/[a-z]+);base64,([A-Za-z0-9+/=]+)")
 
 # Same labels as TRUCK_FRACTIONS in lib/quote-pricing.ts.
 LOAD_SIZES = ["1/8 Truck", "1/4 Truck", "1/2 Truck", "3/4 Truck", "Full Truck"]
@@ -55,26 +66,95 @@ FALLBACK_QUESTIONS = {
     "hasElevator": "Is there an elevator we can use to bring the junk down?",
 }
 
-# Asked last, when the form had no photos. The button names match the chat UI.
+# Only used if a session somehow starts without photos.
 PHOTO_QUESTION = (
-    "Could you add a few photos of the junk, ideally from different angles? "
-    "They help our team see exactly what needs to go and give you an accurate quote. "
-    'Use the "Add photos" button below, or "Skip" if you can\'t right now.'
+    "Please add a few photos of the junk, ideally from different angles, "
+    'using the "Add photos" button below. They help our team see exactly what '
+    "needs to go and give you an accurate quote."
 )
+# Used when the photo check finds a problem but gives no message.
+PHOTO_RETRY = (
+    "We couldn't quite make out the junk in those photos. Could you add another "
+    "photo or two that show the whole pile clearly, in good light?"
+)
+
+PHOTO_CHECK_PROMPT = """\
+You review customer photos for a junk removal booking with Stonegate Moving
+Solutions (Burnaby, BC). Our team uses them to estimate the volume of junk
+(how much of our 16 x 7.5 x 6.5 ft truck it fills) and how hard it is to
+remove. Decide whether the photos, taken together, are good enough for that.
+
+Usable when the junk itself is visible, all of it can be seen across the
+photos, and they are bright and sharp enough to tell what the items are and
+roughly how big they are.
+
+Not usable, for example: too dark or too blurry; taken so close that only
+part of a pile or a single item shows; no junk visible at all (a selfie,
+screenshot, logo, document, blank or empty room); or clearly showing only a
+small part of what the customer described.
+
+Be practical, not picky: ordinary phone photos of a messy garage are fine if
+a person could estimate the volume from them.
+
+Judge only what you can actually see. The customer's description tells you
+what to look for, but it is not evidence: if you can't see the items in the
+photos, they are not usable. First write in "visible" what the photos really
+show (items, lighting, sharpness, framing), then decide.
+
+If not usable, write "message" to the customer: friendly, at most three short
+sentences, saying specifically what is wrong and what photo(s) to take
+instead (e.g. "step back so the whole pile is in the frame", "turn on a light
+or open the garage door"). Tell them to add the new photos with the "Add
+photos" button below. If usable, message is null.
+
+Also judge each photo on its own, by its number: "good" is true when it
+clearly shows junk (bright and sharp enough to tell what the items are) and
+so helps estimate the volume, even if it shows only part of the pile. Only
+good photos are kept with the booking.
+"""
+
+PHOTO_CHECK_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "visible": {"type": "string"},
+        "photos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"number": {"type": "integer"}, "good": {"type": "boolean"}},
+                "required": ["number", "good"],
+                "additionalProperties": False,
+            },
+        },
+        "usable": {"type": "boolean"},
+        "message": {"type": ["string", "null"]},
+    },
+    "required": ["visible", "photos", "usable", "message"],
+    "additionalProperties": False,
+}
 
 PHOTO_PROMPT = """\
 You help Stonegate Moving Solutions (Burnaby, BC) complete a junk removal
-booking. The customer was asked to add photos of their junk, but wrote a
-message instead. Reply in at most three short sentences:
-- If they asked something, answer briefly and honestly. Photos help the team
-  see exactly what needs to be removed, how much there is and how hard it is
-  to reach, so the quote is accurate. For anything you can't answer (exact
-  prices, availability, which items we accept), say the team will follow up
-  after the booking.
-- Then ask again for photos, ideally from different angles, using the
-  "Add photos" button below the chat, or "Skip" if they can't take any now.
-- Never pressure them; skipping is fine.
+booking. Photos of the junk are needed to book. The customer was asked for
+new or more photos (your last message says why) but wrote a message instead.
+
+- If they clearly say they cannot take better or more photos right now, set
+  acceptCurrentPhotos to true and message to a short, friendly confirmation
+  that the team will work with the photos they have and may follow up.
+- Otherwise set acceptCurrentPhotos to false and write "message": answer
+  anything they asked briefly and honestly (photos help the team see what
+  needs to be removed, how much there is and how hard it is to reach, so the
+  quote is accurate; for exact prices, availability or which items we accept,
+  say the team will follow up after the booking), then ask again for the
+  photos, using the "Add photos" button below. At most three short sentences.
 """
+
+PHOTO_REPLY_SCHEMA = {
+    "type": "object",
+    "properties": {"acceptCurrentPhotos": {"type": "boolean"}, "message": {"type": ["string", "null"]}},
+    "required": ["acceptCurrentPhotos", "message"],
+    "additionalProperties": False,
+}
 
 SYSTEM_PROMPT = """\
 You help Stonegate Moving Solutions (Burnaby, BC) complete a junk removal
@@ -84,7 +164,9 @@ their chat answers), decide the best value for each of those fields.
 
 Field meanings:
 - loadSize: one of 1/8 Truck, 1/4 Truck, 1/2 Truck, 3/4 Truck, Full Truck.
-  How much of our junk removal truck the items will fill. Rough guide: a
+  How much of our junk removal truck the items will fill. The truck box is
+  16 ft long, 7.5 ft wide and 6.5 ft high (about 780 ft³); a couch, a
+  mattress, a dresser and about a dozen boxes fill half of it. Rough guide: a
   few small items or bags -> 1/8; a couch or mattress plus some boxes ->
   1/4; the contents of a full room or a small garage clean-out -> 1/2;
   several rooms -> 3/4; a whole home, basement or large garage -> Full.
@@ -146,10 +228,14 @@ class ServiceForm(BaseModel):
     hasElevator: bool
 
 
+# Photos arrive as data URLs (data:image/jpeg;base64,...), already shrunk by the browser.
+PhotoList = list[str]
+
+
 class StartRequest(BaseModel):
     form: ServiceForm
     unsure: list[UnsureField] = Field(default_factory=list)
-    photoCount: int = Field(default=0, ge=0, le=20)
+    photos: PhotoList = Field(default_factory=list, max_length=MAX_PHOTOS)
 
 
 class AnswerRequest(BaseModel):
@@ -157,8 +243,7 @@ class AnswerRequest(BaseModel):
 
 
 class PhotosRequest(BaseModel):
-    # 0 = the customer skipped adding photos.
-    count: int = Field(ge=0, le=20)
+    photos: PhotoList = Field(min_length=1, max_length=MAX_PHOTOS)
 
 
 app = FastAPI(title="Stonegate junk removal chat")
@@ -304,6 +389,80 @@ def ask_model(session: dict) -> None:
         advance(session)
 
 
+def save_photos(session: dict, data_urls: list[str]) -> None:
+    """Store new photos next to the session file; reject anything that isn't a supported image."""
+    if len(session["photos"]) + len(data_urls) > MAX_PHOTOS:
+        raise HTTPException(status_code=400, detail=f"At most {MAX_PHOTOS} photos")
+    folder = SESSIONS_DIR / session["sessionId"]
+    folder.mkdir(parents=True, exist_ok=True)
+    for url in data_urls:
+        match = DATA_URL.fullmatch(url)
+        if not match or match.group(1) not in PHOTO_TYPES:
+            raise HTTPException(status_code=400, detail="Unsupported photo")
+        name = f"{len(session['photos']) + 1}.{PHOTO_TYPES[match.group(1)]}"
+        (folder / name).write_bytes(base64.b64decode(match.group(2)))
+        session["photos"].append(name)
+
+
+def photo_data_urls(session: dict) -> list[str]:
+    folder = SESSIONS_DIR / session["sessionId"]
+    mime = {ext: t for t, ext in PHOTO_TYPES.items()}
+    return [
+        f"data:{mime[name.rsplit('.', 1)[1]]};base64,"
+        + base64.b64encode((folder / name).read_bytes()).decode()
+        for name in session["photos"]
+    ]
+
+
+def check_photos(session: dict) -> None:
+    """Ask the model whether all photos so far are good enough to estimate the volume."""
+    session["photoChecks"] += 1
+    form = session["form"]
+    context = (
+        "What the customer told us about the junk: "
+        + (form["notes"].strip() or "(nothing)")
+        + (f"\nTheir load size estimate: {form['loadSize']}" if form["loadSize"] else "")
+    )
+    completion = openai_client().chat.completions.create(
+        model=PHOTO_MODEL,
+        messages=[
+            {"role": "system", "content": PHOTO_CHECK_PROMPT},
+            {"role": "user", "content": [
+                part
+                for number, url in enumerate(photo_data_urls(session), start=1)
+                for part in (
+                    {"type": "text", "text": f"Photo {number}:"},
+                    {"type": "image_url", "image_url": {"url": url}},
+                )
+            ] + [{"type": "text", "text": context}]},
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "photo_check", "strict": True, "schema": PHOTO_CHECK_SCHEMA},
+        },
+    )
+    result = json.loads(completion.choices[0].message.content)
+    session["photoCheckLog"].append({"photos": len(session["photos"]), **result})
+    session["goodPhotos"] = sorted({
+        p["number"] for p in result["photos"] if p["good"] and 1 <= p["number"] <= len(session["photos"])
+    })
+    if result["usable"]:
+        session["photosOk"] = True
+        session["photoProblem"] = None
+    elif session["photoChecks"] >= MAX_PHOTO_CHECKS or len(session["photos"]) >= MAX_PHOTOS:
+        accept_photos_as_is(session)
+    else:
+        session["photosOk"] = False
+        session["photoProblem"] = (result["message"] or "").strip() or PHOTO_RETRY
+
+
+def accept_photos_as_is(session: dict) -> None:
+    # Staff see "photosFlagged" in the session file and know to double-check.
+    session["photosOk"] = True
+    session["photosFlagged"] = True
+    session["photoProblem"] = None
+
+
 def ask(session: dict, question: str) -> None:
     session["done"] = False
     session["question"] = question
@@ -311,10 +470,13 @@ def ask(session: dict, question: str) -> None:
 
 
 def advance(session: dict) -> None:
-    """Every field is decided: ask for photos if there are none yet, else finish."""
-    if session["photoCount"] == 0 and not session["photosSkipped"]:
+    """Every field is decided: ask for (better) photos if needed, else finish."""
+    if not session["photos"]:
         session["awaitingPhotos"] = True
         ask(session, PHOTO_QUESTION)
+    elif not session["photosOk"]:
+        session["awaitingPhotos"] = True
+        ask(session, session["photoProblem"])
     else:
         session["awaitingPhotos"] = False
         session["done"] = True
@@ -322,13 +484,31 @@ def advance(session: dict) -> None:
 
 
 def reply_about_photos(session: dict) -> None:
-    """The customer typed instead of adding photos: answer them and ask again."""
+    """The customer typed instead of adding photos: answer them and ask again,
+    or accept the photos they have if they say they can't take better ones."""
     completion = openai_client().chat.completions.create(
         model=MODEL,
         messages=[{"role": "system", "content": PHOTO_PROMPT}, *session["messages"]],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "photo_reply", "strict": True, "schema": PHOTO_REPLY_SCHEMA},
+        },
     )
-    question = (completion.choices[0].message.content or "").strip() or PHOTO_QUESTION
-    ask(session, question)
+    result = json.loads(completion.choices[0].message.content)
+    message = (result["message"] or "").strip()
+    if result["acceptCurrentPhotos"] and session["photos"]:
+        accept_photos_as_is(session)
+        if message:
+            session["messages"].append({"role": "assistant", "content": message})
+        advance(session)
+    else:
+        ask(session, message or session["photoProblem"] or PHOTO_QUESTION)
+
+
+def kept_photos(session: dict) -> list[int]:
+    """Numbers (1-based, in upload order) of the photos to keep with the booking.
+    If none was judged good, all are kept so staff still have something to see."""
+    return session["goodPhotos"] or list(range(1, len(session["photos"]) + 1))
 
 
 def public_view(session: dict) -> dict:
@@ -337,6 +517,7 @@ def public_view(session: dict) -> dict:
         "done": session["done"],
         "question": session["question"],
         "awaitingPhotos": session["awaitingPhotos"],
+        "keptPhotos": kept_photos(session),
         "variables": session["variables"],
     }
 
@@ -360,13 +541,21 @@ def start_session(body: StartRequest):
         "variables": variables,
         "pending": unsure,
         "defaulted": [],
-        "photoCount": body.photoCount,
-        "photosSkipped": False,
+        "photos": [],
+        "photoChecks": 0,
+        "photoCheckLog": [],
+        "goodPhotos": [],
+        "photosOk": False,
+        "photosFlagged": False,
+        "photoProblem": None,
         "awaitingPhotos": False,
         "messages": [],
         "question": None,
         "done": False,
     }
+    if body.photos:
+        save_photos(session, body.photos)
+        check_photos(session)
     if unsure:
         ask_model(session)
     else:
@@ -394,10 +583,9 @@ def photos(session_id: str, body: PhotosRequest):
     session = load_session(session_id)
     if not session["awaitingPhotos"]:
         raise HTTPException(status_code=409, detail="Not waiting for photos")
-    session["photoCount"] = body.count
-    session["photosSkipped"] = body.count == 0
-    note = f"[Added {body.count} photo(s)]" if body.count else "[Skipped adding photos]"
-    session["messages"].append({"role": "user", "content": note})
+    save_photos(session, body.photos)
+    session["messages"].append({"role": "user", "content": f"[Added {len(body.photos)} photo(s)]"})
+    check_photos(session)
     advance(session)
     save_session(session)
     return public_view(session)

@@ -3,20 +3,23 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Camera } from 'lucide-react'
 import { postServiceChat, type ServiceChatReply, type ServiceFormData } from '@/lib/service-chat'
-import { MAX_PHOTOS, shrinkPhoto } from '@/lib/photos'
+import { UNREADABLE_PHOTO_MESSAGE, photoDataUrl, shrinkPhotos } from '@/lib/photos'
 
 type Message = { role: 'assistant' | 'user'; content: string }
 
-export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPhotos, onComplete, onBack }: {
+export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPhotos, photoSlots, onComplete, onBack }: {
   sessionId: string
   firstQuestion: string
   firstAwaitingPhotos: boolean
-  // `photos` = any photos the customer added in the chat.
-  onComplete: (variables: ServiceFormData, photos: File[]) => void
+  // How many more photos fit next to the ones from the form.
+  photoSlots: number
+  // `photos` = all photos the customer added in the chat.
+  onComplete: (variables: ServiceFormData, photos: File[], keptPhotos: number[]) => void
   onBack: () => void
 }) {
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', content: firstQuestion }])
   const [awaitingPhotos, setAwaitingPhotos] = useState(firstAwaitingPhotos)
+  const [chatPhotos, setChatPhotos] = useState<File[]>([])
   const [answer, setAnswer] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
@@ -40,7 +43,7 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
     setSending(true)
     try {
       const reply = await postServiceChat({ action: 'answer', sessionId, answer: text })
-      handleReply(reply, [])
+      handleReply(reply, chatPhotos)
     } catch (err) {
       // Put the answer back so the customer can resend it.
       setMessages(prev => prev.slice(0, -1))
@@ -53,24 +56,33 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
 
   function handleReply(reply: ServiceChatReply, photos: File[]) {
     if (reply.done) {
-      onComplete(reply.variables, photos)
+      onComplete(reply.variables, photos, reply.keptPhotos)
       return
     }
     setAwaitingPhotos(reply.awaitingPhotos)
     setMessages(prev => [...prev, { role: 'assistant', content: reply.question ?? '' }])
   }
 
-  // files = [] means the customer skipped adding photos.
   async function sendPhotos(files: File[]) {
     if (sending) return
-    const photos = await Promise.all(files.slice(0, MAX_PHOTOS).map(shrinkPhoto))
-    const note = photos.length ? `Added ${photos.length} photo${photos.length === 1 ? '' : 's'}` : 'Skip for now'
-    setMessages(prev => [...prev, { role: 'user', content: note }])
     setError('')
+    const { photos, rejected } = await shrinkPhotos(files.slice(0, photoSlots - chatPhotos.length))
+    if (!photos.length) {
+      setError(rejected ? UNREADABLE_PHOTO_MESSAGE : 'You can’t add any more photos.')
+      return
+    }
+    const note = `Added ${photos.length} photo${photos.length === 1 ? '' : 's'}`
+    setMessages(prev => [...prev, { role: 'user', content: note }])
     setSending(true)
     try {
-      const reply = await postServiceChat({ action: 'photos', sessionId, count: photos.length })
-      handleReply(reply, photos)
+      // The chat checks the new photos together with the earlier ones.
+      const reply = await postServiceChat({
+        action: 'photos', sessionId, photos: await Promise.all(photos.map(photoDataUrl)),
+      })
+      const allChatPhotos = [...chatPhotos, ...photos]
+      setChatPhotos(allChatPhotos)
+      handleReply(reply, allChatPhotos)
+      if (rejected) setError(UNREADABLE_PHOTO_MESSAGE)
     } catch (err) {
       setMessages(prev => prev.slice(0, -1))
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -129,15 +141,6 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
           >
             <Camera size={15} strokeWidth={2.5} />
             Add photos
-          </button>
-          <button
-            type="button"
-            onClick={() => sendPhotos([])}
-            disabled={sending}
-            className="px-5 h-11 rounded-xl border text-sm font-semibold transition-colors hover:border-[#254220] disabled:opacity-40"
-            style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#6B5E54' }}
-          >
-            Skip
           </button>
         </div>
       )}

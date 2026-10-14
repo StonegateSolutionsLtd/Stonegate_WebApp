@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -13,7 +14,7 @@ import { TRUCK_FRACTIONS } from '@/lib/quote-pricing'
 import { EMPTY_SERVICE_FORM, postServiceChat, type ServiceFormData, type UnsureField } from '@/lib/service-chat'
 import ServiceChat from './ServiceChat'
 import PhotoField from './PhotoField'
-import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES } from '@/lib/photos'
+import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES, photoDataUrl } from '@/lib/photos'
 import { MapPin, User, Mail, Phone, FileText, ArrowRight, Building2 } from 'lucide-react'
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -21,13 +22,15 @@ const SERVICE_LABELS: Record<string, string> = {
 }
 
 // Shared look for the load size / elevator / "Not sure" option buttons.
-function OptionButton({ label, selected, onClick }: { label: string; selected: boolean; onClick: () => void }) {
+function OptionButton({ label, sub, selected, onClick }: {
+  label: string; sub?: string; selected: boolean; onClick: () => void
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={selected}
-      className="h-11 px-3 rounded-xl border text-sm font-semibold transition-colors duration-150 hover:border-[#254220]"
+      className={`${sub ? 'h-14' : 'h-11'} px-3 rounded-xl border text-sm font-semibold transition-colors duration-150 hover:border-[#254220] flex flex-col items-center justify-center`}
       style={{
         backgroundColor: selected ? '#254220' : '#FFFFFF',
         borderColor:     selected ? '#254220' : '#E8E0D5',
@@ -35,9 +38,13 @@ function OptionButton({ label, selected, onClick }: { label: string; selected: b
       }}
     >
       {label}
+      {sub && <span className="text-xs font-normal mt-0.5" style={{ opacity: 0.75 }}>{sub}</span>}
     </button>
   )
 }
+
+// The truck in /truck-load-guide.png: 16 × 7.5 × 6.5 ft ≈ 780 ft³.
+const TRUCK_CUBIC_FEET = 16 * 7.5 * 6.5
 
 export default function ServiceForm() {
   const params = useSearchParams()
@@ -78,6 +85,7 @@ export default function ServiceForm() {
     if (!form.customerEmail.trim()) e.customerEmail = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(form.customerEmail)) e.customerEmail = 'Enter a valid email'
     if (!form.phone.trim()) e.phone = 'Phone number is required'
+    if (photos.length === 0) e.photos = 'Add at least one photo of the junk'
     return e
   }
 
@@ -90,16 +98,19 @@ export default function ServiceForm() {
     setSubmitting(true)
     setErrors({})
     try {
-      const reply = await postServiceChat({ action: 'start', form, unsure: unsureFields, photoCount: photos.length })
-      if (reply.done) await finish(reply.variables, [])
+      // The chat also checks the photos are good enough to estimate the volume.
+      const reply = await postServiceChat({
+        action: 'start', form, unsure: unsureFields, photos: await Promise.all(photos.map(photoDataUrl)),
+      })
+      if (reply.done) await finish(reply.variables, [], reply.keptPhotos)
       else {
         setChat({ sessionId: reply.sessionId, question: reply.question ?? '', awaitingPhotos: reply.awaitingPhotos })
         setSubmitting(false)
       }
     } catch (err) {
       // The assistant is only essential when something was marked "Not sure";
-      // asking for photos is a nice-to-have.
-      if (unsureFields.length === 0) await finish(form, [])
+      // without it the photos (at least one is required) go unchecked.
+      if (unsureFields.length === 0) await finish(form, [], null)
       else {
         setErrors({ form: err instanceof Error ? err.message : 'Something went wrong' })
         setSubmitting(false)
@@ -109,10 +120,13 @@ export default function ServiceForm() {
 
   // Take the chat's answers for the "Not sure" fields; everything else stays as typed.
   // `chatPhotos` = photos added in the chat, on top of the ones from the form.
-  async function finish(variables: ServiceFormData, chatPhotos: File[]) {
+  // `keptPhotos` = which of all those the photo check judged good (null = unchecked, keep all).
+  async function finish(variables: ServiceFormData, chatPhotos: File[], keptPhotos: number[] | null) {
     const resolved = { ...form }
     for (const field of unsure) Object.assign(resolved, { [field]: variables[field] })
-    const allPhotos = [...photos, ...chatPhotos].slice(0, MAX_PHOTOS)
+    const uploaded = [...photos, ...chatPhotos]
+    const good = keptPhotos ? uploaded.filter((_, i) => keptPhotos.includes(i + 1)) : uploaded
+    const allPhotos = (good.length ? good : uploaded).slice(0, MAX_PHOTOS)
     if (allPhotos.reduce((sum, p) => sum + p.size, 0) > MAX_PHOTOS_TOTAL_BYTES) {
       setForm(resolved)
       setUnsure(new Set())
@@ -185,6 +199,7 @@ export default function ServiceForm() {
                 sessionId={chat.sessionId}
                 firstQuestion={chat.question}
                 firstAwaitingPhotos={chat.awaitingPhotos}
+                photoSlots={MAX_PHOTOS - photos.length}
                 onComplete={finish}
                 onBack={() => setChat(null)}
               />
@@ -277,17 +292,34 @@ export default function ServiceForm() {
                   <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
                     Roughly how much of our truck will your junk fill?
                   </p>
+                  <div className="rounded-xl overflow-hidden mb-2.5" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+                    <Image
+                      src="/truck-load-guide.png"
+                      alt="Our truck: 16 ft long, 7.5 ft wide and 6.5 ft high. A couch, mattress, dresser and about a dozen boxes fill half of it."
+                      width={1536}
+                      height={1024}
+                      sizes="(min-width: 640px) 528px, 100vw"
+                      className="w-full h-auto"
+                    />
+                  </div>
+                  <p className="text-xs mb-3" style={{ color: '#9A8E83' }}>
+                    Our truck is 16 × 7.5 × 6.5 ft. A half load is about a couch, a mattress,
+                    a dresser and a dozen boxes. Your estimate only needs to be approximate;
+                    pick the closest size and our team will confirm it before the job.
+                  </p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {TRUCK_FRACTIONS.map(f => (
                       <OptionButton
                         key={f.label}
                         label={f.label}
+                        sub={`≈ ${Math.round(f.fraction * TRUCK_CUBIC_FEET)} ft³`}
                         selected={!unsure.has('loadSize') && form.loadSize === f.label}
                         onClick={() => set('loadSize', f.label)}
                       />
                     ))}
                     <OptionButton
                       label="Not sure"
+                      sub="We'll help you"
                       selected={unsure.has('loadSize')}
                       onClick={() => markUnsure('loadSize', true)}
                     />
@@ -349,13 +381,20 @@ export default function ServiceForm() {
 
                 <div>
                   <span className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Photos of the Junk{' '}
-                    <span className="font-normal" style={{ color: '#B5A99E' }}>(recommended)</span>
+                    Photos of the Junk <span style={{ color: '#254220' }}>*</span>
                   </span>
                   <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
-                    A few shots from different angles help us give you an accurate quote.
+                    Add at least one photo showing all of the junk. A few shots from different
+                    angles help us estimate the volume and give you an accurate quote.
                   </p>
-                  <PhotoField photos={photos} onChange={setPhotos} />
+                  <PhotoField
+                    photos={photos}
+                    onChange={p => {
+                      setPhotos(p)
+                      if (errors.photos) setErrors(prev => ({ ...prev, photos: '' }))
+                    }}
+                  />
+                  {errors.photos && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.photos}</p>}
                 </div>
               </div>
             </div>

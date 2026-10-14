@@ -34,15 +34,19 @@ export interface ServiceChatReply {
   sessionId: string
   done: boolean
   question: string | null
-  // The chat is asking for photos of the junk (none were added on the form).
+  // The chat is asking for new or more photos of the junk.
   awaitingPhotos: boolean
+  // 1-based numbers of the photos judged good enough to keep with the booking,
+  // counting the form's photos first, then the chat's, in upload order.
+  keptPhotos: number[]
   variables: ServiceFormData
 }
 
+// `photos` are data URLs; the chat checks they're good enough to estimate the volume.
 export type ServiceChatRequest =
-  | { action: 'start'; form: ServiceFormData; unsure: UnsureField[]; photoCount: number }
+  | { action: 'start'; form: ServiceFormData; unsure: UnsureField[]; photos: string[] }
   | { action: 'answer'; sessionId: string; answer: string }
-  | { action: 'photos'; sessionId: string; count: number }
+  | { action: 'photos'; sessionId: string; photos: string[] }
 
 export async function postServiceChat(body: ServiceChatRequest): Promise<ServiceChatReply> {
   const res = await fetch('/api/service-chat', {

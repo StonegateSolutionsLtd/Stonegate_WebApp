@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
   if (
+    photos.length === 0 ||
     photos.length > MAX_PHOTOS ||
     photos.some(p => !photoExtension(p.type)) ||
     photos.reduce((sum, p) => sum + p.size, 0) > MAX_PHOTOS_TOTAL_BYTES

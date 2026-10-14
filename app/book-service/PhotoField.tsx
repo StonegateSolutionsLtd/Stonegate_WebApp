@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { Camera, X } from 'lucide-react'
-import { MAX_PHOTOS, shrinkPhoto } from '@/lib/photos'
+import { MAX_PHOTOS, UNREADABLE_PHOTO_MESSAGE, shrinkPhotos } from '@/lib/photos'
 
 // One preview URL per photo, freed when the photo is removed (the browser
 // frees the rest when the page is left).
@@ -23,6 +23,7 @@ export default function PhotoField({ photos, onChange }: {
 }) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [adding, setAdding] = useState(false)
+  const [unreadable, setUnreadable] = useState(false)
 
   function remove(photo: File) {
     const url = previewUrls.get(photo)
@@ -33,7 +34,8 @@ export default function PhotoField({ photos, onChange }: {
 
   async function add(files: File[]) {
     setAdding(true)
-    const shrunk = await Promise.all(files.slice(0, MAX_PHOTOS - photos.length).map(shrinkPhoto))
+    const { photos: shrunk, rejected } = await shrinkPhotos(files.slice(0, MAX_PHOTOS - photos.length))
+    setUnreadable(rejected > 0)
     onChange([...photos, ...shrunk])
     setAdding(false)
   }
@@ -81,6 +83,7 @@ export default function PhotoField({ photos, onChange }: {
           </button>
         )}
       </div>
+      {unreadable && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{UNREADABLE_PHOTO_MESSAGE}</p>}
     </div>
   )
 }

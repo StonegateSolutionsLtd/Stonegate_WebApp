@@ -18,14 +18,13 @@ export async function POST(request: NextRequest) {
   const validSession = 'sessionId' in body && /^[0-9a-f]{32}$/.test(body.sessionId ?? '')
   if (body.action === 'start') {
     path = '/sessions'
-    payload = { form: body.form, unsure: body.unsure, photoCount: body.photoCount }
+    payload = { form: body.form, unsure: body.unsure, photos: body.photos }
   } else if (body.action === 'answer' && validSession) {
     path = `/sessions/${body.sessionId}/answers`
     payload = { answer: body.answer }
   } else if (body.action === 'photos' && validSession) {
-    // count 0 = the customer skipped adding photos.
     path = `/sessions/${body.sessionId}/photos`
-    payload = { count: body.count }
+    payload = { photos: body.photos }
   } else {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }

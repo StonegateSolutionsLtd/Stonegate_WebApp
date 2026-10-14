@@ -8,18 +8,19 @@ form (`/book-service`).
 3. For each field marked "Not sure" (load size, floor, elevator), OpenAI
    decides the value from what the customer wrote, or asks one question at a
    time until it can.
-4. If no photos were added on the form, it then asks for some. The customer
-   adds them with the "Add photos" button in the chat, or skips.
+4. At least one photo of the junk is required. OpenAI (`OPENAI_PHOTO_MODEL`)
+   checks that the photos are good enough to estimate the volume; if not, the
+   chat says what's wrong and the customer adds new photos with the
+   "Add photos" button. After 3 failed checks, 6 photos, or the customer
+   saying they can't take better ones, the photos are accepted as they are
+   and `photosFlagged` is set in the session file for staff.
 5. When everything is filled in, the request (with photos) is submitted to
    `/api/service-requests`.
 
-Photos never reach this server; it only records how many were added or that
-the customer skipped. They are stored by the Next route: in local dev without
-Supabase in `data/service-orders/<orderId>/`, otherwise in the private
-`service-order-photos` Storage bucket (see migration 013).
-
-OpenAI is only called for "Not sure" fields, or when the customer types a
-message instead of adding photos.
+Photos are kept next to the session file (`data/sessions/<sessionId>/`) and
+`photoCheckLog` records each check. The booking's own copy is stored by the
+Next route: in local dev without Supabase in `data/service-orders/<orderId>/`,
+otherwise in the private `service-order-photos` Storage bucket (migration 013).
 
 ## Run locally
 
