@@ -40,9 +40,28 @@ MAX_PHOTO_CHECKS = 3
 PHOTO_TYPES = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif"}
 DATA_URL = re.compile(r"data:(image/[a-z]+);base64,([A-Za-z0-9+/=]+)")
 
-# Same labels as TRUCK_FRACTIONS in lib/quote-pricing.ts.
+# Same labels and fractions as TRUCK_FRACTIONS in lib/quote-pricing.ts.
 LOAD_SIZES = ["1/8 Truck", "1/4 Truck", "1/2 Truck", "3/4 Truck", "Full Truck"]
+LOAD_SIZE_FRACTIONS = {"1/8 Truck": 1 / 8, "1/4 Truck": 1 / 4, "1/2 Truck": 1 / 2, "3/4 Truck": 3 / 4, "Full Truck": 1.0}
 UnsureField = Literal["loadSize", "floor", "hasElevator"]
+
+# Load cabin dimensions by truck type; keyed so more trucks can be added later.
+TRUCKS = {"standard": {"length_ft": 16, "width_ft": 7.5, "height_ft": 6.5}}
+
+
+def truck_capacity_ft3(truck: str = "standard") -> float:
+    t = TRUCKS[truck]
+    return t["length_ft"] * t["width_ft"] * t["height_ft"]
+
+
+def load_size_from_fraction(fraction: float) -> str:
+    """Smallest LOAD_SIZES bucket at or above the fraction: we'd rather send a
+    bigger truck/crew than under-quote, so this rounds up, never to nearest."""
+    for label in LOAD_SIZES:
+        if fraction <= LOAD_SIZE_FRACTIONS[label] + 1e-9:
+            return label
+    return LOAD_SIZES[-1]
+
 
 FIELD_SCHEMAS = {
     "loadSize": {"anyOf": [{"type": "string", "enum": LOAD_SIZES}, {"type": "null"}]},
@@ -78,10 +97,11 @@ PHOTO_RETRY = (
     "photo or two that show the whole pile clearly, in good light?"
 )
 
-PHOTO_CHECK_PROMPT = """\
+PHOTO_CHECK_PROMPT = f"""\
 You review customer photos for a junk removal booking with Stonegate Moving
 Solutions (Burnaby, BC). Our team uses them to estimate the volume of junk
-(how much of our 16 x 7.5 x 6.5 ft truck it fills) and how hard it is to
+(how much of our {TRUCKS["standard"]["length_ft"]:g} x {TRUCKS["standard"]["width_ft"]:g} x
+{TRUCKS["standard"]["height_ft"]:g} ft truck it fills) and how hard it is to
 remove. Decide whether the photos, taken together, are good enough for that.
 
 Usable when the junk itself is visible, all of it can be seen across the
@@ -111,6 +131,36 @@ Also judge each photo on its own, by its number: "good" is true when it
 clearly shows junk (bright and sharp enough to tell what the items are) and
 so helps estimate the volume, even if it shows only part of the pile. Only
 good photos are kept with the booking.
+
+If usable, also estimate what fraction of the truck's load space the junk
+shown would fill, from 0 (nothing) to 1 (completely full) — judge it directly
+as a share of the truck box, not by converting to a volume in some other
+unit. Rough reference points: a couch or mattress plus some boxes is about
+0.15-0.25; the contents of a small room, about 0.5; several rooms, about
+0.75; a whole home, basement or large garage, 1 or more. If a fridge, washer,
+dryer, mattress, standard door or other item of well-known real-world size is
+visible, use it as a scale reference for judging the size of everything else
+in the photo — this is more reliable than judging proportions by eye alone.
+Base this mainly on what you can actually see. If the customer gave their own
+load size estimate,
+treat it as one more thing to weigh, not as evidence on its own: it may be
+accurate, or the photos may show the pile is bigger or smaller than they
+think — go with what the photos support. In volumeEvidence, briefly say what
+you based the estimate on (the items and roughly how many) — it must
+describe the same amount as your numeric estimate. If not usable, both are
+null.
+
+If usable, also check for anything in the photos that might not actually be
+meant for removal: junk sitting on or in a shelf, dresser, cabinet or other
+furniture piece that could itself be a keeper; or one item that stands out
+from the rest (noticeably newer, cleaner or more valuable-looking) as if it
+might not belong with the junk. If you see something like that AND the
+customer's own notes haven't already said what to keep or confirmed
+everything goes, write itemsToConfirm: a short, friendly question naming the
+specific item(s) and asking whether they should be removed too or kept. If
+nothing like that stands out, or the notes already cover it, itemsToConfirm
+is null — don't ask just to be safe, and don't ask again about something
+already answered.
 """
 
 PHOTO_CHECK_SCHEMA = {
@@ -128,8 +178,13 @@ PHOTO_CHECK_SCHEMA = {
         },
         "usable": {"type": "boolean"},
         "message": {"type": ["string", "null"]},
+        "estimatedTruckFraction": {"type": ["number", "null"]},
+        "volumeEvidence": {"type": ["string", "null"]},
+        "itemsToConfirm": {"type": ["string", "null"]},
     },
-    "required": ["visible", "photos", "usable", "message"],
+    "required": [
+        "visible", "photos", "usable", "message", "estimatedTruckFraction", "volumeEvidence", "itemsToConfirm",
+    ],
     "additionalProperties": False,
 }
 
@@ -325,8 +380,13 @@ def response_schema(fields: list[str]) -> dict:
 
 
 def ask_model(session: dict) -> None:
-    """Let the model fill in what it can and pick the next question; updates session in place."""
+    """Let the model fill in what it can and pick the next question; updates session in place.
+    Fields already decided (e.g. loadSize from a photo volume estimate) aren't re-asked."""
     unsure = session["unsure"]
+    remaining = [f for f in unsure if session["variables"][f] is None]
+    if not remaining:
+        advance(session)
+        return
     form_for_model = {k: v for k, v in session["form"].items() if k not in unsure}
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -335,7 +395,7 @@ def ask_model(session: dict) -> None:
             "content": "Junk removal booking form (fields the customer was sure about):\n"
             + json.dumps(form_for_model, indent=2)
             + "\n\nFields marked \"Not sure\": "
-            + ", ".join(unsure),
+            + ", ".join(remaining),
         },
         *session["messages"],
     ]
@@ -352,7 +412,7 @@ def ask_model(session: dict) -> None:
         messages=messages,
         response_format={
             "type": "json_schema",
-            "json_schema": {"name": "junk_fields", "strict": True, "schema": response_schema(unsure)},
+            "json_schema": {"name": "junk_fields", "strict": True, "schema": response_schema(remaining)},
         },
     )
     result = json.loads(completion.choices[0].message.content)
@@ -362,7 +422,7 @@ def ask_model(session: dict) -> None:
         session["form"]["notes"],
         *(m["content"] for m in session["messages"] if m["role"] == "user"),
     ]))
-    for field in unsure:
+    for field in remaining:
         answer = result["values"].get(field) or {}
         value = clean_value(field, answer.get("value"))
         # A value only counts if it rests on something the customer really said.
@@ -370,7 +430,7 @@ def ask_model(session: dict) -> None:
         if value is not None and not out_of_questions and (not evidence or evidence not in customer_text):
             value = None
         session["variables"][field] = value
-    pending = [f for f in unsure if session["variables"][f] is None]
+    pending = [f for f in remaining if session["variables"][f] is None]
 
     if pending and out_of_questions:
         for field in pending:
@@ -414,6 +474,22 @@ def photo_data_urls(session: dict) -> list[str]:
     ]
 
 
+def apply_volume_estimate(session: dict, fraction, evidence) -> None:
+    """Record the model's truck-fraction estimate and use it for loadSize. The model
+    already weighed the customer's own load size guess (if any) as context alongside
+    the photos (see check_photos), so this can move loadSize up or down from whatever
+    the customer said, or decide it outright if they left it "Not sure"."""
+    if not isinstance(fraction, (int, float)) or fraction <= 0:
+        return
+    photo_load_size = load_size_from_fraction(fraction)
+    session["estimatedVolumeFt3"] = round(fraction * truck_capacity_ft3(), 1)
+    session["estimatedLoadSize"] = photo_load_size
+    session["volumeEvidence"] = (evidence or "").strip() or None
+    session["variables"]["loadSize"] = photo_load_size
+    if "loadSize" in session["pending"]:
+        session["pending"] = [f for f in session["pending"] if f != "loadSize"]
+
+
 def check_photos(session: dict) -> None:
     """Ask the model whether all photos so far are good enough to estimate the volume."""
     session["photoChecks"] += 1
@@ -449,6 +525,9 @@ def check_photos(session: dict) -> None:
     if result["usable"]:
         session["photosOk"] = True
         session["photoProblem"] = None
+        apply_volume_estimate(session, result.get("estimatedTruckFraction"), result.get("volumeEvidence"))
+        if not session["itemsAsked"]:
+            session["itemsQuestion"] = (result.get("itemsToConfirm") or "").strip() or None
     elif session["photoChecks"] >= MAX_PHOTO_CHECKS or len(session["photos"]) >= MAX_PHOTOS:
         accept_photos_as_is(session)
     else:
@@ -470,17 +549,32 @@ def ask(session: dict, question: str) -> None:
 
 
 def advance(session: dict) -> None:
-    """Every field is decided: ask for (better) photos if needed, else finish."""
+    """Every field is decided: ask for (better) photos if needed, then once about any
+    items the photos suggest might not be junk, else finish."""
     if not session["photos"]:
         session["awaitingPhotos"] = True
         ask(session, PHOTO_QUESTION)
     elif not session["photosOk"]:
         session["awaitingPhotos"] = True
         ask(session, session["photoProblem"])
+    elif session["itemsQuestion"] and not session["itemsAsked"]:
+        session["awaitingPhotos"] = False
+        session["itemsAsked"] = True
+        session["awaitingItemsAnswer"] = True
+        ask(session, session["itemsQuestion"])
     else:
         session["awaitingPhotos"] = False
         session["done"] = True
         session["question"] = None
+
+
+def handle_items_answer(session: dict, answer: str) -> None:
+    """Fold the customer's answer about what to keep into the booking notes for staff."""
+    session["awaitingItemsAnswer"] = False
+    notes = session["variables"].get("notes") or ""
+    note = f'Items to keep (not remove) — customer said: "{answer}"'
+    session["variables"]["notes"] = (notes + "\n\n" + note).strip() if notes else note
+    advance(session)
 
 
 def reply_about_photos(session: dict) -> None:
@@ -548,6 +642,12 @@ def start_session(body: StartRequest):
         "photosOk": False,
         "photosFlagged": False,
         "photoProblem": None,
+        "estimatedVolumeFt3": None,
+        "estimatedLoadSize": None,
+        "volumeEvidence": None,
+        "itemsQuestion": None,
+        "itemsAsked": False,
+        "awaitingItemsAnswer": False,
         "awaitingPhotos": False,
         "messages": [],
         "question": None,
@@ -572,6 +672,8 @@ def answer(session_id: str, body: AnswerRequest):
     session["messages"].append({"role": "user", "content": body.answer.strip()})
     if session["awaitingPhotos"]:
         reply_about_photos(session)
+    elif session["awaitingItemsAnswer"]:
+        handle_items_answer(session, body.answer.strip())
     else:
         ask_model(session)
     save_session(session)

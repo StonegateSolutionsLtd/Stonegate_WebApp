@@ -122,7 +122,9 @@ export default function ServiceForm() {
   // `chatPhotos` = photos added in the chat, on top of the ones from the form.
   // `keptPhotos` = which of all those the photo check judged good (null = unchecked, keep all).
   async function finish(variables: ServiceFormData, chatPhotos: File[], keptPhotos: number[] | null) {
-    const resolved = { ...form }
+    // loadSize is always re-checked against the photos, even when the customer
+    // picked it themselves, so it's taken from the chat regardless of `unsure`.
+    const resolved = { ...form, loadSize: variables.loadSize }
     for (const field of unsure) Object.assign(resolved, { [field]: variables[field] })
     const uploaded = [...photos, ...chatPhotos]
     const good = keptPhotos ? uploaded.filter((_, i) => keptPhotos.includes(i + 1)) : uploaded
@@ -466,10 +468,14 @@ export default function ServiceForm() {
                 What Junk Do You Need Removed?{' '}
                 <span className="font-normal" style={{ color: '#B5A99E' }}>(optional)</span>
               </label>
+              <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
+                If a photo shows something you want to keep — a shelf, a fridge, anything
+                the junk is on or mixed in with — tell us here so we know not to take it.
+              </p>
               <div className="relative">
                 <FileText size={16} className="absolute left-3.5 top-3.5 pointer-events-none" style={{ color: '#B5C9B0' }} />
                 <Textarea
-                  placeholder="Tell us what items and roughly how much (e.g. a couch, mattress, and a few boxes)"
+                  placeholder="Tell us what items and roughly how much, and anything to leave behind (e.g. a couch, mattress, and a few boxes — but not the shelf they're on)"
                   value={form.notes}
                   onChange={e => set('notes', e.target.value)}
                   className="pl-10 resize-none"
