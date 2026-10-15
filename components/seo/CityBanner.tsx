@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Star, Shield, Zap, Phone, ArrowRight } from 'lucide-react'
-import { JUNK_BOOK_HREF, PRIMARY_PHONE, PRIMARY_PHONE_TEL } from '@/lib/seo/site'
+import { JUNK_BOOK_HREF } from '@/lib/seo/site'
+import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import type { SkylineStyle } from '@/lib/seo/cities'
 
 /** Deterministic PRNG so every city gets its own, stable skyline at build time */
@@ -98,13 +99,12 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
             </h1>
             <p className="text-base leading-relaxed max-w-xl mb-5" style={{ color: 'rgba(255,255,255,0.85)' }}>{lead}</p>
             <div className="flex flex-wrap gap-2 mb-5">
-              <a
-                href={PRIMARY_PHONE_TEL}
+              <PhoneLink
                 className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-extrabold transition-transform hover:scale-[1.03] w-full sm:w-auto"
                 style={{ backgroundColor: '#FAF7F2', color: '#014421' }}
               >
-                <Phone size={17} fill="currentColor" aria-hidden /> Call {PRIMARY_PHONE}
-              </a>
+                <Phone size={17} fill="currentColor" aria-hidden /> Call <PhoneNumber />
+              </PhoneLink>
               {[{ href: JUNK_BOOK_HREF, label: 'Book Junk Removal Online' }].map(b => (
                 <Link
                   key={b.href}

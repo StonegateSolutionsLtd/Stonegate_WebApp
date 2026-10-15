@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { X, Phone, Menu, ChevronDown, ChevronRight, Home } from 'lucide-react'
-import { CONTACT_PHONES } from '@/lib/contact'
+import { PhoneNumber, usePhoneNumber } from '@/components/PhoneNumber'
 import { CITIES, cityHref } from '@/lib/seo/cities'
 
 interface NavLink {
@@ -146,6 +146,7 @@ function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () =>
 }
 
 export default function Navbar({ minimalMobile = false }: { minimalMobile?: boolean } = {}) {
+  const phone = usePhoneNumber()
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [menuOpen, setMenuOpen] = useState(false)
@@ -156,7 +157,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
   return (
     <>
       <header className="relative z-40" style={{ backgroundColor: '#FAF7F2', borderBottom: '1px solid #E8E0D5' }}>
-        <div className="flex h-[68px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:px-16">
+        <div className="flex h-[68px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:px-16 3xl:max-w-[2200px] 3xl:mx-auto">
 
           <Link href="/" className="flex shrink-0 items-center gap-3">
             <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover" />
@@ -176,7 +177,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               About
             </Link>
             <a
-              href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
+              href={phone.tel}
               aria-label="Call Stonegate"
               className="flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
               style={{ width: '38px', height: '38px', border: '1.5px solid #E8E0D5' }}
@@ -195,7 +196,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
           <div className="flex lg:hidden items-center gap-1.5 min-[360px]:gap-2.5">
             {minimalMobile ? (
               <a
-                href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
+                href={phone.tel}
                 aria-label="Call Stonegate"
                 className="flex items-center justify-center rounded-full"
                 style={{ width: '44px', height: '44px', backgroundColor: '#014421' }}
@@ -204,7 +205,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               </a>
             ) : (<>
             <a
-              href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`}
+              href={phone.tel}
               aria-label="Call Stonegate"
               className="flex items-center gap-1.5 whitespace-nowrap rounded-full font-extrabold transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
               style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
@@ -258,11 +259,9 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
                 Make a Request
               </button>
               <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
-                {CONTACT_PHONES.slice(0, 1).map(phone => (
-                  <a key={phone} href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>
-                    <Phone size={14} style={{ color: '#014421' }} /> {phone}
-                  </a>
-                ))}
+                <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>
+                  <Phone size={14} style={{ color: '#014421' }} /> <PhoneNumber />
+                </a>
               </div>
             </div>
           </div>
@@ -326,8 +325,8 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
 
             <p className="mt-6 pt-5 text-sm border-t" style={{ color: '#6B5E54', borderColor: '#E8E0D5' }}>
               Or call us:{' '}
-              <a href={`tel:${CONTACT_PHONES[0].replace(/\D/g, '')}`} className="font-bold hover:underline" style={{ color: '#014421' }}>
-                {CONTACT_PHONES[0]}
+              <a href={phone.tel} className="font-bold hover:underline" style={{ color: '#014421' }}>
+                <PhoneNumber />
               </a>
             </p>
           </div>

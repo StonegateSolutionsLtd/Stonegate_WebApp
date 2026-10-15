@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { CONTACT_PHONES, CONTACT_EMAIL } from '@/lib/contact'
+import { CONTACT_EMAIL } from '@/lib/contact'
+import { PhoneLink } from '@/components/PhoneNumber'
 import { JUNK_ITEM_BY_SLUG, junkItemHref } from '@/lib/seo/junk-items'
 import { CITIES, cityHref } from '@/lib/seo/cities'
 
@@ -49,7 +50,7 @@ const columns = [
 export default function Footer() {
   return (
     <footer style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-      <div className="max-w-6xl mx-auto px-6 pt-16 pb-10">
+      <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-3">
@@ -57,11 +58,7 @@ export default function Footer() {
               <span className="font-extrabold text-base tracking-tight" style={{ color: '#1A1714' }}>Stonegate</span>
             </Link>
             <div className="flex flex-col gap-1.5">
-              {CONTACT_PHONES.slice(0, 1).map(phone => (
-                <a key={phone} href={`tel:${phone.replace(/\D/g, '')}`} className="text-sm font-semibold transition-opacity hover:opacity-60" style={{ color: '#6B5E54' }}>
-                  {phone}
-                </a>
-              ))}
+              <PhoneLink className="text-sm font-semibold transition-opacity hover:opacity-60" style={{ color: '#6B5E54' }} />
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm font-semibold transition-opacity hover:opacity-60" style={{ color: '#6B5E54' }}>
                 {CONTACT_EMAIL}
               </a>

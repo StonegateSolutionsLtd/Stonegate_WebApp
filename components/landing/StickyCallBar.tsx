@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { Phone, ArrowRight } from 'lucide-react'
+import { PhoneLink } from '@/components/PhoneNumber'
 
 /** Mobile/tablet bottom bar that appears once the element with `watchId` scrolls out of view. */
-export default function StickyCallBar({ watchId, tel, quoteHref }: { watchId: string; tel: string; quoteHref: string }) {
+export default function StickyCallBar({ watchId, quoteHref }: { watchId: string; quoteHref: string }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -30,9 +31,9 @@ export default function StickyCallBar({ watchId, tel, quoteHref }: { watchId: st
       <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 rounded-full min-h-[52px] text-base font-extrabold" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
         Free Estimate <ArrowRight size={16} aria-hidden />
       </a>
-      <a href={tel} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 rounded-full min-h-[52px] text-base font-extrabold" style={{ color: '#014421', border: '2px solid #014421', backgroundColor: '#FFFFFF' }}>
+      <PhoneLink tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 rounded-full min-h-[52px] text-base font-extrabold" style={{ color: '#014421', border: '2px solid #014421', backgroundColor: '#FFFFFF' }}>
         <Phone size={17} fill="currentColor" aria-hidden /> Call
-      </a>
+      </PhoneLink>
     </div>
   )
 }
