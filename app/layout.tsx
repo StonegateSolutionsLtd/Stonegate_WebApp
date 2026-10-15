@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import Script from "next/script";
+import { PhoneNumberProvider } from "@/components/PhoneNumber";
+import { PHONE_CONVERSION_SEND_TO, PHONE_CONVERSION_NUMBER } from "@/lib/googleAds";
 import "./globals.css";
 
 const raleway = Raleway({
@@ -42,7 +44,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${raleway.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-raleway)]">{children}</body>
+      <body className="min-h-full flex flex-col font-[family-name:var(--font-raleway)]">
+        <PhoneNumberProvider>{children}</PhoneNumberProvider>
+      </body>
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=AW-18221842465"
@@ -54,6 +58,9 @@ export default function RootLayout({
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'AW-18221842465');
+          gtag('config', '${PHONE_CONVERSION_SEND_TO}', {
+            'phone_conversion_number': '${PHONE_CONVERSION_NUMBER}'
+          });
         `}
       </Script>
     </html>

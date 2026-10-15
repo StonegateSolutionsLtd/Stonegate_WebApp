@@ -4,7 +4,6 @@ export const SITE_URL = 'https://www.stonegatemoving.com'
 export const BUSINESS_NAME = 'Stonegate Moving Solutions'
 
 export const PRIMARY_PHONE = CONTACT_PHONES[0]
-export const PRIMARY_PHONE_TEL = `tel:+${PRIMARY_PHONE.replace(/\D/g, '')}`
 
 /** Public starting rate for junk removal - the only junk price shown on the site */
 export const JUNK_RATE = '$150'

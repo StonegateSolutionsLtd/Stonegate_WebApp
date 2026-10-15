@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronRight, Phone, ArrowRight, MapPin, Plus } from 'lucide-react'
-import { PRIMARY_PHONE, PRIMARY_PHONE_TEL, type Crumb, type Faq } from '@/lib/seo/site'
+import { type Crumb, type Faq } from '@/lib/seo/site'
+import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 
 export function JsonLd({ graph }: { graph: object[] }) {
   return (
@@ -30,14 +31,13 @@ export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
 
 export function CallButton({ big = false, light = false }: { big?: boolean; light?: boolean }) {
   return (
-    <a
-      href={PRIMARY_PHONE_TEL}
+    <PhoneLink
       className={`inline-flex items-center justify-center gap-3 rounded-full font-extrabold transition-transform hover:scale-[1.03] ${big ? 'px-9 py-5 text-lg sm:text-xl' : 'px-7 py-4 text-base'}`}
       style={light ? { backgroundColor: '#FAF7F2', color: '#014421' } : { backgroundColor: '#014421', color: '#FAF7F2' }}
     >
       <Phone size={big ? 22 : 18} fill="currentColor" aria-hidden />
-      <span>Call {PRIMARY_PHONE}</span>
-    </a>
+      <span>Call <PhoneNumber /></span>
+    </PhoneLink>
   )
 }
 

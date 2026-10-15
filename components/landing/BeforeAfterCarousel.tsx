@@ -46,7 +46,7 @@ export default function BeforeAfterCarousel({ pairs, height = 440 }: { pairs: Pa
         >
           {pairs.map(pair => (
             <div key={pair.label} className="grid grid-cols-2" style={{ width: `${100 / pairs.length}%`, flexShrink: 0 }}>
-              <div className="relative" style={{ height: `${height}px` }}>
+              <div className="relative" style={{ height: `var(--ba-h, ${height}px)` }}>
                 <Image src={pair.before} alt={`Before junk removal - ${pair.label}`} fill className="object-cover" />
                 <span
                   className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"
@@ -55,7 +55,7 @@ export default function BeforeAfterCarousel({ pairs, height = 440 }: { pairs: Pa
                   Before
                 </span>
               </div>
-              <div className="relative" style={{ height: `${height}px` }}>
+              <div className="relative" style={{ height: `var(--ba-h, ${height}px)` }}>
                 <Image src={pair.after} alt={`After junk removal - ${pair.label}`} fill className="object-cover" style={{ objectPosition: pair.afterObjectPosition }} />
                 <span
                   className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest rounded-full px-3 py-1"

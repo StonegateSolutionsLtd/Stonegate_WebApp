@@ -10,10 +10,11 @@ import {
 import { JsonLd, FaqList, CityChips } from '@/components/seo/SeoBlocks'
 import { Skyline } from '@/components/seo/CityBanner'
 import StickyCallBar from '@/components/landing/StickyCallBar'
+import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { JUNK_ITEMS, junkItemHref } from '@/lib/seo/junk-items'
 import { CITIES, cityJunkHref } from '@/lib/seo/cities'
 import {
-  SITE_URL, JUNK_BOOK_HREF, JUNK_RATE, PRIMARY_PHONE, PRIMARY_PHONE_TEL, providerLd, faqLd, type Faq,
+  SITE_URL, JUNK_BOOK_HREF, JUNK_RATE, providerLd, faqLd, type Faq,
 } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
@@ -107,14 +108,13 @@ function Stars({ size = 15 }: { size?: number }) {
 
 function CallCta({ className = '', light = false }: { className?: string; light?: boolean }) {
   return (
-    <a
-      href={PRIMARY_PHONE_TEL}
+    <PhoneLink
       className={`flex items-center justify-center gap-2 rounded-full font-extrabold text-base min-h-[54px] px-4 min-[375px]:px-6 transition-opacity hover:opacity-85 ${className}`}
       style={light ? { color: CREAM, border: '2px solid rgba(250,247,242,0.75)' } : { color: GREEN, border: `2px solid ${GREEN}`, backgroundColor: '#FFFFFF' }}
     >
       <Phone size={18} fill="currentColor" aria-hidden />
-      <span className="whitespace-nowrap">Call {PRIMARY_PHONE}</span>
-    </a>
+      <span className="whitespace-nowrap">Call <PhoneNumber /></span>
+    </PhoneLink>
   )
 }
 
@@ -193,15 +193,14 @@ export default function JunkRemovalPage() {
                 >
                   <span className="whitespace-nowrap">Get a Free Estimate</span> <ArrowRight size={17} aria-hidden />
                 </a>
-                <a
-                  href={PRIMARY_PHONE_TEL}
+                <PhoneLink
                   className="flex items-center justify-center gap-2 rounded-full font-extrabold text-base min-h-[56px] px-4 lg:px-6"
                   style={{ color: '#FFFFFF', border: '2px solid rgba(255,255,255,0.8)' }}
                 >
                   <Phone size={17} fill="currentColor" aria-hidden />
                   <span className="lg:hidden">Call</span>
-                  <span className="hidden lg:inline whitespace-nowrap">{PRIMARY_PHONE}</span>
-                </a>
+                  <span className="hidden lg:inline whitespace-nowrap"><PhoneNumber /></span>
+                </PhoneLink>
               </div>
             </div>
 
@@ -443,7 +442,7 @@ export default function JunkRemovalPage() {
 
       <Footer />
 
-      <StickyCallBar watchId="hero-cta" tel={PRIMARY_PHONE_TEL} quoteHref={JUNK_BOOK_HREF} />
+      <StickyCallBar watchId="hero-cta" quoteHref={JUNK_BOOK_HREF} />
     </div>
   )
 }
