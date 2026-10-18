@@ -31,17 +31,17 @@ const LINE = '#E8E0D5'
 const CREAM = '#FAF7F2'
 const WHITE = '#FFFFFF'
 const LIGHT_GREEN = '#E8F0E6'
-const BLUE = '#1F6FB2'
-const SKY = '#EAF3FB'
+const TAN = '#F3EADD'
 const FOREST = '#064B31'
-const OFF_WHITE = '#FAF9F6'
-// Sky colours sampled from the top edge of the hero photo, so the headline area flows into it
-const SKY_TOP = '#BFD6F6'
-const SKY_MID = '#E3EDFA'
 const MUTED_BROWN = '#8B6845'
 const CHARCOAL = '#2B2A28'
 
-const HERO_PHOTO = { src: '/junk/driver-beside-truck.png', alt: 'Stonegate junk removal driver standing in front of the Stonegate truck' }
+const HERO_PHOTO = {
+  src: '/junk/driver-standing-by-truck-side-2.jpg',
+  // Cropped (not scaled up) to a portrait aspect so the driver's face clears the headline on narrow/tall mobile screens
+  mobileSrc: '/junk/driver-standing-mobile-wide-3.jpg',
+  alt: 'Stonegate junk removal driver standing beside the Stonegate truck',
+}
 
 const steps = [
   { title: 'Book a free on-site estimate', text: 'Tell us what is going and pick a time that suits you. No deposit, no obligation.' },
@@ -112,50 +112,22 @@ const faqs: Faq[] = [
   { q: 'Where does my junk go?', a: 'Usable items are donated to local charities, materials are recycled, and only what is left goes to the transfer station.' },
 ]
 
-/** Deterministic pseudo-random sequence, so the skyline renders the same every time */
-function seeded(seed: number) {
-  return () => (seed = (seed * 16807) % 2147483647) / 2147483647
-}
-
-/** Two layers of hazy city towers, anchored to the bottom of their box */
-function CitySkyline() {
-  const r = seeded(42)
-  const layer = (minW: number, maxW: number, minH: number, maxH: number) => {
-    const towers: { x: number; w: number; h: number }[] = []
-    for (let x = -10; x < 1440; ) {
-      const w = minW + r() * (maxW - minW)
-      towers.push({ x, w, h: minH + r() * (maxH - minH) })
-      x += w + 4 + r() * 10
-    }
-    return towers
-  }
-  const back = layer(46, 90, 110, 196)
-  const front = layer(54, 110, 55, 140)
-  return (
-    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1440 200" preserveAspectRatio="xMidYMax slice">
-      {back.map((t, i) => (
-        <g key={`b${i}`} fill="#B4C7E2">
-          <rect x={t.x} y={200 - t.h} width={t.w} height={t.h} />
-          {t.h > 150 && <rect x={t.x + t.w / 2 - 2} y={200 - t.h - 18} width={4} height={18} />}
-        </g>
-      ))}
-      {front.map((t, i) => (
-        <g key={`f${i}`}>
-          <rect x={t.x} y={200 - t.h} width={t.w} height={t.h} fill="#A4BAD8" />
-          {Array.from({ length: Math.floor((t.h - 14) / 16) }, (_, j) => (
-            <rect key={j} x={t.x + 8} y={200 - t.h + 10 + j * 16} width={t.w - 16} height={4} fill="#B7C9E3" />
-          ))}
-        </g>
-      ))}
-    </svg>
-  )
-}
-
 function Stars({ size = 15 }: { size?: number }) {
   return (
     <span className="inline-flex items-center gap-0.5" aria-label="5 out of 5 stars">
       {Array.from({ length: 5 }, (_, i) => <Star key={i} size={size} fill="#D4A017" style={{ color: '#D4A017' }} aria-hidden />)}
     </span>
+  )
+}
+
+function GoogleLogo({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 18 18" aria-hidden>
+      <path fill="#4285F4" d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087c1.7018-1.5668 2.6836-3.8741 2.6836-6.615z" />
+      <path fill="#34A853" d="M9 18c2.43 0 4.4673-.806 5.9564-2.1805l-2.9087-2.2581c-.806.5404-1.8368.8605-3.0477.8605-2.344 0-4.3282-1.5831-5.0359-3.7104H.9573v2.3318C2.4382 15.9832 5.4818 18 9 18z" />
+      <path fill="#FBBC05" d="M3.9641 10.71c-.18-.5404-.2827-1.1181-.2827-1.71s.1027-1.1696.2827-1.71V4.9582H.9573C.3477 6.1732 0 7.5477 0 9s.3477 2.8268.9573 4.0418L3.9641 10.71z" />
+      <path fill="#EA4335" d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5813-2.5814C13.4632.8918 11.426 0 9 0 5.4818 0 2.4382 2.0168.9573 4.9582L3.9641 7.29C4.6718 5.1627 6.656 3.5795 9 3.5795z" />
+    </svg>
   )
 }
 
@@ -218,91 +190,80 @@ export default function JunkRemovalPage() {
 
       <main className="flex-1">
 
-        {/* ───────── Hero - headline, then the photo ───────── */}
-        <section className="relative overflow-hidden" style={{ backgroundColor: OFF_WHITE }}>
-          <div className="hidden lg:block absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to bottom, ${OFF_WHITE} 0%, ${SKY_MID} 62%, ${CREAM} 100%)` }} aria-hidden />
-          {/* Hazy city skyline across the band (desktop) */}
-          <div className="hidden lg:block absolute inset-x-0 bottom-0 h-[280px] pointer-events-none [mask-image:linear-gradient(to_top,transparent_0%,rgba(0,0,0,0.85)_30%,rgba(0,0,0,0.45)_60%,transparent_100%)]" aria-hidden>
-            <CitySkyline />
+        {/* ───────── Hero - full-bleed photo with overlaid headline (matches the main landing page) ───────── */}
+        <section className="relative flex items-center min-h-[680px] sm:min-h-[640px] lg:min-h-[620px]" style={{ overflow: 'hidden' }}>
+          <div className="absolute inset-0" style={{ backgroundColor: CHARCOAL }}>
+            <Image
+              src={HERO_PHOTO.mobileSrc}
+              alt={HERO_PHOTO.alt}
+              fill
+              priority
+              quality={90}
+              sizes="100vw"
+              className="object-cover object-[center_top] lg:hidden"
+              style={{ filter: 'brightness(1.15)' }}
+            />
+            <Image
+              src={HERO_PHOTO.src}
+              alt={HERO_PHOTO.alt}
+              fill
+              priority
+              quality={90}
+              sizes="100vw"
+              className="hidden object-cover object-[62%_78%] lg:block"
+              style={{ filter: 'brightness(1.15)' }}
+            />
           </div>
-          <div className="relative max-w-6xl mx-auto px-5 sm:px-6 pt-4 lg:py-10 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-2 lg:gap-x-14 lg:items-center">
-            {/* Headline */}
-            <div className="relative">
-              <div className="lg:hidden absolute -inset-x-5 sm:-inset-x-6 -top-4 -bottom-3.5 pointer-events-none" style={{ background: `linear-gradient(to bottom, ${OFF_WHITE} 0%, ${OFF_WHITE} 28%, ${SKY_MID} 62%, ${SKY_TOP} 100%)` }} aria-hidden />
-              {/* City rises from the top edge of the photo and fades out before the title */}
-              <div className="lg:hidden absolute -inset-x-5 sm:-inset-x-6 -bottom-3.5 h-[190px] pointer-events-none [mask-image:linear-gradient(to_top,black_0%,rgba(0,0,0,0.5)_45%,transparent_100%)]" aria-hidden>
-                <CitySkyline />
-              </div>
-              <h1 className="relative font-extrabold leading-[1] tracking-tight mb-2 text-[33px] min-[360px]:text-[35px] min-[380px]:text-[42px] min-[400px]:text-[46px] sm:text-[60px] lg:text-[66px]">
-                <span className="block" style={{ color: FOREST }}>Junk Removal</span>
-                <span className="flex items-center gap-3 my-1 sm:my-2 text-[12px] sm:text-[15px] font-bold uppercase leading-none tracking-[0.35em]" style={{ color: MUTED_BROWN }}>
-                  <span className="h-px w-10 sm:w-14" style={{ backgroundColor: 'rgba(139,104,69,0.4)' }} aria-hidden />
-                  in
-                  <span className="h-px w-10 sm:w-14" style={{ backgroundColor: 'rgba(139,104,69,0.4)' }} aria-hidden />
-                </span>
-                <span className="block" style={{ color: '#80552E' }}>Metro Vancouver</span>
-              </h1>
-              <p className="relative text-[17px] sm:text-xl leading-snug mb-1.5" style={{ color: CHARCOAL }}>
-                We lift, load and haul it away.
-              </p>
-              <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center gap-2 text-[15px] font-semibold" style={{ color: CHARCOAL }}>
-                <Stars size={17} /> 4.9 on Google
-              </a>
-              {/* Desktop: buttons under the text (mobile has them on the photo) */}
-              <div className="relative hidden lg:flex gap-3 mt-7">
+          {/* Left-side darkening gradient, so the headline stays legible over the photo */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.6) 18%, rgba(0,0,0,0.44) 36%, rgba(0,0,0,0.26) 54%, rgba(0,0,0,0.1) 72%, transparent 90%)' }} aria-hidden />
+          {/* Bottom darkening, for the stacked mobile layout */}
+          <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.18) 24%, transparent 46%)' }} aria-hidden />
+
+          <div className="relative z-20 px-5 sm:px-6 lg:pl-16 pt-0 pb-10 lg:pt-2 lg:pb-10 max-w-[620px] lg:max-w-[680px]">
+            <h1 className="font-extrabold uppercase tracking-tight leading-[0.95] mb-3 text-[40px] min-[380px]:text-[46px] sm:text-[58px] lg:text-[66px]">
+              <span className="block [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: WHITE }}>Junk Removal</span>
+              <span className="flex items-center gap-3 my-1.5 sm:my-2 text-[12px] sm:text-[15px] font-bold uppercase leading-none tracking-[0.35em]" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                <span className="h-px w-10 sm:w-14" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} aria-hidden />
+                in
+                <span className="h-px w-10 sm:w-14" style={{ background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.4))' }} aria-hidden />
+              </span>
+              <span className="block [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45' }}>Metro Vancouver</span>
+            </h1>
+            <p className="text-[18px] sm:text-xl leading-snug mb-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: WHITE }}>
+              We lift, load and haul it away.
+            </p>
+            <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-44 lg:mb-6">
+              <GoogleLogo size={16} />
+              <Stars size={15} />
+              <span className="text-[15px] font-bold" style={{ color: WHITE, textShadow: '0 1px 6px rgba(0,0,0,0.85)' }}>4.9 rating</span>
+            </a>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div id="hero-cta">
                 <a
                   href={JUNK_BOOK_HREF}
-                  className="flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-8 transition-transform hover:scale-[1.01]"
+                  className="flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-8 w-full sm:w-auto transition-transform active:scale-[0.98] hover:scale-[1.01]"
                   style={{ backgroundColor: FOREST, color: WHITE, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.35)' }}
                 >
                   <span className="whitespace-nowrap">Get a Free Estimate</span> <ArrowRight size={19} aria-hidden />
                 </a>
-                <PhoneLink
-                  className="flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[58px] px-6 transition-colors hover:bg-[#F2F5F2]"
-                  style={{ color: FOREST, backgroundColor: WHITE, border: `1.5px solid ${FOREST}`, fontVariantNumeric: 'lining-nums tabular-nums' }}
-                >
-                  <Phone size={17} fill="currentColor" aria-hidden />
-                  <span className="whitespace-nowrap">Call <PhoneNumber /></span>
-                </PhoneLink>
               </div>
-            </div>
-
-            {/* Photo - on mobile the estimate + call buttons sit on top of it */}
-            <div className="relative -mx-5 sm:-mx-6 lg:mx-0 mt-3.5 lg:mt-0 h-[clamp(380px,56svh,490px)] sm:h-[540px] lg:h-[480px] lg:rounded-3xl overflow-hidden" style={{ backgroundColor: LINE }}>
-              <Image
-                src={HERO_PHOTO.src}
-                alt={HERO_PHOTO.alt}
-                fill
-                preload
-                sizes="(max-width: 1024px) 100vw, 560px"
-                className="object-cover object-[center_48%] lg:object-[center_40%]"
-              />
-              <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to bottom, rgba(10,22,15,0) 45%, rgba(10,22,15,0.55) 68%, rgba(10,22,15,0.85) 100%)' }} aria-hidden />
-              <div className="absolute inset-x-0 bottom-0 px-5 sm:px-6 pb-5 flex flex-col gap-2.5 lg:hidden">
-                <div id="hero-cta">
-                  <a
-                    href={JUNK_BOOK_HREF}
-                    className="flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-6 w-full transition-transform active:scale-[0.98] hover:scale-[1.01]"
-                    style={{ backgroundColor: FOREST, color: WHITE, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.35)' }}
-                  >
-                    <span className="whitespace-nowrap">Get a Free Estimate</span> <ArrowRight size={19} aria-hidden />
-                  </a>
-                </div>
-                <PhoneLink
-                  className="flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[52px] px-6 w-full transition-colors hover:bg-[#F2F5F2]"
-                  style={{ color: FOREST, backgroundColor: WHITE, fontVariantNumeric: 'lining-nums tabular-nums' }}
-                >
-                  <Phone size={17} fill="currentColor" aria-hidden />
-                  <span className="whitespace-nowrap">Call <PhoneNumber /></span>
-                </PhoneLink>
-              </div>
+              <PhoneLink
+                className="flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[58px] px-6 transition-colors hover:bg-[#F2F5F2]"
+                style={{ color: FOREST, backgroundColor: WHITE, fontVariantNumeric: 'lining-nums tabular-nums' }}
+              >
+                <Phone size={17} fill="currentColor" aria-hidden />
+                <span className="whitespace-nowrap">Call <PhoneNumber /></span>
+              </PhoneLink>
             </div>
           </div>
+
+          {/* Solid cream strip - smooth transition into the next section */}
+          <div className="absolute bottom-0 inset-x-0 h-10 lg:h-[36px]" style={{ backgroundColor: CREAM }} aria-hidden />
         </section>
 
         {/* ───────── Price card + trust ───────── */}
         <section style={{ backgroundColor: CREAM }}>
-          <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-5 lg:pt-4">
+          <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-5 lg:pt-0">
             <div className="flex items-center gap-3 sm:gap-4 rounded-2xl p-4 sm:p-5 lg:max-w-xl lg:mx-auto" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}`, boxShadow: '0 10px 30px -16px rgba(26,23,20,0.22)' }}>
               <span className="flex items-center justify-center shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl" style={{ backgroundColor: LIGHT_GREEN }}>
                 <Truck size={24} style={{ color: GREEN }} aria-hidden />
@@ -315,7 +276,7 @@ export default function JunkRemovalPage() {
           </div>
 
           {/* Trust row */}
-          <ul className="max-w-6xl mx-auto px-5 sm:px-6 py-6 lg:py-10 grid grid-cols-3 gap-2">
+          <ul className="max-w-6xl mx-auto px-5 sm:px-6 py-6 lg:py-5 grid grid-cols-3 gap-2">
             {trust.map(({ Icon, label }, i) => (
               <li key={label} className={`flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left ${i > 0 ? 'border-l' : ''}`} style={{ borderColor: LINE }}>
                 <span className="flex items-center justify-center shrink-0 w-10 h-10 rounded-full" style={{ backgroundColor: LIGHT_GREEN }}>
@@ -358,8 +319,8 @@ export default function JunkRemovalPage() {
             <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
               {takes.map(({ slug, label, Icon }) => (
                 <li key={slug}>
-                  <Link href={junkItemHref(slug)} className="flex flex-col items-center justify-center gap-3 h-full rounded-2xl px-3 py-5 sm:py-6 text-center transition-colors hover:bg-[#EAF3FB]" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}` }}>
-                    <Icon size={32} strokeWidth={1.5} style={{ color: BLUE }} aria-hidden />
+                  <Link href={junkItemHref(slug)} className="flex flex-col items-center justify-center gap-3 h-full rounded-2xl px-3 py-5 sm:py-6 text-center transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}` }}>
+                    <Icon size={32} strokeWidth={1.5} style={{ color: GREEN }} aria-hidden />
                     <span className="text-[15px] sm:text-base font-bold leading-tight" style={{ color: INK }}>{label}</span>
                   </Link>
                 </li>
@@ -394,14 +355,14 @@ export default function JunkRemovalPage() {
         </section>
 
         {/* ───────── How it works ───────── */}
-        <section style={{ backgroundColor: SKY }}>
+        <section style={{ backgroundColor: TAN }}>
           <div className="max-w-6xl mx-auto px-5 sm:px-6 py-14 lg:py-20">
             <Eyebrow>How it works</Eyebrow>
-            <Heading className="mb-8">Gone in <span style={{ color: BLUE }}>three steps.</span></Heading>
+            <Heading className="mb-8">Gone in <span style={{ color: GREEN }}>three steps.</span></Heading>
             <ol className="grid md:grid-cols-3 gap-4 md:gap-6">
               {steps.map((s, i) => (
                 <li key={s.title} className="rounded-2xl p-6" style={{ backgroundColor: WHITE }}>
-                  <span className="flex items-center justify-center w-11 h-11 rounded-full text-lg font-extrabold mb-4" style={{ backgroundColor: BLUE, color: WHITE }}>{i + 1}</span>
+                  <span className="flex items-center justify-center w-11 h-11 rounded-full text-lg font-extrabold mb-4" style={{ backgroundColor: GREEN, color: WHITE }}>{i + 1}</span>
                   <p className="text-lg font-extrabold mb-1.5" style={{ color: INK }}>{s.title}</p>
                   <p className="text-[15px] leading-relaxed" style={{ color: MUTED }}>{s.text}</p>
                 </li>
@@ -424,7 +385,7 @@ export default function JunkRemovalPage() {
             </div>
             <blockquote>
               <p className="text-[22px] min-[400px]:text-[24px] sm:text-3xl lg:text-[36px] font-bold leading-[1.3] tracking-tight mb-5" style={{ color: INK }}>
-                <span style={{ color: BLUE }}>&ldquo;</span>{featured.text}<span style={{ color: BLUE }}>&rdquo;</span>
+                <span style={{ color: GREEN }}>&ldquo;</span>{featured.text}<span style={{ color: GREEN }}>&rdquo;</span>
               </p>
               <footer className="text-[15px] font-extrabold" style={{ color: GREEN }}>{featured.name}</footer>
             </blockquote>
