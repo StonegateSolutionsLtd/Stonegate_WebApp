@@ -14,12 +14,20 @@ const BACK_HREFS: Record<string, string> = {
   junk_removal: '/admin/junk-removal',
 }
 
+// 29 cubic yard truck (16 ft x 7.5 ft x 6.5 ft). Full load = loaded to the roof.
 const TRUCK_LOADS = [
-  { label: '1/8 Truck', desc: 'A few small items', price: 99 },
-  { label: '1/4 Truck', desc: 'Small room worth', price: 175 },
-  { label: '1/2 Truck', desc: 'One-two rooms', price: 275 },
-  { label: '3/4 Truck', desc: 'Large haul', price: 375 },
-  { label: 'Full Truck', desc: 'Complete cleanout', price: 475 },
+  { label: 'Minimum pickup', desc: 'A few small items', price: 150 },
+  { label: '1/8 Truck', desc: '~3.5 cubic yards', price: 250 },
+  { label: '1/6 Truck', desc: '~5 cubic yards', price: 300 },
+  { label: '1/4 Truck', desc: '~7 cubic yards', price: 400 },
+  { label: '1/3 Truck', desc: '~10 cubic yards', price: 500 },
+  { label: '3/8 Truck', desc: '~11 cubic yards', price: 550 },
+  { label: '1/2 Truck', desc: '~14.5 cubic yards', price: 650 },
+  { label: '5/8 Truck', desc: '~18 cubic yards', price: 800 },
+  { label: '2/3 Truck', desc: '~19 cubic yards', price: 850 },
+  { label: '3/4 Truck', desc: '~22 cubic yards', price: 950 },
+  { label: '7/8 Truck', desc: '~25 cubic yards', price: 1100 },
+  { label: 'Full Truck', desc: '29 cubic yards, loaded to the roof', price: 1200 },
 ]
 
 interface Order {
@@ -222,7 +230,7 @@ export default function ServiceQuoteEditor({ order }: { order: Order }) {
                             <div style={{ fontSize: '14px', fontWeight: 700, color: active ? '#254220' : '#1A1714' }}>{load.label}</div>
                             <div style={{ fontSize: '11px', color: '#9A8E83', marginTop: '1px' }}>{load.desc}</div>
                           </div>
-                          <div style={{ fontSize: '15px', fontWeight: 700, color: active ? '#254220' : '#6B5E54' }}>${load.price}</div>
+                          <div style={{ fontSize: '15px', fontWeight: 700, color: active ? '#254220' : '#6B5E54' }}>${load.price.toLocaleString('en-CA')}</div>
                         </button>
                       )
                     })}
@@ -249,6 +257,9 @@ export default function ServiceQuoteEditor({ order }: { order: Order }) {
                   <input type="number" min="0" step="0.01" value={fees} onChange={e => setFees(e.target.value)} placeholder="0.00"
                     style={{ width: '100%', padding: '11px 14px 11px 26px', border: '1.5px solid #E8E0D5', borderRadius: '10px', fontSize: '15px', outline: 'none', boxSizing: 'border-box' }} />
                 </div>
+                <p style={{ fontSize: '11px', color: '#9A8E83', marginTop: '6px', lineHeight: 1.5 }}>
+                  Up to 2 hours of labour included, then $60/hour. Over 15 km away: $1.50/km both directions. Extra weight or difficult access: ask Iaroslav or Albert.
+                </p>
               </div>
             </>
           )}
