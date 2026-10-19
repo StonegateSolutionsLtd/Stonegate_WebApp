@@ -37,9 +37,9 @@ const MUTED_BROWN = '#8B6845'
 const CHARCOAL = '#2B2A28'
 
 const HERO_PHOTO = {
-  src: '/junk/driver-standing-by-truck-side-2.jpg',
+  src: '/junk/driver-hero-4627.jpg',
   // Cropped (not scaled up) to a portrait aspect so the driver's face clears the headline on narrow/tall mobile screens
-  mobileSrc: '/junk/driver-standing-mobile-wide-3.jpg',
+  mobileSrc: '/junk/driver-cab-4520-mobile.jpg',
   alt: 'Stonegate junk removal driver standing beside the Stonegate truck',
 }
 
@@ -50,9 +50,9 @@ const steps = [
 ]
 
 const trust = [
-  { Icon: Hand, label: 'We do the lifting' },
+  { Icon: Hand, label: 'Any room, any floor' },
   { Icon: ClipboardList, label: 'Free on-site estimates' },
-  { Icon: MapPin, label: 'Local crew' },
+  { Icon: Shield, label: 'Local & fully insured' },
 ]
 
 const takes = [
@@ -190,9 +190,10 @@ export default function JunkRemovalPage() {
 
       <main className="flex-1">
 
-        {/* ───────── Hero - full-bleed photo with overlaid headline (matches the main landing page) ───────── */}
-        <section className="relative flex items-center min-h-[680px] sm:min-h-[640px] lg:min-h-[620px]" style={{ overflow: 'hidden' }}>
-          <div className="absolute inset-0" style={{ backgroundColor: CHARCOAL }}>
+        {/* ───────── Hero ───────── */}
+        {/* Phone: full-bleed photo with the headline over it. Tablet: headline on warm cream, photo card below. Desktop: headline and photo card side by side */}
+        <section className="relative flex items-center min-h-[680px] sm:min-h-0 sm:py-10 lg:py-12 xl:py-14 sm:bg-[linear-gradient(180deg,#F3EADD_0%,#FAF7F2_100%)]" style={{ overflow: 'hidden' }}>
+          <div className="absolute inset-0 sm:hidden" style={{ backgroundColor: CHARCOAL }}>
             <Image
               src={HERO_PHOTO.mobileSrc}
               alt={HERO_PHOTO.alt}
@@ -200,55 +201,45 @@ export default function JunkRemovalPage() {
               priority
               quality={90}
               sizes="100vw"
-              className="object-cover object-[center_top] lg:hidden"
-              style={{ filter: 'brightness(1.15)' }}
-            />
-            <Image
-              src={HERO_PHOTO.src}
-              alt={HERO_PHOTO.alt}
-              fill
-              priority
-              quality={90}
-              sizes="100vw"
-              className="hidden object-cover object-[62%_78%] lg:block"
-              style={{ filter: 'brightness(1.15)' }}
+              className="object-cover object-[center_top]"
             />
           </div>
-          {/* Left-side darkening gradient, so the headline stays legible over the photo */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.6) 18%, rgba(0,0,0,0.44) 36%, rgba(0,0,0,0.26) 54%, rgba(0,0,0,0.1) 72%, transparent 90%)' }} aria-hidden />
-          {/* Bottom darkening, for the stacked mobile layout */}
-          <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.18) 24%, transparent 46%)' }} aria-hidden />
-
-          <div className="relative z-20 px-5 sm:px-6 lg:pl-16 pt-0 pb-10 lg:pt-2 lg:pb-10 max-w-[620px] lg:max-w-[680px]">
-            <h1 className="font-extrabold uppercase tracking-tight leading-[0.95] mb-3 text-[40px] min-[380px]:text-[46px] sm:text-[58px] lg:text-[66px]">
-              <span className="block [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: WHITE }}>Junk Removal</span>
-              <span className="flex items-center gap-3 my-1.5 sm:my-2 text-[12px] sm:text-[15px] font-bold uppercase leading-none tracking-[0.35em]" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                <span className="h-px w-10 sm:w-14" style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} aria-hidden />
+          {/* Mobile: soft dark patch in the top-left corner only, behind the headline */}
+          <div className="absolute inset-0 sm:hidden" style={{ background: 'radial-gradient(ellipse 125% 440px at 0% 0%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.4) 72%, rgba(0,0,0,0.15) 88%, transparent 100%)' }} aria-hidden />
+          {/* Desktop: centred two-column layout - headline left, large photo card right (the main focus) */}
+          <div className="relative z-20 w-full lg:max-w-[1600px] lg:mx-auto lg:px-12 xl:px-16 lg:grid lg:grid-cols-[minmax(0,36fr)_minmax(0,64fr)] lg:gap-10 xl:gap-14 lg:items-center">
+          {/* On desktop the text column is a size container, so the headline scales to always fit it on one line */}
+          <div className="px-5 sm:px-6 pt-0 pb-2 lg:p-0 max-w-[620px] lg:max-w-none lg:@container">
+            <h1 className="font-extrabold uppercase tracking-tight leading-[0.95] mb-3 lg:mb-4 lg:whitespace-nowrap text-[40px] min-[380px]:text-[46px] sm:text-[58px] lg:text-[length:min(76px,calc(100cqw/8.8))]">
+              <span className="block text-[#C98A45] [text-shadow:0_2px_12px_rgba(0,0,0,0.6)] sm:text-[#B5793A] sm:[text-shadow:none]">Junk Removal</span>
+              <span className="flex items-center gap-3 my-1.5 sm:my-2 text-[12px] sm:text-[15px] font-bold uppercase leading-none tracking-[0.35em] text-white/75 sm:text-[#8B6845]">
+                <span className="h-px w-10 sm:w-14 bg-[linear-gradient(to_right,transparent,rgba(255,255,255,0.4))] sm:bg-[linear-gradient(to_right,transparent,rgba(139,104,69,0.5))]" aria-hidden />
                 in
-                <span className="h-px w-10 sm:w-14" style={{ background: 'linear-gradient(to left, transparent, rgba(255,255,255,0.4))' }} aria-hidden />
+                <span className="h-px w-10 sm:w-14 bg-[linear-gradient(to_left,transparent,rgba(255,255,255,0.4))] sm:bg-[linear-gradient(to_left,transparent,rgba(139,104,69,0.5))]" aria-hidden />
               </span>
-              <span className="block [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45' }}>Metro Vancouver</span>
+              <span className="block text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.6)] sm:text-[#064B31] sm:[text-shadow:none]">Metro Vancouver</span>
             </h1>
-            <p className="text-[18px] sm:text-xl leading-snug mb-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: WHITE }}>
+            <p className="text-[18px] sm:text-xl lg:text-[24px] leading-snug mb-2 lg:mb-3 text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.85),0_1px_3px_rgba(0,0,0,0.9)] sm:text-[#2B2A28] sm:[text-shadow:none]">
               We lift, load and haul it away.
             </p>
-            <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-44 lg:mb-6">
+            <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-52 sm:mb-8">
               <GoogleLogo size={16} />
               <Stars size={15} />
-              <span className="text-[15px] font-bold" style={{ color: WHITE, textShadow: '0 1px 6px rgba(0,0,0,0.85)' }}>4.9 rating</span>
+              <span className="text-[15px] lg:text-[17px] font-bold text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] sm:text-[#1A1714] sm:[text-shadow:none]">4.9 rating</span>
             </a>
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* Desktop: the text column is too narrow for two buttons side by side until ~1680px, so they stack full-width below that */}
+            <div className="flex flex-col sm:flex-row lg:max-[1679px]:flex-col gap-4 sm:gap-3">
               <div id="hero-cta">
                 <a
                   href={JUNK_BOOK_HREF}
-                  className="flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-8 w-full sm:w-auto transition-transform active:scale-[0.98] hover:scale-[1.01]"
+                  className="flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-8 w-full sm:w-auto lg:max-[1679px]:w-full transition-transform active:scale-[0.98] hover:scale-[1.01]"
                   style={{ backgroundColor: FOREST, color: WHITE, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.35)' }}
                 >
                   <span className="whitespace-nowrap">Get a Free Estimate</span> <ArrowRight size={19} aria-hidden />
                 </a>
               </div>
               <PhoneLink
-                className="flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[58px] px-6 transition-colors hover:bg-[#F2F5F2]"
+                className="flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[58px] px-6 transition-colors hover:bg-[#F2F5F2] sm:border-[1.5px] sm:border-[#064B31]"
                 style={{ color: FOREST, backgroundColor: WHITE, fontVariantNumeric: 'lining-nums tabular-nums' }}
               >
                 <Phone size={17} fill="currentColor" aria-hidden />
@@ -257,21 +248,46 @@ export default function JunkRemovalPage() {
             </div>
           </div>
 
-          {/* Solid cream strip - smooth transition into the next section */}
-          <div className="absolute bottom-0 inset-x-0 h-10 lg:h-[36px]" style={{ backgroundColor: CREAM }} aria-hidden />
+          <div className="relative hidden sm:block sm:mx-6 sm:mt-8 lg:mx-0 lg:mt-0 sm:aspect-[16/11] lg:aspect-auto lg:translate-x-8 xl:translate-x-12 lg:h-[clamp(480px,38vw,760px)] rounded-[32px] overflow-hidden" style={{ backgroundColor: LINE, boxShadow: '0 30px 60px -30px rgba(26,23,20,0.45)' }}>
+            <Image
+              src={HERO_PHOTO.src}
+              alt={HERO_PHOTO.alt}
+              fill
+              priority
+              quality={90}
+              sizes="(min-width: 640px) 1000px, 100vw"
+              className="object-cover object-[50%_72%]"
+              style={{ filter: 'brightness(1.08)' }}
+            />
+            <div className="absolute left-6 bottom-6 flex items-center gap-3 rounded-2xl px-4 py-3" style={{ backgroundColor: WHITE, boxShadow: '0 14px 30px -14px rgba(26,23,20,0.35)' }}>
+              <span className="flex items-center justify-center w-10 h-10 rounded-full" style={{ backgroundColor: LIGHT_GREEN }}>
+                <MapPin size={19} style={{ color: GREEN }} aria-hidden />
+              </span>
+              <div className="leading-tight">
+                <p className="text-[15px] font-extrabold" style={{ color: INK }}>Local crew</p>
+                <p className="text-[13px] font-semibold" style={{ color: MUTED }}>Metro Vancouver</p>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          {/* Solid cream strip - smooth transition into the next section (mobile) */}
+          <div className="absolute bottom-0 inset-x-0 h-10 sm:hidden" style={{ backgroundColor: CREAM }} aria-hidden />
         </section>
 
-        {/* ───────── Price card + trust ───────── */}
+        {/* ───────── Slogan card + trust ───────── */}
         <section style={{ backgroundColor: CREAM }}>
-          <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-5 lg:pt-0">
-            <div className="flex items-center gap-3 sm:gap-4 rounded-2xl p-4 sm:p-5 lg:max-w-xl lg:mx-auto" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}`, boxShadow: '0 10px 30px -16px rgba(26,23,20,0.22)' }}>
-              <span className="flex items-center justify-center shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl" style={{ backgroundColor: LIGHT_GREEN }}>
-                <Truck size={24} style={{ color: GREEN }} aria-hidden />
-              </span>
-              <div className="pl-3 sm:pl-4" style={{ borderLeft: `1px solid ${LINE}` }}>
-                <p className="text-[17px] min-[400px]:text-[19px] sm:text-2xl font-extrabold leading-tight min-[380px]:whitespace-nowrap" style={{ color: INK }}>Junk removal from {JUNK_RATE}</p>
-                <p className="text-sm sm:text-[15px] font-semibold" style={{ color: INK }}>Free on-site estimate. Price confirmed before loading.</p>
-              </div>
+          <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-5 lg:pt-2">
+            {/* Slogan - plain type on the cream, gold rules either side */}
+            <div className="text-center">
+              <p className="flex items-center justify-center gap-3 sm:gap-4 font-extrabold uppercase tracking-tight leading-none text-[26px] min-[380px]:text-[28px] sm:text-[34px]" style={{ color: INK }}>
+                <span className="h-px w-8 sm:w-14 shrink-0" style={{ background: 'linear-gradient(to right, transparent, #C98A45)' }} aria-hidden />
+                <span>You point. <span style={{ color: FOREST }}>We haul.</span></span>
+                <span className="h-px w-8 sm:w-14 shrink-0" style={{ background: 'linear-gradient(to left, transparent, #C98A45)' }} aria-hidden />
+              </p>
+              <p className="mt-2 text-sm sm:text-[15px] leading-snug max-w-md mx-auto" style={{ color: MUTED }}>
+                From a single couch to a full garage - we carry it out, load the truck and sweep up after.
+              </p>
             </div>
           </div>
 
