@@ -112,6 +112,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                             size: order.apartment_size,
                             customer_name: order.customer_name,
                             duration_minutes: order.duration_minutes,
+                            lead_source: order.lead_source,
                             order_id: order.id,
                           }}
                         />
@@ -197,6 +198,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                       size: order.apartment_size,
                       customer_name: order.customer_name,
                       duration_minutes: order.duration_minutes,
+                      lead_source: order.lead_source,
                       order_id: order.id,
                     }}
                   />

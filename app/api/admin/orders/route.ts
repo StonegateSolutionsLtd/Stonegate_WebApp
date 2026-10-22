@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import type { OrderFormData } from '@/lib/types'
+import { parseLeadSource, type OrderFormData } from '@/lib/types'
 
 export async function POST(request: NextRequest) {
   let body: OrderFormData
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       moving_date: body.movingDate,
       moving_time: body.movingTime,
       special_notes: body.specialNotes || null,
+      lead_source: parseLeadSource(body.leadSource),
       status: 'pending',
     })
     .select('id')

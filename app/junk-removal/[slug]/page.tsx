@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 import { CheckCircle2, Recycle, Clock, ShieldCheck, Truck } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import JunkAdLanding from '@/components/landing/JunkAdLanding'
+import { JUNK_ADS } from '@/lib/seo/junk-ads'
 import {
   JsonLd, Breadcrumbs, CallButton, BookButton, CallBand, FaqList, LinkGrid, CityChips, PricingTeaser,
 } from '@/components/seo/SeoBlocks'
@@ -25,9 +27,10 @@ export async function generateMetadata({ params }: PageProps<'/junk-removal/[slu
   const item = JUNK_ITEM_BY_SLUG.get(slug)
   if (!item) return {}
   const url = `${SITE_URL}${junkItemHref(slug)}`
-  const [hero] = itemImages(item)
+  const ad = JUNK_ADS[slug]
+  const [hero] = ad ? [ad.itemPhoto] : itemImages(item)
   return {
-    title: { absolute: `${item.title} | Stonegate` },
+    title: { absolute: ad ? `${ad.headline} Vancouver | Same-Day, From ${JUNK_RATE} | Stonegate` : `${item.title} | Stonegate` },
     description: item.description,
     keywords: item.keywords,
     alternates: { canonical: url },
@@ -58,32 +61,48 @@ export default async function JunkItemPage({ params }: PageProps<'/junk-removal/
   const category = categoryOf(item.category)
   const [hero, detail] = itemImages(item)
   const related = relatedItems(item, 8)
-  const faqs = [...item.faqs, ...sharedFaqs(item.name)]
+  const ad = JUNK_ADS[item.slug]
+  // Ad landing pages keep the FAQ short - the top three item questions plus the shared ones
+  const faqs = ad ? [...item.faqs.slice(0, 3), ...sharedFaqs(item.name)] : [...item.faqs, ...sharedFaqs(item.name)]
   const crumbs = [
     { name: 'Home', href: '/' },
     { name: 'Junk Removal', href: '/junk-removal' },
     { name: 'What We Take', href: '/junk-removal/what-we-take' },
     { name: item.name, href: junkItemHref(item.slug) },
   ]
+  const jsonLd = (
+    <JsonLd graph={[
+      {
+        '@type': 'Service',
+        name: `${item.name} - Metro Vancouver`,
+        serviceType: item.name,
+        description: item.description,
+        url: `${SITE_URL}${junkItemHref(item.slug)}`,
+        provider: providerLd,
+        areaServed: CITIES.map(c => ({ '@type': 'City', name: c.name })),
+      },
+      breadcrumbLd(crumbs),
+      faqLd(faqs),
+    ]} />
+  )
+
+  // Google Ads landing pages get the conversion-focused layout
+  if (ad) {
+    return (
+      <>
+        {jsonLd}
+        <JunkAdLanding item={item} ad={ad} faqs={faqs} related={related} />
+      </>
+    )
+  }
+
   const otherCategories = JUNK_CATEGORIES.filter(c => c.id !== item.category)
     .map(c => itemsInCategory(c.id)[0])
     .filter(i => !related.includes(i))
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
-      <JsonLd graph={[
-        {
-          '@type': 'Service',
-          name: `${item.name} - Metro Vancouver`,
-          serviceType: item.name,
-          description: item.description,
-          url: `${SITE_URL}${junkItemHref(item.slug)}`,
-          provider: providerLd,
-          areaServed: CITIES.map(c => ({ '@type': 'City', name: c.name })),
-        },
-        breadcrumbLd(crumbs),
-        faqLd(faqs),
-      ]} />
+      {jsonLd}
       <Navbar />
 
       <main className="flex-1">

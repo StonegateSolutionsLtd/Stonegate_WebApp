@@ -19,6 +19,8 @@ export interface OrderFormData {
   customerEmail: string
   phone: string
   specialNotes: string
+  // Admin-entered orders only
+  leadSource?: LeadSource | ''
 }
 
 export const APARTMENT_SIZE_LABELS: Record<ApartmentSize, string> = {
@@ -47,6 +49,28 @@ export const EMPTY_ORDER_FORM: OrderFormData = {
 
 export type CalendarJobType = 'moving' | 'junk_removal'
 
+export type LeadSource = 'google_ads' | 'facebook_ads' | 'word_of_mouth' | 'organic_seo'
+
+export const LEAD_SOURCES: { value: LeadSource; label: string }[] = [
+  { value: 'google_ads', label: 'Google Ads' },
+  { value: 'facebook_ads', label: 'Facebook Ads' },
+  { value: 'word_of_mouth', label: 'Word of Mouth' },
+  { value: 'organic_seo', label: 'Natural SEO' },
+]
+
+/** Parses a dollar amount from a form value; blank or invalid → null (not recorded). */
+export function parseAmount(value: unknown): number | null {
+  if (value === undefined || value === null || value === '') return null
+  const n = Number(String(value).replace(/[$,\s]/g, ''))
+  if (!Number.isFinite(n) || n < 0 || n > 99_999_999) return null
+  return Math.round(n * 100) / 100
+}
+
+/** Returns the value if it's a known lead source, otherwise null (unset / invalid). */
+export function parseLeadSource(value: unknown): LeadSource | null {
+  return LEAD_SOURCES.some(s => s.value === value) ? (value as LeadSource) : null
+}
+
 export interface CalendarJob {
   id: string
   job_type: CalendarJobType
@@ -59,6 +83,8 @@ export interface CalendarJob {
   size: ApartmentSize | null
   customer_name: string | null
   notes: string | null
+  lead_source: LeadSource | null
+  amount_paid: number | null
   order_id: string | null
   service_order_id: string | null
   created_at: string

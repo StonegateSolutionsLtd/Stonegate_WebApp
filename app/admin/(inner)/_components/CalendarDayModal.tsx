@@ -52,7 +52,10 @@ export default function CalendarDayModal({ date, jobs, onClose, onSelectJob }: P
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontWeight: 700, fontSize: '14px', color: style.color }}>{style.icon} {formatTime(job.event_time)}</span>
-                  {sizeLabel && <span style={{ fontSize: '12px', fontWeight: 600, color: '#6B5E54', background: 'white', padding: '2px 8px', borderRadius: '6px', flexShrink: 0 }}>{sizeLabel}</span>}
+                  <span style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                    {job.amount_paid != null && <span style={{ fontSize: '12px', fontWeight: 700, color: '#254220', background: '#D6E8D3', padding: '2px 8px', borderRadius: '6px' }}>${Number(job.amount_paid).toLocaleString('en-CA', { maximumFractionDigits: 2 })} paid</span>}
+                    {sizeLabel && <span style={{ fontSize: '12px', fontWeight: 600, color: '#6B5E54', background: 'white', padding: '2px 8px', borderRadius: '6px' }}>{sizeLabel}</span>}
+                  </span>
                 </div>
                 {subLine && (
                   <div style={{ fontSize: '13px', color: job.is_subcontract ? '#7C3AED' : '#6B5E54', marginTop: '2px', fontWeight: job.is_subcontract ? 600 : 400 }}>
