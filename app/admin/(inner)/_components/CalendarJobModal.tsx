@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
-import type { CalendarJob, CalendarJobType, Mover } from '@/lib/types'
+import type { CalendarJob, CalendarJobType, LeadSource, Mover } from '@/lib/types'
+import LeadSourcePicker from './LeadSourcePicker'
 import { DEFAULT_DURATION_MIN, DURATION_OPTIONS_MIN, UNSCHEDULED_JOB_BLOCK_MIN, formatDuration } from '@/lib/scheduling'
 
 const SIZES = [
@@ -37,6 +38,8 @@ interface FormState {
   size: string
   customerName: string
   notes: string
+  leadSource: LeadSource | ''
+  amountPaid: string
 }
 
 function emptyForm(defaultDate?: string): FormState {
@@ -51,6 +54,8 @@ function emptyForm(defaultDate?: string): FormState {
     size: '',
     customerName: '',
     notes: '',
+    leadSource: '',
+    amountPaid: '',
   }
 }
 
@@ -67,6 +72,9 @@ function formFromJob(job: CalendarJob): FormState {
     size: job.size ?? '',
     customerName: job.customer_name ?? '',
     notes: job.notes ?? '',
+    leadSource: job.lead_source ?? '',
+    // NUMERIC columns can come back as strings from PostgREST
+    amountPaid: job.amount_paid != null ? String(Number(job.amount_paid)) : '',
   }
 }
 
@@ -114,6 +122,7 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.eventDate) { setError('Select a date'); return }
+    if (form.amountPaid && !(Number(form.amountPaid) >= 0)) { setError('Enter a valid amount paid'); return }
     setSaving(true)
     setError('')
 
@@ -128,6 +137,8 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
       size: form.jobType === 'moving' ? form.size : '',
       customer_name: form.customerName,
       notes: form.notes,
+      lead_source: form.leadSource,
+      amount_paid: form.amountPaid,
     }
 
     const res = job
@@ -275,6 +286,20 @@ export default function CalendarJobModal({ open, job, defaultDate, onClose, onSa
               <label style={lbl}>Customer Name</label>
               <input style={inp} value={form.customerName} onChange={e => set('customerName', e.target.value)} placeholder="Optional" />
             </div>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={lbl}>Amount Paid</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9A8E83', fontSize: '14px', pointerEvents: 'none' }}>$</span>
+              <input style={{ ...inp, paddingLeft: '24px' }} type="number" inputMode="decimal" min="0" step="0.01"
+                value={form.amountPaid} onChange={e => set('amountPaid', e.target.value)} placeholder="Leave blank if not paid yet" />
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={lbl}>Where did the client come from?</label>
+            <LeadSourcePicker value={form.leadSource} onChange={v => set('leadSource', v)} />
           </div>
 
           <div style={{ marginBottom: '16px' }}>

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { parseLeadSource } from '@/lib/types'
 
 const VALID_TYPES = ['junk_removal'] as const
 
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { order_type, customer_name, customer_email, phone, address, service_date, service_time, notes } = body
+  const { order_type, customer_name, customer_email, phone, address, service_date, service_time, notes, lead_source } = body
 
   if (!VALID_TYPES.includes(order_type as typeof VALID_TYPES[number])) {
     return NextResponse.json({ error: 'Invalid order type' }, { status: 400 })
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
       service_date,
       service_time,
       notes: notes || null,
+      lead_source: parseLeadSource(lead_source),
       status: 'pending',
     })
     .select('id')

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import type { CalendarJobType } from '@/lib/types'
+import { parseAmount, parseLeadSource, type CalendarJobType } from '@/lib/types'
 
 const VALID_JOB_TYPES: CalendarJobType[] = ['moving', 'junk_removal']
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
   const {
     job_type, event_date, event_time, is_subcontract, company_name,
-    pickup_address, size, customer_name, notes, order_id, service_order_id, duration_minutes,
+    pickup_address, size, customer_name, notes, lead_source, amount_paid, order_id, service_order_id, duration_minutes,
   } = body
 
   if (!VALID_JOB_TYPES.includes(job_type as CalendarJobType)) {
@@ -45,6 +45,8 @@ export async function POST(request: NextRequest) {
       size: size || null,
       customer_name: customer_name || null,
       notes: notes || null,
+      lead_source: parseLeadSource(lead_source),
+      amount_paid: parseAmount(amount_paid),
       duration_minutes: normalizeDuration(duration_minutes),
       order_id: order_id || null,
       service_order_id: service_order_id || null,

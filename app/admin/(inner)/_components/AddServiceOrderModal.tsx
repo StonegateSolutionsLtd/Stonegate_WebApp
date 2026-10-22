@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import type { LeadSource } from '@/lib/types'
+import LeadSourcePicker from './LeadSourcePicker'
 
 const TIMES = Array.from({ length: 33 }, (_, i) => {
   const totalMins = 6 * 60 + i * 30
@@ -14,6 +16,7 @@ const TIMES = Array.from({ length: 33 }, (_, i) => {
 const EMPTY = {
   customerName: '', customerEmail: '', phone: '',
   address: '', serviceDate: '', serviceTime: '', notes: '',
+  leadSource: '' as LeadSource | '',
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -52,6 +55,7 @@ export default function AddServiceOrderModal({ orderType }: Props) {
         service_date: form.serviceDate,
         service_time: form.serviceTime,
         notes: form.notes,
+        lead_source: form.leadSource,
       }),
     })
 
@@ -140,7 +144,12 @@ export default function AddServiceOrderModal({ orderType }: Props) {
                 </div>
               </div>
 
-              {error && <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '12px' }}>{error}</p>}
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px', marginBottom: '10px' }}>WHERE DID THE CLIENT COME FROM?</div>
+                <LeadSourcePicker value={form.leadSource} onChange={v => set('leadSource', v)} />
+              </div>
+
+              {error &&<p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '12px' }}>{error}</p>}
 
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                 <button type="button" onClick={() => setOpen(false)}

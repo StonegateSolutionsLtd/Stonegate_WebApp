@@ -108,6 +108,7 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                             pickup_address: order.address,
                             customer_name: order.customer_name,
                             duration_minutes: order.duration_minutes,
+                            lead_source: order.lead_source,
                             service_order_id: order.id,
                           }}
                         />
@@ -183,6 +184,7 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                       pickup_address: order.address,
                       customer_name: order.customer_name,
                       duration_minutes: order.duration_minutes,
+                      lead_source: order.lead_source,
                       service_order_id: order.id,
                     }}
                   />
