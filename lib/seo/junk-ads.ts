@@ -1,9 +1,10 @@
 import type { SeoImage } from './site'
+import { JUNK_ITEMS, itemImages, type JunkItem, type JunkCategoryId } from './junk-items'
 
 /**
- * Google Ads landing pages. These /junk-removal/[slug] pages get the conversion-focused
- * layout (item photo + real crew photo in the hero, CTAs above the fold) instead of the
- * standard SEO item template.
+ * Landing page config for every /junk-removal/[slug] page (item photo + real crew photo in
+ * the hero, CTAs above the fold). The Google Ads pages have hand-written config in JUNK_ADS;
+ * every other item page gets one built from its item data by junkAdFor().
  */
 export interface JunkAd {
   /** Big H1 line - matches the ad keyword */
@@ -113,4 +114,102 @@ export const JUNK_ADS: Record<string, JunkAd> = {
     highlights: ['After-hours & weekend pickups', 'Stores, restaurants & rentals', 'Pallets, furniture & e-waste'],
     sliderFirst: 'Warehouse',
   },
+}
+
+/** Short photo labels for the generated pages - describe what's in the photo */
+const ITEM_LABELS: Record<string, string> = {
+  'couch-removal': 'Old couches',
+  'dresser-removal': 'Dressers & wardrobes',
+  'table-removal': 'Tables & chairs',
+  'office-furniture-removal': 'Office furniture',
+  'patio-furniture-removal': 'Patio furniture',
+  'refrigerator-removal': 'Old fridges',
+  'washer-dryer-removal': 'Washers & dryers',
+  'stove-removal': 'Stoves & ovens',
+  'dishwasher-removal': 'Dishwashers',
+  'water-heater-removal': 'Hot water tanks',
+  'air-conditioner-removal': 'A/C units',
+  'electronics-removal': 'Electronics & e-waste',
+  'tv-removal': 'Old TVs',
+  'hot-tub-removal': 'Hot tubs',
+  'bbq-removal': 'Old BBQs',
+  'carpet-removal': 'Carpet & rugs',
+  'christmas-tree-removal': 'Christmas trees',
+  'exercise-equipment-removal': 'Heavy, bulky items',
+  'lawn-mower-removal': 'Garage & yard equipment',
+  'yard-waste-removal': 'Yard waste',
+  'playset-removal': 'Playsets',
+  'cardboard-removal': 'Boxes & cardboard',
+  'residential-junk-removal': 'Full truckloads',
+  'basement-cleanout': 'Cluttered basements',
+  'attic-cleanout': 'Boxes & stored clutter',
+  'hoarder-cleanout': 'Packed homes',
+  'foreclosure-cleanout': 'Left-behind furniture',
+  'storage-unit-cleanout': 'Storage units',
+  'apartment-cleanout': 'Apartment move-outs',
+  'move-out-cleanout': 'Move-out leftovers',
+  'office-cleanout': 'Offices',
+  'construction-debris-removal': 'Renovation debris',
+  'concrete-removal': 'Concrete & rubble',
+  'deck-removal': 'Old decks',
+  'fence-removal': 'Old fencing',
+  'scrap-metal-removal': 'Scrap metal',
+}
+
+/** Items with no photo of their own - the closest real job photo instead */
+const STAND_IN_PHOTOS: Record<string, SeoImage> = {
+  'exercise-equipment-removal': { src: '/truck-bed-loaded.jpg', alt: 'Stonegate truck loaded with heavy items for removal' },
+  'lawn-mower-removal': { src: '/junk/garage-cleanout.jpg', alt: 'Garage full of equipment and junk waiting for removal', pos: 'center 55%' },
+  'basement-cleanout': { src: '/burnaby/burnaby-junk-before-cleanout.jpg', alt: 'Cluttered storage space before a cleanout' },
+  'attic-cleanout': { src: '/junk/household-junk-removal.jpg', alt: 'Boxes and stored clutter waiting for removal', pos: 'center 55%' },
+  'hoarder-cleanout': { src: '/junk/residential-junk-removal.jpg', alt: 'Stonegate truck packed full during a home cleanout', pos: 'center 62%' },
+  'foreclosure-cleanout': { src: '/junk-before-livingroom.png', alt: 'Furniture left behind in a living room before a cleanout' },
+  'apartment-cleanout': { src: '/junk/move-out-cleanout-2.jpg', alt: 'Stonegate crew loading boxes during an apartment move-out cleanout' },
+}
+
+const CATEGORY_HIGHLIGHTS: Record<JunkCategoryId, [string, string, string]> = {
+  furniture: ['Any room, any floor', 'We take it apart if it won’t fit', 'Usable pieces donated'],
+  appliances: ['Heavy-duty dollies & straps', 'Recycled properly', 'From basements, kitchens & laundry rooms'],
+  electronics: ['Taken to approved e-waste recyclers', 'One item or a whole office', 'Carried out from any room'],
+  household: ['One item or a full truckload', 'We load it from wherever it sits', 'Donate & recycle first'],
+  cleanouts: ['Big 29 yd³ truck - fewer trips', 'We sort, load & sweep up', 'Usable items donated'],
+  construction: ['Heavy debris is what we do', 'Loaded by hand - no bin rental', 'Materials recycled where possible'],
+}
+
+const CATEGORY_SLIDER: Record<JunkCategoryId, string> = {
+  furniture: 'Living room',
+  appliances: 'Warehouse',
+  electronics: 'Warehouse',
+  household: 'Living room',
+  cleanouts: 'Living room',
+  construction: 'Fence removal',
+}
+
+// Rotated across the generated pages so neighbouring pages show different people.
+// The cab-door shot is in the hero list twice - the owner wants it used more.
+const HERO_ROTATION = [
+  CREW_PHOTOS.byCab, CREW_PHOTOS.inCab, CREW_PHOTOS.byTruck, CREW_PHOTOS.besideTruck, CREW_PHOTOS.byCab,
+  CREW_PHOTOS.cabDoor, CREW_PHOTOS.inTruck, CREW_PHOTOS.team, CREW_PHOTOS.loadedTruck,
+]
+const TEAM_ROTATION = [
+  CREW_PHOTOS.teamOnRoof, CREW_PHOTOS.ramp, CREW_PHOTOS.walking, CREW_PHOTOS.tailgate,
+  CREW_PHOTOS.onRamp, CREW_PHOTOS.homeLoading, CREW_PHOTOS.truckSide,
+]
+const GENERATED_SLUGS = JUNK_ITEMS.map(i => i.slug).filter(s => !JUNK_ADS[s])
+
+/** Landing page config for any junk item - hand-written for the ad pages, generated for the rest */
+export function junkAdFor(item: JunkItem): JunkAd {
+  const own = JUNK_ADS[item.slug]
+  if (own) return own
+  const n = GENERATED_SLUGS.indexOf(item.slug)
+  const photo = STAND_IN_PHOTOS[item.slug] ?? itemImages(item)[0] ?? itemImages({ ...item, image: undefined })[0]!
+  return {
+    headline: item.name,
+    promise: item.lead,
+    itemPhoto: { ...photo, label: ITEM_LABELS[item.slug] ?? item.name },
+    crewPhoto: HERO_ROTATION[n % HERO_ROTATION.length],
+    teamPhoto: TEAM_ROTATION[n % TEAM_ROTATION.length],
+    highlights: CATEGORY_HIGHLIGHTS[item.category],
+    sliderFirst: CATEGORY_SLIDER[item.category],
+  }
 }
