@@ -28,9 +28,14 @@ otherwise in the private `service-order-photos` Storage bucket (migration 013).
 cd chatbot_server
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
-copy .env.example .env      # then put your OPENAI_API_KEY in .env
 .venv\Scripts\uvicorn main:app --port 8000
 ```
+
+The server reads its settings from the root `.env.local` (shared with Next):
+add `OPENAI_API_KEY` there. `OPENAI_MODEL` (default `gpt-4.1-mini`) and
+`OPENAI_PHOTO_MODEL` (default `gpt-4.1`) are optional overrides. A
+`chatbot_server/.env` still works and fills in anything `.env.local` doesn't
+set.
 
 Then start Next as usual (`npm run dev`). Next reaches the server at
 `http://127.0.0.1:8000` by default; set `CHATBOT_SERVER_URL` in `.env.local`

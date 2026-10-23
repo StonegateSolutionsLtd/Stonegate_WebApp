@@ -24,6 +24,9 @@ from fastapi import FastAPI, HTTPException
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
+# Shares the Next app's .env.local; a local .env, if present, fills in anything
+# it doesn't set (load_dotenv never overrides a variable that's already set).
+load_dotenv(Path(__file__).parent.parent / ".env.local")
 load_dotenv(Path(__file__).with_name(".env"))
 
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
