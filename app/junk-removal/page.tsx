@@ -15,12 +15,12 @@ import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { JUNK_ITEMS, junkItemHref } from '@/lib/seo/junk-items'
 import { CITIES, cityJunkHref } from '@/lib/seo/cities'
 import {
-  SITE_URL, JUNK_BOOK_HREF, JUNK_RATE, providerLd, faqLd, type Faq,
+  SITE_URL, JUNK_BOOK_HREF, providerLd, faqLd, type Faq,
 } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
-  title: { absolute: `Junk Removal Vancouver | Same-Day, From ${JUNK_RATE} | Stonegate` },
-  description: `Same-day junk removal across Metro Vancouver. Our crew lifts, loads and hauls it all - furniture, appliances, cleanouts. From ${JUNK_RATE}, free on-site estimate.`,
+  title: { absolute: `Junk Removal Vancouver | Same-Day Pickup | Stonegate` },
+  description: `Same-day junk removal across Metro Vancouver. Our crew lifts, loads and hauls it all - furniture, appliances, cleanouts. No deposit, pay after the job.`,
   keywords: ['junk removal Vancouver', 'junk removal near me', 'same-day junk removal', 'junk pickup Metro Vancouver', 'furniture removal', 'garbage removal Vancouver'],
   alternates: { canonical: `${SITE_URL}/junk-removal` },
 }
@@ -89,7 +89,7 @@ const beforeAfter = beforeAfterPairs
 const featured = featuredReview
 
 const faqs: Faq[] = [
-  { q: 'How much does junk removal cost?', a: `Junk removal starts at ${JUNK_RATE} and is priced by the size of your load. Estimates are free and done on-site - the crew confirms the final price before we start, and you pay after the job.` },
+  { q: 'How much does junk removal cost?', a: `Junk removal is priced by the size of your load. Estimates are free and done on-site - the crew confirms the final price before we start, and you pay after the job.` },
   { q: 'Can you come today?', a: 'Often, yes. Same-day and next-day pickups are available across Metro Vancouver depending on the schedule. Call for today\'s availability.' },
   { q: 'Do I need to carry anything outside?', a: 'No. We take items from wherever they are - bedrooms, basements, upper floors, garages or storage lockers - and sweep up after.' },
   { q: 'What can\'t you take?', a: 'Hazardous waste: paint, solvents, chemicals, fuel and asbestos. Everything else non-hazardous we can usually haul. Not sure? Just call.' },
@@ -416,13 +416,13 @@ export default function JunkRemovalPage() {
               </Link>
             </div>
             <div className="mx-auto w-full max-w-[420px] rounded-3xl p-7 sm:p-9" style={{ backgroundColor: WHITE, boxShadow: '0 12px 32px -16px rgba(1,68,33,0.25)' }}>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2" style={{ color: MUTED }}>Junk removal from</p>
-              <p className="flex items-end gap-2 mb-6">
-                <span className="text-6xl font-extrabold tracking-tight leading-none" style={{ color: INK }}>{JUNK_RATE}</span>
-                <span className="text-base font-semibold mb-1" style={{ color: MUTED }}>and up</span>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2" style={{ color: MUTED }}>Junk removal</p>
+              <p className="flex flex-wrap items-end gap-x-2 gap-y-1 mb-6">
+                <span className="text-6xl font-extrabold tracking-tight leading-none" style={{ color: INK }}>Upfront</span>
+                <span className="text-base font-semibold mb-1" style={{ color: MUTED }}>pricing</span>
               </p>
               <ul className="flex flex-col gap-3 mb-7">
-                {['Free on-site estimate', 'Price confirmed before we start', 'Pay after - card, e-transfer or cash'].map(t => (
+                {['Priced by the size of your load', 'Price confirmed before we start', 'Pay after - card, e-transfer or cash'].map(t => (
                   <li key={t} className="flex items-center gap-3 text-[15px] font-semibold" style={{ color: INK }}>
                     <CheckCircle2 size={18} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {t}
                   </li>

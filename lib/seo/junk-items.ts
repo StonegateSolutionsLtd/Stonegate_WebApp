@@ -140,7 +140,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     takes: ['Sofas & couches', 'Sectionals', 'Sofa beds & pull-outs', 'Loveseats', 'Recliners & power recliners', 'Futons', 'Leather couches', 'Ottomans & chaise lounges', 'Outdoor sofas'],
     disposal: 'Couches in good shape go to local charity and reuse partners. Damaged sofas are broken down so the wood frame and metal springs can be recycled before the rest is disposed of.',
     faqs: [
-      { q: 'How much does couch removal cost?', a: 'Junk removal starts at $150 and is priced by load size, so a single couch is one of our most affordable jobs. Adding a few more items to the same pickup is often the best value. Send a photo for a free estimate.' },
+      { q: 'How much does couch removal cost?', a: 'Junk removal is priced by load size, so a single couch is one of our most affordable jobs. Adding a few more items to the same pickup is often the best value. Send a photo for a free estimate.' },
       { q: 'Can you remove a sofa bed or recliner?', a: 'Yes. Sofa beds and power recliners are heavier than regular couches, but our two-person crew handles them routinely. We unplug power recliners and take them as-is.' },
       { q: 'Will you take a couch with pet damage or stains?', a: 'Yes, we take couches in any condition. If it cannot be donated, it is broken down and recycled or disposed of responsibly.' },
     ],
@@ -629,7 +629,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     takes: ['Branches & brush', 'Tree trunks & stumps', 'Leaves & clippings', 'Hedge trimmings', 'Sod & soil', 'Weeds & plants', 'Rocks & landscaping stone', 'Old planters'],
     disposal: 'Green waste goes to yard-waste facilities to be composted or chipped. Clean soil and rock go to approved fill and aggregate sites.',
     faqs: [
-      { q: 'How is yard waste priced?', a: 'Junk removal starts at $150 and is priced by load size. Heavy material like soil, sod and rock costs more to haul, so we estimate from photos and confirm the price on-site.' },
+      { q: 'How is yard waste priced?', a: 'Junk removal is priced by load size. Heavy material like soil, sod and rock costs more to haul, so we estimate from photos and confirm the price on-site.' },
       { q: 'Do you cut down trees?', a: 'No, we do not do tree cutting. We haul the branches, logs and debris after the work is done.' },
     ],
     related: ['fence-removal', 'shed-removal', 'concrete-removal'],
@@ -1001,7 +1001,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     takes: ['Drywall & plaster', 'Lumber & framing', 'Kitchen cabinets & counters', 'Tile & flooring', 'Doors & windows', 'Toilets, sinks & tubs', 'Insulation (non-hazardous)', 'Glass & mirrors'],
     disposal: 'Wood, metal and clean drywall are separated for recycling. Mixed debris goes to approved construction waste facilities.',
     faqs: [
-      { q: 'How is construction debris removal priced?', a: 'Junk removal starts at $150 and is priced by load size. Heavy debris like tile and plaster costs more to haul, so we estimate from photos and confirm the price on-site before we start.' },
+      { q: 'How is construction debris removal priced?', a: 'Junk removal is priced by load size. Heavy debris like tile and plaster costs more to haul, so we estimate from photos and confirm the price on-site before we start.' },
       { q: 'Do you take asbestos or lead paint?', a: 'No. Materials suspected to contain asbestos must be tested and removed by a licensed abatement company.' },
     ],
     related: ['concrete-removal', 'deck-removal', 'scrap-metal-removal'],
@@ -1023,7 +1023,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     disposal: 'Clean concrete and brick go to aggregate recyclers where they are crushed and reused for new construction.',
     faqs: [
       { q: 'Do you break up concrete slabs?', a: 'We haul concrete that is already broken into liftable pieces. Breaking a slab is a demolition job - contact us and we can discuss the project.' },
-      { q: 'How is concrete removal priced?', a: 'Junk removal starts at $150 and is priced by load size. Because concrete is heavy, we estimate from photos and confirm the price on-site before loading.' },
+      { q: 'How is concrete removal priced?', a: 'Junk removal is priced by load size. Because concrete is heavy, we estimate from photos and confirm the price on-site before loading.' },
     ],
     related: ['construction-debris-removal', 'yard-waste-removal', 'deck-removal'],
     image: { src: '/junk/concrete-removal.jpg', alt: 'Pile of broken concrete, bricks and rubble ready for concrete removal' },

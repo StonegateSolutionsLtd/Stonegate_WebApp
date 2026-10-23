@@ -2,16 +2,21 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
-import { Camera, ClipboardCheck, Truck, Wallet, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+import { Camera, ClipboardCheck, Truck, Wallet, CheckCircle2, Check, ChevronDown, Star } from 'lucide-react'
+import PricingTabs from '@/components/seo/PricingTabs'
+import TruckSlideshow from '@/components/seo/TruckSlideshow'
+import { GoogleLogo } from '@/components/landing/JunkAdLanding'
+import { GOOGLE_REVIEWS_URL } from '@/lib/seo/junk-proof'
 import FadeIn from '@/components/landing/FadeIn'
 import { JsonLd, Breadcrumbs, CallBand, FaqList, LinkGrid, CityChips, CallButton, BookButton } from '@/components/seo/SeoBlocks'
 import { JUNK_ITEM_BY_SLUG, POPULAR_JUNK_SLUGS, junkItemHref } from '@/lib/seo/junk-items'
 import { CITIES, cityHref } from '@/lib/seo/cities'
-import { SITE_URL, JUNK_BOOK_HREF, JUNK_RATE, providerLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
+import { SITE_URL, JUNK_BOOK_HREF, providerLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
-  title: { absolute: `Junk Removal Prices in Vancouver | From ${JUNK_RATE} | Stonegate` },
-  description: `Junk removal in Metro Vancouver starts at ${JUNK_RATE}. Free estimate from photos, price confirmed on-site before we start. Labour, loading and disposal included.`,
+  title: { absolute: `Junk Removal Prices in Vancouver | Priced by Load | Stonegate` },
+  description: `Junk removal in Metro Vancouver is priced by load size. Estimate from photos, price confirmed on-site before we start. Labour, loading and disposal included.`,
   keywords: ['junk removal cost Vancouver', 'junk removal prices', 'how much is junk removal', 'junk removal rates Metro Vancouver', 'junk pickup cost'],
   alternates: { canonical: `${SITE_URL}/pricing/junk-removal` },
 }
@@ -37,12 +42,73 @@ const factors = [
 ]
 
 const faqs = [
-  { q: 'How much does junk removal cost in Vancouver?', a: `Junk removal starts at ${JUNK_RATE} and is priced by the size of your load. Your final price depends on how much there is, how heavy it is and how easy it is to reach - we give you an estimate up front and confirm the price on-site before we start.` },
+  { q: 'How much does junk removal cost in Vancouver?', a: `Junk removal is priced by the size of your load. Your final price depends on how much there is, how heavy it is and how easy it is to reach - we give you an estimate up front and confirm the price on-site before we start.` },
   { q: 'How do you estimate my price?', a: 'Send us photos or a description when you book. We estimate the size of your load from that, then our crew confirms the final price in person before any work begins.' },
   { q: 'Are there any extra fees?', a: 'No hidden fees. Labour, loading, the truck and disposal are part of the price we confirm with you on-site.' },
   { q: 'Do I pay before or after?', a: 'After. We confirm the price before we start, do the job, and collect payment once everything is gone. We accept e-transfer, credit card and cash.' },
   { q: 'What if I add more items on the day?', a: 'No problem - just show the crew. We will update the price before loading the extra items, so there are never surprises.' },
 ]
+
+// Load sizes are shown as truck fractions only - no prices or minimums on the site
+const loads = [
+  {
+    name: 'Small load',
+    range: 'Up to 1/4 truck',
+    image: '/junk/pricing/truck-small.jpg',
+    loaded: '/junk/pricing/truck-small-loaded.jpg',
+    volume: 'Up to ~195 ft³ (7 yd³)',
+    lead: 'A smaller load is great for:',
+    fits: ['A couch, a mattress and a few boxes', 'Clearing out a balcony or storage locker', 'Leftovers after a move-out', 'Making room for new furniture or appliances'],
+  },
+  {
+    name: 'Medium load',
+    range: '1/4 to 1/2 truck',
+    image: '/junk/pricing/truck-medium.jpg',
+    loaded: '/junk/pricing/truck-medium-loaded.jpg',
+    volume: '~195 - 390 ft³ (7 - 14.5 yd³)',
+    lead: 'A medium load is great for:',
+    fits: ['Garage, basement or storage unit cleanouts', 'Old tools, shelving and sports gear', 'Clearing a small apartment or rental unit', 'Big furniture from two or three rooms'],
+  },
+  {
+    name: 'Large load',
+    range: '1/2 to a full truck',
+    image: '/junk/pricing/truck-large.jpg',
+    loaded: '/junk/pricing/truck-large-loaded.jpg',
+    volume: '~390 - 780 ft³ (14.5 - 29 yd³)',
+    lead: 'A large load is great for:',
+    fits: ['Whole-home and estate cleanouts', 'Downsizing a 3-4 bedroom house', 'Renovation debris plus old furnishings', 'Several packed rooms in one trip'],
+  },
+]
+
+const singleItems = [
+  { label: 'Mattress or box spring', slug: 'mattress-removal' },
+  { label: 'Couch, sectional or armchair', slug: 'couch-removal' },
+  { label: 'Fridge, stove, washer or dryer', slug: 'appliance-removal' },
+  { label: 'Dresser, table or desk', slug: 'dresser-removal' },
+  { label: 'TV or computer monitor', slug: 'tv-removal' },
+  { label: 'BBQ or treadmill', slug: 'bbq-removal' },
+]
+
+const included = ['Labour, loading and the truck', 'Disposal, donation and recycling drop-offs', 'Price confirmed on-site before any work starts', 'No hidden fees - pay after the job']
+
+function IncludesBox({ className = '' }: { className?: string }) {
+  return (
+    <div className={`rounded-3xl p-6 sm:p-8 ${className}`} style={{ backgroundColor: '#E8F0E6' }}>
+      <p className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>Every price includes</p>
+      <ul className="grid sm:grid-cols-2 gap-3">
+        {included.map(t => (
+          <li key={t} className="flex items-start gap-3 text-[15px] font-semibold" style={{ color: '#1A1714' }}>
+            <CheckCircle2 size={18} className="shrink-0 mt-px" style={{ color: '#254220' }} aria-hidden /> {t}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        <CallButton />
+        <BookButton href={JUNK_BOOK_HREF} label="Get My Price" />
+      </div>
+    </div>
+  )
+}
 
 const crumbs = [
   { name: 'Home', href: '/' },
@@ -71,68 +137,97 @@ export default function JunkPricingPage() {
         <Breadcrumbs crumbs={crumbs} />
 
         {/* Page header */}
-        <section className="max-w-6xl mx-auto px-6 pt-10 pb-12">
-          <FadeIn>
-          <span
-            className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
-            style={{ color: '#254220', borderColor: '#B5C9B0' }}
-          >
-            Junk removal pricing
-          </span>
-          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#1A1714' }}>
-            Junk removal from <span style={{ color: '#254220' }}>{JUNK_RATE}.</span>
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-6 text-center">
+          <h1 className="text-[34px] sm:text-5xl font-extrabold tracking-tight leading-[1.08] mb-3" style={{ color: '#1A1714' }}>
+            Simple, <span style={{ color: '#254220' }}>all-inclusive</span> pricing
           </h1>
-          <p className="text-lg leading-relaxed max-w-xl mb-8" style={{ color: '#6B5E54' }}>
-            Upfront, honest pricing across Metro Vancouver. Free estimate from photos, final price confirmed in person before we lift a thing.
+          <p className="text-[17px] sm:text-lg leading-relaxed max-w-xl mx-auto mb-4" style={{ color: '#6B5E54' }}>
+            Your price is based on how much space your items take up in our truck.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <CallButton big />
-            <BookButton href={JUNK_BOOK_HREF} label="Get a Free Estimate" />
-          </div>
-          </FadeIn>
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+            <span className="flex gap-0.5" aria-hidden>
+              {[0, 1, 2, 3, 4].map(i => <Star key={i} size={17} fill="#E3A008" strokeWidth={0} />)}
+            </span>
+            <GoogleLogo size={16} />
+            <span className="text-[15px] font-bold" style={{ color: '#1A1714' }}>4.9 rating on Google</span>
+          </a>
         </section>
 
-        {/* Rate card + what affects price */}
-        <section className="max-w-6xl mx-auto px-6 pb-12 grid lg:grid-cols-2 gap-8 items-stretch">
-          <FadeIn className="h-full">
-            <div className="h-full rounded-3xl overflow-hidden flex flex-col" style={{ border: '1px solid #E8E0D5', boxShadow: '0 2px 12px rgba(37,66,32,0.06)' }}>
-              <div className="relative overflow-hidden px-8 pt-10 pb-8" style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}>
-                <Truck size={160} className="absolute -right-6 -top-6 opacity-[0.07]" style={{ color: '#FAF7F2' }} />
-                <div className="relative">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#B5C9B0' }}>Starting rate</p>
-                  <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$150</span>
-                    <span className="text-xl font-semibold mb-1" style={{ color: '#B5C9B0' }}>and up</span>
-                  </div>
-                  <span className="text-sm font-medium" style={{ color: '#B5C9B0' }}>CAD · priced by the size of your load</span>
+        {/* Multiple items (by volume) / single item */}
+        <section className="max-w-3xl mx-auto w-full px-4 sm:px-6 pb-12 sm:pb-16">
+          <PricingTabs
+            multiple={
+              <div className="pt-7">
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>Got multiple items? We price by volume.</h2>
+                <p className="text-base sm:text-[17px] leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
+                  We price by how much of our 29 yd³ truck your items fill, in eighths of the truck. We estimate from your photos and confirm the price on-site before we start.
+                </p>
+                <div className="rounded-3xl overflow-hidden mb-8" style={{ border: '1px solid #E8E0D5' }}>
+                  <TruckSlideshow empty="/junk/pricing/truck-1-8.jpg" loaded="/junk/pricing/truck-1-8-loaded.jpg" alt="Stonegate truck with 1/8 of the box filled - our pricing goes up in eighths of the truck" sizes="(min-width: 768px) 720px, 100vw" />
                 </div>
+
+                <p className="text-lg font-extrabold mb-3" style={{ color: '#1A1714' }}>Pick a load size to see what fits:</p>
+                <div className="flex flex-col gap-3">
+                  {loads.map((l, i) => (
+                    <details key={l.name} open={i === 0} className="group rounded-2xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', border: '1px solid #B5C9B0' }}>
+                      <summary className="flex items-center justify-between gap-3 cursor-pointer list-none px-5 py-4 [&::-webkit-details-marker]:hidden">
+                        <span className="text-[17px] font-extrabold" style={{ color: '#254220' }}>{l.name} <span className="font-semibold" style={{ color: '#6B5E54' }}>· {l.range}</span></span>
+                        <ChevronDown size={20} className="shrink-0 transition-transform group-open:rotate-180" style={{ color: '#254220' }} aria-hidden />
+                      </summary>
+                      <div className="px-5 pb-6">
+                        <TruckSlideshow empty={l.image} loaded={l.loaded} alt={`Stonegate truck showing a ${l.name.toLowerCase()} - ${l.range}`} sizes="(min-width: 768px) 680px, 100vw" className="rounded-2xl mb-4" />
+                        <p className="text-sm mb-4" style={{ color: '#9A8E83' }}>{l.volume}</p>
+                        <p className="font-extrabold mb-2.5" style={{ color: '#1A1714' }}>{l.lead}</p>
+                        <ul className="flex flex-col gap-2.5">
+                          {l.fits.map(t => (
+                            <li key={t} className="flex items-start gap-3 text-[15px] leading-snug" style={{ color: '#3D3530' }}>
+                              <Check size={19} strokeWidth={2.6} className="shrink-0 mt-px" style={{ color: '#4F8A3F' }} aria-hidden /> {t}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </details>
+                  ))}
+                </div>
+                <IncludesBox className="mt-10" />
               </div>
-              <div className="flex-1 px-8 py-8" style={{ backgroundColor: '#F5F0EB' }}>
-                <ul className="flex flex-col gap-3">
-                  {['Labour, loading and the truck included', 'Disposal, donation and recycling drop-offs handled', 'Price confirmed on-site before any work starts', 'No hidden fees - pay after the job'].map(item => (
-                    <li key={item} className="flex items-start gap-3">
-                      <CheckCircle2 size={16} className="mt-0.5 flex-shrink-0" style={{ color: '#254220' }} />
-                      <span className="text-sm font-medium" style={{ color: '#1A1714' }}>{item}</span>
+            }
+            single={
+              <div className="pt-7">
+                <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>Just one item? We price it on its own.</h2>
+                <p className="text-base sm:text-[17px] leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
+                  When there&apos;s only one piece to go, we price it by its size and weight - a dresser costs more than a microwave. <strong style={{ color: '#1A1714' }}>More than one item? We price by truck volume.</strong>
+                </p>
+                <IncludesBox className="mb-8" />
+                <p className="font-extrabold mb-2.5" style={{ color: '#1A1714' }}>Single items we often pick up:</p>
+                <ul className="flex flex-col gap-2">
+                  {singleItems.map(i => (
+                    <li key={i.slug}>
+                      <Link href={junkItemHref(i.slug)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-semibold" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', color: '#1A1714' }}>
+                        <Check size={18} strokeWidth={2.6} className="shrink-0" style={{ color: '#4F8A3F' }} aria-hidden /> {i.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-          </FadeIn>
-          <FadeIn delay={100} className="h-full">
-            <div className="h-full rounded-3xl p-8" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>What affects your price</p>
-              <h2 className="text-2xl font-extrabold tracking-tight mb-6" style={{ color: '#1A1714' }}>Every job is a little different.</h2>
-              <ul className="flex flex-col gap-5">
-                {factors.map(f => (
-                  <li key={f.title}>
-                    <p className="font-bold mb-1" style={{ color: '#1A1714' }}>{f.title}</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{f.text}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </FadeIn>
+            }
+          />
+        </section>
+
+        {/* What affects price */}
+        <section className="max-w-3xl mx-auto w-full px-4 sm:px-6 pb-12">
+          <div className="rounded-3xl p-6 sm:p-8" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
+            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#254220' }}>What affects your price</p>
+            <h2 className="text-2xl font-extrabold tracking-tight mb-6" style={{ color: '#1A1714' }}>Every job is a little different.</h2>
+            <ul className="grid sm:grid-cols-2 gap-5">
+              {factors.map(f => (
+                <li key={f.title}>
+                  <p className="font-bold mb-1" style={{ color: '#1A1714' }}>{f.title}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{f.text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* How the estimate works */}
@@ -212,7 +307,7 @@ export default function JunkPricingPage() {
           heading="Want an exact price?"
           text="Call or send photos and we will tell you which tier you are looking at. The final price is confirmed on-site - no obligation."
           bookHref={JUNK_BOOK_HREF}
-          bookLabel="Get a Free Quote"
+          bookLabel="Get My Price"
         />
 
         <section style={{ backgroundColor: '#F5F0EB' }}>
