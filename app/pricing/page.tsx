@@ -7,7 +7,7 @@ import FadeIn from '@/components/landing/FadeIn'
 
 export const metadata: Metadata = {
   title: { absolute: 'Junk Removal & Moving Prices in Vancouver | Stonegate' },
-  description: 'Upfront prices across Metro Vancouver. Junk removal from $150, priced by load size. Moving: 2 movers at $120/hr or 3 movers with a 16\' truck at $160/hr + GST, plus a one-time flat-rate travel fee.',
+  description: 'Upfront prices across Metro Vancouver. Junk removal priced by load size. Moving: 2 movers at $120/hr or 3 movers with a 16\' truck at $160/hr + GST, plus a one-time flat-rate travel fee.',
   alternates: { canonical: 'https://www.stonegatemoving.com/pricing' },
 }
 
@@ -17,8 +17,8 @@ const options = [
     Icon: Trash2,
     eyebrow: 'Junk removal',
     title: 'Junk Removal Prices',
-    price: '$150',
-    unit: 'and up',
+    price: 'Upfront',
+    unit: 'pricing',
     points: ['Priced by the size of your load', 'Free estimate from photos or a description', 'Final price confirmed on-site before we start'],
     cta: 'See junk removal prices',
   },

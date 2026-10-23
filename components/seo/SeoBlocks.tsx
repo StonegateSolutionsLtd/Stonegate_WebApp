@@ -148,9 +148,9 @@ export function PricingTeaser({ text }: { text: string }) {
     <div className="rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-6 justify-between" style={{ backgroundColor: '#254220' }}>
       <div>
         <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B5C9B0' }}>Upfront pricing</p>
-        <div className="flex items-end gap-2 mb-2">
-          <span className="text-5xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$150</span>
-          <span className="text-base font-semibold mb-1" style={{ color: '#B5C9B0' }}>and up</span>
+        <div className="flex flex-wrap items-end gap-x-2 gap-y-1 mb-2">
+          <span className="text-5xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>Upfront</span>
+          <span className="text-base font-semibold mb-1" style={{ color: '#B5C9B0' }}>pricing</span>
         </div>
         <p className="text-sm max-w-md" style={{ color: '#B5C9B0' }}>{text}</p>
       </div>

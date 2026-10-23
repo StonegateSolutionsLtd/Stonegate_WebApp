@@ -5,8 +5,6 @@ export const BUSINESS_NAME = 'Stonegate Moving Solutions'
 
 export const PRIMARY_PHONE = CONTACT_PHONES[0]
 
-/** Public starting rate for junk removal - the only junk price shown on the site */
-export const JUNK_RATE = '$150'
 
 export const JUNK_BOOK_HREF = '/book-service?type=junk-removal'
 export const MOVE_BOOK_HREF = '/order'

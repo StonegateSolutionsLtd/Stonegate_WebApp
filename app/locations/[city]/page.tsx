@@ -11,7 +11,7 @@ import {
 import { TEMPLATE_CITIES, CITY_BY_SLUG, CITIES, cityJobPhoto, cityHref, citySkyline } from '@/lib/seo/cities'
 import CityBanner from '@/components/seo/CityBanner'
 import { JUNK_ITEM_BY_SLUG, POPULAR_JUNK_SLUGS, junkItemHref } from '@/lib/seo/junk-items'
-import { SITE_URL, JUNK_BOOK_HREF, JUNK_RATE, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
+import { SITE_URL, JUNK_BOOK_HREF, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
 
 export const dynamicParams = false
 
@@ -43,7 +43,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
   const nearby = city.nearby.map(s => CITY_BY_SLUG.get(s)!).filter(Boolean)
   const faqs: Faq[] = [
     ...city.faqs,
-    { q: `How much does junk removal cost in ${city.name}?`, a: `Junk removal starts at ${JUNK_RATE} and is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos or description, then confirm the final price on-site before we start.` },
+    { q: `How much does junk removal cost in ${city.name}?`, a: `Junk removal is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos or description, then confirm the final price on-site before we start.` },
     { q: `Do you offer same-day junk removal in ${city.name}?`, a: `Often, yes. Same-day and next-day pickups are available across ${city.name} depending on the schedule. Call us for today's availability.` },
     { q: 'What can you take?', a: 'Almost anything non-hazardous: furniture, mattresses, appliances, electronics, hot tubs, yard waste, renovation debris and full cleanouts. We cannot take paint, chemicals, fuel or asbestos.' },
   ]

@@ -35,7 +35,7 @@ const jsonLd = {
     itemListElement: [
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Junk Removal', description: 'Furniture, appliances, estate cleanouts, starting at $150' },
+        itemOffered: { '@type': 'Service', name: 'Junk Removal', description: 'Furniture, appliances, estate cleanouts, priced by load size' },
       },
       {
         '@type': 'Offer',

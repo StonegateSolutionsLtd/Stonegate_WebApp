@@ -13,7 +13,7 @@ import ReviewsRow from '@/components/landing/ReviewsRow'
 
 export const metadata: Metadata = {
   title: { absolute: 'Junk Removal Burnaby | Stonegate Moving Solutions' },
-  description: 'Fast, same-day junk removal in Burnaby, BC. Furniture, appliances, and property cleanouts hauled away starting at $150. Fully insured, transparent pricing.',
+  description: 'Fast, same-day junk removal in Burnaby, BC. Furniture, appliances, and property cleanouts hauled away. Priced by load size. Fully insured, transparent pricing.',
   alternates: { canonical: 'https://www.stonegatemoving.com/burnaby-junk-removal' },
 }
 
@@ -54,7 +54,7 @@ const faqs = [
   },
   {
     q: 'How much does junk removal cost in Burnaby?',
-    a: 'Junk removal starts at $150 and is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos and confirm the price on-site before we start.',
+    a: 'Junk removal is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos and confirm the price on-site before we start.',
   },
   {
     q: 'Do you offer a better rate for Burnaby jobs?',
@@ -213,10 +213,10 @@ export default function BurnabyJunkRemovalPage() {
                 style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}
               >
                 <div className="flex-1">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Junk removal pricing</p>
-                  <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$150</span>
-                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>and up</span>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Junk removal</p>
+                  <div className="flex flex-wrap items-end gap-x-2 gap-y-1 mb-2">
+                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>Upfront</span>
+                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>pricing</span>
                   </div>
                   <p className="text-sm" style={{ color: '#B5C9B0' }}>Free estimate from photos - final price confirmed on-site before we start.</p>
                 </div>

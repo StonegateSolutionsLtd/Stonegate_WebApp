@@ -5,7 +5,7 @@ import { JUNK_ADS, junkAdFor } from '@/lib/seo/junk-ads'
 import { JsonLd } from '@/components/seo/SeoBlocks'
 import { JUNK_ITEMS, JUNK_ITEM_BY_SLUG, junkItemHref, relatedItems } from '@/lib/seo/junk-items'
 import { CITIES } from '@/lib/seo/cities'
-import { SITE_URL, JUNK_RATE, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
+import { SITE_URL, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
 
 export const dynamicParams = false
 
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<'/junk-removal/[slu
   const url = `${SITE_URL}${junkItemHref(slug)}`
   const ad = junkAdFor(item)
   // Google Ads pages get an ad-matching title; the rest keep their SEO titles
-  const title = JUNK_ADS[slug] ? `${ad.headline} Vancouver | Same-Day, From ${JUNK_RATE} | Stonegate` : `${item.title} | Stonegate`
+  const title = JUNK_ADS[slug] ? `${ad.headline} Vancouver | Same-Day Pickup | Stonegate` : `${item.title} | Stonegate`
   return {
     title: { absolute: title },
     description: item.description,
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps<'/junk-removal/[slu
 
 const sharedFaqs = (name: string): Faq[] => [
   { q: `Do you offer same-day ${name.toLowerCase()}?`, a: 'Often, yes. Same-day and next-day pickups are available across Metro Vancouver depending on the schedule. Call us for today\'s availability.' },
-  { q: 'How is the price calculated?', a: `Junk removal starts at ${JUNK_RATE} and is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos or description, then confirm the final price on-site before we start.` },
+  { q: 'How is the price calculated?', a: `Junk removal is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos or description, then confirm the final price on-site before we start.` },
 ]
 
 export default async function JunkItemPage({ params }: PageProps<'/junk-removal/[slug]'>) {

@@ -13,7 +13,7 @@ import { type JunkItem, junkItemHref } from '@/lib/seo/junk-items'
 import type { JunkAd } from '@/lib/seo/junk-ads'
 import { beforeAfterPairs, featuredReview, reviews, GOOGLE_REVIEWS_URL } from '@/lib/seo/junk-proof'
 import { CITIES, cityJunkHref } from '@/lib/seo/cities'
-import { JUNK_BOOK_HREF, JUNK_RATE, type Faq } from '@/lib/seo/site'
+import { JUNK_BOOK_HREF, type Faq } from '@/lib/seo/site'
 
 const GREEN = '#014421'
 const FOREST = '#064B31'
@@ -28,7 +28,7 @@ const GOLD = '#B5793A'
 const MUTED_BROWN = '#8B6845'
 
 const trustBar = [
-  { Icon: Star, title: '4.9 on Google', text: 'Real local reviews' },
+  { Icon: Star, title: '4.9 on Google', text: 'Top-rated in Metro Van' },
   { Icon: Zap, title: 'Same-day', text: 'Or next-day pickup' },
   { Icon: Shield, title: 'Fully insured', text: 'Local Metro Van crew' },
   { Icon: BadgeDollarSign, title: 'Pay after', text: 'No deposit needed' },
@@ -54,7 +54,7 @@ function Stars({ size = 15 }: { size?: number }) {
   )
 }
 
-function GoogleLogo({ size = 16 }: { size?: number }) {
+export function GoogleLogo({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 18 18" aria-hidden>
       <path fill="#4285F4" d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087c1.7018-1.5668 2.6836-3.8741 2.6836-6.615z" />
@@ -165,7 +165,7 @@ export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkI
                 <CallCta className="w-full sm:w-auto lg:w-full xl:w-auto" />
               </div>
               <p className="mt-3 text-[13px] sm:text-sm font-semibold text-center sm:text-left" style={{ color: MUTED }}>
-                From <span style={{ color: INK }}>{JUNK_RATE}</span> · No deposit · Pay after the job
+                No deposit · Pay after the job
               </p>
               <ul className="hidden sm:flex mt-4 lg:mt-6 flex-col gap-2">
                 {ad.highlights.map(h => (
@@ -266,13 +266,13 @@ export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkI
               </Link>
             </div>
             <div className="mx-auto w-full max-w-[420px] rounded-3xl p-7 sm:p-9" style={{ backgroundColor: WHITE, boxShadow: '0 12px 32px -16px rgba(1,68,33,0.25)' }}>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2" style={{ color: MUTED }}>{item.name} from</p>
-              <p className="flex items-end gap-2 mb-6">
-                <span className="text-6xl font-extrabold tracking-tight leading-none" style={{ color: INK }}>{JUNK_RATE}</span>
-                <span className="text-base font-semibold mb-1" style={{ color: MUTED }}>and up</span>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2" style={{ color: MUTED }}>{item.name}</p>
+              <p className="flex flex-wrap items-end gap-x-2 gap-y-1 mb-6">
+                <span className="text-6xl font-extrabold tracking-tight leading-none" style={{ color: INK }}>Upfront</span>
+                <span className="text-base font-semibold mb-1" style={{ color: MUTED }}>pricing</span>
               </p>
               <ul className="flex flex-col gap-3 mb-7">
-                {['Free estimate - no obligation', 'Price confirmed before we start', 'Pay after - card, e-transfer or cash'].map(t => (
+                {['Priced by how much space it takes', 'Price confirmed before we start', 'Pay after - card, e-transfer or cash'].map(t => (
                   <li key={t} className="flex items-center gap-3 text-[15px] font-semibold" style={{ color: INK }}>
                     <CheckCircle2 size={18} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {t}
                   </li>
