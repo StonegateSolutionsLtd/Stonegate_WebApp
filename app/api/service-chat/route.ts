@@ -4,6 +4,9 @@ import type { ServiceChatReply, ServiceChatRequest } from '@/lib/service-chat'
 // The Python chat server (chatbot_server/) runs alongside Next and is never
 // exposed to the browser directly.
 const CHATBOT_SERVER_URL = process.env.CHATBOT_SERVER_URL ?? 'http://127.0.0.1:8000'
+// Shared secret so a server reachable over the internet (e.g. behind a tunnel)
+// only accepts requests from this app, not random traffic to its hostname.
+const CHATBOT_SERVER_SECRET = process.env.CHATBOT_SERVER_SECRET
 
 export async function POST(request: NextRequest) {
   let body: ServiceChatRequest
@@ -33,7 +36,10 @@ export async function POST(request: NextRequest) {
   try {
     res = await fetch(`${CHATBOT_SERVER_URL}${path}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(CHATBOT_SERVER_SECRET ? { 'X-Chatbot-Secret': CHATBOT_SERVER_SECRET } : {}),
+      },
       body: JSON.stringify(payload),
     })
   } catch (err) {

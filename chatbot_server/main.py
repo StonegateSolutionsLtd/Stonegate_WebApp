@@ -21,6 +21,7 @@ from typing import Literal
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from openai import OpenAI
 from pydantic import BaseModel, Field
 
@@ -306,6 +307,17 @@ class PhotosRequest(BaseModel):
 
 app = FastAPI(title="Stonegate junk removal chat")
 _client: OpenAI | None = None
+
+# Set once this server is reachable over the internet (e.g. behind a tunnel),
+# so only the Next.js app (which sends the same value) can call it.
+SERVER_SECRET = os.getenv("CHATBOT_SERVER_SECRET")
+
+
+@app.middleware("http")
+async def require_secret(request, call_next):
+    if SERVER_SECRET and request.url.path != "/health" and request.headers.get("X-Chatbot-Secret") != SERVER_SECRET:
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    return await call_next(request)
 
 
 def openai_client() -> OpenAI:
