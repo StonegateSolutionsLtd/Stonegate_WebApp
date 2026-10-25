@@ -6,7 +6,7 @@ import { LOCAL_WITHOUT_SUPABASE, createServiceClient } from '@/lib/supabase/serv
 import { isSlotAvailable } from '@/lib/availability'
 import { sendOwnerServiceRequestNotification, sendCustomerServiceRequestConfirmation } from '@/lib/email'
 import { TRUCK_FRACTIONS } from '@/lib/quote-pricing'
-import type { ServiceFormData } from '@/lib/service-chat'
+import { PROPERTY_TYPES, type ServiceFormData } from '@/lib/service-chat'
 import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES, PHOTO_BUCKET, photoExtension } from '@/lib/photos'
 
 const TYPE_MAP: Record<string, string> = {
@@ -33,17 +33,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Photos are invalid or too large' }, { status: 400 })
   }
 
-  const { serviceType, address, date, time, customerName, customerEmail, phone, loadSize, floor, hasElevator } = body
+  const { serviceType, address, date, time, customerName, customerEmail, phone, loadSize, propertyType } = body
   if (!serviceType || !address || !date || !time || !customerName || !customerEmail || !phone) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
   if (
     !TRUCK_FRACTIONS.some(f => f.label === loadSize) ||
-    !Number.isInteger(floor) || floor < 1 || floor > 50 ||
-    typeof hasElevator !== 'boolean'
+    !PROPERTY_TYPES.some(p => p.value === propertyType) ||
+    typeof body.hasElevator !== 'boolean'
   ) {
     return NextResponse.json({ error: 'Invalid junk details' }, { status: 400 })
   }
+  // The elevator is only asked for apartments.
+  const hasElevator: boolean | null = propertyType === 'apartment' ? body.hasElevator : null
 
   const orderType = TYPE_MAP[serviceType]
   if (!orderType) {
@@ -109,7 +111,7 @@ export async function POST(request: NextRequest) {
       service_time: time,
       notes: body.notes || null,
       load_size: loadSize,
-      floor,
+      property_type: propertyType,
       has_elevator: hasElevator,
       photo_paths: photoPaths,
       status: 'pending',
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest) {
 
   // Send email notifications - don't fail the request if email fails
   await Promise.allSettled([
-    sendOwnerServiceRequestNotification({ serviceType, address, date, time, customerName, customerEmail, phone, notes: body.notes, loadSize, floor, hasElevator, photoCount: photoPaths.length }),
+    sendOwnerServiceRequestNotification({ serviceType, address, date, time, customerName, customerEmail, phone, notes: body.notes, loadSize, propertyType, hasElevator, photoCount: photoPaths.length }),
     sendCustomerServiceRequestConfirmation({ serviceType, address, date, time, customerName, customerEmail, phone }),
   ])
 

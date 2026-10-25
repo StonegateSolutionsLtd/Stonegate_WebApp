@@ -11,11 +11,13 @@ import { Button } from '@/components/ui/button'
 import TimeSlotPicker from '@/components/order/TimeSlotPicker'
 import { DEFAULT_DURATION_MIN, formatSlotRange, timeToMinutes } from '@/lib/scheduling'
 import { TRUCK_FRACTIONS } from '@/lib/quote-pricing'
-import { EMPTY_SERVICE_FORM, postServiceChat, type ServiceFormData, type UnsureField } from '@/lib/service-chat'
+import {
+  EMPTY_SERVICE_FORM, PROPERTY_TYPES, postServiceChat, type PropertyType, type ServiceFormData, type UnsureField,
+} from '@/lib/service-chat'
 import ServiceChat from './ServiceChat'
 import PhotoField from './PhotoField'
 import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES, photoDataUrl } from '@/lib/photos'
-import { MapPin, User, Mail, Phone, FileText, ArrowRight, Building2 } from 'lucide-react'
+import { MapPin, User, Mail, Phone, FileText, ArrowRight } from 'lucide-react'
 
 const SERVICE_LABELS: Record<string, string> = {
   'junk-removal': 'Junk Removal',
@@ -57,7 +59,7 @@ export default function ServiceForm() {
   // Fields answered "Not sure" — resolved by the service chat before submitting.
   const [unsure, setUnsure] = useState<Set<UnsureField>>(new Set())
   const [photos, setPhotos] = useState<File[]>([])
-  const [chat, setChat] = useState<{ sessionId: string; question: string; awaitingPhotos: boolean } | null>(null)
+  const [chat, setChat] = useState<{ sessionId: string; question: string; options: string[]; awaitingPhotos: boolean } | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
 
@@ -65,6 +67,15 @@ export default function ServiceForm() {
     setForm(prev => ({ ...prev, [field]: value }))
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }))
     if (unsure.has(field as UnsureField)) markUnsure(field as UnsureField, false)
+  }
+
+  // The elevator question only applies to apartments.
+  function setPropertyType(value: PropertyType) {
+    set('propertyType', value)
+    if (value !== 'apartment') {
+      set('hasElevator', false)
+      markUnsure('hasElevator', false)
+    }
   }
 
   function markUnsure(field: UnsureField, on: boolean) {
@@ -81,6 +92,7 @@ export default function ServiceForm() {
     const e: Record<string, string> = {}
     if (!form.address.trim()) e.address = 'Address is required'
     if (!form.loadSize && !unsure.has('loadSize')) e.loadSize = 'Pick a load size, or "Not sure"'
+    if (!form.propertyType) e.propertyType = 'Pick a property type'
     if (!form.customerName.trim()) e.customerName = 'Name is required'
     if (!form.customerEmail.trim()) e.customerEmail = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(form.customerEmail)) e.customerEmail = 'Enter a valid email'
@@ -102,15 +114,16 @@ export default function ServiceForm() {
       const reply = await postServiceChat({
         action: 'start', form, unsure: unsureFields, photos: await Promise.all(photos.map(photoDataUrl)),
       })
-      if (reply.done) await finish(reply.variables, [], reply.keptPhotos)
+      if (reply.done) await finish(reply.variables, [], reply.keptPhotos, reply.quoteSummary)
       else {
-        setChat({ sessionId: reply.sessionId, question: reply.question ?? '', awaitingPhotos: reply.awaitingPhotos })
+        setChat({ sessionId: reply.sessionId, question: reply.question ?? '', options: reply.options, awaitingPhotos: reply.awaitingPhotos })
         setSubmitting(false)
       }
     } catch (err) {
-      // The assistant is only essential when something was marked "Not sure";
-      // without it the photos (at least one is required) go unchecked.
-      if (unsureFields.length === 0) await finish(form, [], null)
+      // The assistant opens for every booking, but is only essential when something
+      // was marked "Not sure"; if it's down, the booking still goes through, with
+      // the photos (at least one is required) unchecked and no quote details.
+      if (unsureFields.length === 0) await finish(form, [], null, null)
       else {
         setErrors({ form: err instanceof Error ? err.message : 'Something went wrong' })
         setSubmitting(false)
@@ -121,7 +134,9 @@ export default function ServiceForm() {
   // Take the chat's answers for the "Not sure" fields; everything else stays as typed.
   // `chatPhotos` = photos added in the chat, on top of the ones from the form.
   // `keptPhotos` = which of all those the photo check judged good (null = unchecked, keep all).
-  async function finish(variables: ServiceFormData, chatPhotos: File[], keptPhotos: number[] | null) {
+  // `quoteSummary` = the chat's quote details for staff: sent with the notes but not put
+  // back into the form, so after a 409 the customer doesn't see it in their notes.
+  async function finish(variables: ServiceFormData, chatPhotos: File[], keptPhotos: number[] | null, quoteSummary: string | null) {
     // loadSize is always re-checked against the photos, even when the customer
     // picked it themselves, so it's taken from the chat regardless of `unsure`.
     const resolved = { ...form, loadSize: variables.loadSize }
@@ -141,7 +156,10 @@ export default function ServiceForm() {
     setSubmitting(true)
     try {
       const body = new FormData()
-      body.append('data', JSON.stringify({ serviceType, ...resolved }))
+      const notes = quoteSummary
+        ? [resolved.notes.trim(), `Quote details from chat:\n${quoteSummary}`].filter(Boolean).join('\n\n')
+        : resolved.notes
+      body.append('data', JSON.stringify({ serviceType, ...resolved, notes }))
       for (const photo of allPhotos) body.append('photos', photo)
       const res = await fetch('/api/service-requests', { method: 'POST', body })
       const data = await res.json().catch(() => ({}))
@@ -200,6 +218,7 @@ export default function ServiceForm() {
               <ServiceChat
                 sessionId={chat.sessionId}
                 firstQuestion={chat.question}
+                firstOptions={chat.options}
                 firstAwaitingPhotos={chat.awaitingPhotos}
                 photoSlots={MAX_PHOTOS - photos.length}
                 onComplete={finish}
@@ -330,56 +349,46 @@ export default function ServiceForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="floor" className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
-                    Floor the Junk Is On
-                  </label>
-                  <p className="text-xs mb-2.5" style={{ color: '#9A8E83' }}>
-                    1 = ground level, garage or curbside.
-                  </p>
-                  <div className="grid grid-cols-[1fr_auto] gap-2">
-                    <div className="relative">
-                      <Building2 size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#B5C9B0' }} />
-                      <Input
-                        id="floor"
-                        type="number"
-                        min={1} max={50}
-                        disabled={unsure.has('floor')}
-                        value={unsure.has('floor') ? '' : form.floor}
-                        onChange={e => set('floor', Math.min(50, Math.max(1, Number(e.target.value) || 1)))}
-                        className="pl-10 h-11 disabled:opacity-50"
-                        style={{ borderColor: '#E8E0D5', backgroundColor: '#FFFFFF' }}
+                  <span className="block text-sm font-semibold mb-2.5" style={{ color: '#1A1714' }}>
+                    Property Type <span style={{ color: '#254220' }}>*</span>
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {PROPERTY_TYPES.map(p => (
+                      <OptionButton
+                        key={p.value}
+                        label={p.label}
+                        selected={form.propertyType === p.value}
+                        onClick={() => setPropertyType(p.value)}
                       />
-                    </div>
-                    <OptionButton
-                      label="Not sure"
-                      selected={unsure.has('floor')}
-                      onClick={() => markUnsure('floor', !unsure.has('floor'))}
-                    />
+                    ))}
                   </div>
+                  {errors.propertyType && <p className="text-xs mt-1.5" style={{ color: '#ef4444' }}>{errors.propertyType}</p>}
                 </div>
 
-                <div>
-                  <span className="block text-sm font-semibold mb-2.5" style={{ color: '#1A1714' }}>
-                    Elevator Available?
-                  </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    <OptionButton
-                      label="No elevator"
-                      selected={!unsure.has('hasElevator') && !form.hasElevator}
-                      onClick={() => set('hasElevator', false)}
-                    />
-                    <OptionButton
-                      label="Has elevator"
-                      selected={!unsure.has('hasElevator') && form.hasElevator}
-                      onClick={() => set('hasElevator', true)}
-                    />
-                    <OptionButton
-                      label="Not sure"
-                      selected={unsure.has('hasElevator')}
-                      onClick={() => markUnsure('hasElevator', true)}
-                    />
+                {form.propertyType === 'apartment' && (
+                  <div>
+                    <span className="block text-sm font-semibold mb-2.5" style={{ color: '#1A1714' }}>
+                      Elevator Available?
+                    </span>
+                    <div className="grid grid-cols-3 gap-2">
+                      <OptionButton
+                        label="No elevator"
+                        selected={!unsure.has('hasElevator') && !form.hasElevator}
+                        onClick={() => set('hasElevator', false)}
+                      />
+                      <OptionButton
+                        label="Has elevator"
+                        selected={!unsure.has('hasElevator') && form.hasElevator}
+                        onClick={() => set('hasElevator', true)}
+                      />
+                      <OptionButton
+                        label="Not sure"
+                        selected={unsure.has('hasElevator')}
+                        onClick={() => markUnsure('hasElevator', true)}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <span className="block text-sm font-semibold mb-1.5" style={{ color: '#1A1714' }}>
@@ -493,7 +502,7 @@ export default function ServiceForm() {
               className="rounded-full text-sm font-bold py-6 border-0"
               style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
             >
-              {submitting ? (unsure.size > 0 ? 'Checking…' : 'Sending…') : 'Submit Request'}
+              {submitting ? 'Checking…' : 'Submit Request'}
             </Button>
           </form>
           )}

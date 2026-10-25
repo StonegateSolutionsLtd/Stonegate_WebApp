@@ -34,6 +34,8 @@ interface Order {
   service_time: string
   notes: string | null
   load_size: string | null
+  property_type?: string | null
+  // Older orders only; the form no longer asks for the floor.
   floor: number | null
   has_elevator: boolean | null
   status: string
@@ -166,6 +168,7 @@ export default function ServiceQuoteEditor({ order, photoUrls }: { order: Order;
           <Row label="Date" value={new Date(order.service_date + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} />
           <Row label="Time" value={order.service_time} />
           {order.load_size && <Row label="Load Size" value={order.load_size} />}
+          {order.property_type && <Row label="Property" value={order.property_type[0].toUpperCase() + order.property_type.slice(1)} />}
           {order.floor !== null && <Row label="Floor" value={String(order.floor)} />}
           {order.has_elevator !== null && <Row label="Elevator" value={order.has_elevator ? 'Yes' : 'No'} />}
           {order.notes && (
