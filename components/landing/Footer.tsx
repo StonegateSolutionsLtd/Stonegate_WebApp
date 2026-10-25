@@ -66,7 +66,7 @@ export default function Footer() {
           </div>
           {columns.map(col => (
             <div key={col.title} className="flex flex-col gap-3">
-              <p className="text-xs font-bold uppercase tracking-wide" style={{ color: '#9A8E83' }}>{col.title}</p>
+              <p className="text-sm font-extrabold" style={{ color: '#1A1714' }}>{col.title}</p>
               {col.links.map(link => (
                 <Link key={link.href} href={link.href} className="text-sm font-medium transition-opacity hover:opacity-60" style={{ color: '#6B5E54' }}>
                   {link.label}
@@ -75,8 +75,8 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div style={{ borderTop: '1px solid #E8E0D5', paddingTop: '24px' }}>
-          <span className="text-sm font-medium" style={{ color: '#B5A99E' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
+        <div style={{ paddingTop: '8px' }}>
+          <span className="text-sm font-medium" style={{ color: '#6B5E54' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
         </div>
       </div>
     </footer>
