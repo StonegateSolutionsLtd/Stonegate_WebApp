@@ -1,13 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  Phone, ArrowRight, Star, CheckCircle2, AlertTriangle, MapPin, Zap, Shield, BadgeDollarSign, Hand, Truck, Recycle,
+  Phone, ArrowRight, Star, CheckCircle2, AlertTriangle, Hand, Truck, Recycle, Zap, Shield, BadgeDollarSign,
 } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
-import { FaqList, CityChips } from '@/components/seo/SeoBlocks'
 import StickyCallBar from '@/components/landing/StickyCallBar'
 import BeforeAfterSlider from '@/components/landing/BeforeAfterSlider'
+import RevealOnScroll from '@/components/landing/RevealOnScroll'
+import { PriceTicket, FaqText, revealDelay as delay } from '@/components/landing/JunkBlocks'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { type JunkItem, junkItemHref } from '@/lib/seo/junk-items'
 import type { JunkAd } from '@/lib/seo/junk-ads'
@@ -24,14 +25,13 @@ const CREAM = '#FAF7F2'
 const WHITE = '#FFFFFF'
 const LIGHT_GREEN = '#E8F0E6'
 const TAN = '#F3EADD'
-const GOLD = '#B5793A'
-const MUTED_BROWN = '#8B6845'
+// Shared grade for the hero photo pair - tames the saturated job photos so they match the crew portraits
+const PHOTO_GRADE = 'saturate(0.82) contrast(1.04) brightness(1.03)'
 
-const trustBar = [
-  { Icon: Star, title: '4.9 on Google', text: 'Top-rated in Metro Van' },
-  { Icon: Zap, title: 'Same-day', text: 'Or next-day pickup' },
-  { Icon: Shield, title: 'Fully insured', text: 'Local Metro Van crew' },
-  { Icon: BadgeDollarSign, title: 'Pay after', text: 'No deposit needed' },
+const serviceFacts = [
+  { Icon: Zap, title: 'Same-day', text: 'or next-day' },
+  { Icon: Shield, title: 'Fully insured', text: 'local crew' },
+  { Icon: BadgeDollarSign, title: 'Pay after', text: 'no deposit' },
 ]
 
 const steps = [
@@ -65,24 +65,24 @@ export function GoogleLogo({ size = 16 }: { size?: number }) {
   )
 }
 
-function QuoteCta({ id, className = '' }: { id?: string; className?: string }) {
+function QuoteCta({ id, className = '', onDark = false }: { id?: string; className?: string; onDark?: boolean }) {
   return (
     <a
       id={id}
       href={JUNK_BOOK_HREF}
-      className={`flex items-center justify-center gap-2 rounded-xl font-extrabold text-lg min-h-[58px] px-8 transition-transform active:scale-[0.98] hover:scale-[1.01] ${className}`}
-      style={{ backgroundColor: FOREST, color: WHITE, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.35)' }}
+      className={`flex items-center justify-center gap-2 rounded-full font-extrabold text-lg min-h-[58px] px-8 transition-[transform,opacity] active:scale-[0.97] hover:opacity-90 ${className}`}
+      style={onDark ? { backgroundColor: CREAM, color: GREEN } : { backgroundColor: FOREST, color: WHITE }}
     >
       <span className="whitespace-nowrap">Get a Free Estimate</span> <ArrowRight size={19} aria-hidden />
     </a>
   )
 }
 
-function CallCta({ className = '' }: { className?: string }) {
+function CallCta({ className = '', onDark = false }: { className?: string; onDark?: boolean }) {
   return (
     <PhoneLink
-      className={`flex items-center justify-center gap-2 rounded-xl font-bold text-base min-h-[56px] px-6 transition-colors hover:bg-[#F2F5F2] ${className}`}
-      style={{ color: FOREST, border: `1.5px solid ${FOREST}`, backgroundColor: WHITE, fontVariantNumeric: 'lining-nums tabular-nums' }}
+      className={`flex items-center justify-center gap-2 rounded-full font-bold text-[17px] min-h-[58px] px-6 transition-[transform,background-color] active:scale-[0.97] ${onDark ? 'bg-white/10 hover:bg-white/20' : 'bg-[#E8F0E6] hover:bg-[#D9E7D6]'} ${className}`}
+      style={{ color: onDark ? WHITE : FOREST, fontVariantNumeric: 'lining-nums tabular-nums' }}
     >
       <Phone size={17} fill="currentColor" aria-hidden />
       <span className="whitespace-nowrap">Call <PhoneNumber /></span>
@@ -90,34 +90,21 @@ function CallCta({ className = '' }: { className?: string }) {
   )
 }
 
-function Eyebrow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-3 ${className}`} style={{ color: MUTED_BROWN }}>{children}</p>
-}
-
 function Heading({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <h2 className={`text-[28px] min-[400px]:text-[30px] sm:text-[38px] font-extrabold leading-[1.1] tracking-tight ${className}`} style={{ color: INK }}>
+    <h2 data-reveal className={`text-[28px] min-[400px]:text-[30px] sm:text-[38px] font-extrabold leading-[1.1] tracking-tight text-balance ${className}`} style={{ color: INK }}>
       {children}
     </h2>
   )
 }
 
+/** The key words of a heading, in the brand green */
 function Accent({ children }: { children: React.ReactNode }) {
   return <span style={{ color: GREEN }}>{children}</span>
 }
 
-function PhotoChip({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
-  return (
-    <span
-      className="absolute left-2.5 bottom-2.5 sm:left-3 sm:bottom-3 max-w-[calc(100%-16px)] inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 sm:px-3 sm:py-1.5 text-[12px] sm:text-[14px] font-extrabold leading-tight"
-      style={dark
-        ? { backgroundColor: FOREST, color: WHITE, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.4)' }
-        : { backgroundColor: 'rgba(255,255,255,0.95)', color: INK, boxShadow: '0 4px 12px -4px rgba(0,0,0,0.3)' }}
-    >
-      {children}
-    </span>
-  )
-}
+/** Thin rule at the top of every section after the hero, so neighbouring cream/white sections read as separate */
+const RULE = `1px solid ${LINE}`
 
 export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkItem; ad: JunkAd; faqs: Faq[]; related: JunkItem[] }) {
   const sliderPairs = ad.sliderFirst
@@ -125,52 +112,93 @@ export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkI
     : beforeAfterPairs
 
   return (
-    <div className="flex flex-col min-h-screen pb-[84px] lg:pb-0" style={{ backgroundColor: WHITE }}>
+    <div className="flex flex-col min-h-svh pb-[84px] lg:pb-0 selection:bg-[#E8F0E6] selection:text-[#014421] [&_:focus-visible]:outline-2 [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-[#014421]" style={{ backgroundColor: WHITE }}>
+      <RevealOnScroll />
       <Navbar minimalMobile />
-      <main className="flex-1">
+
+      {/* Main sits above the footer so on desktop it slides away like a sheet to uncover it (curtain footer) */}
+      <main className="flex-1 relative z-10" style={{ backgroundColor: WHITE }}>
 
         {/* ───────── Hero ───────── */}
-        {/* Phone: headline → item + crew photos → buttons, all above the fold. Desktop: text and buttons left, photos right */}
-        <section style={{ background: `linear-gradient(180deg, ${TAN} 0%, ${CREAM} 100%)` }}>
-          <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-7 sm:pt-8 lg:py-12 grid grid-cols-[minmax(0,1fr)] gap-x-10 xl:gap-x-14 [grid-template-areas:'top'_'photos'_'cta'] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:[grid-template-areas:'top_photos'_'cta_photos'] lg:items-center">
-            <div className="[grid-area:top] lg:self-end">
-              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-2.5 sm:mb-4">
+        {/* Only what decides the click: headline → the item + crew photo pair (captions under, nothing laid over) → one main button,
+            with the framed call button and rating under it. Everything else is grouped in the "why us" block straight after. */}
+        {/* Warm, a step lighter than the full tan */}
+        <section style={{ backgroundColor: '#F4ECE0' }}>
+          <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-12 sm:py-14 lg:py-20 grid grid-cols-[minmax(0,1fr)] [grid-template-areas:'text'_'photo'_'cta'] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] lg:[grid-template-areas:'text_photo'_'cta_photo'] lg:gap-x-12 xl:gap-x-16">
+            <div className="[grid-area:text] lg:self-end">
+              <h1 className="font-extrabold tracking-tight leading-none mb-4 lg:mb-5 text-[40px] min-[380px]:text-[44px] sm:text-[54px] lg:text-[60px]" style={{ color: INK }}>
+                <span className="block">{ad.headline}</span>
+                <span className="block mt-2 text-[20px] min-[380px]:text-[22px] sm:text-[26px] lg:text-[28px] font-bold" style={{ color: '#B5793A' }}>Same-day in Metro Vancouver</span>
+              </h1>
+              <p className="text-[17px] sm:text-[19px] leading-snug mb-7 lg:mb-10 max-w-xl" style={{ color: INK }}>{ad.promise}</p>
+            </div>
+
+            {/* The item and the crew as one matched pair: same frame, same crop, same colour treatment */}
+            <div className="[grid-area:photo] -mx-2 sm:mx-0 grid grid-cols-2 gap-2 sm:gap-5 mb-8 sm:mb-10 lg:mb-0">
+              {[{ photo: ad.itemPhoto, caption: ad.itemPhoto.label }, { photo: ad.crewPhoto, caption: 'Your Stonegate crew' }].map(({ photo, caption }) => (
+                <figure key={photo.src}>
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden" style={{ backgroundColor: LINE }}>
+                    <Image src={photo.src} alt={photo.alt} fill preload quality={90} sizes="(min-width: 1024px) 400px, 50vw" className="object-cover" style={{ objectPosition: photo.pos ?? 'center', filter: PHOTO_GRADE }} />
+                    {/* Warm wash in the page's tan, so photos from different days sit together */}
+                    <span className="absolute inset-0 mix-blend-multiply" style={{ backgroundColor: 'rgba(243,234,221,0.35)' }} aria-hidden />
+                  </div>
+                  <figcaption className="mt-3 px-2 sm:px-0 text-[14px] sm:text-[15px] font-semibold leading-snug" style={{ color: INK }}>{caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+
+            {/* One main action; the call line keeps the number visible without a second heavy button (the sticky bar takes over on scroll) */}
+            <div className="[grid-area:cta] lg:self-start flex flex-col sm:flex-row lg:flex-col xl:flex-row sm:flex-wrap sm:items-center lg:items-stretch xl:items-center gap-3 sm:gap-x-8 sm:gap-y-4 lg:gap-y-3 xl:gap-x-8 xl:gap-y-5">
+              <QuoteCta id="hero-cta" className="w-full sm:w-auto lg:w-full xl:w-auto" />
+              <PhoneLink
+                className="flex items-center justify-center gap-2 min-h-[54px] px-6 rounded-xl w-full sm:w-auto lg:w-full xl:w-auto text-[17px] font-bold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#F2F5F2]"
+                style={{ color: FOREST, backgroundColor: WHITE, border: `1.5px solid ${FOREST}`, fontVariantNumeric: 'lining-nums tabular-nums' }}
+              >
+                <Phone size={16} fill="currentColor" aria-hidden />
+                <span className="whitespace-nowrap">Call <PhoneNumber /></span>
+              </PhoneLink>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center lg:justify-start gap-1.5 text-[15px] hover:opacity-80 transition-opacity sm:basis-full lg:basis-auto xl:basis-full">
                 <GoogleLogo size={15} />
                 <Stars size={14} />
-                <span className="text-[13px] sm:text-[15px] font-bold" style={{ color: INK }}>4.9 rating</span>
-                <span className="text-[13px] sm:text-[15px] font-semibold" style={{ color: MUTED }}>· Metro Vancouver</span>
+                <span className="font-semibold" style={{ color: INK }}>4.9 on Google</span>
               </a>
-              <h1 className="font-extrabold tracking-tight leading-[1.02] mb-2.5 sm:mb-4" style={{ color: INK }}>
-                <span className="block text-[36px] min-[380px]:text-[40px] sm:text-[54px] lg:text-[58px]">{ad.headline}</span>
-                <span className="block text-[19px] min-[380px]:text-[21px] sm:text-[26px] lg:text-[28px] mt-1 font-bold" style={{ color: GOLD }}>Same-day in Metro Vancouver</span>
-              </h1>
-              <p className="text-[16px] sm:text-[19px] leading-snug mb-4 lg:mb-6" style={{ color: '#2B2A28' }}>{ad.promise}</p>
             </div>
+          </div>
+        </section>
 
-            {/* Item photo is never covered - the only overlay is a small label in the corner */}
-            <div className="[grid-area:photos] -mx-4 sm:mx-0 grid grid-cols-2 gap-1 sm:gap-4 mb-5 lg:mb-0">
-              <figure className="relative aspect-[3/4] sm:rounded-3xl overflow-hidden" style={{ backgroundColor: LINE }}>
-                <Image src={ad.itemPhoto.src} alt={ad.itemPhoto.alt} fill preload quality={90} sizes="(min-width: 1024px) 640px, 100vw" className="object-cover" style={{ objectPosition: ad.itemPhoto.pos ?? 'center' }} />
-                <PhotoChip>{ad.itemPhoto.label}</PhotoChip>
-              </figure>
-              <figure className="relative aspect-[3/4] sm:rounded-3xl overflow-hidden" style={{ backgroundColor: LINE }}>
-                <Image src={ad.crewPhoto.src} alt={ad.crewPhoto.alt} fill preload quality={90} sizes="(min-width: 1024px) 640px, 100vw" className="object-cover" style={{ objectPosition: ad.crewPhoto.pos ?? 'center' }} />
-                <PhotoChip dark><span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#6EE7A0' }} aria-hidden />Your Stonegate crew</PhotoChip>
-              </figure>
-            </div>
+        {/* ───────── Slogan band - gold rules either side, as on /junk-removal ───────── */}
+        <section style={{ backgroundColor: WHITE, borderTop: RULE }}>
+          <p className="max-w-6xl mx-auto px-4 sm:px-6 py-7 sm:py-9 flex items-center justify-center gap-3 sm:gap-5 font-extrabold uppercase tracking-tight leading-none text-[24px] min-[380px]:text-[26px] sm:text-[34px]" style={{ color: INK }}>
+            <span className="h-px w-8 sm:w-16 shrink-0" style={{ background: 'linear-gradient(to right, transparent, #C98A45)' }} aria-hidden />
+            <span>You point. <span style={{ color: FOREST }}>We haul.</span></span>
+            <span className="h-px w-8 sm:w-16 shrink-0" style={{ background: 'linear-gradient(to left, transparent, #C98A45)' }} aria-hidden />
+          </p>
+        </section>
 
-            <div className="[grid-area:cta] lg:self-start">
-              <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2.5 sm:gap-3">
-                <QuoteCta id="hero-cta" className="w-full sm:w-auto lg:w-full xl:w-auto" />
-                <CallCta className="w-full sm:w-auto lg:w-full xl:w-auto" />
-              </div>
-              <p className="mt-3 text-[13px] sm:text-sm font-semibold text-center sm:text-left" style={{ color: MUTED }}>
-                No deposit · Pay after the job
+        {/* ───────── Why us: the promise, the item's own reasons and the three service facts, in one calm block ───────── */}
+        <section style={{ backgroundColor: WHITE, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-28 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-20 lg:items-center">
+            <div>
+              <Heading className="mb-6">{item.name} without the <Accent>heavy lifting.</Accent></Heading>
+              <p data-reveal style={delay(80, { color: INK })} className="text-[17px] sm:text-[19px] leading-relaxed max-w-lg">
+                Tell us what is going. The crew shows up on time, gives you the price on the spot, carries everything out from wherever it sits and leaves the space swept clean.
               </p>
-              <ul className="hidden sm:flex mt-4 lg:mt-6 flex-col gap-2">
+            </div>
+            {/* One tinted panel: the item's own reasons on top, the three service facts under a divider */}
+            <div data-reveal style={delay(120, { backgroundColor: LIGHT_GREEN })} className="rounded-2xl px-5 py-7 sm:p-9">
+              <ul className="flex flex-col gap-4">
                 {ad.highlights.map(h => (
-                  <li key={h} className="flex items-center gap-2.5 text-[15px] font-semibold" style={{ color: INK }}>
-                    <CheckCircle2 size={18} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {h}
+                  <li key={h} className="flex items-center gap-3 text-[17px] sm:text-[18px] font-bold" style={{ color: INK }}>
+                    <CheckCircle2 size={22} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {h}
+                  </li>
+                ))}
+              </ul>
+              <ul className="grid grid-cols-3 gap-3 mt-7 pt-7 text-center" style={{ borderTop: '1px solid rgba(1,68,33,0.15)' }}>
+                {serviceFacts.map(({ Icon, title, text }) => (
+                  <li key={title} className="flex flex-col items-center gap-2">
+                    <Icon size={22} style={{ color: GREEN }} aria-hidden />
+                    <span className="text-[15px] sm:text-[17px] font-extrabold leading-tight" style={{ color: GREEN }}>{title}</span>
+                    <span className="text-[14px] leading-tight" style={{ color: INK }}>{text}</span>
                   </li>
                 ))}
               </ul>
@@ -178,41 +206,128 @@ export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkI
           </div>
         </section>
 
-        {/* ───────── Trust bar ───────── */}
-        <section style={{ backgroundColor: FOREST }}>
-          <ul className="max-w-6xl mx-auto px-4 sm:px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-3">
-            {trustBar.map(({ Icon, title, text }) => (
-              <li key={title} className="flex items-center gap-3">
-                <span className="flex items-center justify-center shrink-0 w-10 h-10 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
-                  <Icon size={19} style={{ color: '#F3D9A4' }} fill={Icon === Star ? '#F3D9A4' : 'none'} aria-hidden />
-                </span>
-                <span className="leading-tight">
-                  <span className="block text-[15px] font-extrabold" style={{ color: WHITE }}>{title}</span>
-                  <span className="block text-[12px] sm:text-[13px]" style={{ color: 'rgba(255,255,255,0.72)' }}>{text}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
+        {/* ───────── Before & after - proof straight after the why-us block ───────── */}
+        <section style={{ backgroundColor: CREAM, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-24 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[0.75fr_1.25fr] gap-8 lg:gap-16 items-center">
+            <div>
+              <Heading className="mb-4">Drag to <Accent>clear the room.</Accent></Heading>
+              <p data-reveal style={delay(80, { color: INK })} className="text-[17px] leading-relaxed max-w-md lg:mb-8">
+                Real Stonegate jobs, photographed before we started and after we left.
+              </p>
+              <div data-reveal style={delay(160)}>
+                <QuoteCta className="hidden lg:flex w-fit" />
+              </div>
+            </div>
+            <div data-reveal style={delay(120)} className="mx-auto w-full max-w-[480px] lg:max-w-[540px]">
+              <BeforeAfterSlider pairs={sliderPairs} />
+            </div>
+          </div>
+        </section>
+
+        {/* ───────── What we take ───────── */}
+        <section style={{ backgroundColor: WHITE, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-24 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-14">
+            <div>
+              <Heading className="mb-6">{item.name}, <Accent>done for you.</Accent></Heading>
+              <ul className="grid grid-cols-2 gap-2 sm:gap-2.5 mb-5 max-sm:[&>li:nth-child(n+7)]:hidden">
+                {item.takes.map((t, i) => (
+                  <li key={t} data-reveal style={delay((i % 4) * 50, { backgroundColor: LIGHT_GREEN, color: INK })} className="flex items-center gap-2 rounded-2xl px-3.5 py-3 text-[15px] sm:text-[16px] font-semibold leading-tight">
+                    <CheckCircle2 size={16} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {t}
+                  </li>
+                ))}
+              </ul>
+              <p className="flex items-start gap-2 text-[14px]" style={{ color: MUTED }}>
+                <AlertTriangle size={15} className="shrink-0 mt-0.5" style={{ color: '#B45309' }} aria-hidden />
+                No hazardous waste - paint, chemicals, fuel or asbestos.
+              </p>
+            </div>
+            <div className="hidden lg:flex flex-col gap-4">
+              <p data-reveal className="text-[17px] leading-relaxed" style={{ color: INK }}>{item.body[0]}</p>
+              {item.body.length > 1 && (
+                <details className="group">
+                  <summary className="cursor-pointer list-none text-[16px] font-extrabold underline underline-offset-4 hover:no-underline w-fit" style={{ color: GREEN }}>
+                    <span className="group-open:hidden">More about {item.name.toLowerCase()}</span><span className="hidden group-open:inline">Show less</span>
+                  </summary>
+                  <div className="flex flex-col gap-4 mt-4">
+                    {item.body.slice(1).map(p => (
+                      <p key={p.slice(0, 32)} className="text-[17px] leading-relaxed" style={{ color: INK }}>{p}</p>
+                    ))}
+                  </div>
+                </details>
+              )}
+              <div data-reveal style={delay(80, { backgroundColor: LIGHT_GREEN })} className="rounded-2xl p-6">
+                <p className="flex items-center gap-2 text-[18px] font-extrabold mb-1.5" style={{ color: INK }}>
+                  <Recycle size={18} style={{ color: GREEN }} aria-hidden /> Where it goes
+                </p>
+                <p className="text-[16px] leading-relaxed" style={{ color: INK }}>{item.disposal}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ───────── Pricing - the estimate as a ticket (the steps live on it, so there is no separate how-it-works) ───────── */}
+        <section style={{ backgroundColor: TAN, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-24">
+            <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-16 lg:items-end mb-8 lg:mb-10">
+              <Heading className="mb-4 lg:mb-0">Know the price <Accent>before we start.</Accent></Heading>
+              <div data-reveal style={delay(80)}>
+                <p className="text-[17px] leading-relaxed mb-4" style={{ color: INK }}>
+                  {item.name} is priced by how much space it takes in the truck. Labour, loading and disposal are all included - no hidden fees, no deposit, and you pay after the job.
+                </p>
+                <Link href="/pricing/junk-removal" className="inline-flex items-center gap-2 text-[17px] font-extrabold underline underline-offset-4 hover:no-underline" style={{ color: GREEN }}>
+                  How our pricing works <ArrowRight size={15} aria-hidden />
+                </Link>
+              </div>
+            </div>
+            <PriceTicket steps={steps} action={<QuoteCta className="w-full" />} />
+          </div>
+        </section>
+
+        {/* ───────── Reviews ───────── */}
+        <section style={{ backgroundColor: WHITE, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-24">
+            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mb-7">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <Heading>Rated 4.9 on Google</Heading>
+                <Stars size={22} />
+              </div>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="text-[17px] font-bold underline underline-offset-4 hover:no-underline" style={{ color: GREEN }}>
+                Read all reviews
+              </a>
+            </div>
+            <blockquote data-reveal style={delay(80)} className="max-w-4xl sm:mb-12 lg:mb-16">
+              <p className="text-[22px] min-[400px]:text-[24px] sm:text-3xl lg:text-[36px] font-bold leading-[1.3] tracking-tight mb-4" style={{ color: INK }}>
+                <span style={{ color: GREEN }}>&ldquo;</span>{featuredReview.text}<span style={{ color: GREEN }}>&rdquo;</span>
+              </p>
+              <footer className="text-[17px] font-extrabold" style={{ color: GREEN }}>{featuredReview.name}</footer>
+            </blockquote>
+            {/* Phones get the one featured review - the page stays short where most ad clicks land */}
+            <ul className="hidden sm:grid sm:grid-cols-3 gap-10">
+              {reviews.map((r, i) => (
+                <li key={r.name} data-reveal style={delay(i * 80)}>
+                  <p className="text-[17px] leading-relaxed mb-3" style={{ color: INK }}>{r.text}</p>
+                  <p className="text-[16px] font-extrabold" style={{ color: GREEN }}>{r.name}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* ───────── Meet the crew ───────── */}
-        <section style={{ backgroundColor: WHITE }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1fr_1.2fr] gap-7 lg:gap-14 items-center">
-            <div className="relative aspect-[4/3] lg:aspect-[4/5] max-h-[540px] w-full rounded-3xl overflow-hidden" style={{ backgroundColor: LINE }}>
+        <section style={{ backgroundColor: CREAM, borderTop: RULE }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-24 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-14 items-center">
+            <div data-reveal className="relative aspect-[4/3] lg:aspect-[4/5] max-h-[540px] w-full rounded-2xl overflow-hidden" style={{ backgroundColor: LINE }}>
               <Image src={ad.teamPhoto.src} alt={ad.teamPhoto.alt} fill quality={90} sizes="(max-width: 1024px) 100vw, 800px" className="object-cover" style={{ objectPosition: ad.teamPhoto.pos ?? 'center' }} />
             </div>
             <div>
-              <Eyebrow>Your crew</Eyebrow>
-              <Heading className="mb-4">You point. <Accent>We haul.</Accent></Heading>
-              <p className="text-base sm:text-[17px] leading-relaxed lg:mb-6" style={{ color: MUTED }}>
+              <Heading className="mb-4">A local crew that <Accent>shows up.</Accent></Heading>
+              <p data-reveal style={delay(80, { color: INK })} className="text-[17px] leading-relaxed mb-6">
                 We show up on time, carry everything out from wherever it sits and leave the space swept clean.
               </p>
-              <ul className="hidden lg:flex flex-col gap-3">
-                {crewFacts.map(({ Icon, text }) => (
-                  <li key={text} className="flex items-center gap-3 text-[15px] font-semibold" style={{ color: INK }}>
-                    <span className="flex items-center justify-center shrink-0 w-9 h-9 rounded-full" style={{ backgroundColor: LIGHT_GREEN }}>
-                      <Icon size={17} style={{ color: GREEN }} aria-hidden />
-                    </span>
+              <ul className="flex flex-col gap-3.5">
+                {crewFacts.map(({ Icon, text }, i) => (
+                  <li key={text} data-reveal className="flex items-center gap-3 text-[16px] font-semibold" style={delay(140 + i * 60, { color: INK })}>
+                    <Icon size={20} className="shrink-0" style={{ color: GREEN }} aria-hidden />
                     {text}
                   </li>
                 ))}
@@ -221,196 +336,69 @@ export default function JunkAdLanding({ item, ad, faqs, related }: { item: JunkI
           </div>
         </section>
 
-        {/* ───────── Reviews ───────── */}
-        <section style={{ backgroundColor: CREAM, borderTop: `1px solid ${LINE}` }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:pt-12 sm:pb-4 lg:pt-16">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-              <span className="flex items-center gap-2.5">
-                <GoogleLogo size={18} />
-                <Stars size={18} />
-                <span className="text-sm font-bold" style={{ color: INK }}>Rated 4.9 on Google</span>
-              </span>
-              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-bold underline underline-offset-4" style={{ color: GREEN }}>
-                Read all reviews
-              </a>
-            </div>
-            <blockquote>
-              <p className="text-[21px] min-[400px]:text-[23px] sm:text-3xl font-bold leading-[1.3] tracking-tight mb-4" style={{ color: INK }}>
-                <span style={{ color: GREEN }}>&ldquo;</span>{featuredReview.text}<span style={{ color: GREEN }}>&rdquo;</span>
-              </p>
-              <footer className="text-[15px] font-extrabold" style={{ color: GREEN }}>{featuredReview.name}</footer>
-            </blockquote>
-          </div>
-          <ul className="hidden sm:flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-4 sm:scroll-px-6 px-4 sm:px-6 pt-5 pb-12 lg:pb-16 lg:max-w-6xl lg:mx-auto lg:grid lg:grid-cols-3 lg:overflow-visible [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {reviews.map(r => (
-              <li key={r.name} className="snap-start shrink-0 w-[82%] min-[480px]:w-[300px] lg:w-auto flex flex-col rounded-2xl p-5" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}` }}>
-                <Stars size={13} />
-                <p className="text-[15px] leading-relaxed mt-3 mb-4 flex-1" style={{ color: MUTED }}>{r.text}</p>
-                <p className="text-sm font-extrabold" style={{ color: INK }}>{r.name}</p>
-              </li>
-            ))}
-          </ul>
+        <section style={{ backgroundColor: WHITE, borderTop: RULE }}>
+          <FaqText faqs={faqs} heading={<Heading>{item.name} questions</Heading>} />
         </section>
 
-        {/* ───────── Pricing ───────── */}
-        <section style={{ backgroundColor: LIGHT_GREEN }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="hidden lg:block">
-              <Eyebrow>Simple pricing</Eyebrow>
-              <Heading className="mb-4">Know the price <Accent>before we start.</Accent></Heading>
-              <p className="text-base sm:text-[17px] leading-relaxed mb-5 max-w-lg" style={{ color: MUTED }}>
-                {item.name} is priced by how much space it takes in the truck. Labour, loading and disposal are all included - no hidden fees, no deposit, and you pay after the job.
-              </p>
-              <Link href="/pricing/junk-removal" className="inline-flex items-center gap-2 text-[15px] font-extrabold underline underline-offset-4" style={{ color: GREEN }}>
-                How our pricing works <ArrowRight size={15} aria-hidden />
-              </Link>
-            </div>
-            <div className="mx-auto w-full max-w-[420px] rounded-3xl p-7 sm:p-9" style={{ backgroundColor: WHITE, boxShadow: '0 12px 32px -16px rgba(1,68,33,0.25)' }}>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] mb-2" style={{ color: MUTED }}>{item.name}</p>
-              <p className="flex flex-wrap items-end gap-x-2 gap-y-1 mb-6">
-                <span className="text-6xl font-extrabold tracking-tight leading-none" style={{ color: INK }}>Upfront</span>
-                <span className="text-base font-semibold mb-1" style={{ color: MUTED }}>pricing</span>
-              </p>
-              <ul className="flex flex-col gap-3 mb-7">
-                {['Priced by how much space it takes', 'Price confirmed before we start', 'Pay after - card, e-transfer or cash'].map(t => (
-                  <li key={t} className="flex items-center gap-3 text-[15px] font-semibold" style={{ color: INK }}>
-                    <CheckCircle2 size={18} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {t}
-                  </li>
-                ))}
-              </ul>
-              <QuoteCta className="w-full" />
-            </div>
-          </div>
-        </section>
-
-        {/* ───────── What we take ───────── */}
-        <section style={{ backgroundColor: WHITE }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-14">
+        {/* ───────── Final CTA - full-width forest band ───────── */}
+        <section className="[&_a:focus-visible]:outline-white selection:bg-white/25 selection:text-white" style={{ backgroundColor: FOREST }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-20 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[1fr_auto] gap-7 lg:gap-14 items-center">
             <div>
-              <Eyebrow>What we take</Eyebrow>
-              <Heading className="mb-5">{item.name} <Accent>done for you.</Accent></Heading>
-              <ul className="grid grid-cols-2 gap-2 sm:gap-2.5 mb-5 max-sm:[&>li:nth-child(n+7)]:hidden">
-                {item.takes.map(t => (
-                  <li key={t} className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[14px] sm:text-[15px] font-semibold leading-tight" style={{ backgroundColor: CREAM, border: `1px solid ${LINE}`, color: INK }}>
-                    <CheckCircle2 size={16} className="shrink-0" style={{ color: GREEN }} aria-hidden /> {t}
-                  </li>
-                ))}
-              </ul>
-              <p className="flex items-center gap-2 text-sm" style={{ color: MUTED }}>
-                <AlertTriangle size={15} className="shrink-0" style={{ color: '#B45309' }} aria-hidden />
-                No hazardous waste - paint, chemicals, fuel or asbestos.
+              <h2 data-reveal className="text-[28px] min-[400px]:text-[30px] sm:text-[38px] font-extrabold leading-[1.1] tracking-tight mb-3" style={{ color: WHITE }}>Ready when you are.</h2>
+              <p data-reveal style={delay(80, { color: '#CFE0D4' })} className="text-[17px] sm:text-lg">
+                Same-day and next-day pickups across Metro Vancouver.
               </p>
             </div>
-            <div className="hidden lg:flex flex-col gap-4">
-              <p className="text-base leading-relaxed" style={{ color: '#4A3F38' }}>{item.body[0]}</p>
-              {item.body.length > 1 && (
-                <details className="group">
-                  <summary className="cursor-pointer list-none text-[15px] font-extrabold underline underline-offset-4" style={{ color: GREEN }}>
-                    <span className="group-open:hidden">Read more</span><span className="hidden group-open:inline">Show less</span>
-                  </summary>
-                  <div className="flex flex-col gap-4 mt-4">
-                    {item.body.slice(1).map(p => (
-                      <p key={p.slice(0, 32)} className="text-base leading-relaxed" style={{ color: '#4A3F38' }}>{p}</p>
-                    ))}
-                  </div>
-                </details>
-              )}
-              <div className="rounded-2xl p-5" style={{ backgroundColor: LIGHT_GREEN }}>
-                <p className="flex items-center gap-2 font-extrabold mb-1.5" style={{ color: INK }}>
-                  <Recycle size={18} style={{ color: GREEN }} aria-hidden /> Where it goes
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: MUTED }}>{item.disposal}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ───────── Before & after ───────── */}
-        <section style={{ backgroundColor: CREAM, borderTop: `1px solid ${LINE}` }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20 grid grid-cols-[minmax(0,1fr)] lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-20 items-center">
-            <div>
-              <Eyebrow>Before &amp; after</Eyebrow>
-              <Heading className="mb-4">Drag to <Accent>clear the room.</Accent></Heading>
-              <p className="hidden sm:block text-base sm:text-[17px] leading-relaxed max-w-md" style={{ color: MUTED }}>
-                Real Stonegate jobs, photographed before we started and after we left.
-              </p>
-            </div>
-            <div className="mx-auto w-full max-w-[480px]">
-              <BeforeAfterSlider pairs={sliderPairs} />
-            </div>
-          </div>
-        </section>
-
-        {/* ───────── How it works ───────── */}
-        <section style={{ backgroundColor: TAN }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20">
-            <Eyebrow>How it works</Eyebrow>
-            <Heading className="mb-5 sm:mb-7">Gone in <Accent>three steps.</Accent></Heading>
-            <ol className="grid md:grid-cols-3 gap-3 md:gap-6">
-              {steps.map((s, i) => (
-                <li key={s.title} className="flex items-center md:items-start md:flex-col gap-4 md:gap-0 rounded-2xl p-4 md:p-6" style={{ backgroundColor: WHITE }}>
-                  <span className="flex items-center justify-center shrink-0 w-11 h-11 rounded-full text-lg font-extrabold md:mb-4" style={{ backgroundColor: GREEN, color: WHITE }}>{i + 1}</span>
-                  <div>
-                    <p className="text-[17px] md:text-lg font-extrabold md:mb-1" style={{ color: INK }}>{s.title}</p>
-                    <p className="hidden md:block text-[15px] leading-relaxed" style={{ color: MUTED }}>{s.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <QuoteCta className="hidden sm:inline-flex mt-7" />
-          </div>
-        </section>
-
-        <FaqList faqs={faqs} heading={`${item.name} questions`} />
-
-        {/* ───────── Final CTA ───────── */}
-        <section style={{ backgroundColor: WHITE, borderTop: `1px solid ${LINE}` }}>
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-20 text-center">
-            <Heading className="mb-3">Ready when <Accent>you are.</Accent></Heading>
-            <p className="text-base sm:text-lg mb-6" style={{ color: MUTED }}>
-              Same-day and next-day pickups across Metro Vancouver.
-            </p>
-            <div className="flex flex-col gap-2.5 max-w-md mx-auto">
-              <QuoteCta className="w-full" />
-              <CallCta className="w-full" />
+            <div data-reveal style={delay(160)} className="flex flex-col sm:flex-row gap-3">
+              <QuoteCta onDark className="sm:w-auto" />
+              <CallCta onDark className="sm:w-auto" />
             </div>
           </div>
         </section>
 
         {/* ───────── Related + service area ───────── */}
-        <section className="hidden sm:block py-10" style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }}>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col gap-8">
+        <section className="hidden sm:block" style={{ backgroundColor: CREAM }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-16 flex flex-col gap-10">
             <div>
-              <p className="text-sm font-bold mb-3" style={{ color: MUTED }}>We also haul</p>
+              <h2 className="text-[22px] font-extrabold tracking-tight mb-4" style={{ color: INK }}>We also haul</h2>
               <ul className="flex flex-wrap gap-2">
                 {related.map(r => (
                   <li key={r.slug}>
-                    <Link href={junkItemHref(r.slug)} className="inline-block rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: WHITE, border: `1px solid ${LINE}`, color: INK }}>
+                    <Link href={junkItemHref(r.slug)} className="inline-flex items-center rounded-full px-4 min-h-[44px] text-[16px] font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: WHITE, color: INK }}>
                       {r.name}
                     </Link>
                   </li>
                 ))}
                 <li>
-                  <Link href="/junk-removal/what-we-take" className="inline-block rounded-full px-3.5 py-1.5 text-sm font-extrabold" style={{ color: GREEN }}>
-                    Everything we take &rarr;
+                  <Link href="/junk-removal/what-we-take" className="inline-flex items-center gap-1.5 rounded-full px-4 min-h-[44px] text-[16px] font-extrabold hover:underline" style={{ color: GREEN }}>
+                    Everything we take <ArrowRight size={15} aria-hidden />
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <p className="flex items-center gap-2 text-sm font-bold mb-1" style={{ color: MUTED }}>
-                <MapPin size={15} aria-hidden /> Same-day service area
-              </p>
-              <CityChips heading={`${item.name} across Metro Vancouver`} links={CITIES.map(c => ({ href: cityJunkHref(c), label: c.name }))} />
+              <h2 className="text-[22px] font-extrabold tracking-tight mb-4" style={{ color: INK }}>Same-day {item.name.toLowerCase()} across Metro Vancouver</h2>
+              <ul className="flex flex-wrap gap-2">
+                {CITIES.map(c => (
+                  <li key={c.slug}>
+                    <Link href={cityJunkHref(c)} className="inline-flex items-center rounded-full px-4 min-h-[44px] text-[16px] font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: WHITE, color: INK }}>
+                      {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <p className="text-sm" style={{ color: MUTED }}>
-              Back to <Link href="/junk-removal" className="font-bold underline" style={{ color: GREEN }}>all junk removal services</Link>.
+            <p className="text-[16px]" style={{ color: INK }}>
+              Back to <Link href="/junk-removal" className="font-bold underline underline-offset-4 hover:no-underline" style={{ color: GREEN }}>all junk removal services</Link>.
             </p>
           </div>
         </section>
       </main>
 
-      <Footer />
+      {/* Curtain footer: pinned to the bottom under main on desktop, uncovered as the page scrolls past */}
+      <div className="lg:sticky lg:bottom-0 lg:z-0">
+        <Footer />
+      </div>
 
       <StickyCallBar watchId="hero-cta" quoteHref={JUNK_BOOK_HREF} />
     </div>

@@ -207,10 +207,10 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
       <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-        Your Move is Booked, ${order.customerName}!
+        Your moving order request was received, ${order.customerName}!
       </h2>
       <p style="color: #374151; margin-top: 16px;">
-        Thanks for choosing Stonegate Moving Solutions. We've received your request and will reach out within 24 hours to confirm your time slot.
+        Thanks for choosing Stonegate Moving Solutions. We will contact you soon to confirm your date and time.
       </p>
 
       <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">
@@ -237,7 +237,7 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
   return resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to: order.customerEmail,
-    subject: `Move confirmed for ${movingDate}. Stonegate Moving Solutions`,
+    subject: `Moving order request received - Stonegate Moving Solutions`,
     html,
 
   })

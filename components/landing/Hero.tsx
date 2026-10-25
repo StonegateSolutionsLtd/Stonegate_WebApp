@@ -9,6 +9,7 @@ import { Trash2, Truck, Shield, DollarSign, Star, CalendarDays, MapPin, Clipboar
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import BeforeAfterCarousel from '@/components/landing/BeforeAfterCarousel'
+import ServicesCarousel, { type ServiceCard } from '@/components/landing/ServicesCarousel'
 import { PhoneLink } from '@/components/PhoneNumber'
 
 const beforeAfterPairs = [
@@ -54,6 +55,65 @@ const reviews = [
   },
 ]
 
+
+const movingCards: ServiceCard[] = [
+  {
+    href: '/moving#residential-moving', kind: 'Moving', name: 'Residential Moving',
+    text: 'Full household moves. We wrap and protect your furniture, take apart what needs it and set everything up in the new place.',
+    image: { src: '/crew-wrapping-furniture.jpg', alt: 'Stonegate crew wrapping and loading furniture for a house move', pos: 'center 45%' },
+  },
+  {
+    href: '/moving#apartment-moving', kind: 'Moving', name: 'Apartment & Condo Moving',
+    text: 'Studios to multi-bedroom units, elevators and stairs included. Quick and careful through tight hallways and shared spaces.',
+    image: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'Stonegate mover carrying wrapped furniture up the truck ramp outside an apartment building', pos: 'center 50%' },
+  },
+  {
+    href: '/moving#small-moves', kind: 'Moving', name: 'Small Moves',
+    text: 'A single room, a studio or just a few large pieces. No move is too small to book.',
+    image: { src: '/about/photo-4.jpg', alt: 'Stonegate crew loading boxes into the moving truck', pos: 'center 50%' },
+  },
+  {
+    href: '/moving#commercial-moving', kind: 'Moving', name: 'Commercial & Office Moving',
+    text: 'Office and commercial moves across Metro Vancouver. Tell us the details and we will plan the move with you.',
+    image: { src: '/burnaby/burnaby-move-crew-loading.jpg', alt: 'Stonegate crew loading the moving truck', pos: 'center 45%' },
+  },
+  {
+    href: '/moving#long-distance-moving', kind: 'Moving', name: 'Long-Distance Moving',
+    text: 'Moving outside Metro Vancouver? Send us your route and timeline and we will confirm the move with you.',
+    image: { src: '/junk/driver-standing-by-truck-side-2.jpg', alt: 'Stonegate driver standing beside the moving truck', pos: 'center 45%' },
+  },
+]
+
+const junkCards: ServiceCard[] = [
+  {
+    href: '/junk-removal', kind: 'Junk removal', name: 'Junk Removal',
+    text: 'Furniture, appliances, mattresses, electronics and more - we lift, load and haul it all away the same or next day.',
+    image: { src: '/team-with-truck.jpg', alt: 'The Stonegate crew standing in front of their truck', pos: 'center 60%' },
+  },
+  {
+    href: '/junk-removal/what-we-take#cleanouts', kind: 'Junk removal', name: 'Cleanout Services',
+    text: 'Garages, basements, estates, storage units and apartments - cleared out top to bottom and swept clean.',
+    image: { src: '/junk/household-junk-job.jpg', alt: 'Stonegate crew member loading boxes from a cleanout into the truck', pos: 'center 55%' },
+  },
+  {
+    href: '/junk-removal/what-we-take#construction', kind: 'Junk removal', name: 'Demolition',
+    text: 'Old sheds, decks and fences taken down and hauled away, along with renovation and construction debris.',
+    image: { src: '/junk/commercial-junk-disposal.jpg', alt: 'Stonegate truck next to a demolition site with an excavator', pos: 'center 55%' },
+  },
+  {
+    href: '/junk-removal/commercial-junk-removal', kind: 'Junk removal', name: 'Commercial Junk Removal',
+    text: 'Offices, stores, restaurants and rentals - pallets, furniture and e-waste cleared, after hours if needed.',
+    image: { src: '/junk/commercial-junk-loading.jpg', alt: 'Stonegate crew loading pallets and crates from a commercial job into the truck', pos: 'center 45%' },
+  },
+  {
+    href: '/junk-removal/residential-junk-removal', kind: 'Junk removal', name: 'Residential Junk Removal',
+    text: 'Houses, condos and townhomes - from a few items to a whole houseful, carried out from any room.',
+    image: { src: '/junk/crew-4580-by-cab.jpg', alt: 'Stonegate crew member standing by the cab of the junk removal truck', pos: 'center 72%' },
+  },
+]
+
+// One row, alternating junk removal and moving
+const serviceCards: ServiceCard[] = junkCards.flatMap((j, i) => [j, movingCards[i]].filter(Boolean))
 
 export default function Hero() {
   return (
@@ -155,9 +215,9 @@ export default function Hero() {
 
         {/* Real Crew */}
         <section className="-mt-10 lg:-mt-[110px]" style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10 }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 pt-10 sm:pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-10 sm:pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
             <FadeIn className="order-2 md:order-1">
-              <div className="relative rounded-3xl overflow-hidden h-[380px] 3xl:h-[560px]">
+              <div className="relative rounded-3xl overflow-hidden h-[380px] 3xl:h-[440px]">
                 <Image
                   src="/team-with-truck.jpg"
                   alt="The Stonegate Moving Solutions crew in front of their truck"
@@ -185,12 +245,12 @@ export default function Hero() {
 
         {/* Before & After */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 py-16">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Junk removal results</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>See The Difference</h2>
             </FadeIn>
-            <FadeIn delay={60} className="3xl:[--ba-h:620px]">
+            <FadeIn delay={60} className="3xl:[--ba-h:500px]">
               <BeforeAfterCarousel pairs={beforeAfterPairs} />
             </FadeIn>
           </div>
@@ -198,7 +258,7 @@ export default function Hero() {
 
         {/* How it works */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 pt-20 pb-20">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-20 pb-20">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
                 How it works
@@ -241,7 +301,7 @@ export default function Hero() {
 
         {/* Reviews */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 py-16">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
                 Reviews
@@ -277,10 +337,10 @@ export default function Hero() {
         </section>
 
         {/* Our Services */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 py-16">
+        <section className="pb-10 lg:pb-12" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-10 lg:pt-12">
             <FadeIn>
-              <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+              <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
                   <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: '#1A1714' }}>Our Services</h2>
@@ -292,73 +352,13 @@ export default function Hero() {
                 </Link>
               </div>
             </FadeIn>
-            <div className="grid sm:grid-cols-2 gap-6">
-
-              {/* Moving card */}
-              <FadeIn delay={0} className="flex flex-col">
-              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-                <div className="relative w-full overflow-hidden h-[200px] 3xl:h-[340px]">
-                  <Image
-                    src="/crew-wrapping-furniture.jpg"
-                    alt="Stonegate crew wrapping and loading furniture into the truck"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ objectPosition: 'center 45%' }}
-                  />
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
-                    <Truck size={18} style={{ color: '#014421' }} />
-                  </span>
-                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Moving</p>
-                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    Apartment and house moves across Metro Vancouver. 2 professional movers with a truck from $120/hr + GST.
-                  </p>
-                  <Link href="/order" className="mt-auto">
-                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                      Check Moving Availability
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              </FadeIn>
-
-              {/* Junk Removal card */}
-              <FadeIn delay={120} className="flex flex-col">
-              <div className="group rounded-2xl overflow-hidden flex flex-col h-full" style={{ border: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-                <div className="relative w-full overflow-hidden h-[200px] 3xl:h-[340px]">
-                  <Image
-                    src="/crew-loading-ramp.jpg"
-                    alt="Stonegate crew loading the truck ramp"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ objectPosition: 'center 40%' }}
-                  />
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <span className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: '#E8F0E6' }}>
-                    <Trash2 size={18} style={{ color: '#014421' }} />
-                  </span>
-                  <p className="font-bold text-base mb-2" style={{ color: '#1A1714' }}>Junk Removal</p>
-                  <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B5E54' }}>
-                    Furniture, appliances, estate and office cleanouts - hauled away responsibly across Metro Vancouver.
-                  </p>
-                  <Link href="/book-service?type=junk-removal" className="mt-auto">
-                    <Button className="w-full rounded-xl font-bold border-0 py-5" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                      Get a Free Junk Removal Quote
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              </FadeIn>
-
-            </div>
           </div>
+          <ServicesCarousel cards={serviceCards} label="Our services" />
         </section>
 
         {/* Service areas */}
         <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 py-16">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Service areas</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>Junk Removal Across Metro Vancouver</h2>
@@ -386,7 +386,7 @@ export default function Hero() {
         {/* Contact & Service Area */}
         <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
 
-          <div className="max-w-6xl 3xl:max-w-[2200px] mx-auto px-6 3xl:px-16 py-16 grid sm:grid-cols-2 gap-12">
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16 grid sm:grid-cols-2 gap-12">
             <FadeIn>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>Contact us</p>
