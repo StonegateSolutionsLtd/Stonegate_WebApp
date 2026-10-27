@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { MapPin, Trash2, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react'
+import { MapPin, Truck, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import {
@@ -10,10 +10,17 @@ import {
 } from '@/components/seo/SeoBlocks'
 import { TEMPLATE_CITIES, CITY_BY_SLUG, CITIES, cityJobPhoto, cityHref, citySkyline } from '@/lib/seo/cities'
 import CityBanner from '@/components/seo/CityBanner'
-import { JUNK_ITEM_BY_SLUG, POPULAR_JUNK_SLUGS, junkItemHref } from '@/lib/seo/junk-items'
-import { SITE_URL, JUNK_BOOK_HREF, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
+import { SITE_URL, MOVE_BOOK_HREF, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
 
 export const dynamicParams = false
+
+const MOVING_SERVICES = [
+  { href: '/moving#residential-moving', name: 'House Moving' },
+  { href: '/moving#apartment-moving', name: 'Apartment & Condo Moving' },
+  { href: '/moving#small-moves', name: 'Small Moves' },
+  { href: '/moving#commercial-moving', name: 'Commercial & Office Moving' },
+  { href: '/moving#long-distance-moving', name: 'Long-Distance Moving' },
+]
 
 export function generateStaticParams() {
   return TEMPLATE_CITIES.map(c => ({ city: c.slug }))
@@ -29,7 +36,7 @@ export async function generateMetadata({ params }: PageProps<'/locations/[city]'
     description: city.description,
     keywords: city.keywords,
     alternates: { canonical: url },
-    openGraph: { type: 'website', url, title: city.title, description: city.description, images: [{ url: '/stonegate-mascot.png', alt: `Stonegate junk removal in ${city.name}` }] },
+    openGraph: { type: 'website', url, title: city.title, description: city.description, images: [{ url: '/stonegate-mascot.png', alt: `Stonegate movers in ${city.name}` }] },
   }
 }
 
@@ -39,13 +46,12 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
   if (!city || city.movingHref) notFound()
 
   const detail = cityJobPhoto(city)
-  const popular = POPULAR_JUNK_SLUGS.map(s => JUNK_ITEM_BY_SLUG.get(s)!)
   const nearby = city.nearby.map(s => CITY_BY_SLUG.get(s)!).filter(Boolean)
   const faqs: Faq[] = [
     ...city.faqs,
-    { q: `How much does junk removal cost in ${city.name}?`, a: `Junk removal is priced by the size of your load. The final price depends on how much there is, how heavy it is and how easy it is to reach. We estimate from your photos or description, then confirm the final price on-site before we start.` },
-    { q: `Do you offer same-day junk removal in ${city.name}?`, a: `Often, yes. Same-day and next-day pickups are available across ${city.name} depending on the schedule. Call us for today's availability.` },
-    { q: 'What can you take?', a: 'Almost anything non-hazardous: furniture, mattresses, appliances, electronics, hot tubs, yard waste, renovation debris and full cleanouts. We cannot take paint, chemicals, fuel or asbestos.' },
+    { q: `How much do movers cost in ${city.name}?`, a: `Moving is $120/hr + GST for 2 professional movers and a fully-equipped truck, or $160/hr + GST for 3 movers with a 16' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time.` },
+    { q: `How far ahead should I book my ${city.name} move?`, a: 'As early as you can, especially for weekends and the end of the month. Pick a day and time online to see what is available.' },
+    { q: 'What is included in the hourly rate?', a: 'The movers, the truck, moving blankets, straps and dollies. We wrap your furniture, take apart what needs it and put it back together at your new place.' },
   ]
   const crumbs = [
     { name: 'Home', href: '/' },
@@ -58,8 +64,8 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
       <JsonLd graph={[
         {
           '@type': 'Service',
-          name: `Junk Removal in ${city.name}, BC`,
-          serviceType: 'Junk Removal',
+          name: `Moving Services in ${city.name}, BC`,
+          serviceType: 'Moving',
           description: city.description,
           url: `${SITE_URL}/locations/${city.slug}`,
           provider: providerLd,
@@ -82,49 +88,46 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         <section>
           <div className="max-w-4xl mx-auto px-6 pt-10 pb-16">
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-6" style={{ color: '#1A1714' }}>
-              The <span style={{ color: '#C98A45' }}>4.9-Star Rated</span> Junk Removal Team in {city.name}
+              The <span style={{ color: '#C98A45' }}>4.9-Star Rated</span> Moving Team in {city.name}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed mb-4" style={{ color: '#4A3F38' }}>
               <Link href="/about" className="font-bold underline" style={{ color: '#014421' }}>Stonegate Moving Solutions</Link> is a
-              local, fully insured junk removal crew serving every city in Metro Vancouver. {city.name} homeowners, renters and businesses call us
-              when they need junk hauled away - quickly, responsibly and at an upfront price. We do all the lifting, and we donate and recycle before anything goes to the landfill.
+              local, fully insured moving crew serving every city in Metro Vancouver. {city.name} homeowners, renters and businesses book us
+              when they want a careful, on-time move at a clear hourly rate. We wrap your furniture, do all the lifting and set everything up in your new place.
             </p>
             <p className="text-base sm:text-lg leading-relaxed" style={{ color: '#4A3F38' }}>
-              We handle <Link href="/junk-removal/furniture-removal" className="underline" style={{ color: '#014421' }}>furniture removal</Link>,{' '}
-              <Link href="/junk-removal/mattress-removal" className="underline" style={{ color: '#014421' }}>mattress removal</Link>,{' '}
-              <Link href="/junk-removal/appliance-removal" className="underline" style={{ color: '#014421' }}>appliance removal</Link>,{' '}
-              <Link href="/junk-removal/hot-tub-removal" className="underline" style={{ color: '#014421' }}>hot tub removal</Link>,{' '}
-              <Link href="/junk-removal/garage-cleanout" className="underline" style={{ color: '#014421' }}>garage cleanouts</Link>,{' '}
-              <Link href="/junk-removal/estate-cleanout" className="underline" style={{ color: '#014421' }}>estate cleanouts</Link> and{' '}
-              <Link href="/junk-removal/construction-debris-removal" className="underline" style={{ color: '#014421' }}>construction debris removal</Link>{' '}
-              anywhere in {city.name}. See <Link href="/pricing/junk-removal" className="underline" style={{ color: '#014421' }}>our pricing</Link> or
-              browse <Link href="/junk-removal/what-we-take" className="underline" style={{ color: '#014421' }}>everything we take</Link>.
+              We handle <Link href="/moving#residential-moving" className="underline" style={{ color: '#014421' }}>house moves</Link>,{' '}
+              <Link href="/moving#apartment-moving" className="underline" style={{ color: '#014421' }}>apartment and condo moves</Link>,{' '}
+              <Link href="/moving#small-moves" className="underline" style={{ color: '#014421' }}>small moves</Link> and{' '}
+              <Link href="/moving#commercial-moving" className="underline" style={{ color: '#014421' }}>office moves</Link>{' '}
+              anywhere in {city.name}. See <Link href="/pricing/moving" className="underline" style={{ color: '#014421' }}>our moving prices</Link> or
+              read more about <Link href="/moving" className="underline" style={{ color: '#014421' }}>our moving services</Link>.
             </p>
           </div>
         </section>
 
-        {/* Junk removal */}
-        <section id="junk-removal" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', scrollMarginTop: '80px' }}>
+        {/* Moving */}
+        <section id="moving" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', scrollMarginTop: '80px' }}>
           <div className="max-w-6xl mx-auto px-6 py-16 grid lg:grid-cols-5 gap-10 lg:gap-14">
             <div className="lg:col-span-3">
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#A9743F' }}>
-                <Trash2 size={14} aria-hidden /> Junk removal
+                <Truck size={14} aria-hidden /> Moving
               </p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-5" style={{ color: '#1A1714' }}>What we haul in {city.name}</h2>
-              <p className="text-base leading-relaxed mb-8" style={{ color: '#4A3F38' }}>{city.junk}</p>
-              <h3 className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>Popular {city.name} junk removal services</h3>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-5" style={{ color: '#1A1714' }}>Moving in {city.name}</h2>
+              <p className="text-base leading-relaxed mb-8" style={{ color: '#4A3F38' }}>{city.moving}</p>
+              <h3 className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>Our moving services in {city.name}</h3>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8">
-                {popular.map(i => (
-                  <li key={i.slug}>
-                    <Link href={junkItemHref(i.slug)} className="flex items-center gap-2.5 text-sm font-bold hover:underline" style={{ color: '#014421' }}>
+                {MOVING_SERVICES.map(s => (
+                  <li key={s.href}>
+                    <Link href={s.href} className="flex items-center gap-2.5 text-sm font-bold hover:underline" style={{ color: '#014421' }}>
                       <CheckCircle2 size={16} className="shrink-0" style={{ color: '#254220' }} aria-hidden />
-                      {i.name}
+                      {s.name}
                     </Link>
                   </li>
                 ))}
               </ul>
-              <Link href="/junk-removal/what-we-take" className="inline-flex items-center gap-2 text-sm font-extrabold underline" style={{ color: '#014421' }}>
-                See everything we take <ArrowRight size={14} aria-hidden />
+              <Link href="/moving" className="inline-flex items-center gap-2 text-sm font-extrabold underline" style={{ color: '#014421' }}>
+                See all moving services <ArrowRight size={14} aria-hidden />
               </Link>
             </div>
             <div className="lg:col-span-2 flex flex-col gap-6">
@@ -145,7 +148,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         <section style={{ borderTop: '1px solid #E8E0D5' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <h2 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>{city.name} neighbourhoods we serve</h2>
-            <p className="text-sm mb-6" style={{ color: '#6B5E54' }}>Junk removal across all of {city.name}, including:</p>
+            <p className="text-sm mb-6" style={{ color: '#6B5E54' }}>Moving across all of {city.name}, including:</p>
             <ul className="flex flex-wrap gap-2.5 mb-12">
               {city.neighbourhoods.map(n => (
                 <li key={n} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', color: '#1A1714' }}>
@@ -153,17 +156,21 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
                 </li>
               ))}
             </ul>
-            <PricingTeaser text={`Free estimate for junk removal in ${city.name} from photos - final price confirmed on-site before we start. No hidden fees.`} />
+            <PricingTeaser
+              text={`2 movers and a truck from $120/hr + GST, or 3 movers with a 16' truck from $160/hr + GST, for moves in ${city.name}. 3-hour minimum, no hidden fees.`}
+              href="/pricing/moving"
+              label="See Moving Prices"
+            />
           </div>
         </section>
 
-        <FaqList faqs={faqs} heading={`${city.name} junk removal FAQ`} />
+        <FaqList faqs={faqs} heading={`${city.name} moving FAQ`} />
 
         <CallBand
-          heading={`Need junk removal in ${city.name}?`}
-          text="Call now for today's availability, or book online in a couple of minutes."
-          bookHref={JUNK_BOOK_HREF}
-          bookLabel="Book Junk Removal"
+          heading={`Moving in ${city.name}?`}
+          text="Call now to check availability, or book your move online in a couple of minutes."
+          bookHref={MOVE_BOOK_HREF}
+          bookLabel="Book Your Move"
         />
 
         {/* Internal links */}
@@ -172,21 +179,21 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
             <LinkGrid
               eyebrow="Nearby"
               heading={`Also serving near ${city.name}`}
-              links={nearby.map(n => ({ href: cityHref(n), label: `${n.name} Junk Removal` }))}
+              links={nearby.map(n => ({ href: cityHref(n), label: `${n.name} Movers` }))}
             />
             <LinkGrid
               heading="Explore our services"
               cols={3}
               links={[
-                { href: '/junk-removal', label: 'Junk Removal Services' },
-                { href: '/junk-removal/what-we-take', label: 'What We Take' },
-                { href: '/pricing/junk-removal', label: 'Junk Removal Pricing' },
-                { href: '/junk-removal/garage-cleanout', label: 'Garage Cleanouts' },
-                { href: '/junk-removal/estate-cleanout', label: 'Estate Cleanouts' },
+                { href: '/moving', label: 'Moving Services' },
+                { href: '/moving#apartment-moving', label: 'Apartment & Condo Moving' },
+                { href: '/moving#residential-moving', label: 'House Moving' },
+                { href: '/moving#small-moves', label: 'Small Moves' },
+                { href: '/pricing/moving', label: 'Moving Prices' },
                 { href: '/locations', label: 'All Service Areas' },
               ]}
             />
-            <CityChips heading="Junk removal in other Metro Vancouver cities" links={CITIES.filter(c => c.slug !== city.slug).map(c => ({ href: cityHref(c), label: c.name }))} />
+            <CityChips heading="Movers in other Metro Vancouver cities" links={CITIES.filter(c => c.slug !== city.slug).map(c => ({ href: cityHref(c), label: c.name }))} />
           </div>
         </section>
       </main>

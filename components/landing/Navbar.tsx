@@ -58,16 +58,10 @@ const locationsGroup: NavGroup = {
   ],
 }
 
-const pricingGroup: NavGroup = {
-  label: 'Pricing',
-  href: '/pricing',
-  links: [
-    { label: 'Junk Removal Pricing', href: '/pricing/junk-removal' },
-    { label: 'Moving Pricing', href: '/pricing/moving' },
-  ],
-}
+// Junk removal pricing lives in the Junk Removal menu; Pricing is moving only
+const PRICING_HREF = '/pricing/moving'
 
-const groups = [movingGroup, junkGroup, locationsGroup, pricingGroup]
+const groups = [movingGroup, junkGroup, locationsGroup]
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)
@@ -173,6 +167,9 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               </Link>
             )}
             {groups.map(group => <DesktopDropdown key={group.label} group={group} />)}
+            <Link href={PRICING_HREF} className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+              Pricing
+            </Link>
             <Link href="/about" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
               About
             </Link>
@@ -248,6 +245,9 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               {groups.map(group => (
                 <MobileGroup key={group.label} group={group} onNavigate={closeMenu} />
               ))}
+              <Link href={PRICING_HREF} onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+                Pricing
+              </Link>
               <Link href="/about" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 About
               </Link>

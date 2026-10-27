@@ -143,7 +143,7 @@ export function CityChips({ links, heading }: { links: LinkItem[]; heading: stri
   )
 }
 
-export function PricingTeaser({ text }: { text: string }) {
+export function PricingTeaser({ text, href = '/pricing/junk-removal', label = 'See Junk Removal Pricing' }: { text: string; href?: string; label?: string }) {
   return (
     <div className="rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-6 justify-between" style={{ backgroundColor: '#254220' }}>
       <div>
@@ -155,11 +155,11 @@ export function PricingTeaser({ text }: { text: string }) {
         <p className="text-sm max-w-md" style={{ color: '#B5C9B0' }}>{text}</p>
       </div>
       <Link
-        href="/pricing/junk-removal"
+        href={href}
         className="inline-flex items-center gap-2 self-start sm:self-center rounded-full px-7 py-3.5 text-sm font-extrabold shrink-0"
         style={{ backgroundColor: '#FAF7F2', color: '#254220' }}
       >
-        See Junk Removal Pricing <ArrowRight size={15} aria-hidden />
+        {label} <ArrowRight size={15} aria-hidden />
       </Link>
     </div>
   )

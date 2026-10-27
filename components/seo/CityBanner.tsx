@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Star, Shield, Zap, Phone, ArrowRight } from 'lucide-react'
-import { JUNK_BOOK_HREF } from '@/lib/seo/site'
+import { MapPin, Star, Shield, DollarSign, Phone, ArrowRight } from 'lucide-react'
+import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import type { SkylineStyle } from '@/lib/seo/cities'
 
@@ -84,7 +84,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
   return (
     <>
       <div className="text-center text-sm font-bold px-4 py-2.5" style={{ backgroundColor: '#E8F0E6', color: '#014421' }}>
-        Same-day &amp; next-day junk removal across {city} and all of Metro Vancouver
+        Local movers in {city} and all of Metro Vancouver - 2 movers and a truck from $120/hr + GST
       </div>
       <section className="relative overflow-hidden" style={{ backgroundColor: '#014421' }}>
         <Skyline seed={slug} style={style} />
@@ -95,7 +95,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
             </p>
             <h1 className="font-extrabold uppercase tracking-tight leading-[0.95] mb-4" style={{ color: '#FFFFFF' }}>
               <span className="block text-4xl sm:text-5xl lg:text-6xl">{city}</span>
-              <span className="block text-3xl sm:text-4xl lg:text-5xl mt-1.5 [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45' }}>Junk Removal</span>
+              <span className="block text-3xl sm:text-4xl lg:text-5xl mt-1.5 [text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45' }}>Movers</span>
             </h1>
             <p className="text-base leading-relaxed max-w-xl mb-5" style={{ color: 'rgba(255,255,255,0.85)' }}>{lead}</p>
             <div className="flex flex-wrap gap-2 mb-5">
@@ -105,7 +105,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
               >
                 <Phone size={17} fill="currentColor" aria-hidden /> Call <PhoneNumber />
               </PhoneLink>
-              {[{ href: JUNK_BOOK_HREF, label: 'Book Junk Removal Online' }].map(b => (
+              {[{ href: MOVE_BOOK_HREF, label: 'Book Your Move Online' }].map(b => (
                 <Link
                   key={b.href}
                   href={b.href}
@@ -120,7 +120,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
               {([
                 { Icon: Star, label: '4.9 Google Rating' },
                 { Icon: Shield, label: 'Fully Insured' },
-                { Icon: Zap, label: 'Same-Day Available' },
+                { Icon: DollarSign, label: 'No Hidden Fees' },
               ] as const).map(({ Icon, label }) => (
                 <span key={label} className="flex items-center gap-1.5 text-xs font-bold" style={{ color: 'rgba(255,255,255,0.85)' }}>
                   <Icon size={13} aria-hidden /> {label}
@@ -131,7 +131,7 @@ export default function CityBanner({ city, slug, style, lead }: { city: string; 
           <div className="relative mx-auto w-full max-w-[240px] sm:max-w-[320px] lg:max-w-[420px] aspect-[3/2]">
             <Image
               src="/stonegate-mascot.png"
-              alt={`Stonegate junk removal crew member with the truck, serving ${city}`}
+              alt={`Stonegate mover with the moving truck, serving ${city}`}
               fill
               preload
               sizes="(max-width: 640px) 240px, 420px"

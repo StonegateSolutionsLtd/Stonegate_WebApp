@@ -7,11 +7,11 @@ import { MapPin } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import { CITIES, cityHref } from '@/lib/seo/cities'
 import { CallBand } from '@/components/seo/SeoBlocks'
-import { JUNK_BOOK_HREF } from '@/lib/seo/site'
+import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Junk Removal Service Areas in Metro Vancouver | Stonegate' },
-  description: 'Same-day junk removal in every Metro Vancouver city - Vancouver, Surrey, Burnaby, Richmond, Coquitlam, New Westminster, North Vancouver, Langley, Delta and more.',
+  title: { absolute: 'Moving Service Areas in Metro Vancouver | Stonegate' },
+  description: 'Local movers in every Metro Vancouver city - Vancouver, Surrey, Burnaby, Richmond, Coquitlam, New Westminster, North Vancouver, Langley, Delta and more.',
   alternates: { canonical: 'https://www.stonegatemoving.com/locations' },
 }
 
@@ -29,10 +29,10 @@ export default function LocationsPage() {
           <div className="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
             <FadeIn>
               <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#FFFFFF' }}>
-                Junk Removal Across Metro Vancouver
+                Movers Across Metro Vancouver
               </h1>
               <p className="text-lg leading-relaxed max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                Same-day and next-day junk removal in every city across Metro Vancouver - pick yours below.
+                Apartment, house and small moves in every city across Metro Vancouver - pick yours below.
               </p>
             </FadeIn>
           </div>
@@ -44,7 +44,7 @@ export default function LocationsPage() {
             <FadeIn>
               <h2 className="text-3xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>Every City We Serve</h2>
               <p className="text-base leading-relaxed max-w-2xl mb-10" style={{ color: '#6B5E54' }}>
-                Pick your city to see local junk removal details, the neighbourhoods we cover and answers to common questions.
+                Pick your city to see local moving details, the neighbourhoods we cover and answers to common questions.
               </p>
             </FadeIn>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -56,7 +56,7 @@ export default function LocationsPage() {
                       <h3 className="font-bold group-hover:underline" style={{ color: '#1A1714' }}>{city.name}</h3>
                     </Link>
                     <p className="text-xs leading-relaxed mb-4" style={{ color: '#6B5E54' }}>{city.neighbourhoods.slice(0, 4).join(' · ')}</p>
-                    <Link href={cityHref(city)} className="text-xs font-bold transition-opacity hover:opacity-60" style={{ color: '#254220' }}>{city.name} Junk Removal →</Link>
+                    <Link href={cityHref(city)} className="text-xs font-bold transition-opacity hover:opacity-60" style={{ color: '#254220' }}>{city.name} Movers →</Link>
                   </div>
                 </FadeIn>
               ))}
@@ -65,10 +65,10 @@ export default function LocationsPage() {
         </section>
 
         <CallBand
-          heading="Need junk removal in Metro Vancouver?"
-          text="Call now for today's availability, or book online in a couple of minutes. We confirm the price on site - no obligation."
-          bookHref={JUNK_BOOK_HREF}
-          bookLabel="Book Junk Removal"
+          heading="Moving in Metro Vancouver?"
+          text="Call now to check availability, or book your move online in a couple of minutes. 2 movers and a truck from $120/hr + GST."
+          bookHref={MOVE_BOOK_HREF}
+          bookLabel="Book Your Move"
         />
 
       </main>
