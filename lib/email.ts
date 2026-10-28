@@ -120,8 +120,9 @@ export interface ServiceRequestData {
   phone: string
   notes?: string
   loadSize?: string
-  floor?: number
-  hasElevator?: boolean
+  propertyType?: string
+  // null when not asked (anything but an apartment).
+  hasElevator?: boolean | null
   photoCount?: number
 }
 
@@ -148,8 +149,10 @@ export async function sendOwnerServiceRequestNotification(req: ServiceRequestDat
         <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
         ${req.loadSize ? `
         <tr><td style="padding: 8px 12px; color: #374151;">Load Size</td><td style="padding: 8px 12px;">${req.loadSize}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Floor</td><td style="padding: 8px 12px;">${req.floor}</td></tr>
+        <tr><td style="padding: 8px 12px; color: #374151;">Property</td><td style="padding: 8px 12px; text-transform: capitalize;">${req.propertyType ?? ''}</td></tr>
+        ${typeof req.hasElevator === 'boolean' ? `
         <tr><td style="padding: 8px 12px; color: #374151;">Elevator</td><td style="padding: 8px 12px;">${req.hasElevator ? 'Yes' : 'No'}</td></tr>
+        ` : ''}
         ` : ''}
         ${req.photoCount !== undefined ? `
         <tr><td style="padding: 8px 12px; color: #374151;">Photos</td><td style="padding: 8px 12px;">${req.photoCount ? `${req.photoCount} (view on the admin quote page)` : 'None'}</td></tr>

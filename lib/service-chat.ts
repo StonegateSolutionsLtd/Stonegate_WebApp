@@ -10,9 +10,19 @@ export interface ServiceFormData {
   phone: string
   notes: string
   loadSize: TruckFractionLabel | ''
-  floor: number
+  propertyType: PropertyType | ''
+  // Only asked for apartments; false otherwise.
   hasElevator: boolean
 }
+
+export const PROPERTY_TYPES = [
+  { value: 'house', label: 'House' },
+  { value: 'apartment', label: 'Apartment' },
+  { value: 'commercial', label: 'Commercial' },
+  { value: 'other', label: 'Other' },
+] as const
+
+export type PropertyType = typeof PROPERTY_TYPES[number]['value']
 
 export const EMPTY_SERVICE_FORM: ServiceFormData = {
   address: '',
@@ -23,23 +33,30 @@ export const EMPTY_SERVICE_FORM: ServiceFormData = {
   phone: '',
   notes: '',
   loadSize: '',
-  floor: 1,
+  propertyType: '',
   hasElevator: false,
 }
 
 // Form fields a customer can answer with "Not sure"; the service chat resolves them.
-export type UnsureField = 'loadSize' | 'floor' | 'hasElevator'
+export type UnsureField = 'loadSize' | 'hasElevator'
 
 export interface ServiceChatReply {
   sessionId: string
   done: boolean
   question: string | null
+  // Tap-to-answer replies for `question`; empty for a free-text answer.
+  options: string[]
   // The chat is asking for new or more photos of the junk.
   awaitingPhotos: boolean
   // 1-based numbers of the photos judged good enough to keep with the booking,
   // counting the form's photos first, then the chat's, in upload order.
   keptPhotos: number[]
   variables: ServiceFormData
+  // Structured quote state (items, volume, materials, heavy items, access);
+  // see new_quote_state in chatbot_server/main.py.
+  quote: Record<string, unknown>
+  // Plain-text summary of `quote` for staff, once `done`.
+  quoteSummary: string | null
 }
 
 // `photos` are data URLs; the chat checks they're good enough to estimate the volume.

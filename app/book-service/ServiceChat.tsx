@@ -7,17 +7,19 @@ import { UNREADABLE_PHOTO_MESSAGE, photoDataUrl, shrinkPhotos } from '@/lib/phot
 
 type Message = { role: 'assistant' | 'user'; content: string }
 
-export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPhotos, photoSlots, onComplete, onBack }: {
+export default function ServiceChat({ sessionId, firstQuestion, firstOptions, firstAwaitingPhotos, photoSlots, onComplete, onBack }: {
   sessionId: string
   firstQuestion: string
+  firstOptions: string[]
   firstAwaitingPhotos: boolean
   // How many more photos fit next to the ones from the form.
   photoSlots: number
   // `photos` = all photos the customer added in the chat.
-  onComplete: (variables: ServiceFormData, photos: File[], keptPhotos: number[]) => void
+  onComplete: (variables: ServiceFormData, photos: File[], keptPhotos: number[], quoteSummary: string | null) => void
   onBack: () => void
 }) {
   const [messages, setMessages] = useState<Message[]>([{ role: 'assistant', content: firstQuestion }])
+  const [options, setOptions] = useState(firstOptions)
   const [awaitingPhotos, setAwaitingPhotos] = useState(firstAwaitingPhotos)
   const [chatPhotos, setChatPhotos] = useState<File[]>([])
   const [answer, setAnswer] = useState('')
@@ -32,9 +34,12 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
     if (!sending) inputRef.current?.focus()
   }, [messages, sending])
 
-  async function handleSend(e: React.FormEvent) {
+  function handleSend(e: React.FormEvent) {
     e.preventDefault()
-    const text = answer.trim()
+    send(answer.trim())
+  }
+
+  async function send(text: string) {
     if (!text || sending) return
 
     setMessages(prev => [...prev, { role: 'user', content: text }])
@@ -56,9 +61,10 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
 
   function handleReply(reply: ServiceChatReply, photos: File[]) {
     if (reply.done) {
-      onComplete(reply.variables, photos, reply.keptPhotos)
+      onComplete(reply.variables, photos, reply.keptPhotos, reply.quoteSummary)
       return
     }
+    setOptions(reply.options)
     setAwaitingPhotos(reply.awaitingPhotos)
     setMessages(prev => [...prev, { role: 'assistant', content: reply.question ?? '' }])
   }
@@ -117,6 +123,22 @@ export default function ServiceChat({ sessionId, firstQuestion, firstAwaitingPho
       </div>
 
       {error && <p className="text-sm" style={{ color: '#B42318' }}>{error}</p>}
+
+      {options.length > 0 && !sending && (
+        <div className="flex flex-wrap gap-2">
+          {options.map(option => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => send(option)}
+              className="px-4 py-2 rounded-xl border text-sm font-semibold transition-colors hover:bg-[#F0EBE3]"
+              style={{ borderColor: '#E0D8D0', color: '#254220', backgroundColor: '#FFFFFF' }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
 
       {awaitingPhotos && (
         <div className="flex gap-2">
