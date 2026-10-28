@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { EMPTY_ORDER_FORM, type ApartmentSize, type OrderFormData } from '@/lib/types'
+import { EMPTY_ORDER_FORM, ORDER_START_KEY, type ApartmentSize, type OrderFormData, type OrderStart } from '@/lib/types'
 import { Textarea } from '@/components/ui/textarea'
 import TimeSlotPicker from './TimeSlotPicker'
 import { cn } from '@/lib/utils'
@@ -172,17 +172,38 @@ function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boo
 }
 
 
+function readOrderStart(): OrderStart {
+  if (typeof window === 'undefined') return {}
+  try {
+    const { pickupAddress, dropoffAddress, apartmentSize }: OrderStart = JSON.parse(sessionStorage.getItem(ORDER_START_KEY) ?? '{}')
+    return {
+      ...(pickupAddress && { pickupAddress }),
+      ...(dropoffAddress && { dropoffAddress }),
+      ...(apartmentSize && { apartmentSize }),
+    }
+  } catch {
+    return {}
+  }
+}
+
 export default function OrderForm() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
-  const [form, setForm] = useState<OrderFormData>(EMPTY_ORDER_FORM)
+  // Prefilled from the booking-start form on the moving service pages. Safe to differ from the
+  // server render: those fields only show from step 1, after hydration.
+  const [form, setForm] = useState<OrderFormData>(() => ({ ...EMPTY_ORDER_FORM, ...readOrderStart() }))
   const stepRef = useRef(0)
   useEffect(() => { stepRef.current = step }, [step])
 
   // Seed the current history entry with step:0 so back button works correctly
   useEffect(() => {
     window.history.replaceState({ step: 0 }, '')
+  }, [])
+
+  // The prefill is used once
+  useEffect(() => {
+    try { sessionStorage.removeItem(ORDER_START_KEY) } catch {}
   }, [])
 
   // Browser back button → go to previous step instead of leaving the page

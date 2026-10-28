@@ -19,33 +19,16 @@ interface NavGroup {
   links: NavLink[]
 }
 
-const movingGroup: NavGroup = {
-  label: 'Moving',
+// Moving leads; junk removal is one service among them (its own pages link to its sub-pages and pricing)
+const servicesGroup: NavGroup = {
+  label: 'Services',
   href: '/moving',
   links: [
-    { label: 'Moving Services', href: '/moving' },
-    { label: 'Residential Moving', href: '/moving#residential-moving' },
-    { label: 'Apartment & Condo Moving', href: '/moving#apartment-moving' },
-    { label: 'Commercial & Office Moving', href: '/moving#commercial-moving' },
-    { label: 'Small Moves', href: '/moving#small-moves' },
-    { label: 'Long-Distance Moving', href: '/moving#long-distance-moving' },
-    { label: 'Moving Pricing', href: '/pricing/moving' },
-  ],
-}
-
-const junkGroup: NavGroup = {
-  label: 'Junk Removal',
-  href: '/junk-removal',
-  links: [
-    { label: 'Junk Removal Services', href: '/junk-removal' },
-    { label: 'What We Take', href: '/junk-removal/what-we-take' },
-    { label: 'Furniture Removal', href: '/junk-removal/furniture-removal' },
-    { label: 'Appliance Removal', href: '/junk-removal/appliance-removal' },
-    { label: 'Mattress Removal', href: '/junk-removal/mattress-removal' },
-    { label: 'Garage & Estate Cleanouts', href: '/junk-removal/what-we-take#cleanouts' },
-    { label: 'Construction Debris Removal', href: '/junk-removal/construction-debris-removal' },
-    { label: 'Commercial Junk Removal', href: '/junk-removal/commercial-junk-removal' },
-    { label: 'Junk Removal Pricing', href: '/pricing/junk-removal' },
+    { label: 'Local Moving', href: '/moving' },
+    { label: 'Residential Moving', href: '/residential-moving' },
+    { label: 'Commercial Moving & Corporate Relocation', href: '/commercial-moving' },
+    { label: 'Packing Services', href: '/packing-services' },
+    { label: 'Junk Removal', href: '/junk-removal' },
   ],
 }
 
@@ -58,10 +41,10 @@ const locationsGroup: NavGroup = {
   ],
 }
 
-// Junk removal pricing lives in the Junk Removal menu; Pricing is moving only
+// Pricing is moving only; junk removal pricing is linked from the junk removal pages
 const PRICING_HREF = '/pricing/moving'
 
-const groups = [movingGroup, junkGroup, locationsGroup]
+const groups = [servicesGroup, locationsGroup]
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)

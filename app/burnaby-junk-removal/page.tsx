@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GoogleLogo from '@/components/GoogleLogo'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
@@ -132,7 +133,7 @@ export default function BurnabyJunkRemovalPage() {
               </div>
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {([
-                  { Icon: Star, label: '4.9 Google Rating' },
+                  { Icon: GoogleLogo, label: '4.9 Google Rating' },
                   { Icon: Shield, label: 'Fully Insured' },
                   { Icon: Zap, label: 'Same-Day Available' },
                   { Icon: DollarSign, label: 'Transparent Pricing' },
@@ -299,14 +300,14 @@ export default function BurnabyJunkRemovalPage() {
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
+                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
               </div>
             </FadeIn>
             <ReviewsRow reviews={reviews} />
             <div className="text-center">
               <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
                 <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                  Read More Reviews on Google →
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
                 </Button>
               </a>
             </div>

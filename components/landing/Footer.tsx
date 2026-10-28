@@ -14,12 +14,10 @@ const columns = [
   {
     title: 'Moving',
     links: [
-      { label: 'Moving Services', href: '/moving' },
-      { label: 'Residential Moving', href: '/moving#residential-moving' },
-      { label: 'Apartment & Condo Moving', href: '/moving#apartment-moving' },
-      { label: 'Commercial & Office Moving', href: '/moving#commercial-moving' },
-      { label: 'Small Moves', href: '/moving#small-moves' },
-      { label: 'Long-Distance Moving', href: '/moving#long-distance-moving' },
+      { label: 'Local Moving', href: '/moving' },
+      { label: 'Residential Moving', href: '/residential-moving' },
+      { label: 'Commercial Moving & Corporate Relocation', href: '/commercial-moving' },
+      { label: 'Packing Services', href: '/packing-services' },
     ],
   },
   {

@@ -14,6 +14,8 @@ export interface SeoImage {
   alt: string
   /** CSS object-position, e.g. 'center 40%' */
   pos?: string
+  /** CSS brightness() for photos taken in low light, e.g. 1.4 */
+  brightness?: number
 }
 
 export interface Faq {

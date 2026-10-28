@@ -1,15 +1,18 @@
 import { Fragment } from 'react'
 import Link from 'next/link'
+import GoogleLogo from '@/components/GoogleLogo'
 import { CITIES, cityMovingHref } from '@/lib/seo/cities'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
-import { Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, ArrowRight, Phone, CheckCircle2 } from 'lucide-react'
+import { Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, ArrowRight, CheckCircle2 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
-import ServicesCarousel, { type ServiceCard } from '@/components/landing/ServicesCarousel'
-import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
+import ServicesCarousel from '@/components/landing/ServicesCarousel'
+import { movingServiceCards } from '@/lib/moving-services'
+import { PhoneLink } from '@/components/PhoneNumber'
+import BookingStart from '@/components/moving/BookingStart'
 
 const included = [
   { title: 'Furniture wrapped and protected', text: 'Moving blankets and straps on every piece, so it arrives the way it left.' },
@@ -44,33 +47,8 @@ const reviews = [
 ]
 
 
-const serviceCards: ServiceCard[] = [
-  {
-    href: '/moving#residential-moving', kind: 'Moving', name: 'Residential Moving',
-    text: 'Full household moves. We wrap and protect your furniture, take apart what needs it and set everything up in the new place.',
-    image: { src: '/crew-wrapping-furniture.jpg', alt: 'Stonegate crew wrapping and loading furniture for a house move', pos: 'center 45%' },
-  },
-  {
-    href: '/moving#apartment-moving', kind: 'Moving', name: 'Apartment & Condo Moving',
-    text: 'Studios to multi-bedroom units, elevators and stairs included. Quick and careful through tight hallways and shared spaces.',
-    image: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'Stonegate mover carrying wrapped furniture up the truck ramp outside an apartment building', pos: 'center 50%' },
-  },
-  {
-    href: '/moving#small-moves', kind: 'Moving', name: 'Small Moves',
-    text: 'A single room, a studio or just a few large pieces. No move is too small to book.',
-    image: { src: '/about/photo-4.jpg', alt: 'Stonegate crew loading boxes into the moving truck', pos: 'center 50%' },
-  },
-  {
-    href: '/moving#commercial-moving', kind: 'Moving', name: 'Commercial & Office Moving',
-    text: 'Office and commercial moves across Metro Vancouver. Tell us the details and we will plan the move with you.',
-    image: { src: '/burnaby/burnaby-move-crew-loading.jpg', alt: 'Stonegate crew loading the moving truck', pos: 'center 45%' },
-  },
-  {
-    href: '/moving#long-distance-moving', kind: 'Moving', name: 'Long-Distance Moving',
-    text: 'Moving outside Metro Vancouver? Send us your route and timeline and we will confirm the move with you.',
-    image: { src: '/junk/driver-standing-by-truck-side-2.jpg', alt: 'Stonegate driver standing beside the moving truck', pos: 'center 45%' },
-  },
-]
+// Every moving service page
+const serviceCards = movingServiceCards()
 
 export default function Hero() {
   return (
@@ -101,7 +79,7 @@ export default function Hero() {
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.79) 18%, rgba(0,0,0,0.7) 32%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.12) 75%, rgba(0,0,0,0.04) 84%, transparent 92%)' }} />
 
           {/* Text - left side, vertically centered */}
-          <div className="relative z-20 self-stretch flex flex-col pl-8 sm:pl-16 lg:pl-24 pt-12 pb-16 lg:pt-16 lg:pb-[140px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
+          <div className="relative z-20 self-stretch flex flex-col pl-8 pr-6 sm:pl-16 sm:pr-16 lg:pl-24 lg:pr-0 pt-12 pb-16 lg:pt-16 lg:pb-[140px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
             <div className="flex flex-col flex-1">
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit 3xl:[--hero-h1-max:5.4rem]" style={{ fontSize: 'clamp(2.05rem, 7.3vw, var(--hero-h1-max, 4.55rem))' }}>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Moving</span>
@@ -121,26 +99,16 @@ export default function Hero() {
                 You pick the day - we wrap, carry and set it all up.
               </p>
 
-              {/* Buttons - side by side */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-3 mt-1 lg:gap-3 lg:mb-6 lg:mt-2">
-                <Link href="/order">
-                  <Button className="text-[15px] py-3.5 px-5 lg:text-base lg:py-7 lg:px-5 rounded-full font-bold border-0 flex items-center gap-2 whitespace-nowrap" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                    <CalendarDays size={16} /> Check Moving Availability →
-                  </Button>
-                </Link>
-                <PhoneLink
-                  className="h-8 text-[15px] py-3.5 px-5 lg:text-base lg:py-7 lg:px-5 rounded-full font-bold flex items-center gap-2 whitespace-nowrap w-fit"
-                  style={{ backgroundColor: '#FAF7F2', color: '#014421' }}
-                >
-                  <Phone size={16} fill="currentColor" aria-hidden /> Call <PhoneNumber />
-                </PhoneLink>
+              {/* Start a booking: two addresses and Next, with the phone number under it (pushed lower in the photo on phones) */}
+              <div className="mt-auto pt-8 mb-6 sm:mt-1 sm:pt-0 sm:mb-4 lg:mb-6 lg:mt-2">
+                <BookingStart />
               </div>
 
               {/* Trust badges */}
-              <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 mt-auto pt-2 lg:gap-y-3 lg:mb-3">
+              <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 sm:mt-auto sm:pt-2 lg:gap-y-3 lg:mb-3">
                 {([
                   { Icon: Shield, label: 'Fully Insured' },
-                  { Icon: Star, label: '4.9-Star Rated' },
+                  { Icon: GoogleLogo, label: '4.9-Star Rated' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2">
@@ -304,7 +272,7 @@ export default function Hero() {
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
+                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
               </div>
             </FadeIn>
 
@@ -318,7 +286,7 @@ export default function Hero() {
                 className="inline-flex items-center gap-2"
               >
                 <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                  Read More Reviews on Google →
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
                 </Button>
               </a>
             </div>

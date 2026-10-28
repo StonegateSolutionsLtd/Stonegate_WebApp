@@ -5,7 +5,7 @@ import { Phone, ArrowRight } from 'lucide-react'
 import { PhoneLink } from '@/components/PhoneNumber'
 
 /** Mobile/tablet bottom bar that appears once the element with `watchId` scrolls out of view. */
-export default function StickyCallBar({ watchId, quoteHref }: { watchId: string; quoteHref: string }) {
+export default function StickyCallBar({ watchId, quoteHref, quoteLabel = 'Free Estimate' }: { watchId: string; quoteHref: string; quoteLabel?: string }) {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function StickyCallBar({ watchId, quoteHref }: { watchId: string;
       aria-hidden={!show}
     >
       <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 rounded-full min-h-[52px] text-base font-extrabold" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-        Free Estimate <ArrowRight size={16} aria-hidden />
+        {quoteLabel} <ArrowRight size={16} aria-hidden />
       </a>
       <PhoneLink tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 rounded-full min-h-[52px] text-base font-extrabold" style={{ color: '#014421', border: '2px solid #014421', backgroundColor: '#FFFFFF' }}>
         <Phone size={17} fill="currentColor" aria-hidden /> Call

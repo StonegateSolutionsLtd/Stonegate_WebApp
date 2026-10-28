@@ -2,23 +2,29 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { MapPin, Truck, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react'
+import { MapPin, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import FadeIn from '@/components/landing/FadeIn'
+import ServicesCarousel from '@/components/landing/ServicesCarousel'
+import StickyCallBar from '@/components/landing/StickyCallBar'
+import { JsonLd, Breadcrumbs } from '@/components/seo/SeoBlocks'
+import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import {
-  JsonLd, Breadcrumbs, CallBand, FaqList, LinkGrid, CityChips, PricingTeaser,
-} from '@/components/seo/SeoBlocks'
-import { TEMPLATE_CITIES, CITY_BY_SLUG, CITIES, cityJobPhoto, cityHref, citySkyline } from '@/lib/seo/cities'
-import CityBanner from '@/components/seo/CityBanner'
+  MovingHero, MovingPriceBlock, MovingReviews, MovingFaq, MovingClose, CityPills,
+  GREEN, INK, MUTED, CREAM, LINE, eyebrow, sectionWrap,
+} from '@/components/moving/MovingSections'
+import { TEMPLATE_CITIES, CITY_BY_SLUG, CITIES, cityJobPhoto, cityHeroPhoto, cityHref } from '@/lib/seo/cities'
+import { movingServiceCards } from '@/lib/moving-services'
 import { SITE_URL, MOVE_BOOK_HREF, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
 
 export const dynamicParams = false
 
 const MOVING_SERVICES = [
-  { href: '/moving#residential-moving', name: 'House Moving' },
+  { href: '/residential-moving', name: 'Residential Moving' },
   { href: '/moving#apartment-moving', name: 'Apartment & Condo Moving' },
-  { href: '/moving#small-moves', name: 'Small Moves' },
-  { href: '/moving#commercial-moving', name: 'Commercial & Office Moving' },
+  { href: '/commercial-moving', name: 'Commercial Moving & Corporate Relocation' },
+  { href: '/packing-services', name: 'Packing Services' },
   { href: '/moving#long-distance-moving', name: 'Long-Distance Moving' },
 ]
 
@@ -60,7 +66,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
   ]
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: CREAM }}>
       <JsonLd graph={[
         {
           '@type': 'Service',
@@ -81,124 +87,124 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
       <Navbar />
 
       <main className="flex-1">
-        <CityBanner city={city.name} slug={city.slug} style={citySkyline(city)} lead={city.lead} />
+        <MovingHero
+          heading={[city.name, 'Movers']}
+          divider={city.slug === 'vancouver' ? 'BRITISH COLUMBIA' : 'METRO VANCOUVER'}
+          intro={city.lead}
+          photo={cityHeroPhoto(city)}
+        />
         <Breadcrumbs crumbs={crumbs} />
 
-        {/* Intro */}
-        <section>
-          <div className="max-w-4xl mx-auto px-6 pt-10 pb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-6" style={{ color: '#1A1714' }}>
-              The <span style={{ color: '#C98A45' }}>4.9-Star Rated</span> Moving Team in {city.name}
-            </h2>
-            <p className="text-base sm:text-lg leading-relaxed mb-4" style={{ color: '#4A3F38' }}>
-              <Link href="/about" className="font-bold underline" style={{ color: '#014421' }}>Stonegate Moving Solutions</Link> is a
-              local, fully insured moving crew serving every city in Metro Vancouver. {city.name} homeowners, renters and businesses book us
-              when they want a careful, on-time move at a clear hourly rate. We wrap your furniture, do all the lifting and set everything up in your new place.
-            </p>
-            <p className="text-base sm:text-lg leading-relaxed" style={{ color: '#4A3F38' }}>
-              We handle <Link href="/moving#residential-moving" className="underline" style={{ color: '#014421' }}>house moves</Link>,{' '}
-              <Link href="/moving#apartment-moving" className="underline" style={{ color: '#014421' }}>apartment and condo moves</Link>,{' '}
-              <Link href="/moving#small-moves" className="underline" style={{ color: '#014421' }}>small moves</Link> and{' '}
-              <Link href="/moving#commercial-moving" className="underline" style={{ color: '#014421' }}>office moves</Link>{' '}
-              anywhere in {city.name}. See <Link href="/pricing/moving" className="underline" style={{ color: '#014421' }}>our moving prices</Link> or
-              read more about <Link href="/moving" className="underline" style={{ color: '#014421' }}>our moving services</Link>.
-            </p>
+        {/* Moving in this city */}
+        <section id="moving" style={{ backgroundColor: CREAM, scrollMarginTop: '80px' }}>
+          <div className={`${sectionWrap} pt-10 pb-16 sm:pb-20 grid md:grid-cols-2 gap-12 items-center`}>
+            <FadeIn className="order-2 md:order-1">
+              <div className="relative rounded-3xl overflow-hidden h-[420px] md:h-[600px]" style={{ backgroundColor: LINE }}>
+                <Image src={detail.src} alt={detail.alt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" style={{ objectPosition: detail.pos ?? 'center' }} />
+              </div>
+            </FadeIn>
+            <FadeIn delay={120} className="order-1 md:order-2">
+              <div>
+                <p className={eyebrow} style={{ color: GREEN }}>Moving in {city.name}</p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5" style={{ color: INK }}>
+                  The 4.9-Star Rated Moving Team in {city.name}
+                </h2>
+                <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: MUTED }}>{city.moving}</p>
+                <ul className="flex flex-col gap-3.5 mb-9">
+                  {MOVING_SERVICES.map(s => (
+                    <li key={s.href}>
+                      <Link href={s.href} className="flex items-center gap-3 font-bold text-lg hover:underline" style={{ color: INK }}>
+                        <CheckCircle2 size={22} className="shrink-0" style={{ color: GREEN }} aria-hidden />
+                        {s.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+                    Check Moving Availability <ArrowRight size={18} aria-hidden />
+                  </Link>
+                  <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 border-[#014421] transition-[transform,background-color] active:scale-[0.97] hover:bg-[#E8F0E6]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                    Call <PhoneNumber />
+                  </PhoneLink>
+                </div>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
-        {/* Moving */}
-        <section id="moving" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', scrollMarginTop: '80px' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16 grid lg:grid-cols-5 gap-10 lg:gap-14">
-            <div className="lg:col-span-3">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#A9743F' }}>
-                <Truck size={14} aria-hidden /> Moving
-              </p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-5" style={{ color: '#1A1714' }}>Moving in {city.name}</h2>
-              <p className="text-base leading-relaxed mb-8" style={{ color: '#4A3F38' }}>{city.moving}</p>
-              <h3 className="text-lg font-extrabold mb-4" style={{ color: '#1A1714' }}>Our moving services in {city.name}</h3>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-8">
-                {MOVING_SERVICES.map(s => (
-                  <li key={s.href}>
-                    <Link href={s.href} className="flex items-center gap-2.5 text-sm font-bold hover:underline" style={{ color: '#014421' }}>
-                      <CheckCircle2 size={16} className="shrink-0" style={{ color: '#254220' }} aria-hidden />
-                      {s.name}
-                    </Link>
+        {/* Neighbourhoods and the local tip */}
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+          <div className={`${sectionWrap} py-16 sm:py-20 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start`}>
+            <FadeIn>
+              <p className={eyebrow} style={{ color: GREEN }}>Where we move</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>{city.name} Neighbourhoods We Serve</h2>
+              <p className="text-base leading-relaxed mb-8" style={{ color: MUTED }}>Moving across all of {city.name}, including:</p>
+              <ul className="flex flex-wrap gap-2.5">
+                {city.neighbourhoods.map(n => (
+                  <li key={n} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}`, color: INK }}>
+                    <MapPin size={13} style={{ color: GREEN }} aria-hidden /> {n}
                   </li>
                 ))}
               </ul>
-              <Link href="/moving" className="inline-flex items-center gap-2 text-sm font-extrabold underline" style={{ color: '#014421' }}>
-                See all moving services <ArrowRight size={14} aria-hidden />
+            </FadeIn>
+            <FadeIn delay={120}>
+              <div className="rounded-3xl p-7 sm:p-8" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}` }}>
+                <span className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ backgroundColor: '#F3E6D6' }}>
+                  <Lightbulb size={20} style={{ color: '#A9743F' }} aria-hidden />
+                </span>
+                <p className={eyebrow} style={{ color: '#A9743F' }}>Local tip</p>
+                <h3 className="text-xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>{city.localTip.title}</h3>
+                <p className="text-base leading-relaxed" style={{ color: MUTED }}>{city.localTip.text}</p>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        <div className="pt-16 sm:pt-20" style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }} />
+        <MovingPriceBlock note={`2 movers and a truck from $120/hr + GST, or 3 movers with a 16' truck from $160/hr + GST, for moves in ${city.name}. 3-hour minimum, no hidden fees.`} />
+
+        <MovingReviews />
+
+        <MovingFaq heading={`${city.name} Moving FAQ`} faqs={faqs} />
+
+        {/* Moving services */}
+        <section className="pb-10 lg:pb-12" style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }}>
+          <div className={`${sectionWrap} pt-12`}>
+            <FadeIn>
+              <p className={eyebrow} style={{ color: GREEN }}>Moving services</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-6" style={{ color: INK }}>How We Can Help in {city.name}</h2>
+            </FadeIn>
+          </div>
+          <ServicesCarousel cards={movingServiceCards()} label="Moving services" />
+        </section>
+
+        {/* Nearby and other cities */}
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+          <div className={`${sectionWrap} py-16 flex flex-col gap-12`}>
+            {nearby.length > 0 && (
+              <FadeIn>
+                <p className={eyebrow} style={{ color: GREEN }}>Nearby</p>
+                <h2 className="text-3xl font-extrabold tracking-tight mb-6" style={{ color: INK }}>Also Serving Near {city.name}</h2>
+                <CityPills links={nearby.map(n => ({ href: cityHref(n), label: `${n.name} Movers` }))} />
+              </FadeIn>
+            )}
+            <FadeIn>
+              <p className={eyebrow} style={{ color: GREEN }}>Service areas</p>
+              <h2 className="text-2xl font-extrabold tracking-tight mb-6" style={{ color: INK }}>Movers in Other Metro Vancouver Cities</h2>
+              <CityPills links={CITIES.filter(c => c.slug !== city.slug).map(c => ({ href: cityHref(c), label: c.name }))} />
+              <Link href="/locations" className="inline-flex items-center gap-2 mt-8 text-sm font-extrabold underline" style={{ color: GREEN }}>
+                All service areas <ArrowRight size={14} aria-hidden />
               </Link>
-            </div>
-            <div className="lg:col-span-2 flex flex-col gap-6">
-              <div className="relative rounded-3xl overflow-hidden aspect-[4/5]" style={{ backgroundColor: '#E8E0D5' }}>
-                <Image src={detail.src} alt={detail.alt} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover" style={{ objectPosition: detail.pos ?? 'center' }} />
-              </div>
-              <div className="rounded-2xl p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
-                <p className="flex items-center gap-2 font-extrabold mb-2" style={{ color: '#1A1714' }}>
-                  <Lightbulb size={18} style={{ color: '#A9743F' }} aria-hidden /> {city.localTip.title}
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{city.localTip.text}</p>
-              </div>
-            </div>
+            </FadeIn>
           </div>
         </section>
 
-        {/* Neighbourhoods + pricing */}
-        <section style={{ borderTop: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16">
-            <h2 className="text-2xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>{city.name} neighbourhoods we serve</h2>
-            <p className="text-sm mb-6" style={{ color: '#6B5E54' }}>Moving across all of {city.name}, including:</p>
-            <ul className="flex flex-wrap gap-2.5 mb-12">
-              {city.neighbourhoods.map(n => (
-                <li key={n} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', color: '#1A1714' }}>
-                  <MapPin size={13} style={{ color: '#014421' }} aria-hidden /> {n}
-                </li>
-              ))}
-            </ul>
-            <PricingTeaser
-              text={`2 movers and a truck from $120/hr + GST, or 3 movers with a 16' truck from $160/hr + GST, for moves in ${city.name}. 3-hour minimum, no hidden fees.`}
-              href="/pricing/moving"
-              label="See Moving Prices"
-            />
-          </div>
-        </section>
-
-        <FaqList faqs={faqs} heading={`${city.name} moving FAQ`} />
-
-        <CallBand
-          heading={`Moving in ${city.name}?`}
-          text="Call now to check availability, or book your move online in a couple of minutes."
-          bookHref={MOVE_BOOK_HREF}
-          bookLabel="Book Your Move"
-        />
-
-        {/* Internal links */}
-        <section style={{ backgroundColor: '#F5F0EB' }}>
-          <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col gap-14">
-            <LinkGrid
-              eyebrow="Nearby"
-              heading={`Also serving near ${city.name}`}
-              links={nearby.map(n => ({ href: cityHref(n), label: `${n.name} Movers` }))}
-            />
-            <LinkGrid
-              heading="Explore our services"
-              cols={3}
-              links={[
-                { href: '/moving', label: 'Moving Services' },
-                { href: '/moving#apartment-moving', label: 'Apartment & Condo Moving' },
-                { href: '/moving#residential-moving', label: 'House Moving' },
-                { href: '/moving#small-moves', label: 'Small Moves' },
-                { href: '/pricing/moving', label: 'Moving Prices' },
-                { href: '/locations', label: 'All Service Areas' },
-              ]}
-            />
-            <CityChips heading="Movers in other Metro Vancouver cities" links={CITIES.filter(c => c.slug !== city.slug).map(c => ({ href: cityHref(c), label: c.name }))} />
-          </div>
-        </section>
+        <MovingClose heading={`Moving in ${city.name}?`} text="Pick a day and time online in a couple of minutes, or call and we will book it with you." />
       </main>
 
       <Footer />
+      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
     </div>
   )
 }

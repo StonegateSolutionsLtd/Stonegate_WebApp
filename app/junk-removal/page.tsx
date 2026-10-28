@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import GoogleLogo from '@/components/GoogleLogo'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import {
@@ -111,17 +112,6 @@ function Stars({ size = 15 }: { size?: number }) {
     <span className="inline-flex items-center gap-0.5" aria-label="5 out of 5 stars">
       {Array.from({ length: 5 }, (_, i) => <Star key={i} size={size} fill="#D4A017" style={{ color: '#D4A017' }} aria-hidden />)}
     </span>
-  )
-}
-
-function GoogleLogo({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 18 18" aria-hidden>
-      <path fill="#4285F4" d="M17.64 9.2045c0-.6381-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087c1.7018-1.5668 2.6836-3.8741 2.6836-6.615z" />
-      <path fill="#34A853" d="M9 18c2.43 0 4.4673-.806 5.9564-2.1805l-2.9087-2.2581c-.806.5404-1.8368.8605-3.0477.8605-2.344 0-4.3282-1.5831-5.0359-3.7104H.9573v2.3318C2.4382 15.9832 5.4818 18 9 18z" />
-      <path fill="#FBBC05" d="M3.9641 10.71c-.18-.5404-.2827-1.1181-.2827-1.71s.1027-1.1696.2827-1.71V4.9582H.9573C.3477 6.1732 0 7.5477 0 9s.3477 2.8268.9573 4.0418L3.9641 10.71z" />
-      <path fill="#EA4335" d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5813-2.5814C13.4632.8918 11.426 0 9 0 5.4818 0 2.4382 2.0168.9573 4.9582L3.9641 7.29C4.6718 5.1627 6.656 3.5795 9 3.5795z" />
-    </svg>
   )
 }
 
@@ -383,6 +373,7 @@ export default function JunkRemovalPage() {
           <div className="max-w-6xl mx-auto px-5 sm:px-6 py-16 lg:py-24">
             <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 mb-8">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <GoogleLogo size={28} />
                 <Heading>Rated 4.9 on Google</Heading>
                 <Stars size={22} />
               </div>

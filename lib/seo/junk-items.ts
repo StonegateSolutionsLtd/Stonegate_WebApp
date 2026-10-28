@@ -360,7 +360,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     related: ['appliance-removal', 'dishwasher-removal', 'construction-debris-removal'],
     image: { src: '/junk/stove-removal.jpg', alt: 'Rusted old gas stove and oven waiting for stove removal', pos: 'center 35%' },
     image2: { src: '/junk/stonegate-truck-crew.jpg', alt: 'Stonegate crew working on the junk removal truck', pos: 'center 60%' },
-    image3: { src: '/hero-truck.jpg', alt: 'Stonegate truck parked outside a home for an appliance pickup', pos: '70% center' },
+    image3: { src: '/hero-truck-home-natural.jpg', alt: 'Stonegate truck parked outside a home for an appliance pickup', pos: '70% center' },
   },
   {
     slug: 'dishwasher-removal',
@@ -843,7 +843,7 @@ export const JUNK_ITEMS: JunkItem[] = [
     ],
     related: ['hoarder-cleanout', 'foreclosure-cleanout', 'furniture-removal'],
     image: { src: '/junk/estate-cleanout.jpg', alt: 'Large pile of bins, lumber, tarps and household belongings outside a property before an estate cleanout', pos: 'center 60%' },
-    image2: { src: '/hero-truck.jpg', alt: 'Stonegate truck parked in front of a house for an estate cleanout', pos: '70% center' },
+    image2: { src: '/hero-truck-home-natural.jpg', alt: 'Stonegate truck parked in front of a house for an estate cleanout', pos: '70% center' },
     beforeAfter: {
       before: { src: '/junk-before-livingroom.png', alt: 'Living room full of furniture before an estate cleanout' },
       after: { src: '/junk-after-livingroom.png', alt: 'Same living room emptied and cleaned after the Stonegate cleanout' },

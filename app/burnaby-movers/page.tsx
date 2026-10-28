@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GoogleLogo from '@/components/GoogleLogo'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import { Button } from '@/components/ui/button'
 import {
   Shield, DollarSign, Users, Truck, Star, CheckCircle2, Building2,
-  Home, Package, MapPin, ArrowRight,
+  Home, MapPin, ArrowRight,
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
@@ -20,7 +21,6 @@ export const metadata: Metadata = {
 const services = [
   { label: 'Apartment & Condo Moving', desc: 'Studio to 3-bedroom moves across Burnaby high-rises and low-rises.', Icon: Building2 },
   { label: 'House Moving', desc: 'Full household moves, handled by our own uniformed crew.', Icon: Home },
-  { label: 'Small Moves', desc: 'A few pieces of furniture or a single room - no move too small.', Icon: Package },
   { label: 'Local Moving', desc: 'Moving within Burnaby or across Metro Vancouver, flat hourly rate.', Icon: Truck },
 ]
 
@@ -75,10 +75,6 @@ const faqs = [
   {
     q: 'Do you move apartments and condos?',
     a: 'Yes, apartment and condo moves are a big part of what we do across Burnaby, from studios to multi-bedroom units.',
-  },
-  {
-    q: 'Do you handle small moves?',
-    a: 'Yes. Our 3-hour minimum covers everything from a single room to a full apartment - there\'s no move too small to book.',
   },
   {
     q: 'What areas around Burnaby do you serve?',
@@ -155,7 +151,7 @@ export default function BurnabyMoversPage() {
                 </div>
                 <div className="flex flex-wrap gap-x-6 gap-y-3">
                   {([
-                    { Icon: Star, label: '4.9 Google Rating' },
+                    { Icon: GoogleLogo, label: '4.9 Google Rating' },
                     { Icon: Shield, label: 'Fully Insured' },
                     { Icon: DollarSign, label: 'Transparent Pricing' },
                     { Icon: Users, label: 'Local Crew' },
@@ -208,7 +204,7 @@ export default function BurnabyMoversPage() {
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Moving Services in Burnaby</h2>
             </FadeIn>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
               {services.map(({ label, desc, Icon }, i) => (
                 <FadeIn key={label} delay={i * 80}>
                   <div className="h-full rounded-2xl p-6" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
@@ -303,14 +299,14 @@ export default function BurnabyMoversPage() {
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>4.9 from Google reviews</span>
+                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
               </div>
             </FadeIn>
             <ReviewsRow reviews={reviews} />
             <div className="text-center">
               <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
                 <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                  Read More Reviews on Google →
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
                 </Button>
               </a>
             </div>

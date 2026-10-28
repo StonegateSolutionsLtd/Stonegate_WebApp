@@ -1,219 +1,186 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ArrowRight, Clock, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
-import { Button } from '@/components/ui/button'
-import { Shield, Clock, Star } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
+import StickyCallBar from '@/components/landing/StickyCallBar'
+import GoogleLogo from '@/components/GoogleLogo'
+import { MovingHero, MovingReviews, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
+import { CITIES } from '@/lib/seo/cities'
+import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'About Us | Stonegate Moving Solutions' },
-  description: 'Meet the Stonegate Moving Solutions team - professional movers serving Metro Vancouver with moving and junk removal services.',
+  description: 'Meet the Stonegate Moving Solutions crew - a local moving team based in Burnaby, serving every city in Metro Vancouver.',
   alternates: { canonical: 'https://www.stonegatemoving.com/about' },
 }
 
+// What the crew does on every job, with a real photo of it
 const values = [
   {
-    icon: Shield,
-    title: 'Fully Licensed & Insured',
-    desc: 'Every move is covered. You can relax knowing your belongings are protected from start to finish.',
+    Icon: Clock,
+    title: 'On time, every time',
+    text: 'We respect your schedule. The crew shows up when we say we will, ready to work.',
+    photo: { src: '/about/team-truck.png', alt: 'A Stonegate mover walking a dolly to the truck on a sunny street', pos: 'center 55%' },
   },
   {
-    icon: Clock,
-    title: 'On Time, Every Time',
-    desc: 'We respect your schedule. Our team shows up when we say we will - no waiting around.',
+    Icon: PackageCheck,
+    title: 'Careful with your things',
+    text: 'Blankets, straps and plastic wrap on every piece. We treat every home like our own.',
+    photo: { src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping furniture in a moving blanket inside a home', pos: 'center 55%' },
   },
   {
-    icon: Star,
-    title: 'Quality You Can Count On',
-    desc: 'We treat every home like our own. Careful handling, clean equipment, and a job done right.',
+    Icon: ReceiptText,
+    title: 'Clear, hourly pricing',
+    text: 'You know the rate before you book: $120 an hour for 2 movers, $160 for 3, plus GST.',
+    photo: { src: '/about/photo-4.jpg', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
   },
 ]
 
+// The crew at work
+const gallery = [
+  { src: '/about/photo-2.jpg', alt: 'A Stonegate mover on the truck ramp under the Moving made effortless sign', pos: 'center 40%', caption: 'Ready on the ramp' },
+  { src: '/about/photo-5.jpg', alt: 'A Stonegate mover arranging wrapped furniture inside the truck', pos: 'center 60%', caption: 'Packed tight, nothing shifts', brightness: 1.2 },
+  { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp', pos: 'center 45%', caption: 'Up the ramp, piece by piece' },
+  { src: '/junk/driver-hero-4627.jpg', alt: 'A Stonegate mover standing in front of the branded truck', pos: 'center 45%', caption: 'Your crew for the day' },
+]
+
 export default function AboutPage() {
+  const facts = [
+    { big: '4.9', small: 'Google rating', google: true },
+    { big: 'Burnaby', small: 'where we are based' },
+    { big: String(CITIES.length), small: 'cities across Metro Vancouver' },
+    { big: 'Insured', small: 'every move is covered' },
+  ]
+
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: CREAM }}>
       <Navbar />
 
       <main className="flex-1">
+        <MovingHero
+          heading={['Meet the', 'Crew']}
+          intro="A local Metro Vancouver team that makes your move stress-free, from the first box to the last piece of furniture."
+          photo={{ src: '/about/photo-3.jpg', alt: 'The three-person Stonegate crew standing in front of the moving truck', pos: 'center 60%' }}
+        />
 
-        {/* ── Hero ── */}
-        <section className="relative overflow-hidden" style={{ minHeight: '680px' }}>
-          <Image
-            src="/about/photo-4.jpg"
-            alt="Stonegate team loading the truck"
-            fill
-            className="object-cover"
-            style={{ objectPosition: 'center 55%' }}
-            priority
-          />
-
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 35%, transparent 65%)' }} />
-          <div className="relative max-w-6xl mx-auto px-6 flex flex-col justify-center" style={{ minHeight: '680px', paddingTop: '80px', paddingBottom: '80px' }}>
-            <span
-              className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5 w-fit"
-              style={{ color: 'rgba(255,255,255,0.85)', borderColor: 'rgba(255,255,255,0.35)' }}
-            >
-              Who we are
-            </span>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#FFFFFF' }}>
-              Built on Hard Work<br />
-              <span style={{ color: '#014421' }}>&amp; Trust.</span>
-            </h1>
-            <p className="text-lg max-w-md leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-              Stonegate Moving Solutions is a local Metro Vancouver team dedicated to making your move - and your home - stress-free.
-            </p>
-          </div>
+        {/* Quick facts */}
+        <section style={{ backgroundColor: GREEN }}>
+          <ul className={`${sectionWrap} py-8 sm:py-10 grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4`}>
+            {facts.map(f => (
+              <li key={f.small} className="text-center">
+                <p className="flex items-center justify-center gap-2 text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: CREAM }}>
+                  {f.google && <span className="w-9 h-9 rounded-full flex items-center justify-center bg-white"><GoogleLogo size={20} /></span>}
+                  {f.big}
+                </p>
+                <p className="mt-1 text-[15px] font-semibold" style={{ color: '#B5C9B0' }}>{f.small}</p>
+              </li>
+            ))}
+          </ul>
         </section>
 
-        {/* ── Our Story ── */}
-        <section style={{ borderTop: '1px solid #E8E0D5', borderBottom: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-14 items-center">
+        {/* Our story */}
+        <section style={{ backgroundColor: CREAM }}>
+          <div className={`${sectionWrap} py-16 sm:py-24 grid md:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center`}>
             <FadeIn>
-            <div>
-              <span
-                className="inline-block text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
-                style={{ color: '#254220', borderColor: '#B5C9B0' }}
-              >
-                Our story
-              </span>
-              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-6" style={{ color: '#1A1714' }}>
-                A Local Team<br />
-                <span style={{ color: '#254220' }}>You Can Trust</span>
-              </h2>
-              <div className="flex flex-col gap-4 text-base leading-relaxed" style={{ color: '#6B5E54' }}>
-                <p>
-                  Stonegate Moving Solutions started with a simple idea: moving should be easy. We saw too many people stressed out by unreliable movers, hidden fees, and careless handling - and we knew we could do better.
-                </p>
-                <p>
-                  We&apos;re a young, driven team based right here in Metro Vancouver. Every job we take on gets our full attention and effort, whether it&apos;s a studio apartment move across town or a full house cleanout.
-                </p>
-                <p>
-                  Over time we expanded into junk removal - because the same values that make a great move also make every other home service better: showing up on time, working hard, and leaving the place better than we found it.
-                </p>
-              </div>
-            </div>
-
-            </FadeIn>
-
-            {/* Group photo */}
-            <FadeIn delay={150}>
-            <div className="relative rounded-2xl overflow-hidden shadow-md" style={{ height: '460px', border: '1px solid #E8E0D5' }}>
-              <Image
-                src="/about/photo-3.jpg"
-                alt="The Stonegate team in front of the truck"
-                fill
-                className="object-cover object-top"
-              />
-            </div>
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* ── Photo Grid ── */}
-        <section style={{ backgroundColor: '#F5F0EB', borderBottom: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-20">
-            <span
-              className="inline-block text-xs font-semibold uppercase tracking-widest mb-3 border rounded-full px-4 py-1.5"
-              style={{ color: '#254220', borderColor: '#B5C9B0' }}
-            >
-              The team in action
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Meet the Crew</h2>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" style={{ gridAutoRows: '240px' }}>
-              {/* Large: action shot - 2 cols × 2 rows */}
-              <FadeIn className="col-span-2 row-span-2">
-              <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E8E0D5' }}>
-                <Image src="/about/team-truck.png" alt="Team member walking to the Stonegate truck" fill className="object-cover object-center" />
-              </div>
-              </FadeIn>
-              {/* Interior action shot */}
-              <FadeIn delay={100}>
-              <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E8E0D5' }}>
-                <Image src="/about/photo-5.jpg" alt="Team member working inside the truck" fill className="object-cover object-center" />
-              </div>
-              </FadeIn>
-              {/* Solo portrait 2 */}
-              <FadeIn delay={200}>
-              <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E8E0D5' }}>
-                <Image src="/about/photo-2.jpg" alt="Stonegate team member" fill className="object-cover object-top" />
-              </div>
-              </FadeIn>
-              {/* Team on top of truck - 2 cols */}
-              <FadeIn delay={150} className="col-span-2">
-              <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E8E0D5' }}>
-                <Image src="/about/photo-6.png" alt="Stonegate team sitting on top of the truck" fill className="object-cover" style={{ objectPosition: 'center 35%' }} />
-              </div>
-              </FadeIn>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Values ── */}
-        <section style={{ borderBottom: '1px solid #E8E0D5' }}>
-          <div className="max-w-6xl mx-auto px-6 py-20">
-            <div className="text-center mb-12">
-              <span
-                className="inline-block text-xs font-semibold uppercase tracking-widest mb-3 border rounded-full px-4 py-1.5"
-                style={{ color: '#254220', borderColor: '#B5C9B0' }}
-              >
-                What drives us
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: '#1A1714' }}>Our Values</h2>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-6">
-              {values.map((v, i) => (
-                <FadeIn key={v.title} delay={i * 120}>
-                <div className="flex flex-col gap-4 p-8 rounded-2xl" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
-                  <span className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#E8F0E6' }}>
-                    <v.icon size={22} style={{ color: '#254220' }} />
-                  </span>
-                  <h3 className="font-bold text-base" style={{ color: '#1A1714' }}>{v.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{v.desc}</p>
+              <div>
+                <p className={eyebrow} style={{ color: GREEN }}>Our story</p>
+                <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.05] mb-7" style={{ color: INK }}>
+                  Moving Should Be Easy. <span style={{ color: CLAY }}>So We Made It That Way.</span>
+                </h2>
+                <div className="flex flex-col gap-5 text-[17px] sm:text-lg leading-relaxed" style={{ color: INK }}>
+                  <p>
+                    Stonegate Moving Solutions started with a simple idea: moving should be easy. We saw too many people stressed out by unreliable movers, hidden fees and careless handling, and we knew we could do better.
+                  </p>
+                  <p>
+                    We&apos;re a young, driven team based right here in Metro Vancouver. Every job gets our full attention, whether it&apos;s a studio across town or a whole family home.
+                  </p>
+                  <p>
+                    Over time we added junk removal too, because the same things make every home service better: showing up on time, working hard, and leaving the place better than we found it.
+                  </p>
                 </div>
-                </FadeIn>
+                <Link href={MOVE_BOOK_HREF} className="mt-9 inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+                  Book Your Move With Us <ArrowRight size={18} aria-hidden />
+                </Link>
+              </div>
+            </FadeIn>
+            <FadeIn delay={120}>
+              <div className="relative rounded-3xl overflow-hidden aspect-[4/5] max-w-[460px] mx-auto md:ml-auto" style={{ backgroundColor: LINE }}>
+                <Image src="/about/photo-6.png" alt="The Stonegate crew sitting on the roof of their moving truck" fill sizes="(max-width: 768px) 100vw, 460px" className="object-cover" style={{ objectPosition: 'center 48%' }} />
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* What we stand for, each with a photo */}
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+          <div className={`${sectionWrap} py-16 sm:py-20`}>
+            <FadeIn>
+              <p className={`${eyebrow} text-center`} style={{ color: GREEN }}>What we stand for</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-center mb-10 sm:mb-14" style={{ color: INK }}>How We Work on Every Move</h2>
+            </FadeIn>
+            <ul className="grid md:grid-cols-3 gap-6">
+              {values.map(({ Icon, title, text, photo }, i) => (
+                <li key={title}>
+                  <FadeIn delay={i * 100} className="h-full">
+                    <div className="h-full rounded-3xl overflow-hidden flex flex-col" style={{ backgroundColor: '#FFFFFF' }}>
+                      <div className="relative aspect-[4/3]" style={{ backgroundColor: LINE }}>
+                        <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" style={{ objectPosition: photo.pos }} />
+                        <span className="absolute left-4 -bottom-6 w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: GREEN }}>
+                          <Icon size={22} style={{ color: CREAM }} aria-hidden />
+                        </span>
+                      </div>
+                      <div className="p-6 pt-10">
+                        <h3 className="text-xl font-extrabold mb-2" style={{ color: INK }}>{title}</h3>
+                        <p className="text-base leading-relaxed" style={{ color: MUTED }}>{text}</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                </li>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA ── */}
-        <section>
-          <FadeIn>
-          <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-            <span
-              className="inline-block text-xs font-semibold uppercase tracking-widest mb-4 border rounded-full px-4 py-1.5"
-              style={{ color: '#254220', borderColor: '#B5C9B0' }}
-            >
-              Get started
-            </span>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
-              Ready to work with us?
-            </h2>
-            <p className="text-lg mb-10 max-w-lg mx-auto" style={{ color: '#6B5E54' }}>
-              Book a move or schedule junk removal - we&apos;ve got you covered.
+            </ul>
+            <p className="mt-8 flex items-center justify-center gap-2 text-base font-semibold" style={{ color: INK }}>
+              <ShieldCheck size={20} style={{ color: GREEN }} aria-hidden /> Fully insured on every move
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/order">
-                <Button className="text-base px-10 py-6 rounded-full font-bold border-0" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
-                  Book a Move
-                </Button>
-              </Link>
-              <Link href="/book-service?type=junk-removal">
-                <Button className="text-base px-10 py-6 rounded-full font-bold" style={{ backgroundColor: 'transparent', color: '#254220', border: '2px solid #254220' }}>
-                  Junk Removal
-                </Button>
-              </Link>
-            </div>
           </div>
-          </FadeIn>
         </section>
 
+        {/* The crew in action: swipe row on phones, grid on desktop */}
+        <section style={{ backgroundColor: CREAM }}>
+          <div className={`${sectionWrap} pt-16 sm:pt-20`}>
+            <FadeIn>
+              <p className={eyebrow} style={{ color: GREEN }}>The team in action</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8" style={{ color: INK }}>A Day on the Job</h2>
+            </FadeIn>
+          </div>
+          <ul className="flex lg:grid lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto snap-x snap-mandatory px-6 pb-16 sm:pb-20 scroll-px-6 max-w-6xl 3xl:max-w-7xl mx-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {gallery.map((g, i) => (
+              <li key={g.src} className="snap-start shrink-0 w-[72vw] max-w-[300px] lg:w-auto lg:max-w-none">
+                <FadeIn delay={i * 80}>
+                  <figure className="relative aspect-[3/4] rounded-2xl overflow-hidden group" style={{ backgroundColor: LINE }}>
+                    <Image src={g.src} alt={g.alt} fill sizes="(max-width: 1024px) 72vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectPosition: g.pos, filter: g.brightness ? `brightness(${g.brightness})` : undefined }} />
+                    <figcaption className="absolute inset-x-0 bottom-0 p-4 pt-12 text-[15px] font-bold" style={{ color: '#FFFFFF', background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' }}>
+                      {g.caption}
+                    </figcaption>
+                  </figure>
+                </FadeIn>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <MovingReviews />
+
+        <MovingClose
+          heading="Ready to work with us?"
+          text="Pick a day and time online in a couple of minutes, or call and we will book it with you."
+        />
       </main>
 
       <Footer />
+      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
     </div>
   )
 }

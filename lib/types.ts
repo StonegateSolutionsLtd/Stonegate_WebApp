@@ -31,6 +31,11 @@ export const APARTMENT_SIZE_LABELS: Record<ApartmentSize, string> = {
   '4br+': '4+ Bedrooms',
 }
 
+/** sessionStorage key the service pages' booking-start form uses to prefill /order */
+export const ORDER_START_KEY = 'orderStart'
+
+export type OrderStart = Partial<Pick<OrderFormData, 'pickupAddress' | 'dropoffAddress' | 'apartmentSize'>>
+
 export const EMPTY_ORDER_FORM: OrderFormData = {
   pickupAddress: '',
   pickupFloor: 1,
