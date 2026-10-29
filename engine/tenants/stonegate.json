@@ -1,0 +1,27 @@
+{
+  "name": "Stonegate Moving Solutions",
+  "depot": { "name": "Depot (Metrotown, Burnaby)", "lat": 49.2264, "lng": -123.0012 },
+  "trucks": [
+    { "id": "truck-1", "length_ft": 16, "width_ft": 7.5, "height_ft": 6.5, "shift": ["06:00", "23:00"] }
+  ],
+  "costs": {
+    "crew_per_hour": 60,
+    "fuel_litres_per_100km": 18,
+    "fuel_price_per_litre": 1.75,
+    "wear_per_km": 0.2
+  },
+  "dump_stations": [
+    { "name": "Vancouver South Transfer Station", "lat": 49.2074, "lng": -123.1139, "setup_min": 25, "unload_min_per_yd3": 1, "hours": ["06:00", "17:00"] },
+    { "name": "United Boulevard Recycling and Waste Centre", "lat": 49.2303, "lng": -122.8717, "setup_min": 25, "unload_min_per_yd3": 1, "hours": ["06:00", "17:00"] },
+    { "name": "North Vancouver Transfer Station", "lat": 49.3012, "lng": -123.0180, "setup_min": 25, "unload_min_per_yd3": 1, "hours": ["06:00", "17:00"] },
+    { "name": "Central Surrey Recycling and Waste Centre", "lat": 49.1250, "lng": -122.7969, "setup_min": 25, "unload_min_per_yd3": 1, "hours": ["06:00", "17:00"] },
+    { "name": "Vancouver Landfill", "lat": 49.0981, "lng": -123.0046, "setup_min": 30, "unload_min_per_yd3": 1, "hours": ["06:00", "17:00"] }
+  ],
+  "pricing": {
+    "base_prices": { "1/8 Truck": 145, "1/4 Truck": 260, "1/2 Truck": 405, "3/4 Truck": 555, "Full Truck": 700 },
+    "share_of_savings": 0.5,
+    "min_discount": 20,
+    "max_discount_fraction": 0.25,
+    "round_to": 5
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "rows": {
+    "service_orders": [
+      { "id": "s-101", "order_number": 101, "address": "2150 West Broadway, Vancouver", "service_time": "08:00:00", "load_size": "1/4 Truck", "status": "confirmed" },
+      { "id": "s-102", "order_number": 102, "address": "6551 No. 3 Road, Richmond", "service_time": "12:00:00", "load_size": "1/2 Truck", "status": "pending" },
+      { "id": "s-103", "order_number": 103, "address": "2929 Barnet Highway, Coquitlam", "service_time": "16:00:00", "load_size": "1/8 Truck", "status": "confirmed" }
+    ],
+    "orders": [],
+    "calendar_jobs": []
+  },
+  "previous_day_rows": {
+    "service_orders": [
+      { "id": "s-099", "order_number": 99, "address": "4700 Kingsway, Burnaby", "service_time": "20:00:00", "load_size": "1/4 Truck", "status": "confirmed" }
+    ]
+  },
+  "request": {
+    "address": "6138 Student Union Boulevard, Vancouver",
+    "load_size": "1/4 Truck",
+    "preferred_time": "18:00"
+  }
+}

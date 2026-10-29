@@ -1,4 +1,5 @@
 ﻿import { Resend } from 'resend'
+import type { OfferTerms } from './offer-token'
 import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from './types'
 
 
@@ -124,6 +125,8 @@ export interface ServiceRequestData {
   // null when not asked (anything but an apartment).
   hasElevator?: boolean | null
   photoCount?: number
+  // A cheaper slot the customer accepted while booking.
+  offer?: OfferTerms | null
 }
 
 export async function sendOwnerServiceRequestNotification(req: ServiceRequestData) {
@@ -156,6 +159,9 @@ export async function sendOwnerServiceRequestNotification(req: ServiceRequestDat
         ` : ''}
         ${req.photoCount !== undefined ? `
         <tr><td style="padding: 8px 12px; color: #374151;">Photos</td><td style="padding: 8px 12px;">${req.photoCount ? `${req.photoCount} (view on the admin quote page)` : 'None'}</td></tr>
+        ` : ''}
+        ${req.offer ? `
+        <tr><td style="padding: 8px 12px; color: #374151;">Offer Accepted</td><td style="padding: 8px 12px; font-weight: 600;">$${req.offer.price} (instead of $${req.offer.basePrice}), moved from ${formatTime(req.offer.originalTime)}</td></tr>
         ` : ''}
         ${req.notes ? `
         <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Notes</td></tr>
@@ -197,7 +203,15 @@ export async function sendCustomerServiceRequestConfirmation(req: ServiceRequest
         <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
         <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
         <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
+        ${req.offer ? `
+        <tr><td style="padding: 8px 12px; color: #374151;">Estimated Price</td><td style="padding: 8px 12px; font-weight: 600;">$${req.offer.price} (instead of $${req.offer.basePrice}, for your flexible time)</td></tr>
+        ` : ''}
       </table>
+      ${req.offer ? `
+      <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
+        Based on your ${req.loadSize ?? 'load size'} estimate; our team confirms the load size on site before starting.
+      </p>
+      ` : ''}
       <p style="color: #6b7280; font-size: 13px; margin-top: 24px;">
         Questions? Reach out to orders@stonegatemoving.com or call us directly.
       </p>

@@ -91,6 +91,20 @@ export function parseJobType(value: string | null): CalendarJobType | null {
   return value && value in DEFAULT_DURATION_MIN ? (value as CalendarJobType) : null
 }
 
+/** Start times ("HH:MM") the booking form would offer on `date` right now. */
+export async function openSlotTimes(jobType: CalendarJobType, date: string): Promise<Set<string>> {
+  const now = nowInBusinessZone()
+  if (date < now.date) return new Set()
+
+  const busyByDate = await loadBusyByDate(date, date)
+  const slots = computeAvailableSlots({
+    busy: busyByDate[date] ?? [],
+    durationMinutes: conflictDurationFor(jobType),
+    minStartMinutes: date === now.date ? now.minutes : BUSINESS_START_MIN,
+  })
+  return new Set(slots.map(slot => slot.value))
+}
+
 /**
  * Re-checks a slot at submit time — the browser may have been sitting on a stale
  * availability list while someone else booked the same window.
@@ -100,16 +114,5 @@ export async function isSlotAvailable(
   date: string,
   time: string
 ): Promise<boolean> {
-  const now = nowInBusinessZone()
-  if (date < now.date) return false
-
-  const busyByDate = await loadBusyByDate(date, date)
-  const slots = computeAvailableSlots({
-    busy: busyByDate[date] ?? [],
-    durationMinutes: conflictDurationFor(jobType),
-    minStartMinutes: date === now.date ? now.minutes : BUSINESS_START_MIN,
-  })
-
-  const normalized = time.slice(0, 5)
-  return slots.some(slot => slot.value === normalized)
+  return (await openSlotTimes(jobType, date)).has(time.slice(0, 5))
 }

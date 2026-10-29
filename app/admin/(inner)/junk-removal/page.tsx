@@ -7,9 +7,15 @@ import AddServiceOrderModal from '../_components/AddServiceOrderModal'
 import AddToCalendarButton from '../_components/AddToCalendarButton'
 import StatusFilter from '../_components/StatusFilter'
 import DurationSelect from '../_components/DurationSelect'
-import { durationFor } from '@/lib/scheduling'
+import { durationFor, formatTimeLabel, timeToMinutes } from '@/lib/scheduling'
 
 export const dynamic = 'force-dynamic'
+
+// The customer took a cheaper slot while booking (migration 015).
+function offerTitle(order: { offer_base_price: number | null; offer_original_time: string | null }) {
+  const from = order.offer_original_time ? ` Moved from ${formatTimeLabel(timeToMinutes(order.offer_original_time))}.` : ''
+  return `Estimated price promised when booking, instead of $${Number(order.offer_base_price ?? 0).toFixed(2)}.${from}`
+}
 
 export default async function JunkRemovalPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
   const { status } = await searchParams
@@ -81,6 +87,8 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                   <td style={{ padding: '14px 16px' }}>
                     {order.estimated_price != null ? (
                       <span style={{ background: '#D6E8D3', color: '#254220', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>${Number(order.estimated_price).toFixed(2)}</span>
+                    ) : order.offer_price != null ? (
+                      <span title={offerTitle(order)} style={{ background: '#FDE4C8', color: '#9A4B12', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Offer ${Number(order.offer_price).toFixed(2)}</span>
                     ) : (
                       <span style={{ background: '#F5F0EB', color: '#9A8E83', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Pending</span>
                     )}
@@ -156,6 +164,8 @@ export default async function JunkRemovalPage({ searchParams }: { searchParams: 
                   <div style={{ fontSize: '10px', color: '#9A8E83', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '2px' }}>QUOTE</div>
                   {order.estimated_price != null ? (
                     <span style={{ background: '#D6E8D3', color: '#254220', padding: '2px 8px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>${Number(order.estimated_price).toFixed(2)}</span>
+                  ) : order.offer_price != null ? (
+                    <span title={offerTitle(order)} style={{ background: '#FDE4C8', color: '#9A4B12', padding: '2px 8px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Offer ${Number(order.offer_price).toFixed(2)}</span>
                   ) : (
                     <span style={{ background: '#F5F0EB', color: '#9A8E83', padding: '2px 8px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Pending</span>
                   )}

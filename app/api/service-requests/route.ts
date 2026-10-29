@@ -4,6 +4,7 @@ import path from 'node:path'
 import { NextResponse, type NextRequest } from 'next/server'
 import { LOCAL_WITHOUT_SUPABASE, createServiceClient } from '@/lib/supabase/server'
 import { isSlotAvailable } from '@/lib/availability'
+import { verifyOffer } from '@/lib/offer-token'
 import { sendOwnerServiceRequestNotification, sendCustomerServiceRequestConfirmation } from '@/lib/email'
 import { TRUCK_FRACTIONS } from '@/lib/quote-pricing'
 import { PROPERTY_TYPES, type ServiceFormData } from '@/lib/service-chat'
@@ -15,7 +16,8 @@ const TYPE_MAP: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   // multipart/form-data: `data` = the form as JSON, `photos` = image files.
-  let body: ServiceFormData & { serviceType: string }
+  // `offerToken`: a cheaper slot the customer accepted (from /api/quote-options).
+  let body: ServiceFormData & { serviceType: string; offerToken?: string }
   let photos: File[]
   try {
     const formData = await request.formData()
@@ -52,6 +54,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unknown service type' }, { status: 400 })
   }
 
+  // An offer's price is only honoured with a valid signature for this exact
+  // booking; an expired or altered one sends the customer back to pick a time.
+  const offer = body.offerToken ? verifyOffer(body.offerToken, { address, date, time, loadSize }) : null
+  if (body.offerToken && !offer) {
+    return NextResponse.json(
+      { error: 'That offer has expired. Please pick your time again.' },
+      { status: 409 }
+    )
+  }
+
   try {
     if (!(await isSlotAvailable('junk_removal', date, time))) {
       return NextResponse.json(
@@ -79,8 +91,9 @@ export async function POST(request: NextRequest) {
     await writeFile(
       path.join(dir, `${orderId}.txt`),
       JSON.stringify({
-        orderId, createdAt: new Date().toISOString(), status: 'pending', ...body,
+        orderId, createdAt: new Date().toISOString(), status: 'pending', ...body, offerToken: undefined,
         photos: photoNames.map(n => `${orderId}/${n}`),
+        offer,
       }, null, 2),
     )
     return NextResponse.json({ orderId }, { status: 201 })
@@ -115,6 +128,9 @@ export async function POST(request: NextRequest) {
       has_elevator: hasElevator,
       photo_paths: photoPaths,
       status: 'pending',
+      offer_price: offer?.price ?? null,
+      offer_base_price: offer?.basePrice ?? null,
+      offer_original_time: offer?.originalTime ?? null,
     })
     .select('id')
     .single()
@@ -126,8 +142,8 @@ export async function POST(request: NextRequest) {
 
   // Send email notifications - don't fail the request if email fails
   await Promise.allSettled([
-    sendOwnerServiceRequestNotification({ serviceType, address, date, time, customerName, customerEmail, phone, notes: body.notes, loadSize, propertyType, hasElevator, photoCount: photoPaths.length }),
-    sendCustomerServiceRequestConfirmation({ serviceType, address, date, time, customerName, customerEmail, phone }),
+    sendOwnerServiceRequestNotification({ serviceType, address, date, time, customerName, customerEmail, phone, notes: body.notes, loadSize, propertyType, hasElevator, photoCount: photoPaths.length, offer }),
+    sendCustomerServiceRequestConfirmation({ serviceType, address, date, time, customerName, customerEmail, phone, loadSize, offer }),
   ])
 
   return NextResponse.json({ orderId: serviceOrder.id }, { status: 201 })

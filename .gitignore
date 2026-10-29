@@ -38,7 +38,11 @@ yarn-error.log*
 /data/
 /chatbot_server/data/
 /chatbot_server/.venv/
+/engine/.venv/
+# geocode cache: customer addresses
+/engine/data/
 __pycache__/
+.pytest_cache/
 
 # vercel
 .vercel

@@ -1,0 +1,7 @@
+pyvroom>=1.15
+certifi
+fastapi>=0.115
+uvicorn>=0.32
+python-dotenv>=1.0
+httpx
+pytest>=8

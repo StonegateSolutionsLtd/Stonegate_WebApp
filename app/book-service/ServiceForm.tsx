@@ -16,6 +16,9 @@ import {
 } from '@/lib/service-chat'
 import ServiceChat from './ServiceChat'
 import PhotoField from './PhotoField'
+import OfferPrompt from './OfferPrompt'
+import { fetchBestOffer, type BestOffer } from '@/lib/quote-offer'
+import type { CustomerOffer } from '@/lib/quote-engine'
 import { MAX_PHOTOS, MAX_PHOTOS_TOTAL_BYTES, photoDataUrl } from '@/lib/photos'
 import { MapPin, User, Mail, Phone, FileText, ArrowRight } from 'lucide-react'
 
@@ -48,6 +51,14 @@ function OptionButton({ label, sub, selected, onClick }: {
 // The truck in /truck-load-guide.png: 16 × 7.5 × 6.5 ft ≈ 780 ft³.
 const TRUCK_CUBIC_FEET = 16 * 7.5 * 6.5
 
+// A request ready to send: the form with the chat's answers, the photos to
+// keep, and the notes with the chat's quote details for staff.
+interface PendingBooking {
+  resolved: ServiceFormData
+  photos: File[]
+  notes: string
+}
+
 export default function ServiceForm() {
   const params = useSearchParams()
   const router = useRouter()
@@ -60,6 +71,8 @@ export default function ServiceForm() {
   const [unsure, setUnsure] = useState<Set<UnsureField>>(new Set())
   const [photos, setPhotos] = useState<File[]>([])
   const [chat, setChat] = useState<{ sessionId: string; question: string; options: string[]; awaitingPhotos: boolean } | null>(null)
+  // A cheaper slot offered once the chat is done, with the request waiting on the answer.
+  const [offer, setOffer] = useState<{ best: BestOffer; booking: PendingBooking } | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
 
@@ -153,13 +166,33 @@ export default function ServiceForm() {
       setSubmitting(false)
       return
     }
+    const notes = quoteSummary
+      ? [resolved.notes.trim(), `Quote details from chat:\n${quoteSummary}`].filter(Boolean).join('\n\n')
+      : resolved.notes
+    const booking = { resolved, photos: allPhotos, notes }
+
+    // A cheaper slot the same day, if the engine has one; with none (or the
+    // engine slow or down) the request goes ahead as picked.
+    setSubmitting(true)
+    const best = resolved.loadSize ? await fetchBestOffer(resolved) : null
+    if (best) {
+      setChat(null)
+      setOffer({ best, booking })
+      setSubmitting(false)
+      return
+    }
+    await submit(booking, null)
+  }
+
+  // `accepted`: the offer the customer said yes to; its slot replaces their pick.
+  async function submit({ resolved, photos: allPhotos, notes }: PendingBooking, accepted: CustomerOffer | null) {
     setSubmitting(true)
     try {
       const body = new FormData()
-      const notes = quoteSummary
-        ? [resolved.notes.trim(), `Quote details from chat:\n${quoteSummary}`].filter(Boolean).join('\n\n')
-        : resolved.notes
-      body.append('data', JSON.stringify({ serviceType, ...resolved, notes }))
+      body.append('data', JSON.stringify({
+        serviceType, ...resolved, notes,
+        ...(accepted ? { time: accepted.time, offerToken: accepted.token } : {}),
+      }))
       for (const photo of allPhotos) body.append('photos', photo)
       const res = await fetch('/api/service-requests', { method: 'POST', body })
       const data = await res.json().catch(() => ({}))
@@ -169,6 +202,7 @@ export default function ServiceForm() {
         setPhotos(allPhotos)
         setUnsure(new Set())
         setChat(null)
+        setOffer(null)
         setScheduled(false)
         setErrors({ form: data.error ?? 'That time was just booked. Please pick another slot.' })
         setSubmitting(false)
@@ -178,6 +212,7 @@ export default function ServiceForm() {
       router.push(`/book-service/success?id=${data.orderId}`)
     } catch {
       setChat(null)
+      setOffer(null)
       setErrors({ form: 'Something went wrong. Please try again.' })
       setSubmitting(false)
     }
@@ -206,14 +241,25 @@ export default function ServiceForm() {
             Book {serviceLabel}
           </h1>
           <p className="text-base mb-12" style={{ color: '#6B5E54' }}>
-            {chat
+            {offer
+              ? 'One last thing before we send your request.'
+              : chat
               ? 'A few quick questions before we send your request.'
               : scheduled
               ? 'Fill in the details below and we’ll get back to you the same day with a quote.'
               : 'Start by picking an open time — we only show slots our crew can actually make.'}
           </p>
 
-          {chat ? (
+          {offer ? (
+            <OfferPrompt
+              best={offer.best}
+              pickedTime={offer.booking.resolved.time}
+              loadSize={offer.booking.resolved.loadSize}
+              submitting={submitting}
+              onAccept={() => submit(offer.booking, offer.best.offer)}
+              onDecline={() => submit(offer.booking, null)}
+            />
+          ) : chat ? (
             <div className="rounded-2xl p-5 sm:p-6" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5' }}>
               <ServiceChat
                 sessionId={chat.sessionId}
