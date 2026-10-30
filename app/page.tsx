@@ -3,7 +3,7 @@ import Hero from '@/components/landing/Hero'
 
 export const metadata: Metadata = {
   title: { absolute: 'Vancouver Movers - Local Moving Company | Stonegate Moving Solutions' },
-  description: 'Local movers in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. Apartment, condo and house moves with 2 professional movers and a truck from $120/hr + GST.',
+  description: 'Local movers in Vancouver, Burnaby, Richmond, Surrey & all of Metro Vancouver. Apartment, condo and house moves with 2 professional movers and a truck from $130/hr + GST.',
   alternates: {
     canonical: 'https://www.stonegatemoving.com',
   },
@@ -17,7 +17,7 @@ const jsonLd = {
   telephone: '+16723360022',
   email: 'orders@stonegatemoving.com',
   logo: 'https://www.stonegatemoving.com/logo.png',
-  description: 'Apartment, condo and house moves across Metro Vancouver. 2 movers with truck from $120/hr + GST.',
+  description: 'Apartment, condo and house moves across Metro Vancouver. 2 movers with truck from $130/hr + GST.',
   areaServed: [
     'Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam',
     'New Westminster', 'Port Coquitlam', 'Port Moody', 'Delta', 'North Vancouver',
@@ -28,18 +28,18 @@ const jsonLd = {
     addressRegion: 'BC',
     addressCountry: 'CA',
   },
-  priceRange: '$120/hr + GST',
+  priceRange: '$130/hr + GST',
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Moving Services',
     itemListElement: [
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $120/hr + GST, 3-hour minimum' },
+        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $130/hr + GST, 3-hour minimum' },
       },
       {
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'House Moving', description: '2 movers from $120/hr or 3 movers with a 16\' truck from $160/hr + GST, 3-hour minimum' },
+        itemOffered: { '@type': 'Service', name: 'House Moving', description: '2 movers from $130/hr or 3 movers with a 16\' truck from $170/hr + GST, 3-hour minimum' },
       },
     ],
   },

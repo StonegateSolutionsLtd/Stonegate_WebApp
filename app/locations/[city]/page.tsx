@@ -55,7 +55,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
   const nearby = city.nearby.map(s => CITY_BY_SLUG.get(s)!).filter(Boolean)
   const faqs: Faq[] = [
     ...city.faqs,
-    { q: `How much do movers cost in ${city.name}?`, a: `Moving is $120/hr + GST for 2 professional movers and a fully-equipped truck, or $160/hr + GST for 3 movers with a 16' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time.` },
+    { q: `How much do movers cost in ${city.name}?`, a: `Moving is $130/hr + GST for 2 professional movers and a fully-equipped truck, or $170/hr + GST for 3 movers with a 16' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time.` },
     { q: `How far ahead should I book my ${city.name} move?`, a: 'As early as you can, especially for weekends and the end of the month. Pick a day and time online to see what is available.' },
     { q: 'What is included in the hourly rate?', a: 'The movers, the truck, moving blankets, straps and dollies. We wrap your furniture, take apart what needs it and put it back together at your new place.' },
   ]
@@ -162,7 +162,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         </section>
 
         <div className="pt-16 sm:pt-20" style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }} />
-        <MovingPriceBlock note={`2 movers and a truck from $120/hr + GST, or 3 movers with a 16' truck from $160/hr + GST, for moves in ${city.name}. 3-hour minimum, no hidden fees.`} />
+        <MovingPriceBlock note={`2 movers and a truck from $130/hr + GST, or 3 movers with a 16' truck from $170/hr + GST, for moves in ${city.name}. 3-hour minimum, no hidden fees.`} />
 
         <MovingReviews />
 

@@ -7,17 +7,16 @@ type Entry = [path: string, priority: number, freq?: MetadataRoute.Sitemap[numbe
 
 const STATIC: Entry[] = [
   ['', 1],
-  ['/junk-removal', 0.95],
-  ['/moving', 0.9],
+  ['/moving', 0.95],
   ['/residential-moving', 0.9],
   ['/commercial-moving', 0.9],
   ['/packing-services', 0.9],
-  ['/pricing', 0.8],
-  ['/pricing/junk-removal', 0.9],
-  ['/pricing/moving', 0.85],
-  ['/junk-removal/what-we-take', 0.85],
-  ['/locations', 0.8],
-  ['/about', 0.6],
+  ['/pricing/moving', 0.9],
+  ['/locations', 0.85],
+  ['/about', 0.7],
+  ['/junk-removal', 0.6],
+  ['/pricing/junk-removal', 0.5],
+  ['/junk-removal/what-we-take', 0.5],
   ['/order', 0.7, 'yearly'],
   ['/book-service', 0.6, 'yearly'],
 ]
@@ -27,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: Entry[] = [
     ...STATIC,
     ['/burnaby-movers', 0.85],
-    ['/burnaby-junk-removal', 0.85],
+    ['/burnaby-junk-removal', 0.5],
     ...TEMPLATE_CITIES.map((c): Entry => [`/locations/${c.slug}`, 0.85]),
-    ...JUNK_ITEMS.map((i): Entry => [junkItemHref(i.slug), 0.8]),
+    ...JUNK_ITEMS.map((i): Entry => [junkItemHref(i.slug), 0.4]),
   ]
   return entries.map(([path, priority, freq = 'monthly']) => ({
     url: `${SITE_URL}${path}`,

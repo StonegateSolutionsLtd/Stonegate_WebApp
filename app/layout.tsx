@@ -13,12 +13,12 @@ const raleway = Raleway({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Stonegate Moving Solutions · Junk Removal & Moving in Vancouver',
+    default: 'Stonegate Moving Solutions · Movers in Metro Vancouver',
     template: '%s · Stonegate Moving Solutions',
   },
-  description: 'Junk removal and professional apartment moving serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. 2 movers with truck from $120/hr + GST. Book online in minutes.',
+  description: 'Local movers serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. Apartment, house, commercial moves and packing. 2 movers with a truck from $130/hr + GST. Book online in minutes.',
   keywords: [
-    'junk removal Vancouver', 'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
+    'Vancouver movers', 'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC', 'Coquitlam movers',
   ],
   metadataBase: new URL('https://www.stonegatemoving.com'),
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     locale: 'en_CA',
     url: 'https://www.stonegatemoving.com',
     siteName: 'Stonegate Moving Solutions',
-    title: 'Stonegate Moving Solutions · Junk Removal & Moving in Vancouver',
-    description: 'Junk removal and professional apartment moving serving all of Metro Vancouver. 2 movers with truck from $120/hr + GST.',
+    title: 'Stonegate Moving Solutions · Movers in Metro Vancouver',
+    description: 'Local movers serving all of Metro Vancouver. 2 movers with a truck from $130/hr + GST.',
   },
   robots: {
     index: true,

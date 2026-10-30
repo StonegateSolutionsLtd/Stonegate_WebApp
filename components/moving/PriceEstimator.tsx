@@ -26,7 +26,7 @@ const ESTIMATES: Record<ApartmentSize, { crew: 2 | 3; hours: [number, number] | 
   '4br+': { crew: 3, hours: null },
 }
 
-const RATE = { 2: 120, 3: 160 } as const
+const RATE = { 2: 130, 3: 170 } as const
 const CREW_LABEL = { 2: '2 movers + truck', 3: '3 movers + 16\' truck' } as const
 
 const money = (n: number) => `$${n.toLocaleString('en-CA')}`

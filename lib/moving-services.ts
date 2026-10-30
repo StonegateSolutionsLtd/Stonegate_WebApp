@@ -35,7 +35,7 @@ export const RATE_TEXT = '3-hour minimum. A one-time flat travel fee, explained 
 
 const PRICE_FAQ = {
   q: 'How is the price worked out?',
-  a: 'By the hour: $120 for 2 movers and a truck, or $160 for 3 movers with the 16\' truck, plus GST. There is a 3-hour minimum and a one-time flat travel fee we explain before you book.',
+  a: 'By the hour: $130 for 2 movers and a truck, or $170 for 3 movers with the 16\' truck, plus GST. There is a 3-hour minimum and a one-time flat travel fee we explain before you book.',
 }
 
 const INCLUDED_FAQ = {
@@ -49,7 +49,7 @@ export const MOVING_SERVICES: MovingService[] = [
     path: '/moving',
     name: 'Local moving',
     metaTitle: 'Local Movers in Metro Vancouver | Stonegate Moving Solutions',
-    metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $120/hr + GST. Check availability and book online.',
+    metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $130/hr + GST. Check availability and book online.',
     heading: ['Local', 'Movers'],
     cardPhoto: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 40%' },
     cardText: 'Apartments, condos and houses moved anywhere in Metro Vancouver.',
@@ -84,7 +84,7 @@ export const MOVING_SERVICES: MovingService[] = [
     path: '/residential-moving',
     name: 'Residential moving',
     metaTitle: 'Residential Movers in Metro Vancouver | Stonegate Moving Solutions',
-    metaDescription: 'House and townhouse moves across Metro Vancouver. Furniture wrapped, taken apart and set up in your new home. 2 movers and a truck from $120/hr + GST.',
+    metaDescription: 'House and townhouse moves across Metro Vancouver. Furniture wrapped, taken apart and set up in your new home. 2 movers and a truck from $130/hr + GST.',
     heading: ['Residential', 'Movers'],
     cardPhoto: { src: '/hero-truck-home-natural.jpg', alt: 'The Stonegate moving truck parked in the driveway of a house', pos: '70% center' },
     cardText: 'Houses and townhouses moved room by room: taken apart, wrapped and set up again.',
@@ -119,7 +119,7 @@ export const MOVING_SERVICES: MovingService[] = [
     path: '/commercial-moving',
     name: 'Commercial moving',
     metaTitle: 'Commercial Movers & Corporate Relocation in Metro Vancouver | Stonegate',
-    metaDescription: 'Office, store and commercial moves plus corporate relocation for employees across Metro Vancouver. 2 movers and a truck from $120/hr + GST.',
+    metaDescription: 'Office, store and commercial moves plus corporate relocation for employees across Metro Vancouver. 2 movers and a truck from $130/hr + GST.',
     heading: ['Commercial', 'Movers'],
     cardPhoto: { src: '/about/photo-4.jpg', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
     cardText: 'Offices, stores and commercial spaces, plus corporate relocation for employees.',
@@ -175,7 +175,7 @@ export const MOVING_SERVICES: MovingService[] = [
     priceNote: 'Packing runs at the moving rate. Boxes and packing materials are extra, charged for what we use. 3-hour minimum, prices plus GST.',
     faqHeading: 'Packing questions',
     faqs: [
-      { q: 'How is packing priced?', a: 'At the same hourly rate as the move: $120 for 2 movers or $160 for 3, plus GST. Boxes and materials are extra, charged for what we use.' },
+      { q: 'How is packing priced?', a: 'At the same hourly rate as the move: $130 for 2 movers or $170 for 3, plus GST. Boxes and materials are extra, charged for what we use.' },
       { q: 'What can you pack?', a: 'The whole home, or just part of it: the kitchen, dishes, glassware, art and anything else fragile.' },
       { q: 'Do you bring boxes?', a: 'Yes. The crew brings boxes, packing paper, tape and wardrobe boxes.' },
       { q: 'Do you unpack at the new home?', a: 'Yes, if you want. We unbox, put things away and take the packing material with us.' },

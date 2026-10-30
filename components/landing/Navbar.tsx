@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { X, Phone, Menu, ChevronDown, ChevronRight, Home } from 'lucide-react'
 import { PhoneNumber, usePhoneNumber } from '@/components/PhoneNumber'
 import { CITIES, cityHref } from '@/lib/seo/cities'
+import { JUNK_BOOK_HREF, MOVE_BOOK_HREF } from '@/lib/seo/site'
 
 interface NavLink {
   label: string
@@ -45,6 +46,8 @@ const locationsGroup: NavGroup = {
 const PRICING_HREF = '/pricing/moving'
 
 const groups = [servicesGroup, locationsGroup]
+
+const JUNK_PATHS = ['/junk-removal', '/burnaby-junk-removal', '/pricing/junk-removal', '/book-service']
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)
@@ -127,7 +130,9 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [menuOpen, setMenuOpen] = useState(false)
-  const [quoteOpen, setQuoteOpen] = useState(false)
+  // The quote button books a move; on the junk removal pages it stays a junk removal quote
+  const isJunk = JUNK_PATHS.some(p => pathname.startsWith(p))
+  const quoteHref = isJunk ? JUNK_BOOK_HREF : MOVE_BOOK_HREF
 
   function closeMenu() { setMenuOpen(false) }
 
@@ -164,13 +169,13 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
             >
               <Phone size={15} style={{ color: '#014421' }} />
             </a>
-            <button
-              onClick={() => setQuoteOpen(true)}
-              className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 cursor-pointer transition-transform duration-200 hover:scale-105 border-0"
+            <Link
+              href={quoteHref}
+              className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 transition-transform duration-200 hover:scale-105"
               style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
             >
-              Make a Request
-            </button>
+              {isJunk ? 'Get a Quote' : 'Book Your Move'}
+            </Link>
           </nav>
 
           <div className="flex lg:hidden items-center gap-1.5 min-[360px]:gap-2.5">
@@ -194,13 +199,13 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               <span className="text-[15px]">Call</span>
             </a>
 
-            <button
-              onClick={() => setQuoteOpen(true)}
-              className="whitespace-nowrap rounded-full font-extrabold text-[15px] cursor-pointer transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
+            <Link
+              href={quoteHref}
+              className="whitespace-nowrap rounded-full font-extrabold text-[15px] transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
               style={{ backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
             >
-              Free Quote
-            </button>
+              {isJunk ? 'Free Quote' : 'Book Move'}
+            </Link>
             </>)}
 
             <button
@@ -234,13 +239,14 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               <Link href="/about" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 About
               </Link>
-              <button
-                onClick={() => { closeMenu(); setQuoteOpen(true) }}
-                className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90 border-0 cursor-pointer"
+              <Link
+                href={quoteHref}
+                onClick={closeMenu}
+                className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
               >
-                Make a Request
-              </button>
+                {isJunk ? 'Get a Junk Removal Quote' : 'Book Your Move'}
+              </Link>
               <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
                 <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>
                   <Phone size={14} style={{ color: '#014421' }} /> <PhoneNumber />
@@ -251,70 +257,6 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
         )}
       </header>
 
-      {quoteOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => setQuoteOpen(false)}
-        >
-          <div className="absolute inset-0" style={{ backgroundColor: 'rgba(26,23,20,0.6)' }} />
-          <div
-            className="relative rounded-xl w-full max-w-lg p-6 sm:p-7 shadow-xl"
-            style={{ backgroundColor: '#FAF7F2' }}
-            onClick={e => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setQuoteOpen(false)}
-              aria-label="Close"
-              className="absolute top-4 right-4 cursor-pointer transition-opacity hover:opacity-60"
-              style={{ background: 'none', border: 'none', padding: '4px' }}
-            >
-              <X size={18} style={{ color: '#1A1714' }} />
-            </button>
-            <h2 className="text-2xl font-extrabold mb-5" style={{ color: '#1A1714' }}>What do you need?</h2>
-
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              {[
-                { href: '/order', title: 'Moving', desc: 'Apartments & houses', cta: 'Check moving availability', img: '/crew-walking-truck.jpg', pos: 'center 55%', color: '#014421', ctaText: '#FFFFFF' },
-                { href: '/book-service?type=junk-removal', title: 'Junk Removal', desc: 'Furniture, appliances, cleanouts', cta: 'Get a free junk removal quote', img: '/truck-bed-loaded.jpg', pos: 'center 55%', color: '#C98A45', ctaText: '#1A1714' },
-              ].map(({ href, title, desc, cta, img, pos, color, ctaText }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setQuoteOpen(false)}
-                  className="group flex flex-col rounded-lg overflow-hidden transition-shadow hover:shadow-lg"
-                  style={{ textDecoration: 'none', border: `2px solid ${color}` }}
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden" style={{ backgroundColor: '#E8E0D5' }}>
-                    <Image
-                      src={img}
-                      alt=""
-                      fill
-                      sizes="(max-width: 640px) 45vw, 240px"
-                      className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
-                      style={{ objectPosition: pos }}
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-3/5" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }} />
-                    <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
-                      <p className="font-extrabold text-xl sm:text-2xl leading-tight" style={{ color: '#FFFFFF' }}>{title}</p>
-                      <p className="text-xs sm:text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.85)' }}>{desc}</p>
-                    </div>
-                  </div>
-                  <span className="flex-1 flex items-center justify-center py-3 px-3 text-center text-sm font-bold" style={{ backgroundColor: color, color: ctaText }}>
-                    {cta} →
-                  </span>
-                </Link>
-              ))}
-            </div>
-
-            <p className="mt-6 pt-5 text-sm border-t" style={{ color: '#6B5E54', borderColor: '#E8E0D5' }}>
-              Or call us:{' '}
-              <a href={phone.tel} className="font-bold hover:underline" style={{ color: '#014421' }}>
-                <PhoneNumber />
-              </a>
-            </p>
-          </div>
-        </div>
-      )}
     </>
   )
 }

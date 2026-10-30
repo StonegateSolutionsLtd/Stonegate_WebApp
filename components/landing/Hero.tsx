@@ -18,7 +18,7 @@ const included = [
   { title: 'Furniture wrapped and protected', text: 'Moving blankets and straps on every piece, so it arrives the way it left.' },
   { title: 'Taken apart and put back together', text: 'Beds, tables and anything that won\'t fit through a door - reassembled in your new place.' },
   { title: 'Truck and equipment included', text: 'A fully-equipped truck, dollies and ramp come with the crew. Nothing extra to rent.' },
-  { title: 'Clear hourly rate', text: '2 movers and a truck from $120/hr, or 3 movers with a 16\' truck from $160/hr, plus GST. 3-hour minimum.' },
+  { title: 'Clear hourly rate', text: '2 movers and a truck from $130/hr, or 3 movers with a 16\' truck from $170/hr, plus GST. 3-hour minimum.' },
 ]
 
 const steps = [
@@ -112,8 +112,8 @@ export default function Hero() {
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2">
-                    <Icon size={14} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
-                    <span className="text-xs 3xl:text-sm font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{label}</span>
+                    <Icon size={17} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
+                    <span className="text-sm sm:text-[15px] 3xl:text-base font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{label}</span>
                   </div>
                 ))}
               </div>

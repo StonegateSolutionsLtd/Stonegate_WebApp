@@ -7,7 +7,7 @@ import Footer from '@/components/landing/Footer'
 import FadeIn from '@/components/landing/FadeIn'
 import StickyCallBar from '@/components/landing/StickyCallBar'
 import GoogleLogo from '@/components/GoogleLogo'
-import { MovingHero, MovingReviews, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
+import { MovingReviews, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
 import { CITIES } from '@/lib/seo/cities'
 import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 
@@ -34,7 +34,7 @@ const values = [
   {
     Icon: ReceiptText,
     title: 'Clear, hourly pricing',
-    text: 'You know the rate before you book: $120 an hour for 2 movers, $160 for 3, plus GST.',
+    text: 'You know the rate before you book: $130 an hour for 2 movers, $170 for 3, plus GST.',
     photo: { src: '/about/photo-4.jpg', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
   },
 ]
@@ -60,11 +60,37 @@ export default function AboutPage() {
       <Navbar />
 
       <main className="flex-1">
-        <MovingHero
-          heading={['Meet the', 'Crew']}
-          intro="A local Metro Vancouver team that makes your move stress-free, from the first box to the last piece of furniture."
-          photo={{ src: '/about/photo-3.jpg', alt: 'The three-person Stonegate crew standing in front of the moving truck', pos: 'center 60%' }}
-        />
+        {/* Hero: just who we are, no booking form */}
+        <section id="about-hero" className="relative overflow-hidden" style={{ backgroundColor: INK }}>
+          <Image
+            src="/about/photo-3.jpg"
+            alt="The three-person Stonegate crew standing in front of the moving truck"
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: 'center 60%' }}
+          />
+          <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 420px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0.35) 78%, transparent 100%)' }} />
+          <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.3) 45%, transparent 65%)' }} />
+          <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-start lg:items-center min-h-[520px] sm:min-h-[600px] lg:min-h-[min(calc(80svh-68px),720px)] pt-14 pb-12 lg:py-16">
+            <div>
+              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-5 w-fit" style={{ fontSize: 'clamp(2.4rem, 7.3vw, 4.8rem)' }}>
+                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Meet the</span>
+                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
+                  <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />
+                  <span className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>STONEGATE</span>
+                  <span style={{ flex: 1.7, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.4), transparent)' }} />
+                </span>
+                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>Crew</span>
+              </h1>
+              <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[480px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
+                A young, local moving team from Burnaby, making moves across Metro Vancouver feel effortless.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Quick facts */}
         <section style={{ backgroundColor: GREEN }}>
@@ -180,7 +206,7 @@ export default function AboutPage() {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
+      <StickyCallBar watchId="about-hero" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
     </div>
   )
 }

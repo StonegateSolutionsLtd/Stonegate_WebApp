@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import GoogleLogo from '@/components/GoogleLogo'
-import { Shield, Star, DollarSign, MapPin, ArrowRight, Phone, Plus } from 'lucide-react'
+import { Shield, Star, MapPin, ArrowRight, Phone, Plus } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
@@ -23,8 +23,8 @@ export const sectionWrap = 'max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8'
 export const MASCOT = '/moving/mascot.png'
 
 const TIERS = [
-  { crew: '2 movers + truck', price: '$120', fit: 'Most studios and 1-bedroom homes' },
-  { crew: '3 movers + 16\' truck', price: '$160', fit: 'Most homes of 2 bedrooms and up' },
+  { crew: '2 movers + truck', price: '$130', fit: 'Most studios and 1-bedroom homes' },
+  { crew: '3 movers + 16\' truck', price: '$170', fit: 'Most homes of 2 bedrooms and up' },
 ]
 
 /** Photo hero with the stacked headline, then the two-address booking start */
@@ -75,7 +75,6 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo 
             {([
               { Icon: Shield, label: 'Fully Insured' },
               { Icon: GoogleLogo, label: '4.9-Star Rated' },
-              { Icon: DollarSign, label: 'From $120/hr' },
             ] as const).map(({ Icon, label }) => (
               <li key={label} className="flex items-center gap-2">
                 <Icon size={15} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1))' }} aria-hidden />
