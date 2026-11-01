@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
+import { SITE_URL, providerLd, hourlyOfferLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'Burnaby Movers | Local Moving Company | Stonegate Moving Solutions' },
@@ -97,25 +98,12 @@ const jsonLd = {
     name: 'Burnaby',
     containedInPlace: { '@type': 'AdministrativeArea', name: 'Metro Vancouver' },
   },
-  provider: {
-    '@type': 'MovingCompany',
-    name: 'Stonegate Moving Solutions',
-    telephone: '+16723360022',
-    email: 'orders@stonegatemoving.com',
-    url: 'https://www.stonegatemoving.com',
-    address: { '@type': 'PostalAddress', addressLocality: 'Burnaby', addressRegion: 'BC', addressCountry: 'CA' },
-  },
-  offers: {
-    '@type': 'Offer',
-    priceCurrency: 'CAD',
-    price: '110',
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
-      price: '110',
-      priceCurrency: 'CAD',
-      unitText: 'HOUR',
-    },
-  },
+  url: `${SITE_URL}/burnaby-movers`,
+  provider: providerLd,
+  offers: [
+    hourlyOfferLd('2 movers with a truck', 130),
+    hourlyOfferLd("3 movers with a 16' truck", 170),
+  ],
 }
 
 export default function BurnabyMoversPage() {

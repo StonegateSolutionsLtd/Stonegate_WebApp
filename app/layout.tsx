@@ -3,6 +3,8 @@ import { Raleway } from "next/font/google";
 import Script from "next/script";
 import { PhoneNumberProvider } from "@/components/PhoneNumber";
 import { PHONE_CONVERSION_SEND_TO, PHONE_CONVERSION_NUMBER } from "@/lib/googleAds";
+import { JsonLd } from "@/components/seo/SeoBlocks";
+import { businessLd, websiteLd } from "@/lib/seo/site";
 import "./globals.css";
 
 const raleway = Raleway({
@@ -33,7 +35,8 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    noimageindex: true,
+    // Full text snippets and large photo previews for Google results and AI answers
+    googleBot: { index: true, follow: true, 'max-snippet': -1, 'max-image-preview': 'large', 'max-video-preview': -1 },
   },
 };
 
@@ -45,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${raleway.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-[family-name:var(--font-raleway)]">
+        <JsonLd graph={[businessLd, websiteLd]} />
         <PhoneNumberProvider>{children}</PhoneNumberProvider>
       </body>
       <Script
