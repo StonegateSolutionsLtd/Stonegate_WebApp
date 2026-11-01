@@ -5,7 +5,6 @@ export interface City {
   name: string
   /** Set for cities that use dedicated standalone pages instead of the template */
   movingHref?: string
-  junkHref?: string
   title: string
   description: string
   keywords: string[]
@@ -73,7 +72,6 @@ export const CITIES: City[] = [
     slug: 'burnaby',
     name: 'Burnaby',
     movingHref: '/burnaby-movers',
-    junkHref: '/burnaby-junk-removal',
     title: 'Burnaby Movers',
     description: 'Movers in Burnaby, BC.',
     keywords: ['Burnaby movers'],
@@ -320,11 +318,6 @@ export const TEMPLATE_CITIES = CITIES.filter(c => !c.movingHref)
 /** City pages are moving pages; Burnaby has its own standalone movers page */
 export function cityHref(c: City) {
   return c.movingHref ?? `/locations/${c.slug}`
-}
-
-/** Best page for a city when the context is junk removal */
-export function cityJunkHref(c: City) {
-  return c.junkHref ?? `/locations/${c.slug}`
 }
 
 /** Best page for a city when the context is moving */

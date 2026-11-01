@@ -5,8 +5,6 @@ export const BUSINESS_NAME = 'Stonegate Moving Solutions'
 
 export const PRIMARY_PHONE = CONTACT_PHONES[0]
 
-
-export const JUNK_BOOK_HREF = '/book-service?type=junk-removal'
 export const MOVE_BOOK_HREF = '/order'
 
 export interface SeoImage {
