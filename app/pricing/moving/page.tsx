@@ -11,7 +11,7 @@ import { JsonLd } from '@/components/seo/SeoBlocks'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import PriceEstimator from '@/components/moving/PriceEstimator'
 import { MovingReviews, MovingFaq, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, MASCOT, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
-import { SITE_URL, MOVE_BOOK_HREF, providerLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
+import { SITE_URL, MOVE_BOOK_HREF, providerLd, hourlyOfferLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'Moving Prices in Vancouver | $130-$170/hr + GST | Stonegate' },
@@ -72,8 +72,8 @@ export default function MovingPricingPage() {
           url: `${SITE_URL}/pricing/moving`,
           provider: providerLd,
           offers: [
-            { '@type': 'Offer', price: '130', priceCurrency: 'CAD', description: '2 movers with truck, per hour + GST, 3-hour minimum, plus a one-time flat-rate travel fee' },
-            { '@type': 'Offer', price: '170', priceCurrency: 'CAD', description: '3 movers with 16\' truck, per hour + GST, 3-hour minimum, plus a one-time flat-rate travel fee' },
+            hourlyOfferLd('2 movers with a truck', 130),
+            hourlyOfferLd("3 movers with a 16' truck", 170),
           ],
         },
         breadcrumbLd(crumbs),

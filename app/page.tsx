@@ -9,50 +9,7 @@ export const metadata: Metadata = {
   },
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'MovingCompany',
-  name: 'Stonegate Moving Solutions',
-  url: 'https://www.stonegatemoving.com',
-  telephone: '+16723360022',
-  email: 'orders@stonegatemoving.com',
-  logo: 'https://www.stonegatemoving.com/logo.png',
-  description: 'Apartment, condo and house moves across Metro Vancouver. 2 movers with truck from $130/hr + GST.',
-  areaServed: [
-    'Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam',
-    'New Westminster', 'Port Coquitlam', 'Port Moody', 'Delta', 'North Vancouver',
-  ],
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Burnaby',
-    addressRegion: 'BC',
-    addressCountry: 'CA',
-  },
-  priceRange: '$130/hr + GST',
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Moving Services',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'Apartment Moving', description: '2 professional movers with truck, $130/hr + GST, 3-hour minimum' },
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: 'House Moving', description: '2 movers from $130/hr or 3 movers with a 16\' truck from $170/hr + GST, 3-hour minimum' },
-      },
-    ],
-  },
-}
-
+// The MovingCompany structured data is rendered on every page by the root layout
 export default function HomePage() {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Hero />
-    </>
-  )
+  return <Hero />
 }
