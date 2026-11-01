@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { X, Phone, Menu, ChevronDown, ChevronRight, Home } from 'lucide-react'
 import { PhoneNumber, usePhoneNumber } from '@/components/PhoneNumber'
 import { CITIES, cityHref } from '@/lib/seo/cities'
-import { JUNK_BOOK_HREF, MOVE_BOOK_HREF } from '@/lib/seo/site'
+import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 
 interface NavLink {
   label: string
@@ -20,7 +20,6 @@ interface NavGroup {
   links: NavLink[]
 }
 
-// Moving leads; junk removal is one service among them (its own pages link to its sub-pages and pricing)
 const servicesGroup: NavGroup = {
   label: 'Services',
   href: '/moving',
@@ -29,7 +28,6 @@ const servicesGroup: NavGroup = {
     { label: 'Residential Moving', href: '/residential-moving' },
     { label: 'Commercial Moving & Corporate Relocation', href: '/commercial-moving' },
     { label: 'Packing Services', href: '/packing-services' },
-    { label: 'Junk Removal', href: '/junk-removal' },
   ],
 }
 
@@ -42,12 +40,9 @@ const locationsGroup: NavGroup = {
   ],
 }
 
-// Pricing is moving only; junk removal pricing is linked from the junk removal pages
 const PRICING_HREF = '/pricing/moving'
 
 const groups = [servicesGroup, locationsGroup]
-
-const JUNK_PATHS = ['/junk-removal', '/burnaby-junk-removal', '/pricing/junk-removal', '/book-service']
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)
@@ -130,9 +125,6 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
   const pathname = usePathname()
   const isHome = pathname === '/'
   const [menuOpen, setMenuOpen] = useState(false)
-  // The quote button books a move; on the junk removal pages it stays a junk removal quote
-  const isJunk = JUNK_PATHS.some(p => pathname.startsWith(p))
-  const quoteHref = isJunk ? JUNK_BOOK_HREF : MOVE_BOOK_HREF
 
   function closeMenu() { setMenuOpen(false) }
 
@@ -170,11 +162,11 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               <Phone size={15} style={{ color: '#014421' }} />
             </a>
             <Link
-              href={quoteHref}
+              href={MOVE_BOOK_HREF}
               className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 transition-transform duration-200 hover:scale-105"
               style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
             >
-              {isJunk ? 'Get a Quote' : 'Book Your Move'}
+              Book Your Move
             </Link>
           </nav>
 
@@ -200,11 +192,11 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
             </a>
 
             <Link
-              href={quoteHref}
+              href={MOVE_BOOK_HREF}
               className="whitespace-nowrap rounded-full font-extrabold text-[15px] transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
               style={{ backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
             >
-              {isJunk ? 'Free Quote' : 'Book Move'}
+              Book Move
             </Link>
             </>)}
 
@@ -240,12 +232,12 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
                 About
               </Link>
               <Link
-                href={quoteHref}
+                href={MOVE_BOOK_HREF}
                 onClick={closeMenu}
                 className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
               >
-                {isJunk ? 'Get a Junk Removal Quote' : 'Book Your Move'}
+                Book Your Move
               </Link>
               <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
                 <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>

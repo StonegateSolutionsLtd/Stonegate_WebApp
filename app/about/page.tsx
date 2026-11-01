@@ -123,9 +123,6 @@ export default function AboutPage() {
                   <p>
                     We&apos;re a young, driven team based right here in Metro Vancouver. Every job gets our full attention, whether it&apos;s a studio across town or a whole family home.
                   </p>
-                  <p>
-                    Over time we added junk removal too, because the same things make every home service better: showing up on time, working hard, and leaving the place better than we found it.
-                  </p>
                 </div>
                 <Link href={MOVE_BOOK_HREF} className="mt-9 inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
                   Book Your Move With Us <ArrowRight size={18} aria-hidden />

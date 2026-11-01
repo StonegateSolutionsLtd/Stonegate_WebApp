@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import { Button } from '@/components/ui/button'
+import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import {
   Shield, DollarSign, Users, Truck, Star, CheckCircle2, Building2,
   Home, MapPin, ArrowRight,
@@ -372,11 +373,9 @@ export default function BurnabyMoversPage() {
                     Request Your Move
                   </Button>
                 </Link>
-                <Link href="/burnaby-junk-removal">
-                  <Button className="text-base px-10 py-6 rounded-full font-bold" style={{ backgroundColor: 'transparent', color: '#254220', border: '2px solid #254220' }}>
-                    Need Junk Removal Instead?
-                  </Button>
-                </Link>
+                <PhoneLink className="inline-flex items-center justify-center text-base px-10 py-3 rounded-full font-bold" style={{ color: '#254220', border: '2px solid #254220' }}>
+                  Call <PhoneNumber />
+                </PhoneLink>
               </div>
             </div>
           </FadeIn>

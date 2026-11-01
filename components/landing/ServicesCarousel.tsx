@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 export interface ServiceCard {
   href: string
-  kind: 'Moving' | 'Junk removal'
+  kind: 'Moving'
   name: string
   text: string
   image: { src: string; alt: string; pos?: string; brightness?: number }

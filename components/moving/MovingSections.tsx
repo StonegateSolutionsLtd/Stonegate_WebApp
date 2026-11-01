@@ -48,7 +48,7 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo 
           className="object-cover"
           style={{ objectPosition: photo.pos ?? 'center', filter: photo.brightness ? `brightness(${photo.brightness})` : undefined }}
         />
-        {/* Phones: only the upper left, behind the headline, is darkened (as on /junk-removal); desktop fades from the left */}
+        {/* Phones: only the upper left, behind the headline, is darkened; desktop fades from the left */}
         <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 520px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.68) 55%, rgba(0,0,0,0.45) 74%, rgba(0,0,0,0.15) 90%, transparent 100%)' }} />
         <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.14) 58%, transparent 75%)' }} />
       </div>
