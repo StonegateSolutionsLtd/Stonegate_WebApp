@@ -4,6 +4,7 @@ import GoogleLogo from '@/components/GoogleLogo'
 import Image from 'next/image'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import GoogleStars from '@/components/GoogleStars'
 import { Button } from '@/components/ui/button'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import {
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
+import { MOVING_REVIEWS } from '@/lib/moving-services'
 import { SITE_URL, providerLd, hourlyOfferLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
@@ -46,24 +48,6 @@ const jobs = [
   { src: '/burnaby/burnaby-move-truck-street.jpg', alt: 'Stonegate moving truck loaded with wrapped furniture on a Burnaby street', position: 'center' },
 ]
 
-const reviews = [
-  {
-    name: 'Fady Nasr',
-    text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
-  },
-  {
-    name: 'Le Cao Huy',
-    text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than…',
-  },
-  {
-    name: 'Amirali Nasrinpay',
-    text: 'The stonegate solution is the best moving company in the whole of Vancouver. They came on time picked my items and safely put them to the other location i needed them to it. They have one of the strongest times in Vancouver, very respect…',
-  },
-  {
-    name: 'Aryan Kapoor',
-    text: 'Really happy with the service. The guys were on time, worked quickly, and took good care of my stuff. The whole move went smoothly and they made the process a lot less stressful. Would definitely use them again!',
-  },
-]
 
 const faqs = [
   {
@@ -119,6 +103,7 @@ export default function BurnabyMoversPage() {
           <div className="max-w-6xl mx-auto px-6 py-16 lg:py-20 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div>
               <FadeIn>
+                <GoogleStars onLight className="mb-4" />
                 <span
                   className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
                   style={{ color: '#254220', borderColor: '#B5C9B0' }}
@@ -134,7 +119,7 @@ export default function BurnabyMoversPage() {
                 <div className="flex flex-wrap gap-4 mb-10">
                   <Link href="/order">
                     <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
-                      Request Your Move →
+                      Request a Free Estimate →
                     </Button>
                   </Link>
                 </div>
@@ -291,7 +276,7 @@ export default function BurnabyMoversPage() {
                 <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
               </div>
             </FadeIn>
-            <ReviewsRow reviews={reviews} />
+            <ReviewsRow reviews={MOVING_REVIEWS} />
             <div className="text-center">
               <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
                 <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
@@ -350,15 +335,15 @@ export default function BurnabyMoversPage() {
           <FadeIn>
             <div className="max-w-6xl mx-auto px-6 py-20 text-center">
               <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
-                Ready to Book Your Burnaby Move?
+                Get a Free Estimate for Your Burnaby Move
               </h2>
               <p className="text-lg mb-10 max-w-lg mx-auto" style={{ color: '#6B5E54' }}>
-                Get a free quote in minutes - transparent pricing, no surprises.
+                Transparent hourly pricing, no surprises.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link href="/order">
                   <Button className="text-base px-10 py-6 rounded-full font-bold border-0" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
-                    Request Your Move
+                    Request a Free Estimate
                   </Button>
                 </Link>
                 <PhoneLink className="inline-flex items-center justify-center text-base px-10 py-3 rounded-full font-bold" style={{ color: '#254220', border: '2px solid #254220' }}>

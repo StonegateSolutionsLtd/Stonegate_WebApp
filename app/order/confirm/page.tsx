@@ -12,7 +12,9 @@ function readStoredOrder(): OrderFormData | null {
   if (typeof window === 'undefined') return null
   try {
     const raw = sessionStorage.getItem('pendingOrder')
-    return raw ? (JSON.parse(raw) as OrderFormData) : null
+    const order = raw ? (JSON.parse(raw) as OrderFormData) : null
+    // A request saved by the older form has no move type; send it back through the new one
+    return order?.moveType ? order : null
   } catch { return null }
 }
 
@@ -45,18 +47,18 @@ export default function ConfirmPage() {
 
   if (!order) return (
     <PageCanvas>
-      <p className="text-center pt-20" style={{ color: '#9A8E83' }}>Loading your order...</p>
+      <p className="text-center pt-20" style={{ color: '#9A8E83' }}>Loading your request...</p>
     </PageCanvas>
   )
 
   return (
-    <PageCanvas backHref="/order" backLabel="← Edit order">
+    <PageCanvas backHref="/order" backLabel="← Edit request">
       <div className="max-w-lg mx-auto pt-8">
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
-          Review your quote details
+          Review your estimate request
         </h1>
         <p className="mt-2 text-base" style={{ color: '#9A8E83' }}>
-          Make sure everything looks right before submitting.
+          Make sure everything looks right before sending.
         </p>
 
         <div className="mt-8">
@@ -64,7 +66,7 @@ export default function ConfirmPage() {
         </div>
 
         <div className="mt-4 p-4 rounded-xl text-sm" style={{ backgroundColor: '#FFFFFF', border: '1px solid #EDE6DE', color: '#9A8E83' }}>
-          After confirming, we will reach out to discuss the details and finalize the price.
+          We will contact you within 24 hours with your free estimate and to confirm your moving date.
         </div>
 
         {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
@@ -77,7 +79,7 @@ export default function ConfirmPage() {
             onClick={handleConfirm}
             disabled={submitting}
           >
-            {submitting ? 'Submitting...' : 'Submit Quote Request'}
+            {submitting ? 'Submitting...' : 'Request My Free Estimate'}
           </Button>
           <Link href="/order">
             <Button variant="ghost" className="w-full" style={{ color: '#9A8E83' }}>

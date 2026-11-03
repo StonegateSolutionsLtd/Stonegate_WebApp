@@ -2,36 +2,64 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { EMPTY_ORDER_FORM, ORDER_START_KEY, type ApartmentSize, type OrderFormData, type OrderStart } from '@/lib/types'
+import {
+  EMPTY_ORDER_FORM, HOME_SIZES, MOVE_TYPES, ORDER_START_KEY, sizesFor,
+  type DateFlex, type MoveType, type OrderFormData, type OrderStart,
+} from '@/lib/types'
+import { addDays, nowInBusinessZone } from '@/lib/scheduling'
 import { Textarea } from '@/components/ui/textarea'
-import TimeSlotPicker from './TimeSlotPicker'
+import MonthCalendar from './MonthCalendar'
 import { cn } from '@/lib/utils'
 import {
-  MapPin, Building2, User, Mail, Phone, ArrowRight, Check, CheckCircle2,
+  MapPin, User, Mail, Phone, ArrowRight, Check, CheckCircle2,
+  Home, Building2, Briefcase, Warehouse, Package, Zap, CalendarRange, CalendarDays,
 } from 'lucide-react'
 
+type StepKey = 'type' | 'size' | 'date' | 'pickup' | 'dropoff' | 'contact'
 
-const STEPS = [
-  { short: 'Schedule', title: 'When works best for you?', desc: 'Pick a day and an open start time.' },
-  { short: 'Pickup',   title: 'Pickup location',          desc: 'Where are we picking up from?' },
-  { short: 'Drop-off', title: 'Drop-off & move details',  desc: 'Where are we delivering to?' },
-  { short: 'You',      title: 'Your information',         desc: 'How can we reach you?' },
+const STEP_INFO: Record<StepKey, { short: string; title: string; desc: string }> = {
+  type:    { short: 'Move', title: 'What are you moving?',               desc: 'Choose the type of move.' },
+  size:    { short: 'Size', title: 'How big is the move?',               desc: 'Pick the closest size.' },
+  date:    { short: 'Date', title: 'When do you want to move?',          desc: 'Pick a day, or any day this week. We confirm the arrival time with you.' },
+  pickup:  { short: 'From', title: 'Where are we picking up?',           desc: 'The address we are moving you from.' },
+  dropoff: { short: 'To',   title: 'Where are you moving to?',           desc: 'A full address, a city or a postal code is fine.' },
+  contact: { short: 'You',  title: 'Where should we send your estimate?', desc: 'We reply within 24 hours.' },
+}
+
+const SIZE_TITLES: Partial<Record<MoveType, string>> = {
+  house: 'How many bedrooms?',
+  apartment: 'How many bedrooms?',
+  commercial: 'How big is the office?',
+  storage: 'What size is the storage unit?',
+}
+
+const TYPE_ICONS: Record<MoveType, React.ElementType> = {
+  house: Home,
+  apartment: Building2,
+  commercial: Briefcase,
+  storage: Warehouse,
+  small: Package,
+}
+
+const DATE_OPTIONS: { value: DateFlex; label: string; Icon: React.ElementType }[] = [
+  { value: 'today', label: 'Today', Icon: Zap },
+  { value: 'this_week', label: 'This week', Icon: CalendarRange },
+  { value: 'date', label: 'Choose a date', Icon: CalendarDays },
 ]
 
-const APARTMENT_SIZES = [
-  { value: 'studio', label: 'Studio' },
-  { value: '1br',    label: '1 BR'   },
-  { value: '2br',    label: '2 BR'   },
-  { value: '3br',    label: '3 BR'   },
-  { value: '4br+',   label: '4+ BR'  },
-]
+/** A small move needs no size */
+function stepsFor(type: OrderFormData['moveType']): StepKey[] {
+  return type === 'small'
+    ? ['type', 'date', 'pickup', 'dropoff', 'contact']
+    : ['type', 'size', 'date', 'pickup', 'dropoff', 'contact']
+}
 
-function StepIndicator({ current }: { current: number }) {
+function StepIndicator({ steps, current }: { steps: StepKey[]; current: number }) {
   return (
     <div className="mb-10">
       <div className="flex items-center">
-        {STEPS.map((s, i) => (
-          <div key={i} className="relative flex items-center" style={{ flex: i < STEPS.length - 1 ? 1 : 'none' }}>
+        {steps.map((key, i) => (
+          <div key={key} className="relative flex items-center" style={{ flex: i < steps.length - 1 ? 1 : 'none' }}>
             {/* Circle */}
             <div className="relative flex-shrink-0">
               {i === current && (
@@ -41,7 +69,7 @@ function StepIndicator({ current }: { current: number }) {
                 />
               )}
               <div
-                className="relative w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-[background-color,color,box-shadow] duration-300"
+                className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm font-bold transition-[background-color,color,box-shadow] duration-300"
                 style={
                   i < current
                     ? { backgroundColor: '#254220', color: '#FAF7F2' }
@@ -59,16 +87,16 @@ function StepIndicator({ current }: { current: number }) {
             </div>
 
             {/* Label centered under circle */}
-            <div className="absolute top-full mt-1.5 w-9 flex justify-center">
+            <div className="absolute top-full mt-1.5 w-8 sm:w-9 flex justify-center">
               <span className="text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap transition-colors duration-300"
                 style={{ color: i <= current ? '#254220' : '#C4B8AC' }}>
-                {s.short}
+                {STEP_INFO[key].short}
               </span>
             </div>
 
             {/* Connector line */}
-            {i < STEPS.length - 1 && (
-              <div className="flex-1 h-[2px] mx-2 rounded-full transition-colors duration-500"
+            {i < steps.length - 1 && (
+              <div className="flex-1 h-[2px] mx-1.5 sm:mx-2 rounded-full transition-colors duration-500"
                 style={{ backgroundColor: i < current ? '#254220' : '#E0D8D0' }} />
             )}
           </div>
@@ -112,93 +140,93 @@ function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className={`w-full h-11 pl-10 pr-4 rounded-xl border text-sm transition-all outline-none
+      className={`w-full h-12 pl-10 pr-4 rounded-xl border text-base sm:text-sm transition-all outline-none
         focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15 placeholder:text-[#C4B8AC] ${props.className ?? ''}`}
       style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714', ...props.style }}
     />
   )
 }
 
-function SizeCard({ label, selected, onClick }: {
-  label: string; selected: boolean; onClick: () => void
+const GREEN = '#014421'
+const CREAM = '#FAF7F2'
+
+/** A big tappable choice on a soft green tint; the selected one fills solid green */
+function ChoiceCard({ selected, onClick, className, children }: {
+  selected: boolean; onClick: () => void; className?: string; children: React.ReactNode
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={cn(
-        'h-12 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color,transform] duration-150 hover:border-[#254220] hover:scale-[1.05] active:scale-95',
-        selected && 'scale-[1.03]'
+        'rounded-xl border text-center transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.98]',
+        !selected && 'hover:border-[#014421] hover:bg-[#EAF2E7]',
+        className,
       )}
       style={{
-        backgroundColor: selected ? '#254220' : '#FFFFFF',
-        borderColor:     selected ? '#254220' : '#E0D8D0',
-        color:           selected ? '#FAF7F2' : '#6B5E54',
-        boxShadow:       selected ? '0 2px 8px rgba(77,107,71,0.25)' : 'none',
+        backgroundColor: selected ? GREEN : '#F3F8F1',
+        borderColor: selected ? GREEN : '#D6E4D2',
+        boxShadow: selected ? '0 8px 20px -10px rgba(1,68,33,0.6)' : 'none',
       }}
     >
-      {label}
+      {children}
     </button>
   )
 }
 
-function ElevatorPicker({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
+/** The icon in a solid green circle; it turns cream on the selected card */
+function IconBadge({ icon: Icon, selected }: { icon: React.ElementType; selected: boolean }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {[
-        { label: 'No elevator',  val: false },
-        { label: 'Has elevator', val: true  },
-      ].map(opt => (
-        <button
-          key={String(opt.val)}
-          type="button"
-          onClick={() => onChange(opt.val)}
-          className={cn(
-            'h-11 rounded-xl border text-sm font-semibold transition-[background-color,border-color,box-shadow,color,transform] duration-150 hover:border-[#254220] hover:scale-[1.03] active:scale-95',
-            value === opt.val && 'scale-[1.02]'
-          )}
-          style={{
-            backgroundColor: value === opt.val ? '#254220' : '#FFFFFF',
-            borderColor:     value === opt.val ? '#254220' : '#E0D8D0',
-            color:           value === opt.val ? '#FAF7F2' : '#6B5E54',
-            boxShadow:       value === opt.val ? '0 2px 8px rgba(77,107,71,0.25)' : 'none',
-          }}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
+    <span className="w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-150"
+      style={{ backgroundColor: selected ? CREAM : GREEN }}>
+      <Icon size={22} strokeWidth={2} style={{ color: selected ? GREEN : CREAM }} aria-hidden />
+    </span>
   )
 }
 
+const choiceText = (selected: boolean) => ({ color: selected ? CREAM : '#1A1714' })
 
-function readOrderStart(): OrderStart {
+function readOrderStart(): Partial<OrderFormData> {
   if (typeof window === 'undefined') return {}
   try {
     const { pickupAddress, dropoffAddress, apartmentSize }: OrderStart = JSON.parse(sessionStorage.getItem(ORDER_START_KEY) ?? '{}')
     return {
       ...(pickupAddress && { pickupAddress }),
       ...(dropoffAddress && { dropoffAddress }),
-      ...(apartmentSize && { apartmentSize }),
+      // The price estimator's home size waits on the size step once house or apartment is picked
+      ...(apartmentSize && HOME_SIZES.some(s => s.value === apartmentSize) && { moveSize: apartmentSize }),
     }
   } catch {
     return {}
   }
 }
 
+const fadeUp = (delay: number) => ({ animationDelay: `${delay}ms`, animationDuration: '300ms', animationFillMode: 'backwards' as const })
+
 export default function OrderForm() {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
-  // Prefilled from the booking-start form on the moving service pages. Safe to differ from the
-  // server render: those fields only show from step 1, after hydration.
+  // Prefilled from the hero form and the price estimator. Safe to differ from the server render:
+  // those fields only show from the size step on, after hydration.
   const [form, setForm] = useState<OrderFormData>(() => ({ ...EMPTY_ORDER_FORM, ...readOrderStart() }))
   const stepRef = useRef(0)
   useEffect(() => { stepRef.current = step }, [step])
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Seed the current history entry with step:0 so back button works correctly
+  // Which date card is open; a day picked under "This week" is saved as an exact date
+  const [dateMode, setDateMode] = useState<DateFlex | ''>('')
+
+  const steps = stepsFor(form.moveType)
+  const key = steps[step] ?? 'type'
+  const today = nowInBusinessZone().date
+  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(today, i + 1))
+
+  // Seed the current history entry with step:0 so back button works correctly. The step is added to
+  // Next's own history state rather than replacing it: an entry without Next's state makes Back reload the page.
   useEffect(() => {
-    window.history.replaceState({ step: 0 }, '')
+    window.history.replaceState({ ...window.history.state, step: 0 }, '')
   }, [])
 
   // The prefill is used once
@@ -209,8 +237,10 @@ export default function OrderForm() {
   // Browser back button → go to previous step instead of leaving the page
   useEffect(() => {
     const onPop = (e: PopStateEvent) => {
-      const target = e.state?.step
+      // The first entry may have lost its step to Next's own state; it is the first step
+      const target = e.state?.step ?? 0
       if (typeof target === 'number') {
+        if (advanceTimer.current) clearTimeout(advanceTimer.current)
         setDirection(target < stepRef.current ? 'back' : 'forward')
         setStep(target)
       }
@@ -219,29 +249,33 @@ export default function OrderForm() {
     return () => window.removeEventListener('popstate', onPop)
   }, [])
 
-  function set<K extends keyof OrderFormData>(key: K, value: OrderFormData[K]) {
-    setForm(prev => ({ ...prev, [key]: value }))
+  useEffect(() => () => { if (advanceTimer.current) clearTimeout(advanceTimer.current) }, [])
+
+  function set<K extends keyof OrderFormData>(field: K, value: OrderFormData[K]) {
+    setForm(prev => ({ ...prev, [field]: value }))
   }
 
   function canAdvance() {
-    if (step === 0) return form.movingDate !== '' && form.movingTime !== ''
-    if (step === 1) return form.pickupAddress.trim().length > 0
-    if (step === 2) return (
-      form.dropoffAddress.trim().length > 0 &&
-      form.apartmentSize !== ''
-    )
-    return (
-      form.customerName.trim().length > 0 &&
-      form.customerEmail.trim().length > 0 &&
-      form.phone.trim().length > 0
-    )
+    const f = form
+    switch (key) {
+      case 'type':    return !!f.moveType
+      case 'size':    return sizesFor(f.moveType).some(s => s.value === f.moveSize)
+      case 'date':    return !!f.dateFlex && !!f.movingDate
+      case 'pickup':  return f.pickupAddress.trim().length > 0
+      case 'dropoff': return f.dropoffAddress.trim().length > 0
+      case 'contact': return (
+        f.customerName.trim().length > 0 &&
+        /\S+@\S+\.\S+/.test(f.customerEmail) &&
+        f.phone.replace(/\D/g, '').length >= 10
+      )
+    }
   }
 
-  function handleNext() {
-    if (step < STEPS.length - 1) {
+  function goNext() {
+    if (step < steps.length - 1) {
       const next = step + 1
       setDirection('forward')
-      window.history.pushState({ step: next }, '')
+      window.history.pushState({ ...window.history.state, step: next }, '')
       setStep(next)
       return
     }
@@ -249,172 +283,257 @@ export default function OrderForm() {
     router.push('/order/confirm')
   }
 
+  /** Choosing a card moves on by itself, after a beat so the choice is seen */
+  function chooseAndAdvance(patch: Partial<OrderFormData>) {
+    setForm(prev => ({ ...prev, ...patch }))
+    if (advanceTimer.current) clearTimeout(advanceTimer.current)
+    advanceTimer.current = setTimeout(goNext, 220)
+  }
+
+  function chooseType(type: MoveType) {
+    // A size only carries over between house and apartment, which share the bedroom sizes
+    const keepSize = sizesFor(type).some(s => s.value === form.moveSize)
+    chooseAndAdvance({ moveType: type, moveSize: keepSize ? form.moveSize : '' })
+  }
+
+  function chooseDate(mode: DateFlex) {
+    if (mode === 'today') {
+      setDateMode('today')
+      chooseAndAdvance({ dateFlex: 'today', movingDate: today })
+      return
+    }
+    // "This week" opens the next 7 days and "Choose a date" the calendar; picking a day there moves on
+    if (mode !== dateMode) setForm(prev => ({ ...prev, dateFlex: '', movingDate: '' }))
+    setDateMode(mode)
+  }
+
   const ready = canAdvance()
+  const sizes = sizesFor(form.moveType)
+  const title = key === 'size' ? SIZE_TITLES[form.moveType as MoveType] ?? STEP_INFO.size.title : STEP_INFO[key].title
 
   return (
     <div className="w-full">
-      <StepIndicator current={step} />
+      <StepIndicator steps={steps} current={step} />
 
-      {/* â"€â"€ Card â"€â"€ */}
-      <div className="rounded-2xl p-8 lg:p-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+      {/* Card */}
+      <div className="rounded-2xl p-5 sm:p-8 lg:p-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
         style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #EDE6DE' }}>
 
         <div
-          key={step}
+          key={key}
           className={cn(
             'animate-in fade-in duration-300',
             direction === 'forward' ? 'slide-in-from-right-8' : 'slide-in-from-left-8'
           )}
         >
           {/* Header */}
-          <div className="mb-7 pb-6" style={{ borderBottom: '1px solid #F0EBE3' }}>
-            <h2 className="text-xl font-bold" style={{ color: '#1A1714' }}>{STEPS[step].title}</h2>
-            <p className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEPS[step].desc}</p>
+          <div className="mb-6 pb-5" style={{ borderBottom: '1px solid #F0EBE3' }}>
+            <h2 className="text-xl font-bold" style={{ color: '#1A1714' }}>{title}</h2>
+            <p className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEP_INFO[key].desc}</p>
           </div>
 
           <div className="flex flex-col gap-5">
 
-          {/* â"€â"€ Step 1: Schedule â"€â"€ */}
-          {step === 0 && (
-            <TimeSlotPicker
-              jobType="moving"
-              date={form.movingDate}
-              time={form.movingTime}
-              onChange={(date, time) => setForm(prev => ({ ...prev, movingDate: date, movingTime: time }))}
-            />
+          {/* Step: move type */}
+          {key === 'type' && (
+            // Phones: 2 + 2 + 1 wide; wider: 3 on top, 2 centred below
+            <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
+              {MOVE_TYPES.map((t, i) => {
+                const Icon = TYPE_ICONS[t.value]
+                const selected = form.moveType === t.value
+                return (
+                  <ChoiceCard
+                    key={t.value}
+                    selected={selected}
+                    onClick={() => chooseType(t.value)}
+                    className={cn(
+                      'flex flex-col items-center justify-center gap-2 px-3 py-5 sm:col-span-2 animate-in fade-in slide-in-from-bottom-2',
+                      i === 3 && 'sm:col-start-2',
+                      i === MOVE_TYPES.length - 1 && 'col-span-2',
+                    )}
+                  >
+                    <IconBadge icon={Icon} selected={selected} />
+                    <span className="text-[15px] font-bold leading-tight" style={choiceText(selected)}>{t.label}</span>
+                  </ChoiceCard>
+                )
+              })}
+            </div>
           )}
 
-          {/* â"€â"€ Step 2: Pickup â"€â"€ */}
-          {step === 1 && (
-            <>
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '0ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress" valid={form.pickupAddress.trim().length > 0}>
-                  <StyledInput
-                    id="pickupAddress"
-                    placeholder="123 Main St, City"
-                    value={form.pickupAddress}
-                    onChange={e => set('pickupAddress', e.target.value)}
-                  />
-                </FieldIcon>
-              </div>
-
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '60ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <FieldIcon icon={Building2} label="Floor number" id="pickupFloor">
-                  <StyledInput
-                    id="pickupFloor"
-                    type="number"
-                    min={1} max={50}
-                    value={form.pickupFloor}
-                    onChange={e => set('pickupFloor', Number(e.target.value))}
-                  />
-                </FieldIcon>
-              </div>
-
-              <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '120ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Elevator available?</span>
-                <ElevatorPicker value={form.pickupHasElevator} onChange={v => set('pickupHasElevator', v)} />
-              </div>
-            </>
+          {/* Step: size - bedrooms, office size or storage unit size */}
+          {key === 'size' && (
+            <div className="grid grid-cols-2 gap-3">
+              {sizes.map(s => {
+                const selected = form.moveSize === s.value
+                return (
+                  <ChoiceCard
+                    key={s.value}
+                    selected={selected}
+                    onClick={() => chooseAndAdvance({ moveSize: s.value })}
+                    className="flex flex-col items-center justify-center px-2 py-4 sm:py-5 min-h-[104px] animate-in fade-in slide-in-from-bottom-2"
+                  >
+                    <span className="text-[34px] font-black leading-none" style={{ color: selected ? CREAM : GREEN }}>{s.short}</span>
+                    {form.moveType === 'storage' && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider mt-0.5" style={{ color: selected ? '#B9D3B3' : '#A9743F' }}>sqft</span>
+                    )}
+                    <span className="text-[13px] sm:text-sm font-semibold mt-1.5 leading-snug" style={{ color: selected ? '#D9E8D5' : '#4A3F38' }}>
+                      {form.moveType === 'house' || form.moveType === 'apartment' ? (s.short === '1' ? 'Bedroom' : 'Bedrooms') : s.label}
+                    </span>
+                  </ChoiceCard>
+                )
+              })}
+            </div>
           )}
 
-          {/* â"€â"€ Step 3: Drop-off â"€â"€ */}
-          {step === 2 && (
+          {/* Step: date - today, this week or a day on the calendar */}
+          {key === 'date' && (
             <>
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '0ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <FieldIcon icon={MapPin} label="Drop-off address" id="dropoffAddress" valid={form.dropoffAddress.trim().length > 0}>
-                  <StyledInput
-                    id="dropoffAddress"
-                    placeholder="456 New St, City"
-                    value={form.dropoffAddress}
-                    onChange={e => set('dropoffAddress', e.target.value)}
-                  />
-                </FieldIcon>
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+                {DATE_OPTIONS.map(({ value, label, Icon }) => {
+                  const selected = dateMode === value
+                  return (
+                    <ChoiceCard
+                      key={value}
+                      selected={selected}
+                      onClick={() => chooseDate(value)}
+                      className="flex flex-col items-center justify-center gap-2 px-1.5 py-4 sm:py-5"
+                    >
+                      <IconBadge icon={Icon} selected={selected} />
+                      <span className="text-[14px] sm:text-[15px] font-bold leading-tight" style={choiceText(selected)}>{label}</span>
+                    </ChoiceCard>
+                  )
+                })}
               </div>
-
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '60ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <FieldIcon icon={Building2} label="Floor number" id="dropoffFloor">
-                  <StyledInput
-                    id="dropoffFloor"
-                    type="number"
-                    min={1} max={50}
-                    value={form.dropoffFloor}
-                    onChange={e => set('dropoffFloor', Number(e.target.value))}
-                  />
-                </FieldIcon>
-              </div>
-
-              <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '120ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Elevator available?</span>
-                <ElevatorPicker value={form.dropoffHasElevator} onChange={v => set('dropoffHasElevator', v)} />
-              </div>
-
-              <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '180ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <span className="text-sm font-semibold" style={{ color: '#4A3F38' }}>Apartment size</span>
-                <div className="grid grid-cols-5 gap-2">
-                  {APARTMENT_SIZES.map(s => (
-                    <SizeCard
-                      key={s.value}
-                      label={s.label}
-                      selected={form.apartmentSize === s.value}
-                      onClick={() => set('apartmentSize', s.value as ApartmentSize)}
-                    />
-                  ))}
+              {dateMode === 'this_week' && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                  <p className="text-sm font-semibold mb-2.5" style={{ color: '#4A3F38' }}>Which day works?</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[null, ...weekDays].map(day => {
+                      const selected = day ? form.dateFlex === 'date' && form.movingDate === day : form.dateFlex === 'this_week'
+                      const d = day ? new Date(`${day}T12:00:00`) : null
+                      return (
+                        <ChoiceCard
+                          key={day ?? 'any'}
+                          selected={selected}
+                          onClick={() => chooseAndAdvance(day ? { dateFlex: 'date', movingDate: day } : { dateFlex: 'this_week', movingDate: today })}
+                          className="flex flex-col items-center justify-center h-16"
+                        >
+                          {d ? (
+                            <>
+                              <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: selected ? '#B9D3B3' : '#A9743F' }}>
+                                {d.toLocaleDateString('en-CA', { weekday: 'short' })}
+                              </span>
+                              <span className="text-lg font-black leading-tight" style={{ color: selected ? CREAM : GREEN }}>{d.getDate()}</span>
+                            </>
+                          ) : (
+                            <span className="text-[13px] font-bold leading-tight px-1" style={{ color: selected ? CREAM : GREEN }}>Any day</span>
+                          )}
+                        </ChoiceCard>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-
+              )}
+              {dateMode === 'date' && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+                  <MonthCalendar
+                    value={form.movingDate}
+                    min={today}
+                    onChange={date => chooseAndAdvance({ dateFlex: 'date', movingDate: date })}
+                  />
+                </div>
+              )}
             </>
           )}
 
-          {/* â"€â"€ Step 4: Contact â"€â"€ */}
-          {step === 3 && (
+          {/* Step: pickup */}
+          {key === 'pickup' && (
+            <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(0)}>
+              <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress" valid={form.pickupAddress.trim().length > 0}>
+                <StyledInput
+                  id="pickupAddress"
+                  placeholder="123 Main St, Vancouver"
+                  autoComplete="street-address"
+                  autoFocus
+                  value={form.pickupAddress}
+                  onChange={e => set('pickupAddress', e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && ready) goNext() }}
+                />
+              </FieldIcon>
+            </div>
+          )}
+
+          {/* Step: drop-off */}
+          {key === 'dropoff' && (
+            <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(0)}>
+              <FieldIcon icon={MapPin} label="Drop-off address, city or postal code" id="dropoffAddress" valid={form.dropoffAddress.trim().length > 0}>
+                <StyledInput
+                  id="dropoffAddress"
+                  placeholder="Burnaby, or V5C 0N7"
+                  autoFocus
+                  value={form.dropoffAddress}
+                  onChange={e => set('dropoffAddress', e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && ready) goNext() }}
+                />
+              </FieldIcon>
+            </div>
+          )}
+
+          {/* Step: contact */}
+          {key === 'contact' && (
             <>
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '0ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
+              <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(0)}>
                 <FieldIcon icon={User} label="Full name" id="customerName" valid={form.customerName.trim().length > 0}>
                   <StyledInput
                     id="customerName"
                     placeholder="Jane Smith"
+                    autoComplete="name"
                     value={form.customerName}
                     onChange={e => set('customerName', e.target.value)}
                   />
                 </FieldIcon>
               </div>
 
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '60ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
+              <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(60)}>
                 <FieldIcon icon={Mail} label="Email address" id="customerEmail" valid={/\S+@\S+\.\S+/.test(form.customerEmail)}>
                   <StyledInput
                     id="customerEmail"
                     type="email"
                     placeholder="you@example.com"
+                    autoComplete="email"
                     value={form.customerEmail}
                     onChange={e => set('customerEmail', e.target.value)}
                   />
                 </FieldIcon>
               </div>
 
-              <div className="animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '120ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
-                <FieldIcon icon={Phone} label="Phone number" id="phone" valid={form.phone.trim().length > 0}>
+              <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(120)}>
+                <FieldIcon icon={Phone} label="Phone number" id="phone" valid={form.phone.replace(/\D/g, '').length >= 10}>
                   <StyledInput
                     id="phone"
                     type="tel"
-                    placeholder="+1 555 000 0000"
+                    placeholder="604 555 0123"
+                    autoComplete="tel"
                     value={form.phone}
                     onChange={e => set('phone', e.target.value)}
                   />
                 </FieldIcon>
               </div>
 
-              <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={{ animationDelay: '180ms', animationDuration: '300ms', animationFillMode: 'backwards' }}>
+              <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={fadeUp(180)}>
                 <label htmlFor="specialNotes" className="text-sm font-semibold" style={{ color: '#4A3F38' }}>
-                  Special notes{' '}
+                  {form.moveType === 'small' ? 'What are you moving?' : 'Anything we should know?'}{' '}
                   <span className="font-normal text-[#B0A49A]">(optional)</span>
                 </label>
                 <Textarea
                   id="specialNotes"
-                  placeholder="Heavy items, fragile furniture, access codes…"
+                  placeholder={form.moveType === 'small'
+                    ? 'A couch, a bed and a few boxes…'
+                    : 'Stairs or elevator, heavy items, a piano, parking…'}
                   rows={3}
                   value={form.specialNotes}
                   onChange={e => set('specialNotes', e.target.value)}
-                  className="rounded-xl border resize-none text-sm placeholder:text-[#C4B8AC] focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15"
+                  className="rounded-xl border resize-none text-base sm:text-sm placeholder:text-[#C4B8AC] focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15"
                   style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714' }}
                 />
               </div>
@@ -423,8 +542,8 @@ export default function OrderForm() {
           </div>
         </div>
 
-        {/* â"€â"€ Navigation â"€â"€ */}
-        <div className="flex items-center justify-between pt-5">
+        {/* Navigation */}
+        <div className="flex items-center justify-between pt-6">
           {step > 0 ? (
             <button
               type="button"
@@ -438,7 +557,7 @@ export default function OrderForm() {
 
           <button
             type="button"
-            onClick={handleNext}
+            onClick={goNext}
             disabled={!ready}
             className={cn(
               'group flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed',
@@ -450,7 +569,7 @@ export default function OrderForm() {
               boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
             }}
           >
-            {step < STEPS.length - 1 ? 'Continue' : 'Review Quote'}
+            {step < steps.length - 1 ? 'Continue' : 'Review Request'}
             <ArrowRight size={14} strokeWidth={2.5} className="transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </div>
@@ -458,6 +577,3 @@ export default function OrderForm() {
     </div>
   )
 }
-
-
-

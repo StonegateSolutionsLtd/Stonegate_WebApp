@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Clock, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import GoogleStars from '@/components/GoogleStars'
 import FadeIn from '@/components/landing/FadeIn'
 import StickyCallBar from '@/components/landing/StickyCallBar'
 import GoogleLogo from '@/components/GoogleLogo'
@@ -76,6 +77,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.3) 45%, transparent 65%)' }} />
           <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-start lg:items-center min-h-[520px] sm:min-h-[600px] lg:min-h-[min(calc(80svh-68px),720px)] pt-14 pb-12 lg:py-16">
             <div>
+              <GoogleStars className="mb-4 lg:mb-5" />
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-5 w-fit" style={{ fontSize: 'clamp(2.4rem, 7.3vw, 4.8rem)' }}>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Meet the</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
@@ -125,7 +127,7 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <Link href={MOVE_BOOK_HREF} className="mt-9 inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
-                  Book Your Move With Us <ArrowRight size={18} aria-hidden />
+                  Request a Free Estimate <ArrowRight size={18} aria-hidden />
                 </Link>
               </div>
             </FadeIn>
@@ -203,7 +205,7 @@ export default function AboutPage() {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="about-hero" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
+      <StickyCallBar watchId="about-hero" quoteHref={MOVE_BOOK_HREF} />
     </div>
   )
 }

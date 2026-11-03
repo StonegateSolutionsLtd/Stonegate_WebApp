@@ -1,9 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { isSlotAvailable } from '@/lib/availability'
 import { sendOwnerOrderNotification, sendCustomerOrderConfirmation } from '@/lib/email'
-import type { OrderFormData } from '@/lib/types'
+import { addDays, nowInBusinessZone } from '@/lib/scheduling'
+import { MOVE_TYPES, sizesFor, type ApartmentSize, type OrderFormData } from '@/lib/types'
 
+const DATE_FLEX = ['today', 'this_week', 'date']
+
+/** A free estimate request from the public form - no time slot is held until we confirm the move */
 export async function POST(request: NextRequest) {
   let body: OrderFormData
   try {
@@ -13,48 +16,52 @@ export async function POST(request: NextRequest) {
   }
 
   const required: (keyof OrderFormData)[] = [
+    'moveType', 'dateFlex', 'movingDate', 'pickupAddress', 'dropoffAddress',
     'customerName', 'customerEmail', 'phone',
-    'pickupAddress', 'dropoffAddress', 'apartmentSize', 'movingDate', 'movingTime',
   ]
   for (const field of required) {
-    if (!body[field]) {
+    const value = body[field]
+    if (typeof value !== 'string' || !value.trim()) {
       return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 })
     }
   }
 
-  try {
-    if (!(await isSlotAvailable('moving', body.movingDate, body.movingTime))) {
-      return NextResponse.json(
-        { error: 'That time was just booked. Please pick another slot.' },
-        { status: 409 }
-      )
-    }
-  } catch (err) {
-    console.error('Availability check failed:', err)
-    return NextResponse.json(
-      { error: 'Could not verify that time is still open. Please try again.' },
-      { status: 503 }
-    )
+  const moveType = body.moveType!
+  if (!MOVE_TYPES.some(t => t.value === moveType)) {
+    return NextResponse.json({ error: 'Invalid move type' }, { status: 400 })
+  }
+  const sizes = sizesFor(moveType)
+  const moveSize = sizes.length ? body.moveSize ?? '' : ''
+  if (sizes.length && !sizes.some(s => s.value === moveSize)) {
+    return NextResponse.json({ error: 'Please choose a size for your move' }, { status: 400 })
+  }
+  if (!DATE_FLEX.includes(body.dateFlex!)) {
+    return NextResponse.json({ error: 'Invalid moving date' }, { status: 400 })
+  }
+  // A day of slack either side of Vancouver's date covers customers in other time zones
+  const today = nowInBusinessZone().date
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(body.movingDate) || body.movingDate < addDays(today, -1) || body.movingDate > addDays(today, 730)) {
+    return NextResponse.json({ error: 'Please choose a valid moving date' }, { status: 400 })
   }
 
+  const isHome = moveType === 'house' || moveType === 'apartment'
   const supabase = createServiceClient()
 
   const { data: order, error: insertError } = await supabase
     .from('orders')
     .insert({
-      customer_name: body.customerName,
-      customer_email: body.customerEmail,
-      phone: body.phone,
-      pickup_address: body.pickupAddress,
-      pickup_floor: body.pickupFloor ?? 1,
-      pickup_has_elevator: body.pickupHasElevator ?? false,
-      dropoff_address: body.dropoffAddress,
-      dropoff_floor: body.dropoffFloor ?? 1,
-      dropoff_has_elevator: body.dropoffHasElevator ?? false,
-      apartment_size: body.apartmentSize,
+      customer_name: body.customerName.trim(),
+      customer_email: body.customerEmail.trim(),
+      phone: body.phone.trim(),
+      pickup_address: body.pickupAddress.trim(),
+      dropoff_address: body.dropoffAddress.trim(),
+      move_type: moveType,
+      move_size: moveSize || null,
+      apartment_size: isHome ? (moveSize as ApartmentSize) : null,
+      date_flexibility: body.dateFlex,
       moving_date: body.movingDate,
-      moving_time: body.movingTime,
-      special_notes: body.specialNotes || null,
+      moving_time: null,
+      special_notes: body.specialNotes?.trim() || null,
       status: 'pending',
     })
     .select('id')
@@ -62,13 +69,14 @@ export async function POST(request: NextRequest) {
 
   if (insertError || !order) {
     console.error('Order insert error:', insertError)
-    return NextResponse.json({ error: 'Failed to save order' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save your request. Please try again or call us.' }, { status: 500 })
   }
 
   // Send both emails - don't fail the request if email fails
+  const saved: OrderFormData = { ...body, moveSize, movingTime: '' }
   await Promise.allSettled([
-    sendOwnerOrderNotification({ orderId: order.id, order: body }),
-    sendCustomerOrderConfirmation({ orderId: order.id, order: body }),
+    sendOwnerOrderNotification({ orderId: order.id, order: saved }),
+    sendCustomerOrderConfirmation({ orderId: order.id, order: saved }),
   ])
 
   return NextResponse.json({ orderId: order.id }, { status: 201 })

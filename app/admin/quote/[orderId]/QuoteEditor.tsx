@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
+import { moveDateLabel, moveSummary } from '@/lib/types'
 import type { DetailedQuoteInputs } from '@/lib/quote-pricing'
 import { useDetailedQuoteState } from '@/components/admin/useDetailedQuoteState'
 import { DetailedQuoteForm } from '@/components/admin/DetailedQuoteForm'
@@ -19,9 +19,13 @@ interface Order {
   dropoff_address: string
   dropoff_floor: number
   dropoff_has_elevator: boolean
-  apartment_size: string
+  apartment_size: string | null
+  /** Set on free estimate requests; older and admin-entered orders have none */
+  move_type: string | null
+  move_size: string | null
+  date_flexibility: string | null
   moving_date: string
-  moving_time: string
+  moving_time: string | null
   special_notes: string | null
   status: string
   hourly_rate: number | null
@@ -50,7 +54,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const year = new Date(order.created_at).getFullYear()
   const num = String(order.order_number ?? '-').padStart(4, '0')
   const orderNum = `SG-${year}-${num}`
-  const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
+  const sizeLabel = moveSummary(order.move_type, order.move_size, order.apartment_size)
 
   const parsedRate = parseFloat(rate) || 0
   const parsedHours = parseFloat(hours) || 0
@@ -149,20 +153,20 @@ export default function QuoteEditor({ order }: { order: Order }) {
               <Row label="Name" value={order.customer_name} />
               <Row label="Email" value={order.customer_email} />
               <Row label="Phone" value={order.phone} />
-              <Row label="Move Date" value={new Date(order.moving_date + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} />
-              <Row label="Time" value={order.moving_time} />
-              <Row label="Size" value={sizeLabel} />
+              <Row label="Move Date" value={moveDateLabel(order.date_flexibility, order.moving_date, order.moving_time)} />
+              <Row label="Move" value={sizeLabel} />
             </div>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px', marginBottom: '12px' }}>LOCATIONS</div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: '#254220', marginBottom: '6px' }}>FROM</div>
               <Row label="Address" value={order.pickup_address} />
-              <Row label="Floor" value={String(order.pickup_floor)} />
-              <Row label="Elevator" value={order.pickup_has_elevator ? 'Yes' : 'No'} />
+              {/* The estimate form doesn't ask for floors or elevators, so only older orders have them */}
+              {!order.move_type && <Row label="Floor" value={String(order.pickup_floor)} />}
+              {!order.move_type && <Row label="Elevator" value={order.pickup_has_elevator ? 'Yes' : 'No'} />}
               <div style={{ fontSize: '12px', fontWeight: 600, color: '#254220', margin: '12px 0 6px' }}>TO</div>
               <Row label="Address" value={order.dropoff_address} />
-              <Row label="Floor" value={String(order.dropoff_floor)} />
-              <Row label="Elevator" value={order.dropoff_has_elevator ? 'Yes' : 'No'} />
+              {!order.move_type && <Row label="Floor" value={String(order.dropoff_floor)} />}
+              {!order.move_type && <Row label="Elevator" value={order.dropoff_has_elevator ? 'Yes' : 'No'} />}
             </div>
           </div>
           {order.special_notes && (
