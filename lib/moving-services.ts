@@ -49,7 +49,7 @@ export const MOVING_SERVICES: MovingService[] = [
     path: '/moving',
     name: 'Local moving',
     metaTitle: 'Local Movers in Metro Vancouver | Stonegate Moving Solutions',
-    metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $130/hr + GST. Check availability and book online.',
+    metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $130/hr + GST. Request a free estimate online.',
     heading: ['Local', 'Movers'],
     cardPhoto: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 40%' },
     cardText: 'Apartments, condos and houses moved anywhere in Metro Vancouver.',
@@ -188,15 +188,35 @@ export const MOVING_SERVICES: MovingService[] = [
 
 export const SERVICE_BY_SLUG = Object.fromEntries(MOVING_SERVICES.map(s => [s.slug, s])) as Record<MovingService['slug'], MovingService>
 
-/** Real Google reviews about moves (same wording as on the homepage) */
+/** Real Google reviews about moves, newest first. The homepage, Burnaby page, service pages and /order all use this list */
 export const MOVING_REVIEWS = [
   {
-    name: 'Fady Nasr',
-    text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
+    name: 'Diana K',
+    text: 'Great service. The guys were super punctual, careful and got things done at a very reasonable time. Would recommend!',
+  },
+  {
+    name: 'Chanvi Kotak',
+    text: "Ricardo and Dae'jhun (DJ) were very efficient. Extremely quick and super helpful. Made our move easy.",
+  },
+  {
+    name: 'Arista Maharjan',
+    text: 'We had a great experience with this moving company! The team was friendly, professional, and handled our belongings with care. They made the moving process smooth and stress-free. Everything went well, and we really appreciate their help. Highly recommend their service!',
+  },
+  {
+    name: 'Sana Hamid',
+    text: 'I had a very good experience with Stonegate Moving. They moved stuff for us from multiple locations on the same day, working 15 hours straight! Very courteous and skilled. Would be happy to use their services again.',
   },
   {
     name: 'Le Cao Huy',
-    text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than…',
+    text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than I expected. I would definitely use their services again and highly recommend them to anyone looking for reliable movers.',
+  },
+  {
+    name: 'Tabitha Marie Geraghty',
+    text: 'Amazing communication, pleasant and efficient service. These two movers who attended were kind and so helpful…',
+  },
+  {
+    name: 'Fady Nasr',
+    text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
   },
   {
     name: 'Amirali Nasrinpay',

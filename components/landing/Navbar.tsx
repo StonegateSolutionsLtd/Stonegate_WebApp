@@ -166,7 +166,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 transition-transform duration-200 hover:scale-105"
               style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
             >
-              Book Your Move
+              Request a Free Estimate
             </Link>
           </nav>
 
@@ -193,10 +193,10 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
 
             <Link
               href={MOVE_BOOK_HREF}
-              className="whitespace-nowrap rounded-full font-extrabold text-[15px] transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
+              className="whitespace-nowrap rounded-full font-extrabold text-[14px] min-[360px]:text-[15px] transition-transform hover:scale-105 px-3 min-[360px]:px-[18px] py-[11px]"
               style={{ backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
             >
-              Book Move
+              Free Estimate
             </Link>
             </>)}
 
@@ -237,7 +237,7 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
                 className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
                 style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
               >
-                Book Your Move
+                Request a Free Estimate
               </Link>
               <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
                 <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>

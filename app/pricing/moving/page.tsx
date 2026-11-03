@@ -5,6 +5,7 @@ import GoogleLogo from '@/components/GoogleLogo'
 import { ArrowRight, CheckCircle2, Clock, MapPin, Route, ShieldCheck, Star, Truck, Users } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
+import GoogleStars from '@/components/GoogleStars'
 import FadeIn from '@/components/landing/FadeIn'
 import StickyCallBar from '@/components/landing/StickyCallBar'
 import { JsonLd } from '@/components/seo/SeoBlocks'
@@ -95,6 +96,7 @@ export default function MovingPricingPage() {
           {/* Below lg the left column dissolves so its parts and the price cards can be ordered: headline, intro, prices, buttons */}
           <div className={`${sectionWrap} relative pt-8 pb-10 sm:pt-12 sm:pb-14 lg:pt-12 lg:pb-14 grid lg:grid-cols-[1fr_1.15fr] gap-6 sm:gap-8 lg:gap-12 items-center`}>
             <div className="contents lg:block">
+              <GoogleStars className="order-1 lg:mb-4" />
               <div className="order-1 flex items-center justify-between gap-4 lg:mb-5">
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none w-fit" style={{ fontSize: 'clamp(2.4rem, 6.5vw, 4.4rem)' }}>
                 <span style={{ color: CREAM }}>Moving</span>
@@ -282,13 +284,13 @@ export default function MovingPricingPage() {
         <MovingFaq heading="Moving pricing FAQ" faqs={faqs} />
 
         <MovingClose
-          heading="Ready to book your move?"
+          heading="Ready for your free estimate?"
           text="Check availability online in a couple of minutes, or call us to talk through your move."
         />
       </main>
 
       <Footer />
-      <StickyCallBar watchId="pricing-cta" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
+      <StickyCallBar watchId="pricing-cta" quoteHref={MOVE_BOOK_HREF} quoteLabel="Request a Free Estimate" />
     </div>
   )
 }

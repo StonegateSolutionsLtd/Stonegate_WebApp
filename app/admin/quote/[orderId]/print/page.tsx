@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { createServiceClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
+import { moveDateLabel, moveSummary } from '@/lib/types'
 import PrintButton from './PrintButton'
 import { calcDetailedQuote, type DetailedQuoteInputs, type QuoteLineItem } from '@/lib/quote-pricing'
 
@@ -33,11 +33,10 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
   const num = String(order.order_number ?? '001').padStart(4, '0')
   const estimateNum = `SG-${year}-${num}`
   const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-  const moveDate = new Date(order.moving_date + 'T12:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-  const moveTime = new Date(`1970-01-01T${order.moving_time}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  const moveDate = moveDateLabel(order.date_flexibility, order.moving_date, order.moving_time)
 
   const price = Number(order.estimated_price)
-  const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
+  const sizeLabel = moveSummary(order.move_type, order.move_size, order.apartment_size)
   const isDetailed = order.quote_type === 'detailed' && order.quote_details?.inputs
 
   let lineItems: QuoteLineItem[]
@@ -125,7 +124,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
             <InfoRow label="Name" value={order.customer_name} />
             <InfoRow label="Phone" value={order.phone} />
             <InfoRow label="Email" value={order.customer_email} />
-            <InfoRow label="Move Date" value={`${moveDate}, ${moveTime}`} />
+            <InfoRow label="Move Date" value={moveDate} />
           </div>
 
           {/* Move Details */}
@@ -139,8 +138,8 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                 </div>
                 <div style={{ fontSize: '11px', color: '#333', marginBottom: '4px', lineHeight: 1.4 }}>{order.pickup_address}</div>
                 <MoveDetailRow label="Type" value={sizeLabel} />
-                <MoveDetailRow label="Elevator" value={order.pickup_has_elevator ? 'Yes' : 'No'} />
-                <MoveDetailRow label="Floor" value={String(order.pickup_floor)} />
+                {!order.move_type && <MoveDetailRow label="Elevator" value={order.pickup_has_elevator ? 'Yes' : 'No'} />}
+                {!order.move_type && <MoveDetailRow label="Floor" value={String(order.pickup_floor)} />}
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
@@ -148,8 +147,8 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                   <span style={{ fontSize: '10px', fontWeight: 700, color: G, letterSpacing: '0.5px' }}>TO</span>
                 </div>
                 <div style={{ fontSize: '11px', color: '#333', marginBottom: '4px', lineHeight: 1.4 }}>{order.dropoff_address}</div>
-                <MoveDetailRow label="Elevator" value={order.dropoff_has_elevator ? 'Yes' : 'No'} />
-                <MoveDetailRow label="Floor" value={String(order.dropoff_floor)} />
+                {!order.move_type && <MoveDetailRow label="Elevator" value={order.dropoff_has_elevator ? 'Yes' : 'No'} />}
+                {!order.move_type && <MoveDetailRow label="Floor" value={String(order.dropoff_floor)} />}
               </div>
             </div>
           </div>

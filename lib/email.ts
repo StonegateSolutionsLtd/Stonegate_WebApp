@@ -1,5 +1,5 @@
 ﻿import { Resend } from 'resend'
-import { APARTMENT_SIZE_LABELS, type ApartmentSize, type OrderFormData } from './types'
+import { moveDateLabel, moveSizeLabel, moveTypeLabel, type OrderFormData } from './types'
 
 
 const EMAIL_FOOTER = `
@@ -11,16 +11,27 @@ interface OrderEmailPayload {
   order: OrderFormData
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-GB', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  })
+/** Customer-typed text goes into the HTML as text, never as markup */
+function esc(value: unknown) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 }
 
-function formatTime(timeStr: string) {
-  return new Date(`1970-01-01T${timeStr}`).toLocaleTimeString('en-GB', {
-    hour: '2-digit', minute: '2-digit', hour12: true,
-  })
+const SECTION = 'background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;'
+
+function section(title: string, first = false) {
+  return `<tr><td colspan="2" style="${SECTION}${first ? '' : ' padding-top: 20px;'}">${title}</td></tr>`
+}
+
+function row(label: string, value: string, strong = false) {
+  return `<tr><td style="padding: 8px 12px; color: #374151; width: 40%;">${label}</td><td style="padding: 8px 12px;${strong ? ' font-weight: 600;' : ''}">${value}</td></tr>`
+}
+
+function moveLabels(order: OrderFormData) {
+  return {
+    type: moveTypeLabel(order.moveType),
+    size: moveSizeLabel(order.moveType, order.moveSize, order.apartmentSize),
+    date: moveDateLabel(order.dateFlex, order.movingDate, order.movingTime),
+  }
 }
 
 export async function sendVerificationCode(email: string, name: string, code: string) {
@@ -31,7 +42,7 @@ export async function sendVerificationCode(email: string, name: string, code: st
       <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
         Verify your email
       </h2>
-      <p style="color: #374151; margin-top: 16px;">Hi ${name},</p>
+      <p style="color: #374151; margin-top: 16px;">Hi ${esc(name)},</p>
       <p style="color: #374151;">Enter the code below to confirm your email and complete your move booking.</p>
       <div style="margin: 32px 0; text-align: center;">
         <span style="font-size: 48px; font-weight: 800; letter-spacing: 12px; color: #111827;">${code}</span>
@@ -52,46 +63,38 @@ export async function sendVerificationCode(email: string, name: string, code: st
 
 export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailPayload) {
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const sizeLabel = APARTMENT_SIZE_LABELS[order.apartmentSize as ApartmentSize] ?? order.apartmentSize
-  const movingDate = formatDate(order.movingDate)
-  const movingTime = formatTime(order.movingTime)
+  const move = moveLabels(order)
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
       <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-        New Move Order Received
+        New Free Estimate Request
       </h2>
 
       <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Customer</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Name</td><td style="padding: 8px 12px;">${order.customerName}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Email</td><td style="padding: 8px 12px;">${order.customerEmail}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Phone</td><td style="padding: 8px 12px;">${order.phone}</td></tr>
+        ${section('Customer', true)}
+        ${row('Name', esc(order.customerName))}
+        ${row('Email', esc(order.customerEmail))}
+        ${row('Phone', esc(order.phone))}
 
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Move Details</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Moving Date</td><td style="padding: 8px 12px; font-weight: 600;">${movingDate}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Arrival Time</td><td style="padding: 8px 12px; font-weight: 600;">${movingTime}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Apartment Size</td><td style="padding: 8px 12px;">${sizeLabel}</td></tr>
+        ${section('Move Details')}
+        ${row('Type', move.type, true)}
+        ${row('Size', move.size, true)}
+        ${row('Moving Date', move.date, true)}
 
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Pickup</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${order.pickupAddress}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Floor</td><td style="padding: 8px 12px;">${order.pickupFloor}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Elevator</td><td style="padding: 8px 12px;">${order.pickupHasElevator ? 'Yes' : 'No'}</td></tr>
-
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Drop-off</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${order.dropoffAddress}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Floor</td><td style="padding: 8px 12px;">${order.dropoffFloor}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Elevator</td><td style="padding: 8px 12px;">${order.dropoffHasElevator ? 'Yes' : 'No'}</td></tr>
+        ${section('Addresses')}
+        ${row('Pickup', esc(order.pickupAddress))}
+        ${row('Drop-off', esc(order.dropoffAddress))}
 
         ${order.specialNotes ? `
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Notes</td></tr>
-        <tr><td colspan="2" style="padding: 8px 12px;">${order.specialNotes}</td></tr>
+        ${section('Notes')}
+        <tr><td colspan="2" style="padding: 8px 12px;">${esc(order.specialNotes)}</td></tr>
         ` : ''}
       </table>
 
       <p style="margin-top: 24px; padding: 12px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
         Order ID: <strong>${orderId}</strong><br>
-        Submitted: ${new Date().toLocaleString('en-GB')}
+        Submitted: ${new Date().toLocaleString('en-CA', { timeZone: 'America/Vancouver' })}
       </p>
       ${EMAIL_FOOTER}
     </div>
@@ -100,131 +103,37 @@ export async function sendOwnerOrderNotification({ orderId, order }: OrderEmailP
   return resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to: process.env.ORDERS_EMAIL!,
-    subject: `New Move Order. ${movingDate}. ${order.customerName}`,
+    subject: `New Estimate Request. ${move.type}, ${move.date}. ${order.customerName}`,
     html,
 
-  })
-}
-
-const SERVICE_LABELS: Record<string, string> = {
-  'junk-removal': 'Junk Removal',
-}
-
-export interface ServiceRequestData {
-  serviceType: string
-  address: string
-  date: string
-  time: string
-  customerName: string
-  customerEmail: string
-  phone: string
-  notes?: string
-}
-
-export async function sendOwnerServiceRequestNotification(req: ServiceRequestData) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
-  const serviceLabel = SERVICE_LABELS[req.serviceType] ?? req.serviceType
-  const formattedDate = formatDate(req.date)
-  const formattedTime = formatTime(req.time)
-
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-        New ${serviceLabel} Request
-      </h2>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Customer</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Name</td><td style="padding: 8px 12px;">${req.customerName}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Email</td><td style="padding: 8px 12px;">${req.customerEmail}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Phone</td><td style="padding: 8px 12px;">${req.phone}</td></tr>
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Service Details</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Service</td><td style="padding: 8px 12px; font-weight: 600;">${serviceLabel}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
-        ${req.notes ? `
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280; padding-top: 20px;">Notes</td></tr>
-        <tr><td colspan="2" style="padding: 8px 12px;">${req.notes}</td></tr>
-        ` : ''}
-      </table>
-      <p style="margin-top: 24px; padding: 12px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
-        Submitted: ${new Date().toLocaleString('en-GB')}
-      </p>
-      ${EMAIL_FOOTER}
-    </div>
-  `
-
-  return resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
-    to: process.env.ORDERS_EMAIL!,
-    subject: `New ${serviceLabel} Request - ${req.customerName}`,
-    html,
-  })
-}
-
-export async function sendCustomerServiceRequestConfirmation(req: ServiceRequestData) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
-  const serviceLabel = SERVICE_LABELS[req.serviceType] ?? req.serviceType
-  const formattedDate = formatDate(req.date)
-  const formattedTime = formatTime(req.time)
-
-  const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-        Request Received, ${req.customerName}!
-      </h2>
-      <p style="color: #374151; margin-top: 16px;">
-        Thanks for reaching out. We've received your ${serviceLabel} request and will get back to you the same day.
-      </p>
-      <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Your Request</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Service</td><td style="padding: 8px 12px; font-weight: 600;">${serviceLabel}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Date</td><td style="padding: 8px 12px; font-weight: 600;">${formattedDate}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Time</td><td style="padding: 8px 12px; font-weight: 600;">${formattedTime}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Address</td><td style="padding: 8px 12px;">${req.address}</td></tr>
-      </table>
-      <p style="color: #6b7280; font-size: 13px; margin-top: 24px;">
-        Questions? Reach out to orders@stonegatemoving.com or call us directly.
-      </p>
-      ${EMAIL_FOOTER}
-    </div>
-  `
-
-  return resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
-    to: req.customerEmail,
-    subject: `${serviceLabel} request received - Stonegate Moving Solutions`,
-    html,
   })
 }
 
 export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEmailPayload) {
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const sizeLabel = APARTMENT_SIZE_LABELS[order.apartmentSize as ApartmentSize] ?? order.apartmentSize
-  const movingDate = formatDate(order.movingDate)
-  const movingTime = formatTime(order.movingTime)
+  const move = moveLabels(order)
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
       <h2 style="color: #1a1a1a; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-        Your moving order request was received, ${order.customerName}!
+        We received your estimate request, ${esc(order.customerName)}!
       </h2>
       <p style="color: #374151; margin-top: 16px;">
-        Thanks for choosing Stonegate Moving Solutions. We will contact you soon to confirm your date and time.
+        Thanks for choosing Stonegate Moving Solutions. We will contact you within 24 hours with your free estimate and to confirm your moving date.
       </p>
 
       <table style="width: 100%; border-collapse: collapse; margin-top: 24px;">
-        <tr><td colspan="2" style="background: #f9fafb; padding: 8px 12px; font-weight: bold; font-size: 13px; text-transform: uppercase; color: #6b7280;">Your Move Summary</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151; width: 40%;">Moving Date</td><td style="padding: 8px 12px; font-weight: 600;">${movingDate}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Arrival Time</td><td style="padding: 8px 12px; font-weight: 600;">${movingTime}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Apartment Size</td><td style="padding: 8px 12px;">${sizeLabel}</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Pickup</td><td style="padding: 8px 12px;">${order.pickupAddress} (floor ${order.pickupFloor})</td></tr>
-        <tr><td style="padding: 8px 12px; color: #374151;">Drop-off</td><td style="padding: 8px 12px;">${order.dropoffAddress} (floor ${order.dropoffFloor})</td></tr>
-        ${order.specialNotes ? `<tr><td style="padding: 8px 12px; color: #374151;">Notes</td><td style="padding: 8px 12px;">${order.specialNotes}</td></tr>` : ''}
+        ${section('Your Move Summary', true)}
+        ${row('Type', move.type, true)}
+        ${row('Size', move.size)}
+        ${row('Moving Date', move.date, true)}
+        ${row('Pickup', esc(order.pickupAddress))}
+        ${row('Drop-off', esc(order.dropoffAddress))}
+        ${order.specialNotes ? row('Notes', esc(order.specialNotes)) : ''}
       </table>
 
       <p style="margin-top: 24px; padding: 12px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
-        Order reference: <strong>${orderId}</strong>
+        Request reference: <strong>${orderId}</strong>
       </p>
 
       <p style="color: #6b7280; font-size: 13px; margin-top: 16px;">
@@ -237,7 +146,7 @@ export async function sendCustomerOrderConfirmation({ orderId, order }: OrderEma
   return resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to: order.customerEmail,
-    subject: `Moving order request received - Stonegate Moving Solutions`,
+    subject: 'Free estimate request received - Stonegate Moving Solutions',
     html,
 
   })

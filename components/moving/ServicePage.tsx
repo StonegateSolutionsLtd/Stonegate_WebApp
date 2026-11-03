@@ -161,7 +161,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
         <section style={{ backgroundColor: GREEN }}>
           <div className={`${sectionWrap} relative grid md:grid-cols-[1.3fr_1fr] items-end gap-4`}>
             <div className="py-14 md:py-20">
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: CREAM }}>Ready to book your move?</h2>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: CREAM }}>Ready for your free estimate?</h2>
               <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#B5C9B0' }}>Pick a day and time online in a couple of minutes, or call and we will book it with you.</p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
@@ -180,7 +180,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Book Your Move" />
+      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Request a Free Estimate" />
     </div>
   )
 }

@@ -7,7 +7,7 @@ import AddMovingOrderModal from '../_components/AddMovingOrderModal'
 import AddToCalendarButton from '../_components/AddToCalendarButton'
 import StatusFilter from '../_components/StatusFilter'
 import DurationSelect from '../_components/DurationSelect'
-import { APARTMENT_SIZE_LABELS, type ApartmentSize } from '@/lib/types'
+import { moveDateShort, moveSummary } from '@/lib/types'
 import { durationFor } from '@/lib/scheduling'
 
 export const dynamic = 'force-dynamic'
@@ -63,7 +63,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
               const year = new Date(order.created_at).getFullYear()
               const num = String(order.order_number ?? (i + 1)).padStart(4, '0')
               const orderNum = `SG-${year}-${num}`
-              const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
+              const sizeLabel = moveSummary(order.move_type, order.move_size, order.apartment_size)
               return (
                 <tr key={order.id} style={{ borderBottom: '1px solid #F5F0EB' }}>
                   <td style={{ padding: '14px 12px', fontSize: '13px', fontWeight: 700, color: '#254220', whiteSpace: 'nowrap' }}>{orderNum}</td>
@@ -73,7 +73,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                     <div style={{ fontSize: '12px', color: '#9A8E83' }}>{order.customer_email}</div>
                     <div style={{ fontSize: '12px', color: '#9A8E83' }}>{order.phone}</div>
                   </td>
-                  <td style={{ padding: '14px 12px', fontSize: '13px', color: '#1A1714', whiteSpace: 'nowrap' }}>{new Date(order.moving_date + 'T12:00:00').toLocaleDateString('en-CA')}</td>
+                  <td style={{ padding: '14px 12px', fontSize: '13px', color: '#1A1714', whiteSpace: 'nowrap' }}>{moveDateShort(order.date_flexibility, order.moving_date)}</td>
                   <td style={{ padding: '14px 12px', fontSize: '13px', color: '#6B5E54', whiteSpace: 'nowrap' }}>{sizeLabel}</td>
                   <td style={{ padding: '14px 12px' }}>
                     <DurationSelect orderId={order.id} current={durationFor('moving', order.duration_minutes)} apiPath="/api/admin/orders" />
@@ -110,6 +110,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                             event_time: order.moving_time,
                             pickup_address: order.pickup_address,
                             size: order.apartment_size,
+                            notes: order.move_type && !order.apartment_size ? sizeLabel : undefined,
                             customer_name: order.customer_name,
                             duration_minutes: order.duration_minutes,
                             lead_source: order.lead_source,
@@ -138,7 +139,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
           const year = new Date(order.created_at).getFullYear()
           const num = String(order.order_number ?? (i + 1)).padStart(4, '0')
           const orderNum = `SG-${year}-${num}`
-          const sizeLabel = APARTMENT_SIZE_LABELS[order.apartment_size as ApartmentSize] ?? order.apartment_size
+          const sizeLabel = moveSummary(order.move_type, order.move_size, order.apartment_size)
           return (
             <div key={order.id} style={{ background: 'white', borderRadius: '12px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '1px solid #F5F0EB' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
@@ -156,7 +157,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
                 <div>
                   <div style={{ fontSize: '10px', color: '#9A8E83', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '2px' }}>MOVE DATE</div>
-                  <div style={{ fontSize: '13px', color: '#1A1714' }}>{new Date(order.moving_date + 'T12:00:00').toLocaleDateString('en-CA')}</div>
+                  <div style={{ fontSize: '13px', color: '#1A1714' }}>{moveDateShort(order.date_flexibility, order.moving_date)}</div>
                 </div>
                 <div>
                   <div style={{ fontSize: '10px', color: '#9A8E83', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '2px' }}>SIZE</div>
@@ -196,6 +197,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                       event_time: order.moving_time,
                       pickup_address: order.pickup_address,
                       size: order.apartment_size,
+                      notes: order.move_type && !order.apartment_size ? sizeLabel : undefined,
                       customer_name: order.customer_name,
                       duration_minutes: order.duration_minutes,
                       lead_source: order.lead_source,

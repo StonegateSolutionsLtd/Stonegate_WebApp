@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: 'Stonegate Moving Solutions · Movers in Metro Vancouver',
     template: '%s · Stonegate Moving Solutions',
   },
-  description: 'Local movers serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. Apartment, house, commercial moves and packing. 2 movers with a truck from $130/hr + GST. Book online in minutes.',
+  description: 'Local movers serving Vancouver, Burnaby, Richmond, Surrey, Coquitlam and all of Metro Vancouver. Apartment, house, commercial moves and packing. 2 movers with a truck from $130/hr + GST. Request a free estimate online in minutes.',
   keywords: [
     'Vancouver movers', 'Vancouver moving company', 'Burnaby movers', 'Richmond movers', 'Surrey moving',
     'apartment moving Vancouver', 'Metro Vancouver movers', 'moving company BC', 'Coquitlam movers',

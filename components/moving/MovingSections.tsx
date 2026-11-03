@@ -8,6 +8,7 @@ import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { MOVE_BOOK_HREF } from '@/lib/seo/site'
 import { MOVING_REVIEWS, type ServicePhoto } from '@/lib/moving-services'
 import BookingStart from './BookingStart'
+import GoogleStars from '@/components/GoogleStars'
 
 export const GREEN = '#014421'
 export const INK = '#1A1714'
@@ -55,6 +56,7 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo 
 
       <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-14 pb-12 lg:py-16">
         <div className="flex flex-col w-full">
+          <GoogleStars className="mb-4 lg:mb-5" />
           <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, 7.3vw, 4.4rem)' }}>
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>{heading[0]}</span>
             <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
@@ -101,7 +103,7 @@ export function MovingPriceBlock({ note }: { note: string }) {
               <p className="text-base leading-relaxed mb-7" style={{ color: '#B5C9B0' }}>{note}</p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
-                  Book Your Move <ArrowRight size={18} aria-hidden />
+                  Request a Free Estimate <ArrowRight size={18} aria-hidden />
                 </Link>
                 <Link href="/pricing/moving" className="flex items-center justify-center rounded-full min-h-[56px] px-6 font-bold transition-[transform,opacity] active:scale-[0.97] hover:opacity-80" style={{ color: CREAM, border: '2px solid rgba(250,247,242,0.6)' }}>
                   See All Moving Prices

@@ -10,9 +10,11 @@ import { Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, A
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import ServicesCarousel from '@/components/landing/ServicesCarousel'
-import { movingServiceCards } from '@/lib/moving-services'
+import { MOVING_REVIEWS, movingServiceCards } from '@/lib/moving-services'
 import { PhoneLink } from '@/components/PhoneNumber'
 import BookingStart from '@/components/moving/BookingStart'
+import { MovingClose } from '@/components/moving/MovingSections'
+import GoogleStars from '@/components/GoogleStars'
 
 const included = [
   { title: 'Furniture wrapped and protected', text: 'Moving blankets and straps on every piece, so it arrives the way it left.' },
@@ -22,29 +24,11 @@ const included = [
 ]
 
 const steps = [
-  { number: '01', title: 'Book Your Move', description: 'Pick an available day and time online in minutes - no hidden fees, no stress.', Icon: CalendarDays },
+  { number: '01', title: 'Request a Free Estimate', description: 'Tell us what you\'re moving and when, online in about 2 minutes - no hidden fees, no stress.', Icon: CalendarDays },
   { number: '02', title: 'We Confirm the Details', description: 'We go over your move with you and give you a clear, upfront rate before moving day.', Icon: ClipboardList },
   { number: '03', title: 'We Move You In', description: 'Our crew arrives on time, wraps and loads your furniture, and sets it up in your new place.', Icon: Truck },
 ]
 
-const reviews = [
-  {
-    name: 'Fady Nasr',
-    text: "Great experience with Stonegate. The team was professional, efficient, and careful with everything from start to finish. They showed up prepared, handled the move smoothly, and made the whole process much less stressful. Communication was clear, the service felt reliable, and I'd definitely recommend them to anyone looking for movers.",
-  },
-  {
-    name: 'Le Cao Huy',
-    text: 'I had a fantastic experience with Stonegate Moving Solutions. The crew arrived on time, worked efficiently, and treated my furniture and boxes with care. They were friendly, professional, and made the entire moving process much easier than…',
-  },
-  {
-    name: 'Amirali Nasrinpay',
-    text: 'The stonegate solution is the best moving company in the whole of Vancouver. They came on time picked my items and safely put them to the other location i needed them to it. They have one of the strongest times in Vancouver, very respect…',
-  },
-  {
-    name: 'Aryan Kapoor',
-    text: 'Really happy with the service. The guys were on time, worked quickly, and took good care of my stuff. The whole move went smoothly and they made the process a lot less stressful. Would definitely use them again!',
-  },
-]
 
 
 // Every moving service page
@@ -81,6 +65,7 @@ export default function Hero() {
           {/* Text - left side, vertically centered */}
           <div className="relative z-20 self-stretch flex flex-col pl-8 pr-6 sm:pl-16 sm:pr-16 lg:pl-24 lg:pr-0 pt-12 pb-16 lg:pt-16 lg:pb-[140px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
             <div className="flex flex-col flex-1">
+              <GoogleStars className="mb-4 lg:mb-5" />
               <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit 3xl:[--hero-h1-max:5.4rem]" style={{ fontSize: 'clamp(2.05rem, 7.3vw, var(--hero-h1-max, 4.55rem))' }}>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.8rem, 2.4vw, 1.35rem)', margin: '0.3em 0', letterSpacing: '0.35em' }}>
@@ -276,7 +261,7 @@ export default function Hero() {
               </div>
             </FadeIn>
 
-            <ReviewsRow reviews={reviews} />
+            <ReviewsRow reviews={MOVING_REVIEWS} />
 
             <div className="text-center">
               <a
@@ -339,6 +324,9 @@ export default function Hero() {
             </ul>
           </div>
         </section>
+
+        {/* Close: the mascot standing on the green band, as on the service pages */}
+        <MovingClose heading="Ready for your free estimate?" text="Tell us what you're moving and when in about 2 minutes, or call and we will sort it out with you." />
 
         {/* Contact & Service Area */}
         <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
