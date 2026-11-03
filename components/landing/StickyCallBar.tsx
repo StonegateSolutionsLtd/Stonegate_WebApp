@@ -28,7 +28,7 @@ export default function StickyCallBar({ watchId, quoteHref, quoteLabel = 'Free E
       }}
       aria-hidden={!show}
     >
-      <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 rounded-full min-h-[52px] text-base font-extrabold" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+      <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 rounded-full min-h-[52px] px-3 whitespace-nowrap text-base font-extrabold" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
         {quoteLabel} <ArrowRight size={16} aria-hidden />
       </a>
       <PhoneLink tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 rounded-full min-h-[52px] text-base font-extrabold" style={{ color: '#014421', border: '2px solid #014421', backgroundColor: '#FFFFFF' }}>

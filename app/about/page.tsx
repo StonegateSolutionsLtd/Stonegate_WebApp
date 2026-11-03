@@ -205,7 +205,7 @@ export default function AboutPage() {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="about-hero" quoteHref={MOVE_BOOK_HREF} quoteLabel="Request a Free Estimate" />
+      <StickyCallBar watchId="about-hero" quoteHref={MOVE_BOOK_HREF} />
     </div>
   )
 }

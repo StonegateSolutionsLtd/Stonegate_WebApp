@@ -73,7 +73,7 @@ export default function LocationsPage() {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} quoteLabel="Request a Free Estimate" />
+      <StickyCallBar watchId="booking-start" quoteHref={MOVE_BOOK_HREF} />
     </div>
   )
 }

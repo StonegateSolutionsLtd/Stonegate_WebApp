@@ -290,7 +290,7 @@ export default function MovingPricingPage() {
       </main>
 
       <Footer />
-      <StickyCallBar watchId="pricing-cta" quoteHref={MOVE_BOOK_HREF} quoteLabel="Request a Free Estimate" />
+      <StickyCallBar watchId="pricing-cta" quoteHref={MOVE_BOOK_HREF} />
     </div>
   )
 }
