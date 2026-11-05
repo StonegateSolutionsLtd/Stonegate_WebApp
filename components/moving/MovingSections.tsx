@@ -1,7 +1,7 @@
-import Image from 'next/image'
+import Image, { getImageProps } from 'next/image'
 import Link from 'next/link'
 import GoogleLogo from '@/components/GoogleLogo'
-import { Shield, Star, MapPin, ArrowRight, Phone, Plus } from 'lucide-react'
+import { Shield, Star, MapPin, ArrowRight, Phone, Plus, Check } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
@@ -28,33 +28,67 @@ const TIERS = [
   { crew: '3 movers + 16\' truck', price: '$170', fit: 'Most homes of 2 bedrooms and up' },
 ]
 
+const filterOf = (p: ServicePhoto) => (p.brightness ? `brightness(${p.brightness})` : 'none')
+
+/** One <picture>: the phone photo, swapped for the desktop photo from lg (1024px) up, so only one is downloaded */
+function HeroPicture({ photo, desktop }: { photo: ServicePhoto; desktop: ServicePhoto }) {
+  // No preload link: it would fetch one of the two photos on every screen
+  const common = { fill: true, loading: 'eager', fetchPriority: 'high', quality: 90, sizes: '100vw' } as const
+  const { props: { srcSet: desktopSet } } = getImageProps({ ...common, src: desktop.src, alt: desktop.alt })
+  const { props: { srcSet: phoneSet, ...img } } = getImageProps({ ...common, src: photo.src, alt: photo.alt })
+  const vars = {
+    '--pos': photo.pos ?? 'center', '--pos-lg': desktop.pos ?? 'center',
+    '--filter': filterOf(photo), '--filter-lg': filterOf(desktop),
+  } as React.CSSProperties
+  return (
+    <picture>
+      <source media="(min-width: 1024px)" srcSet={desktopSet} sizes="100vw" />
+      <source srcSet={phoneSet} sizes="100vw" />
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- alt comes from getImageProps */}
+      <img
+        {...img}
+        className="object-cover [object-position:var(--pos)] [filter:var(--filter)] lg:[object-position:var(--pos-lg)] lg:[filter:var(--filter-lg)]"
+        style={{ ...img.style, ...vars, objectPosition: undefined }}
+      />
+    </picture>
+  )
+}
+
 /** Photo hero with the stacked headline, then the two-address booking start */
-export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo }: {
+export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo, desktopPhoto }: {
   /** White line, then the orange line under the divider */
   heading: [string, string]
   divider?: string
   intro: string
   photo: ServicePhoto
+  /** A different photo from the lg breakpoint up; phones keep `photo` */
+  desktopPhoto?: ServicePhoto
 }) {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0" style={{ backgroundColor: INK }}>
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          fill
-          priority
-          quality={90}
-          sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: photo.pos ?? 'center', filter: photo.brightness ? `brightness(${photo.brightness})` : undefined }}
-        />
+        {desktopPhoto ? (
+          <HeroPicture photo={photo} desktop={desktopPhoto} />
+        ) : (
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: photo.pos ?? 'center', filter: photo.brightness ? `brightness(${photo.brightness})` : undefined }}
+          />
+        )}
         {/* Phones: only the upper left, behind the headline, is darkened; desktop fades from the left */}
         <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 520px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.68) 55%, rgba(0,0,0,0.45) 74%, rgba(0,0,0,0.15) 90%, transparent 100%)' }} />
-        <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.14) 58%, transparent 75%)' }} />
+        <div className="absolute inset-0 hidden lg:block" style={{ background: (desktopPhoto ?? photo).bright
+          ? 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.74) 25%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.25) 58%, transparent 75%)'
+          : 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.14) 58%, transparent 75%)' }} />
       </div>
 
-      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-14 pb-12 lg:py-16">
+      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-10 pb-8 sm:pt-14 sm:pb-12 lg:py-16">
         <div className="flex flex-col w-full">
           <GoogleStars className="mb-4 lg:mb-5" />
           <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, 7.3vw, 4.4rem)' }}>
@@ -70,7 +104,7 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo 
             {intro}
           </p>
           {/* Lower in the photo on phones, then the badges under it */}
-          <div className="mt-6 sm:mt-0">
+          <div className="mt-24 sm:mt-0">
             <BookingStart id="booking-start" />
           </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-7 sm:mt-8">
@@ -91,25 +125,39 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo 
 }
 
 /** Green price card with both crew tiers */
-export function MovingPriceBlock({ note }: { note: string }) {
+/** The hourly rates beside the note; with `quotePoints` (moves priced per job) those points show instead of the rates */
+export function MovingPriceBlock({ note, quotePoints }: { note: string; quotePoints?: string[] }) {
   return (
     <section style={{ backgroundColor: CREAM }}>
       <div className={`${sectionWrap} pb-16 sm:pb-20`}>
         <FadeIn>
           <div className="rounded-3xl p-7 sm:p-10 lg:p-12 grid lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-12 items-center" style={{ backgroundColor: GREEN }}>
             <div>
-              <p className={eyebrow} style={{ color: '#B5C9B0' }}>Clear hourly pricing</p>
+              <p className={eyebrow} style={{ color: '#B5C9B0' }}>{quotePoints ? 'Quoted for your move' : 'Clear hourly pricing'}</p>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4" style={{ color: CREAM }}>Know the Price Before You Book</h2>
               <p className="text-base leading-relaxed mb-7" style={{ color: '#B5C9B0' }}>{note}</p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
+              {/* Buttons drop to their own rows rather than breaking their labels */}
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold whitespace-nowrap transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
                   Request a Free Estimate <ArrowRight size={18} aria-hidden />
                 </Link>
-                <Link href="/pricing/moving" className="flex items-center justify-center rounded-full min-h-[56px] px-6 font-bold transition-[transform,opacity] active:scale-[0.97] hover:opacity-80" style={{ color: CREAM, border: '2px solid rgba(250,247,242,0.6)' }}>
+                <Link href="/pricing/moving" className="flex items-center justify-center rounded-full min-h-[56px] px-6 font-bold whitespace-nowrap transition-[transform,opacity] active:scale-[0.97] hover:opacity-80" style={{ color: CREAM, border: '2px solid rgba(250,247,242,0.6)' }}>
                   See All Moving Prices
                 </Link>
               </div>
             </div>
+            {quotePoints ? (
+              <ul className="rounded-2xl p-6 sm:p-8 flex flex-col gap-4" style={{ backgroundColor: CREAM }}>
+                {quotePoints.map(p => (
+                  <li key={p} className="flex items-start gap-3 text-lg font-bold leading-snug" style={{ color: INK }}>
+                    <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: GREEN }}>
+                      <Check size={15} strokeWidth={3} style={{ color: CREAM }} aria-hidden />
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            ) : (
             <ul className="grid sm:grid-cols-2 gap-4">
               {TIERS.map(t => (
                 <li key={t.crew} className="rounded-2xl p-6" style={{ backgroundColor: CREAM }}>
@@ -122,6 +170,7 @@ export function MovingPriceBlock({ note }: { note: string }) {
                 </li>
               ))}
             </ul>
+            )}
           </div>
         </FadeIn>
       </div>

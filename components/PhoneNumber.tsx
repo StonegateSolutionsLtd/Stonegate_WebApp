@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type AnchorHTMLAttributes } from 'react'
 import { PHONE_CONVERSION_NUMBER } from '@/lib/googleAds'
+import { trackEvent } from '@/lib/analytics'
 
 type Phone = { display: string; tel: string }
 
@@ -35,6 +36,18 @@ export function PhoneNumberProvider({ children }: { children: React.ReactNode })
     const observer = new MutationObserver(read)
     observer.observe(probe, { subtree: true, childList: true, characterData: true })
     return () => observer.disconnect()
+  }, [])
+
+  // click_call for every tel: link on the site (header, sticky bar, hero, footer, contact modal...).
+  // One listener: the provider is mounted once, in the root layout.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.('a[href^="tel:"]')
+      if (!link) return
+      trackEvent('click_call', { page_path: window.location.pathname, link_text: link.textContent?.trim().slice(0, 60) })
+    }
+    document.addEventListener('click', onClick, { capture: true })
+    return () => document.removeEventListener('click', onClick, { capture: true })
   }, [])
 
   return (

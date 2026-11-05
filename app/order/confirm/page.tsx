@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { type OrderFormData } from '@/lib/types'
+import { trackLead } from '@/lib/analytics'
 import OrderSummary from '@/components/order/OrderSummary'
 import { Button } from '@/components/ui/button'
 import PageCanvas from '@/components/PageCanvas'
@@ -41,6 +42,7 @@ export default function ConfirmPage() {
       return
     }
     const { orderId } = await res.json()
+    trackLead(orderId, { move_type: order.moveType || undefined })
     sessionStorage.removeItem('pendingOrder')
     router.push(`/order/success?id=${orderId}`)
   }

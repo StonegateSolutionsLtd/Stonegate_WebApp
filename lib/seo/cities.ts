@@ -20,8 +20,8 @@ export interface City {
 
 /** Real Stonegate moving job photos, rotated across city pages so they don't all repeat */
 const JOB_PHOTOS: { src: string; alt: (city: string) => string; pos?: string }[] = [
-  { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: c => `Stonegate mover carrying wrapped furniture up the truck ramp in ${c}` },
-  { src: '/about/photo-4.jpg', alt: c => `Stonegate movers loading boxes into the truck in ${c}` },
+  { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: c => `Stonegate mover carrying wrapped furniture up the truck ramp in ${c}` },
+  { src: '/about/photo-4-warm.png', alt: c => `Stonegate movers loading boxes into the truck in ${c}` },
   { src: '/crew-walking-truck.jpg', alt: c => `Stonegate mover walking a dolly beside the truck in ${c}`, pos: 'center 45%' },
   { src: '/moving/protect-wrapped-furniture.png', alt: c => `Stonegate mover wrapping furniture in a moving blanket during a move in ${c}`, pos: 'center 55%' },
   { src: '/junk/crew-4557-truck-side.jpg', alt: c => `Stonegate mover loading the branded moving truck in ${c}`, pos: 'center 60%' },

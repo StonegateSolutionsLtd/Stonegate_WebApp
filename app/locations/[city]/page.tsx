@@ -22,10 +22,13 @@ export const dynamicParams = false
 
 const MOVING_SERVICES = [
   { href: '/residential-moving', name: 'Residential Moving' },
-  { href: '/moving#apartment-moving', name: 'Apartment & Condo Moving' },
+  { href: '/apartment-moving', name: 'Apartment & Condo Moving' },
   { href: '/commercial-moving', name: 'Commercial Moving & Corporate Relocation' },
+  { href: '/office-moving', name: 'Office Moving' },
   { href: '/packing-services', name: 'Packing Services' },
-  { href: '/moving#long-distance-moving', name: 'Long-Distance Moving' },
+  { href: '/long-distance-moving', name: 'Long-Distance Moving' },
+  { href: '/senior-moving', name: 'Senior Moving' },
+  { href: '/specialty-moving', name: 'Specialty Moving' },
 ]
 
 export function generateStaticParams() {

@@ -26,7 +26,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
           description: service.metaDescription,
           url: `${SITE_URL}${service.path}`,
           provider: providerLd,
-          areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver' },
+          areaServed: (service.areaServed ?? ['Metro Vancouver']).map(name => ({ '@type': 'AdministrativeArea', name })),
         },
         faqLd(service.faqs),
       ]} />
@@ -34,7 +34,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
 
       <main className="flex-1">
 
-        <MovingHero heading={service.heading} intro={service.intro} photo={service.heroPhoto} />
+        <MovingHero heading={service.heading} divider={service.divider} intro={service.intro} photo={service.heroPhoto} desktopPhoto={service.heroPhotoDesktop} />
 
         {/* What this service includes */}
         <section style={{ backgroundColor: CREAM }}>
@@ -103,7 +103,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
           </ol>
         </section>
 
-        <MovingPriceBlock note={service.priceNote} />
+        <MovingPriceBlock note={service.priceNote} quotePoints={service.quotePoints} />
 
         <MovingReviews />
 
@@ -162,7 +162,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
           <div className={`${sectionWrap} relative grid md:grid-cols-[1.3fr_1fr] items-end gap-4`}>
             <div className="py-14 md:py-20">
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: CREAM }}>Ready for your free estimate?</h2>
-              <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#B5C9B0' }}>Pick a day and time online in a couple of minutes, or call and we will book it with you.</p>
+              <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#B5C9B0' }}>Tell us what you&apos;re moving and when in about 2 minutes, or call and we will sort it out with you.</p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
                   Check Moving Availability <ArrowRight size={18} aria-hidden />
