@@ -1,12 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void
-  }
-}
+import '@/lib/analytics'
 
 export default function ConversionEvent({ transactionId }: { transactionId: string }) {
   useEffect(() => {

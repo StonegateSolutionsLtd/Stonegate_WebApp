@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ArrowRight, Phone } from 'lucide-react'
 import { ORDER_START_KEY, type OrderStart } from '@/lib/types'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
+import { formLocationFor, trackEvent } from '@/lib/analytics'
 
 const inputClass =
   'w-full min-w-0 rounded-full min-h-[44px] sm:min-h-[52px] px-4 sm:px-5 text-[16px] font-semibold border-0 outline-none transition-shadow focus:shadow-[0_0_0_3px_#C98A45] placeholder:font-medium placeholder:text-[#8A7E74]'
@@ -16,12 +17,14 @@ const inputClass =
  */
 export default function BookingStart({ id }: { id?: string }) {
   const router = useRouter()
+  const pathname = usePathname()
   const [pickup, setPickup] = useState('')
 
   function start(e: FormEvent) {
     e.preventDefault()
     const answers: OrderStart = { pickupAddress: pickup.trim() || undefined }
     try { sessionStorage.setItem(ORDER_START_KEY, JSON.stringify(answers)) } catch {}
+    trackEvent('quote_start', { form_location: formLocationFor(pathname) })
     router.push('/order')
   }
 

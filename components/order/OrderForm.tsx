@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { trackEvent } from '@/lib/analytics'
 import {
   EMPTY_ORDER_FORM, HOME_SIZES, MOVE_TYPES, ORDER_START_KEY, sizesFor,
   type DateFlex, type MoveType, type OrderFormData, type OrderStart,
@@ -233,6 +234,14 @@ export default function OrderForm() {
   useEffect(() => {
     try { sessionStorage.removeItem(ORDER_START_KEY) } catch {}
   }, [])
+
+  // Funnel: quote_step_N_view once each time a step comes on screen (not on rerenders)
+  const lastViewed = useRef(-1)
+  useEffect(() => {
+    if (lastViewed.current === step) return
+    lastViewed.current = step
+    trackEvent(`quote_step_${step + 1}_view`, { step_name: key, move_type: form.moveType || undefined })
+  }, [step, key, form.moveType])
 
   // Browser back button → go to previous step instead of leaving the page
   useEffect(() => {
