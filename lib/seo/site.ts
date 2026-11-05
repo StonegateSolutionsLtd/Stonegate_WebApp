@@ -38,7 +38,12 @@ const MOVING_SERVICES_LD = [
   { name: 'Local Moving', path: '/moving' },
   { name: 'Residential Moving', path: '/residential-moving' },
   { name: 'Commercial Moving & Corporate Relocation', path: '/commercial-moving' },
+  { name: 'Office Moving', path: '/office-moving' },
   { name: 'Packing Services', path: '/packing-services' },
+  { name: 'Apartment & Condo Moving', path: '/apartment-moving' },
+  { name: 'Long-Distance Moving', path: '/long-distance-moving' },
+  { name: 'Senior Moving', path: '/senior-moving' },
+  { name: 'Specialty Moving', path: '/specialty-moving' },
 ]
 
 export const RATE_TERMS = 'Hourly rate plus GST, 3-hour minimum, plus a one-time flat-rate travel fee explained before booking.'

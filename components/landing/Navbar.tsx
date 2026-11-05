@@ -26,7 +26,12 @@ const servicesGroup: NavGroup = {
   links: [
     { label: 'Local Moving', href: '/moving' },
     { label: 'Residential Moving', href: '/residential-moving' },
+    { label: 'Apartment & Condo Moving', href: '/apartment-moving' },
     { label: 'Commercial Moving & Corporate Relocation', href: '/commercial-moving' },
+    { label: 'Office Moving', href: '/office-moving' },
+    { label: 'Long-Distance Moving', href: '/long-distance-moving' },
+    { label: 'Senior Moving', href: '/senior-moving' },
+    { label: 'Specialty Moving', href: '/specialty-moving' },
     { label: 'Packing Services', href: '/packing-services' },
   ],
 }

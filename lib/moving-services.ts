@@ -5,18 +5,28 @@ export interface ServicePhoto {
   pos?: string
   /** CSS brightness() for photos taken in low light, e.g. 1.4 */
   brightness?: number
+  /** A bright, sunny photo: the hero darkens more behind the headline so the text stays readable */
+  bright?: boolean
 }
 
 export interface MovingService {
-  slug: 'local' | 'residential' | 'commercial' | 'packing'
+  slug: 'local' | 'residential' | 'commercial' | 'office' | 'packing' | 'apartment' | 'long-distance' | 'senior' | 'specialty'
   path: string
   /** Short name used in links and the services list */
   name: string
   metaTitle: string
   metaDescription: string
-  /** Hero headline: white line, then the orange line under the 'Metro Vancouver' divider */
+  /** Hero headline: white line, then the orange line under the divider */
   heading: [string, string]
+  /** Hero divider text; 'METRO VANCOUVER' when not set */
+  divider?: string
+  /** Where the service runs, for the structured data; Metro Vancouver when not set */
+  areaServed?: string[]
+  /** 'quote': priced per move instead of by the hour, so the page shows these points in place of the hourly rates */
+  quotePoints?: string[]
   heroPhoto: ServicePhoto
+  /** Optional different hero photo for desktop (lg and up) */
+  heroPhotoDesktop?: ServicePhoto
   intro: string
   /** Card shown wherever the moving services are listed (homepage, other service pages) */
   cardText: string
@@ -51,7 +61,7 @@ export const MOVING_SERVICES: MovingService[] = [
     metaTitle: 'Local Movers in Metro Vancouver | Stonegate Moving Solutions',
     metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $130/hr + GST. Request a free estimate online.',
     heading: ['Local', 'Movers'],
-    cardPhoto: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 40%' },
+    cardPhoto: { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 40%' },
     cardText: 'Apartments, condos and houses moved anywhere in Metro Vancouver.',
     includedHeading: 'Any home, any building',
     heroPhoto: { src: '/hero-left.jpg', alt: 'The Stonegate moving truck on a tree-lined road in Metro Vancouver', pos: 'center 55%', brightness: 1.45 },
@@ -63,8 +73,8 @@ export const MOVING_SERVICES: MovingService[] = [
     ],
     steps: [
       { verb: 'Wrap', text: 'Every piece goes into blankets before it leaves the room.', photo: { src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping furniture in a moving blanket inside the home', pos: 'center 55%' } },
-      { verb: 'Load', text: 'Up the ramp, strapped to the wall, packed tight so nothing shifts.', photo: { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 45%' } },
-      { verb: 'Drive', text: 'One trip across the city, planned around bridges and traffic.', photo: { src: '/junk/crew-4557-truck-side.jpg', alt: 'A Stonegate mover loading the back of the branded truck', pos: 'center 60%' } },
+      { verb: 'Load', text: 'Up the ramp, strapped to the wall, packed tight so nothing shifts.', photo: { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 45%' } },
+      { verb: 'Drive', text: 'One trip across the city, planned around bridges and traffic.', photo: { src: '/junk/driver-cab-4520-mobile.jpg', alt: 'A Stonegate mover at the wheel of the moving truck', pos: 'center 62%' } },
       { verb: 'Unload', text: 'Carried to the room you want it in and put back together.', photo: { src: '/crew-loading-ramp.jpg', alt: 'A Stonegate mover sliding out the truck ramp', pos: 'center 45%' } },
     ],
     priceNote: RATE_TEXT,
@@ -119,35 +129,72 @@ export const MOVING_SERVICES: MovingService[] = [
     path: '/commercial-moving',
     name: 'Commercial moving',
     metaTitle: 'Commercial Movers & Corporate Relocation in Metro Vancouver | Stonegate',
-    metaDescription: 'Office, store and commercial moves plus corporate relocation for employees across Metro Vancouver. 2 movers and a truck from $130/hr + GST.',
+    metaDescription: 'Store, showroom, studio and commercial moves plus corporate relocation for employees across Metro Vancouver. 2 movers and a truck from $130/hr + GST.',
     heading: ['Commercial', 'Movers'],
-    cardPhoto: { src: '/about/photo-4.jpg', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
-    cardText: 'Offices, stores and commercial spaces, plus corporate relocation for employees.',
+    cardPhoto: { src: '/about/photo-5.jpg', alt: 'A Stonegate mover in a branded shirt walking toward the truck', pos: 'center 40%' },
+    cardText: 'Stores, showrooms and commercial spaces, plus corporate relocation for employees.',
     includedHeading: 'Businesses and their people',
-    heroPhoto: { src: '/junk/driver-hero-4627.jpg', alt: 'A Stonegate mover standing in front of the branded moving truck', pos: 'center 72%' },
-    intro: 'Offices, stores and commercial spaces moved across Metro Vancouver, and employees relocated into their new homes.',
+    heroPhoto: { src: '/about/photo-4-warm.png', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 53%' },
+    heroPhotoDesktop: { src: '/about/photo-4-warm-desktop.png', alt: 'Two Stonegate movers lifting a box into the truck in the evening light', pos: 'center 55%', bright: true },
+    intro: 'Stores, showrooms, studios and other commercial spaces moved across Metro Vancouver, and employees relocated into their new homes.',
     included: [
-      { title: 'Desks to boardroom', text: 'Desks, chairs, filing cabinets, shelving and boardroom tables, taken apart where needed and set up in the new floor plan.' },
+      { title: 'Stores and showrooms', text: 'Shelving, display furniture and boxed stock moved between locations and set up in the new space.' },
+      { title: 'Studios and workspaces', text: 'Salons, studios and other workspaces: furniture and equipment wrapped, moved and placed where you want it.' },
       { title: 'Corporate relocation', text: 'Moving an employee to or within Metro Vancouver? Book their home move the same way: dates, both addresses, and we do the rest.' },
-      { title: 'Planned with you', text: 'Tell us the space, the timeline and the building rules. We plan the crew and the trips around them.' },
     ],
     steps: [
-      { verb: 'Wrap', text: 'Desks, chairs and furniture wrapped in blankets and plastic before they leave the room.', illustration: { src: '/moving/moving-day-step-1.png', alt: 'A Stonegate mover wrapping an armchair in a moving blanket and plastic wrap' } },
-      { verb: 'Load', text: 'Up the ramp and strapped in the truck, packed tight so nothing shifts.', illustration: { src: '/moving/moving-day-step-2.png', alt: 'A Stonegate mover pushing a wrapped piece of furniture up the ramp into the truck' } },
-      { verb: 'Drive', text: 'Straight to the new space, planned around the building\'s loading rules.', illustration: { src: '/moving/moving-day-step-3.png', alt: 'A Stonegate mover giving a thumbs up from the cab of the moving truck' } },
-      { verb: 'Set up', text: 'Furniture carried in and placed to your floor plan, ready for Monday.', illustration: { src: '/moving/moving-day-step-4.png', alt: 'A Stonegate mover carrying an armchair into the new space' } },
+      { verb: 'Wrap', text: 'Furniture and fixtures wrapped in blankets and plastic before they leave.', photo: { src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping furniture in a moving blanket', pos: 'center 55%' } },
+      { verb: 'Load', text: 'Up the ramp and strapped in the truck, packed tight so nothing shifts.', photo: { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 45%' } },
+      { verb: 'Drive', text: 'Straight to the new space, planned around the building\'s loading rules.', photo: { src: '/junk/driver-cab-4534-mobile.jpg', alt: 'A Stonegate mover at the wheel of the moving truck', pos: 'center 62%' } },
+      { verb: 'Set up', text: 'Carried in and placed where you want it, ready to open.', photo: { src: '/moving/rebuild-wrapped-sofas.png', alt: 'Blanket-wrapped furniture placed in the new space, ready to unwrap', pos: 'center 65%' } },
     ],
     priceNote: RATE_TEXT,
     faqHeading: 'Moving a business',
     faqs: [
       PRICE_FAQ,
-      { q: 'Do you move offices and stores?', a: 'Yes: offices, stores, studios and other commercial spaces across Metro Vancouver. Tell us the space and the timeline and we plan the move with you.' },
+      { q: 'What kinds of businesses do you move?', a: 'Stores, showrooms, studios and other commercial spaces across Metro Vancouver. Moving an office? See our office moving page.' },
       { q: 'What is corporate relocation?', a: 'Moving an employee\'s home when they relocate for work. We move them the same way we move any household: wrapped, carried and set up in the new place.' },
       INCLUDED_FAQ,
       { q: 'Our building has loading rules. Can you work with them?', a: 'Yes. Send us the building\'s rules for the loading dock and elevators and we plan the crew and the trips around them.' },
-      { q: 'How do we book?', a: 'Pick a date online or call us. For a bigger office move, call first so we can plan the crew and the number of trips.' },
+      { q: 'How do we book?', a: 'Request a free estimate online or call us. For a bigger move, call first so we can plan the crew and the number of trips.' },
     ],
     listPhoto: { src: '/crew-walking-truck.jpg', alt: 'A Stonegate mover walking a dolly beside the truck', pos: 'center 55%' },
+  },
+  {
+    slug: 'office',
+    path: '/office-moving',
+    name: 'Office moving',
+    metaTitle: 'Office Movers in Metro Vancouver | Stonegate Moving Solutions',
+    metaDescription: 'Office moves across Metro Vancouver: desks, chairs, filing cabinets and boardroom tables taken apart, moved and set up to your floor plan. 2 movers and a truck from $130/hr + GST.',
+    heading: ['Office', 'Movers'],
+    cardPhoto: { src: '/junk/driver-beside-truck.png', alt: 'A Stonegate mover standing at the back of the truck under the Moving made effortless sign', pos: 'center 30%' },
+    cardText: 'Desks, chairs, filing cabinets and boardrooms, set up to your new floor plan.',
+    includedHeading: 'From the old desk to the new one',
+    heroPhoto: { src: '/about/photo-4-warm.png', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 53%' },
+    heroPhotoDesktop: { src: '/about/photo-4-warm-desktop.png', alt: 'Two Stonegate movers lifting a box into the truck in the evening light', pos: 'center 55%', bright: true },
+    intro: 'Small offices to whole floors across Metro Vancouver. Desks and boardrooms taken apart, moved and set up to your new floor plan.',
+    included: [
+      { title: 'Desks to boardroom', text: 'Desks, chairs, filing cabinets, shelving and boardroom tables, taken apart where needed and put back together.' },
+      { title: 'Set up to your floor plan', text: 'Send us the new layout and every desk, chair and cabinet goes where it belongs.' },
+      { title: 'Planned around your building', text: 'Loading docks, elevator bookings and building hours: tell us the rules at both addresses and we plan the crew and the trips around them.' },
+    ],
+    steps: [
+      { verb: 'Wrap', text: 'Desks, chairs and furniture wrapped in blankets and plastic before they leave the room.', illustration: { src: '/moving/moving-day-step-1.png', alt: 'A Stonegate mover wrapping an armchair in a moving blanket and plastic wrap' } },
+      { verb: 'Load', text: 'Up the ramp and strapped in the truck, packed tight so nothing shifts.', illustration: { src: '/moving/moving-day-step-2.png', alt: 'A Stonegate mover pushing a wrapped piece of furniture up the ramp into the truck' } },
+      { verb: 'Drive', text: 'Straight to the new office, planned around the building\'s loading rules.', illustration: { src: '/moving/moving-day-step-3.png', alt: 'A Stonegate mover giving a thumbs up from the cab of the moving truck' } },
+      { verb: 'Set up', text: 'Furniture carried in and placed to your floor plan, ready for Monday.', illustration: { src: '/moving/moving-day-step-4.png', alt: 'A Stonegate mover carrying an armchair into the new office' } },
+    ],
+    priceNote: RATE_TEXT,
+    faqHeading: 'Moving an office',
+    faqs: [
+      PRICE_FAQ,
+      { q: 'How big an office can you move?', a: 'From a few desks to a whole floor. Tell us the number of workstations and the furniture, and we suggest a crew and the number of trips.' },
+      { q: 'Can you set everything up in the new office?', a: 'Yes. Send us the floor plan and we place the desks, chairs, cabinets and boardroom furniture where they belong.' },
+      { q: 'Our building has loading rules. Can you work with them?', a: 'Yes. Send us the building\'s rules for the loading dock and elevators and we plan the crew and the trips around them.' },
+      INCLUDED_FAQ,
+      { q: 'How do we book?', a: 'Request a free estimate online or call us. For a bigger office, call first so we can plan the crew and the number of trips.' },
+    ],
+    listPhoto: { src: '/junk/driver-cab-4534-mobile.jpg', alt: 'A smiling Stonegate mover in the cab of the truck', pos: 'center 45%' },
   },
   {
     slug: 'packing',
@@ -159,7 +206,7 @@ export const MOVING_SERVICES: MovingService[] = [
     cardPhoto: { src: '/burnaby/burnaby-movers-hero.jpg', alt: 'Packed boxes and a wardrobe box loaded in the Stonegate truck', pos: 'center 62%', brightness: 1.4 },
     cardText: 'Full or partial packing with boxes supplied, and unpacking at the new home.',
     includedHeading: 'As much packing as you want',
-    heroPhoto: { src: '/burnaby/burnaby-movers-hero.jpg', alt: 'The Stonegate truck filled with packed boxes and a wardrobe box', pos: 'center 55%', brightness: 1.5 },
+    heroPhoto: { src: '/packing/packing-truck-rainy.png', alt: 'The Stonegate truck loaded with packed boxes and a wardrobe box, the ramp down', pos: '58% center', bright: true },
     intro: 'The whole home, just the kitchen, or only what breaks. We bring the boxes and can unpack at the other end.',
     included: [
       { title: 'Full packing', text: 'Every room boxed, wrapped and labelled before the truck is loaded. You come home to a packed house.' },
@@ -183,6 +230,153 @@ export const MOVING_SERVICES: MovingService[] = [
       INCLUDED_FAQ,
     ],
     listPhoto: { src: '/crew-walking-truck.jpg', alt: 'A Stonegate mover walking a dolly beside the truck', pos: 'center 55%' },
+  },
+  {
+    slug: 'apartment',
+    path: '/apartment-moving',
+    name: 'Apartment & condo moving',
+    metaTitle: 'Apartment & Condo Movers in Metro Vancouver | Stonegate Moving Solutions',
+    metaDescription: 'Apartment and condo moves across Metro Vancouver: elevator bookings, loading bays and walk-ups handled. 2 movers and a truck from $130/hr + GST. Request a free estimate.',
+    heading: ['Apartment &', 'Condo Movers'],
+    cardPhoto: { src: '/burnaby/burnaby-move-truck-loaded.jpg', alt: 'The Stonegate truck loaded with bins, boxes and a wrapped mattress', pos: 'center 55%' },
+    cardText: 'Studios to three-bedroom suites, moved around elevator bookings and building rules.',
+    includedHeading: 'Made for buildings',
+    heroPhoto: { src: '/apartment/apartment-truck-street.png', alt: 'A Stonegate mover walking a dolly along the sidewalk beside the Stonegate truck', pos: '60% center' },
+    heroPhotoDesktop: { src: '/apartment/apartment-truck-street-desktop.png', alt: 'A Stonegate mover walking a dolly along a sunny sidewalk beside the Stonegate truck', pos: 'center 40%', bright: true },
+    intro: 'From studios to three-bedroom suites, we move you in and out of any building, on time for your elevator booking.',
+    included: [
+      { title: 'Elevator bookings', text: 'Book the elevator and loading bay for the arrival window we give you, and the crew works inside your booking.' },
+      { title: 'Walk-ups and tight stairs', text: 'No elevator? Fourth-floor walk-ups and narrow stairwells are handled with straps, dollies and the right crew size.' },
+      { title: 'Furniture that fits', text: 'Beds, tables and sectionals are taken apart to get through doors and hallways, then put back together in the new suite.' },
+    ],
+    steps: [
+      { verb: 'Wrap', text: 'Every piece goes into blankets before it leaves the suite.', photo: { src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping furniture in a moving blanket inside the home', pos: 'center 55%' } },
+      { verb: 'Carry', text: 'Down the elevator or the stairs on dollies, without scuffing the halls.', photo: { src: '/crew-walking-truck.jpg', alt: 'A Stonegate mover walking a dolly beside the truck', pos: 'center 55%' } },
+      { verb: 'Load', text: 'Up the ramp and strapped in, packed tight so nothing shifts.', photo: { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 45%' } },
+      { verb: 'Set up', text: 'Carried into the new suite and put back together where you want it.', photo: { src: '/moving/rebuild-wrapped-sofas.png', alt: 'Blanket-wrapped sofas placed in the living room of the new home, ready to unwrap', pos: 'center 65%' } },
+    ],
+    priceNote: RATE_TEXT,
+    faqHeading: 'Moving an apartment or condo',
+    faqs: [
+      PRICE_FAQ,
+      { q: 'My building needs an elevator booking. Who arranges it?', a: 'You book the elevator and loading bay with your building for the arrival window we give you. We work inside the building\'s rules from there.' },
+      { q: 'How long does a one-bedroom move take?', a: 'Most one-bedroom moves take 3 to 4 hours with 2 movers. Floors, elevator waits and the distance between the two buildings all change it.' },
+      { q: 'Do you move walk-up apartments?', a: 'Yes. Tell us the floor and the stairs at both addresses so we bring the right crew size for them.' },
+      { q: 'Do 2 or 3 movers make more sense for me?', a: 'Two movers suit most studios and one-bedrooms. For two bedrooms and up, 3 movers with the bigger truck usually finish sooner.' },
+      INCLUDED_FAQ,
+    ],
+    listPhoto: { src: '/burnaby/burnaby-move-crew-loading.jpg', alt: 'A Stonegate mover loading boxes into the truck', pos: 'center 45%' },
+  },
+  {
+    slug: 'long-distance',
+    path: '/long-distance-moving',
+    name: 'Long-distance moving',
+    metaTitle: 'Long-Distance Movers from Vancouver to BC & Alberta | Stonegate',
+    metaDescription: 'Long-distance moves between Metro Vancouver and anywhere in BC or Alberta: Vancouver Island, the Okanagan, Kamloops, Calgary, Edmonton and more. One flat quote for your move.',
+    heading: ['Long-Distance', 'Movers'],
+    divider: 'BC & ALBERTA',
+    areaServed: ['British Columbia', 'Alberta'],
+    cardPhoto: { src: '/junk/stonegate-truck-crew.jpg', alt: 'Stonegate movers at the back of the branded truck', pos: 'center 45%' },
+    cardText: 'Moves between Metro Vancouver and anywhere in BC or Alberta, for one flat price.',
+    includedHeading: 'Across BC and into Alberta',
+    heroPhoto: { src: '/hero-truck.jpg', alt: 'The Stonegate moving truck parked on a residential street', pos: 'center 60%' },
+    intro: 'Moving to Vancouver Island, the Okanagan, Calgary or Edmonton? We load, drive and unload your home for one flat price.',
+    included: [
+      { title: 'Anywhere in BC and Alberta', text: 'Vancouver Island, the Okanagan, Kamloops, the Kootenays, northern BC, Calgary, Edmonton and the towns in between.' },
+      { title: 'One flat quote', text: 'Send us both addresses, the size of your home and your dates. We quote one price for the whole move.' },
+      { title: 'Packed for the highway', text: 'Furniture wrapped in blankets, strapped to the truck walls and packed tight, so nothing shifts on a long drive.' },
+    ],
+    steps: [
+      { verb: 'Wrap', text: 'Every piece wrapped in blankets and plastic before it leaves the room.', illustration: { src: '/moving/moving-day-step-1.png', alt: 'A Stonegate mover wrapping an armchair in a moving blanket and plastic wrap' } },
+      { verb: 'Load', text: 'Strapped in and packed tight for the long drive.', illustration: { src: '/moving/moving-day-step-2.png', alt: 'A Stonegate mover pushing a wrapped piece of furniture up the ramp into the truck' } },
+      { verb: 'Drive', text: 'Straight to your new town, on the dates we agreed.', illustration: { src: '/moving/moving-day-step-3.png', alt: 'A Stonegate mover giving a thumbs up from the cab of the moving truck' } },
+      { verb: 'Unload', text: 'Carried in, unwrapped and put back together in the new home.', illustration: { src: '/moving/moving-day-step-4.png', alt: 'A Stonegate mover carrying an armchair into the new home' } },
+    ],
+    quotePoints: ['One flat price for your route and your home', 'Loading, the drive and unloading in one quote', 'Confirmed with you before moving day'],
+    priceNote: 'Long-distance moves are quoted as one flat price, based on your route, the size of your home and your dates. Request a free estimate and we confirm the price before moving day. Prices plus GST.',
+    faqHeading: 'Moving out of town',
+    faqs: [
+      { q: 'Where do you move to?', a: 'Anywhere in BC and Alberta, to or from Metro Vancouver: Vancouver Island, the Okanagan, Kamloops, the Kootenays, northern BC, Calgary, Edmonton and the towns along the way.' },
+      { q: 'How is a long-distance move priced?', a: 'With one flat quote for the whole move, based on the distance, the size of your home and your dates. Request a free estimate with both addresses and we send you the price.' },
+      { q: 'Do you move to Vancouver Island?', a: 'Yes. Tell us the town and we plan the ferry crossing into the move.' },
+      { q: 'How far ahead should I book?', a: 'As early as you can, especially for the end of the month. A few weeks\' notice gives us the best chance to fit your dates.' },
+      { q: 'Can you pack for a long-distance move?', a: 'Yes, with our packing service. Tell us what you want packed when you request your estimate and we include it in the quote.' },
+      INCLUDED_FAQ,
+    ],
+    listPhoto: { src: '/junk/crew-4539-cab.jpg', alt: 'A Stonegate mover standing at the open cab door of the truck', pos: 'center 40%' },
+  },
+  {
+    slug: 'senior',
+    path: '/senior-moving',
+    name: 'Senior moving',
+    metaTitle: 'Senior Movers in Metro Vancouver | Downsizing & Retirement Moves | Stonegate',
+    metaDescription: 'Moves for seniors across Metro Vancouver: help with downsizing, packing and unpacking, moves into retirement residences and the new home set up on day one. From $130/hr + GST.',
+    heading: ['Senior', 'Movers'],
+    cardPhoto: { src: '/junk/crew-4580-by-cab.jpg', alt: 'A Stonegate mover smiling beside the open cab of the truck', pos: 'center 45%' },
+    cardText: 'Downsizing and moves into retirement residences, packed, moved and set up for day one.',
+    includedHeading: 'A calmer move, start to finish',
+    heroPhoto: { src: '/junk/crew-4628-by-truck.jpg', alt: 'A smiling Stonegate mover with arms crossed beside the truck', pos: '30% 65%' },
+    intro: 'Downsizing, a move into a retirement residence, or closer to family. We pack, move and set up the new home, and take the time to get it right.',
+    included: [
+      { title: 'Downsizing help', text: 'Moving somewhere smaller? We help sort what comes along, so only the furniture that fits makes the trip.' },
+      { title: 'Packed and unpacked', text: 'We box up the home, label every box by room and unpack at the other end.' },
+      { title: 'Retirement residences', text: 'Retirement homes, assisted living and care residences: we work around their move-in times, elevator bookings and rules.' },
+      { title: 'Home on day one', text: 'Beds put together and made up, furniture placed where you want it and favourite things put away, so the first night feels like home.' },
+    ],
+    steps: [
+      { verb: 'Sort', text: 'Decide together what comes to the new home.', illustration: { src: '/moving/packing-step-1.png', alt: 'An open Stonegate box packed with a pillow, a picture frame and a roll of tape' } },
+      { verb: 'Pack', text: 'Dishes, photos and keepsakes wrapped and boxed by room.', illustration: { src: '/moving/packing-step-3.png', alt: 'A taped moving box labelled Living Room' } },
+      { verb: 'Move', text: 'Loaded, driven and carried into the new home.', illustration: { src: '/moving/moving-day-step-2.png', alt: 'A Stonegate mover pushing a wrapped piece of furniture up the ramp into the truck' } },
+      { verb: 'Settle in', text: 'Beds made up, boxes unpacked and things put away.', illustration: { src: '/moving/packing-step-4.png', alt: 'A Stonegate box unpacked at the new home with a plant, books and a lamp' } },
+    ],
+    priceNote: 'Senior moves run at the moving rate, with packing and unpacking at the same hourly rate. Boxes and packing materials are extra, charged for what we use. 3-hour minimum, prices plus GST.',
+    faqHeading: 'Moving a parent or yourself',
+    faqs: [
+      PRICE_FAQ,
+      { q: 'Can you help decide what to bring?', a: 'Yes. Tell us about the new home and we help sort what fits and what stays behind before moving day.' },
+      { q: 'Do you move people into retirement residences?', a: 'Yes: retirement homes, assisted living and care residences. Send us the residence\'s move-in rules and we plan the move around them.' },
+      { q: 'Can I book the move for my parent?', a: 'Of course. Request the estimate in your name, add your parent\'s addresses and tell us who to contact on moving day.' },
+      { q: 'Do you set up the new home?', a: 'Yes. Beds go back together and get made up, furniture is placed where you want it and boxes are unpacked.' },
+      { q: 'Do you bring boxes?', a: 'Yes. The crew brings boxes, packing paper, tape and wardrobe boxes.' },
+    ],
+    listPhoto: { src: '/junk/driver-cab-4520-mobile.jpg', alt: 'A smiling Stonegate mover leaning out of the truck cab window', pos: 'center 45%' },
+  },
+  {
+    slug: 'specialty',
+    path: '/specialty-moving',
+    name: 'Specialty moving',
+    metaTitle: 'Piano, Safe & Specialty Item Movers in Metro Vancouver | Stonegate',
+    metaDescription: 'Pianos, heavy safes, art, antiques, gym equipment and appliances moved across Metro Vancouver. Wrapped, strapped and carried with the right crew and gear.',
+    heading: ['Specialty', 'Movers'],
+    cardPhoto: { src: '/junk/driver-standing-mobile-wide-3.jpg', alt: 'A Stonegate mover with arms crossed beside the truck', pos: 'center 30%' },
+    cardText: 'Pianos, heavy safes, art and antiques, gym equipment and appliances.',
+    includedHeading: 'Heavy, fragile and one of a kind',
+    heroPhoto: { src: '/specialty/specialty-truck-at-work.png', alt: 'A Stonegate mover securing a wooden crate in the back of the truck', pos: '50% center', bright: true },
+    intro: 'Pianos, safes, art and antiques, home gyms and appliances. Heavy or fragile, it is wrapped, strapped and carried with the right gear.',
+    included: [
+      { title: 'Pianos', text: 'Wrapped in blankets and moved on dollies and straps. Tell us the type of piano and the stairs at both ends.' },
+      { title: 'Heavy safes', text: 'Gun safes and heavy home or office safes, moved with the crew size and equipment the weight needs.' },
+      { title: 'Art and antiques', text: 'Artwork, mirrors and antiques wrapped piece by piece and loaded so nothing presses on them.' },
+      { title: 'Gym gear and appliances', text: 'Treadmills, home gyms, fridges, washers and dryers, taken apart where needed and carried down the stairs safely.' },
+    ],
+    steps: [
+      { verb: 'Plan', text: 'Tell us the item, its weight and the stairs, and we plan the crew.', photo: { src: '/crew-loading-ramp.jpg', alt: 'A Stonegate mover sliding out the truck ramp', pos: 'center 45%' } },
+      { verb: 'Wrap', text: 'Blankets and plastic on every surface that can scratch.', photo: { src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping furniture in a moving blanket inside the home', pos: 'center 55%' } },
+      { verb: 'Secure', text: 'Strapped upright to the truck wall so it cannot tip or slide.', photo: { src: '/junk/crew-4557-truck-side.jpg', alt: 'A Stonegate mover loading the back of the branded truck', pos: 'center 60%' } },
+      { verb: 'Place', text: 'Carried in and set exactly where it belongs.', photo: { src: '/moving/rebuild-wrapped-sofas.png', alt: 'Blanket-wrapped furniture placed in the new home, ready to unwrap', pos: 'center 65%' } },
+    ],
+    quotePoints: ['Quoted for the item, its weight and the stairs', 'On its own or with the rest of your move', 'Confirmed with you before moving day'],
+    priceNote: 'Specialty items are quoted for the piece, its weight and the stairs at both ends, on their own or with the rest of your move. Request a free estimate and we confirm the price before moving day. Prices plus GST.',
+    faqHeading: 'Moving something special',
+    faqs: [
+      { q: 'What specialty items do you move?', a: 'Pianos, gun safes and other heavy safes, art and antiques, mirrors, home gym equipment and large appliances like fridges and washers.' },
+      { q: 'How is a piano or safe move priced?', a: 'It depends on the item, its weight and the stairs at both ends. Tell us about it when you request your estimate and we confirm the price before moving day.' },
+      { q: 'Can you move one item on its own?', a: 'Yes. A piano, safe or appliance can be moved on its own or as part of a full move.' },
+      { q: 'What do you need to know about my piano?', a: 'The type of piano, the stairs and turns at both addresses, and whether there is an elevator. A photo helps.' },
+      { q: 'How do you protect art and antiques?', a: 'Each piece is wrapped on its own in blankets and plastic, and loaded so nothing rests against it on the drive.' },
+      INCLUDED_FAQ,
+    ],
+    listPhoto: { src: '/junk/driver-standing-by-truck-side-2.jpg', alt: 'A Stonegate mover standing beside the branded truck', pos: 'center 30%' },
   },
 ]
 

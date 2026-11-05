@@ -16,12 +16,13 @@ const MUTED = '#6B5E54'
 // Up to four cards sit in one row on desktop
 const ONE_ROW: Record<number, string> = { 2: 'lg:grid-cols-2', 3: 'lg:grid-cols-3', 4: 'lg:grid-cols-4' }
 
-/** Service cards: a swipe row on phones and tablets; on desktop one row of up to four, otherwise centred rows of 3 + 2 (one row of 5 on very wide screens) */
+/** Service cards: a swipe row on phones and tablets; on desktop one row of up to four, otherwise centred rows of four (of three when that fills every row) */
 export default function ServicesCarousel({ cards, label }: { cards: ServiceCard[]; label: string }) {
   const oneRow = ONE_ROW[cards.length]
+  const rowsOfThree = cards.length % 4 !== 0 && cards.length % 3 === 0
   const desktop = oneRow
     ? `lg:grid ${oneRow} lg:overflow-visible lg:max-w-6xl 3xl:max-w-7xl lg:mx-auto`
-    : 'lg:flex-wrap lg:justify-center lg:overflow-visible lg:gap-y-6 lg:max-w-[1180px] min-[1950px]:max-w-[1900px] lg:mx-auto'
+    : 'lg:flex-wrap lg:justify-center lg:overflow-visible lg:gap-y-6 lg:max-w-6xl 3xl:max-w-7xl lg:mx-auto'
   return (
     <div>
       <ul
@@ -29,7 +30,7 @@ export default function ServicesCarousel({ cards, label }: { cards: ServiceCard[
         aria-label={label}
       >
         {cards.map(c => (
-          <li key={c.href} className={`snap-start shrink-0 w-[84vw] max-w-[400px] sm:w-[400px] lg:max-w-none ${oneRow ? 'lg:w-auto' : 'lg:w-[360px]'}`}>
+          <li key={c.href} className={`snap-start shrink-0 w-[84vw] max-w-[400px] sm:w-[400px] lg:max-w-none ${oneRow ? 'lg:w-auto' : rowsOfThree ? 'lg:w-[calc((100%-4.5rem)/3)]' : 'lg:w-[calc((100%-6rem)/4)]'}`}>
             <div
               className="group h-full flex flex-col rounded-[28px] p-3.5 pb-5 lg:p-5 lg:pb-6 text-center transition-shadow hover:shadow-lg"
               style={{ backgroundColor: '#FFFFFF', boxShadow: '0 6px 24px -12px rgba(26,23,20,0.18)' }}

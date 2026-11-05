@@ -36,7 +36,7 @@ const values = [
     Icon: ReceiptText,
     title: 'Clear, hourly pricing',
     text: 'You know the rate before you book: $130 an hour for 2 movers, $170 for 3, plus GST.',
-    photo: { src: '/about/photo-4.jpg', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
+    photo: { src: '/about/photo-4-warm.png', alt: 'Two Stonegate movers lifting a box into the truck', pos: 'center 60%' },
   },
 ]
 
@@ -44,7 +44,7 @@ const values = [
 const gallery = [
   { src: '/about/photo-2.jpg', alt: 'A Stonegate mover on the truck ramp under the Moving made effortless sign', pos: 'center 40%', caption: 'Ready on the ramp' },
   { src: '/about/photo-5.jpg', alt: 'A Stonegate mover arranging wrapped furniture inside the truck', pos: 'center 60%', caption: 'Packed tight, nothing shifts', brightness: 1.2 },
-  { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'A Stonegate mover carrying wrapped furniture up the ramp', pos: 'center 45%', caption: 'Up the ramp, piece by piece' },
+  { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp', pos: 'center 45%', caption: 'Up the ramp, piece by piece' },
   { src: '/junk/driver-hero-4627.jpg', alt: 'A Stonegate mover standing in front of the branded truck', pos: 'center 45%', caption: 'Your crew for the day' },
 ]
 

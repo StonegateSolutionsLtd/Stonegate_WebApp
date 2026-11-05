@@ -43,7 +43,7 @@ const areas = [
 ]
 
 const jobs = [
-  { src: '/burnaby/burnaby-move-apartment-boxes.jpg', alt: 'Stonegate mover carrying wrapped furniture down the truck ramp during a Burnaby apartment move', position: 'center' },
+  { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'Stonegate mover carrying wrapped furniture down the truck ramp during a Burnaby apartment move', position: 'center' },
   { src: '/burnaby/burnaby-move-truck-night.jpg', alt: 'Stonegate Moving Solutions truck parked outside a Burnaby home', position: 'center 40%' },
   { src: '/burnaby/burnaby-move-truck-street.jpg', alt: 'Stonegate moving truck loaded with wrapped furniture on a Burnaby street', position: 'center' },
 ]

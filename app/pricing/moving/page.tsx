@@ -256,7 +256,7 @@ export default function MovingPricingPage() {
           <div className={`${sectionWrap} py-16 sm:py-20 grid md:grid-cols-2 gap-12 items-center`}>
             <FadeIn className="order-2 md:order-1">
               <div className="relative rounded-3xl overflow-hidden h-[420px] md:h-[520px]" style={{ backgroundColor: LINE }}>
-                <Image src="/about/photo-4.jpg" alt="Two Stonegate movers lifting a box into the moving truck" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" style={{ objectPosition: 'center 60%' }} />
+                <Image src="/about/photo-4-warm.png" alt="Two Stonegate movers lifting a box into the moving truck" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" style={{ objectPosition: 'center 60%' }} />
               </div>
             </FadeIn>
             <FadeIn delay={120} className="order-1 md:order-2">
