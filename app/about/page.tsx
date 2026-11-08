@@ -75,10 +75,10 @@ export default function AboutPage() {
           />
           <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 420px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0.35) 78%, transparent 100%)' }} />
           <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.3) 45%, transparent 65%)' }} />
-          <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-start lg:items-center min-h-[520px] sm:min-h-[600px] lg:min-h-[min(calc(80svh-68px),720px)] pt-14 pb-12 lg:py-16">
+          <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-start lg:items-center min-h-[520px] sm:min-h-[600px] lg:min-h-[min(calc(80svh-68px),720px)] pt-14 pb-12 lg:py-16 short:min-h-[calc(64svh-68px)] short:py-9">
             <div>
-              <GoogleStars className="mb-4 lg:mb-5" />
-              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-5 w-fit" style={{ fontSize: 'clamp(2.4rem, 7.3vw, 4.8rem)' }}>
+              <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
+              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-5 short:mb-4 w-fit" style={{ fontSize: 'clamp(2.4rem, min(7.3vw, 7.5svh), 4.8rem)' }}>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Meet the</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
                   <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />

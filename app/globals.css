@@ -4,6 +4,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Laptops: desktop width but a short viewport (big monitors and phones are unaffected) */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 56.25rem));
+
 /* Large desktop monitors (laptops and below are unaffected) */
 @theme {
   --breakpoint-3xl: 106.25rem;

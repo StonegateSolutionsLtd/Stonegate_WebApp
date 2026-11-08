@@ -12,6 +12,7 @@ import {
   Home, MapPin, ArrowRight,
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
+import LinkedText from '@/components/moving/LinkedText'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import { MOVING_REVIEWS } from '@/lib/moving-services'
 import { SITE_URL, providerLd, hourlyOfferLd } from '@/lib/seo/site'
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
 }
 
 const services = [
-  { label: 'Apartment & Condo Moving', desc: 'Studio to 3-bedroom moves across Burnaby high-rises and low-rises.', Icon: Building2 },
-  { label: 'House Moving', desc: 'Full household moves, handled by our own uniformed crew.', Icon: Home },
-  { label: 'Local Moving', desc: 'Moving within Burnaby or across Metro Vancouver, flat hourly rate.', Icon: Truck },
+  { label: 'Apartment & Condo Moving', href: '/apartment-moving', desc: 'Studio to 3-bedroom moves across Burnaby high-rises and low-rises.', Icon: Building2 },
+  { label: 'House Moving', href: '/residential-moving', desc: 'Full household moves, handled by our own uniformed crew.', Icon: Home },
+  { label: 'Packing Services', href: '/packing-services', desc: 'The whole home, just the kitchen, or only what breaks. Same hourly rate, materials extra.', Icon: Truck },
 ]
 
 const whyChoose = [
@@ -167,6 +168,9 @@ export default function BurnabyMoversPage() {
               <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>
                 Stonegate Moving Solutions is based in Burnaby, and it shows in how we work - we know the buildings, the elevator booking windows, and the fastest routes around town. We also serve the rest of Metro Vancouver, but Burnaby is home base, which means quicker scheduling and local know-how on every job.
               </p>
+              <p className="text-base leading-relaxed mt-4" style={{ color: '#6B5E54' }}>
+                <LinkedText text="Moving out of a Metrotown or Brentwood tower? See [apartment and condo moving](/apartment-moving) for how we work around elevator bookings and loading bays. Moving a house near Deer Lake or Burnaby Heights? See [residential moving](/residential-moving). Every move is billed at the same hourly [moving rates](/pricing/moving)." />
+              </p>
             </FadeIn>
           </div>
         </section>
@@ -179,15 +183,15 @@ export default function BurnabyMoversPage() {
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Moving Services in Burnaby</h2>
             </FadeIn>
             <div className="grid md:grid-cols-3 gap-4">
-              {services.map(({ label, desc, Icon }, i) => (
+              {services.map(({ label, href, desc, Icon }, i) => (
                 <FadeIn key={label} delay={i * 80}>
-                  <div className="h-full rounded-2xl p-6" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
+                  <Link href={href} className="block h-full rounded-2xl p-6 transition-colors hover:bg-[#EDE6DD]" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
                     <span className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#E8F0E6' }}>
                       <Icon size={20} style={{ color: '#254220' }} />
                     </span>
                     <p className="font-bold text-sm mb-2" style={{ color: '#1A1714' }}>{label}</p>
                     <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
-                  </div>
+                  </Link>
                 </FadeIn>
               ))}
             </div>
@@ -239,6 +243,9 @@ export default function BurnabyMoversPage() {
                 </FadeIn>
               ))}
             </div>
+            <p className="text-base leading-relaxed max-w-2xl mt-8" style={{ color: '#6B5E54' }}>
+              <LinkedText text="Moving between Burnaby and a neighbouring city? We also move people in [Vancouver](/locations/vancouver), [New Westminster](/locations/new-westminster), [Coquitlam](/locations/coquitlam) and [Richmond](/locations/richmond), or see [all service areas](/locations)." />
+            </p>
           </div>
         </section>
 

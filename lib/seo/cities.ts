@@ -8,8 +8,13 @@ export interface City {
   title: string
   description: string
   keywords: string[]
+  /** Hero headline when it should differ from "<name> / Movers" */
+  heading?: [string, string]
   lead: string
+  /** Links to related pages are written inline as [text](/path) */
   moving: string
+  /** The 3-4 moving services most relevant here, as service slugs */
+  services: ('local' | 'residential' | 'commercial' | 'office' | 'packing' | 'apartment' | 'long-distance' | 'senior' | 'specialty')[]
   localTip: { title: string; text: string }
   neighbourhoods: string[]
   faqs: Faq[]
@@ -39,11 +44,13 @@ export const CITIES: City[] = [
   {
     slug: 'vancouver',
     name: 'Vancouver',
-    title: 'Vancouver Movers',
-    description: 'Local movers in Vancouver, BC. Apartment, condo and house moves from Downtown and the West End to Kitsilano and East Van. 2 movers and a truck from $130/hr + GST.',
-    keywords: ['movers Vancouver', 'Vancouver movers', 'moving company Vancouver', 'apartment movers Vancouver', 'condo movers Vancouver', 'local movers Vancouver'],
+    title: 'Downtown & City of Vancouver Movers',
+    description: 'Movers for the City of Vancouver: Downtown and Yaletown towers, West End walk-ups, Kitsilano and East Van houses. Elevator, loading bay and parking planned. From $130/hr + GST.',
+    keywords: ['Downtown Vancouver movers', 'condo movers Vancouver', 'Yaletown movers', 'West End movers', 'Kitsilano movers', 'East Vancouver movers'],
+    heading: ['City of Vancouver', 'Movers'],
     lead: 'Apartment, condo and house moves across the City of Vancouver - from Downtown towers to East Van character homes. We wrap, load, move and set up.',
-    moving: 'Vancouver moves range from a studio in a West End walk-up to a full Kerrisdale family home. We wrap furniture in blankets, take apart what needs it, protect hallways and elevators, and reassemble everything in your new place - whether you are moving across the street or across Metro Vancouver.',
+    moving: 'Vancouver moves range from a studio in a West End walk-up to a full Kerrisdale family home. We wrap furniture in blankets, take apart what needs it, protect hallways and elevators, and reassemble everything in your new place - whether you are moving across the street or across Metro Vancouver. Condo and tower moves follow our [apartment and condo moving](/apartment-moving) process, and houses our [residential moving](/residential-moving) one. Moving on to [Burnaby](/burnaby-movers) or the [North Shore](/locations/north-vancouver)? It is the same hourly rate.',
+    services: ['apartment', 'residential', 'office', 'packing'],
     localTip: { title: 'Moving in or out of a Vancouver high-rise?', text: 'Most Downtown and Yaletown buildings need a move-in or move-out elevator booking and a loading bay reservation. Book both for your moving window and we will handle everything else.' },
     neighbourhoods: ['Downtown', 'Yaletown', 'West End', 'Coal Harbour', 'Kitsilano', 'Mount Pleasant', 'Fairview', 'Kerrisdale', 'Dunbar', 'Point Grey', 'Commercial Drive', 'Hastings-Sunrise', 'Marpole', 'Oakridge', 'Killarney', 'Renfrew', 'South Granville', 'UBC'],
     faqs: [
@@ -59,7 +66,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Surrey, BC. House, townhouse and apartment moves in Guildford, Fleetwood, Newton, Cloverdale and South Surrey. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Surrey', 'Surrey movers', 'moving company Surrey', 'house movers Surrey', 'local movers Surrey BC'],
     lead: 'House, townhouse and apartment moves across Surrey - from Whalley and Guildford to Cloverdale and South Surrey.',
-    moving: 'Surrey moves are often bigger homes with full garages, so we plan the crew and truck to match. We wrap and protect furniture, handle heavy pieces like dressers, sectionals and appliances, and load the truck so everything arrives in the same condition it left.',
+    moving: 'Surrey moves are often bigger homes with full garages, so we plan the crew and truck to match. We wrap and protect furniture, handle heavy pieces like dressers, sectionals and appliances, and load the truck so everything arrives in the same condition it left. See [residential moving](/residential-moving) for how we handle a full house, and add [packing services](/packing-services) if you want it boxed for you.',
+    services: ['residential', 'packing', 'apartment'],
     localTip: { title: 'Moving a full house in Surrey?', text: 'For a 3+ bedroom home, our 3-mover crew with the 16\' truck usually saves time overall. Tell us the size of your home when you book and we will suggest the right crew.' },
     neighbourhoods: ['Whalley', 'City Centre', 'Guildford', 'Fleetwood', 'Newton', 'Cloverdale', 'Fraser Heights', 'Panorama Ridge', 'South Surrey', 'Morgan Creek', 'Grandview Heights', 'Sullivan Heights'],
     faqs: [
@@ -77,6 +85,7 @@ export const CITIES: City[] = [
     keywords: ['Burnaby movers'],
     lead: '',
     moving: '',
+    services: ['apartment', 'residential', 'packing'],
     localTip: { title: '', text: '' },
     neighbourhoods: ['Metrotown', 'Brentwood', 'Burnaby Heights', 'Edmonds', 'Lougheed', 'Deer Lake', 'Capitol Hill', 'Burnaby Mountain'],
     faqs: [],
@@ -89,7 +98,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Richmond, BC. Condo, townhouse and house moves in City Centre, Steveston, Terra Nova and across Richmond. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Richmond', 'Richmond BC movers', 'moving company Richmond', 'condo movers Richmond', 'Steveston movers'],
     lead: 'Condo, townhouse and house moves across Richmond - from City Centre towers to Steveston and Terra Nova.',
-    moving: 'Our Richmond moves include condos along No. 3 Road, townhouse complexes with tight parking and family homes across the city. We plan the carry, protect your floors and furniture and keep the move moving.',
+    moving: 'Our Richmond moves include condos along No. 3 Road, townhouse complexes with tight parking and family homes across the city. We plan the carry, protect your floors and furniture and keep the move moving. Condo moves follow our [apartment and condo moving](/apartment-moving) process, and houses and townhouses our [residential moving](/residential-moving) one.',
+    services: ['apartment', 'residential', 'packing'],
     localTip: { title: 'Moving from a townhouse complex?', text: 'Many Richmond complexes limit where trucks can park. Tell us your unit\'s location and any strata rules so we can plan the shortest carry.' },
     neighbourhoods: ['City Centre', 'Brighouse', 'Steveston', 'Terra Nova', 'Thompson', 'Seafair', 'Broadmoor', 'Ironwood', 'Hamilton', 'East Richmond', 'Blundell', 'Shellmont'],
     faqs: [
@@ -105,7 +115,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Coquitlam, BC. Apartment and house moves in Burquitlam, Coquitlam Centre, Westwood Plateau and Burke Mountain. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Coquitlam', 'Coquitlam movers', 'moving company Coquitlam', 'Burke Mountain movers', 'local movers Coquitlam'],
     lead: 'Apartment and house moves across Coquitlam - from Burquitlam condos to homes on Westwood Plateau and Burke Mountain.',
-    moving: 'Coquitlam moves often mean hillside homes, long driveways and multi-level houses. We bring the crew and equipment to move heavy furniture safely up and down stairs, and we handle condo moves near the Evergreen Line just as often.',
+    moving: 'Coquitlam moves often mean hillside homes, long driveways and multi-level houses. We bring the crew and equipment to move heavy furniture safely up and down stairs, and we handle condo moves near the Evergreen Line just as often. See [residential moving](/residential-moving) for multi-level houses and [apartment and condo moving](/apartment-moving) for the Burquitlam towers.',
+    services: ['residential', 'apartment', 'packing'],
     localTip: { title: 'Steep driveway or lots of stairs?', text: 'Let us know when you book - we bring the right crew size so heavy pieces come out safely and the move stays on schedule.' },
     neighbourhoods: ['Burquitlam', 'Coquitlam Centre', 'Westwood Plateau', 'Burke Mountain', 'Maillardville', 'Austin Heights', 'Ranch Park', 'Eagle Ridge', 'Harbour Chines', 'River Springs'],
     faqs: [
@@ -120,7 +131,8 @@ export const CITIES: City[] = [
     description: 'Local movers in New Westminster, BC. Apartment, walk-up and heritage house moves in Downtown, Sapperton, Queens Park and Queensborough. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers New Westminster', 'New West movers', 'moving company New Westminster', 'apartment movers New Westminster'],
     lead: 'Apartment, walk-up and heritage house moves across New Westminster - from Downtown and the Quay to Sapperton and Queensborough.',
-    moving: 'New West has plenty of walk-up apartments and older homes with narrow staircases. We take apart what will not fit, carry it all down safely and put it back together at your new place.',
+    moving: 'New West has plenty of walk-up apartments and older homes with narrow staircases. We take apart what will not fit, carry it all down safely and put it back together at your new place. Walk-up moves follow our [apartment and condo moving](/apartment-moving) process, and heavy pieces on narrow stairs are covered by [specialty moving](/specialty-moving).',
+    services: ['apartment', 'residential', 'specialty'],
     localTip: { title: 'Walk-up apartment?', text: 'Many New West buildings have no elevator. Tell us the floor when you book so we bring the right crew for the stairs.' },
     neighbourhoods: ['Downtown', 'Uptown', 'Sapperton', 'Queens Park', 'Brow of the Hill', 'Queensborough', 'Connaught Heights', 'West End', 'Victory Heights', 'The Quay'],
     faqs: [
@@ -135,7 +147,8 @@ export const CITIES: City[] = [
     description: 'Local movers in North Vancouver (City and District). Condo and house moves from Lonsdale to Lynn Valley, Edgemont and Deep Cove. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers North Vancouver', 'North Van movers', 'moving company North Vancouver', 'Lonsdale movers', 'Lynn Valley movers'],
     lead: 'Condo and house moves across the City and District of North Vancouver - Lonsdale towers to Lynn Valley and Deep Cove homes.',
-    moving: 'North Shore moves mean hillside homes, long stair runs and bridge traffic. We plan the route and timing so your crew arrives inside the window, and we protect your furniture on every step.',
+    moving: 'North Shore moves mean hillside homes, long stair runs and bridge traffic. We plan the route and timing so your crew arrives inside the window, and we protect your furniture on every step. See [residential moving](/residential-moving) for hillside homes and [apartment and condo moving](/apartment-moving) for the Lonsdale towers.',
+    services: ['residential', 'apartment', 'packing'],
     localTip: { title: 'Crossing the bridge?', text: 'For moves to or from the North Shore, we plan around bridge traffic so the move stays on schedule.' },
     neighbourhoods: ['Lower Lonsdale', 'Central Lonsdale', 'Lynn Valley', 'Deep Cove', 'Edgemont', 'Capilano', 'Upper Lonsdale', 'Seymour', 'Norgate', 'Lynnmour', 'Blueridge'],
     faqs: [
@@ -150,7 +163,8 @@ export const CITIES: City[] = [
     description: 'Local movers in West Vancouver, BC. Careful house and condo moves in Ambleside, Dundarave, British Properties and more. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers West Vancouver', 'West Van movers', 'moving company West Vancouver', 'downsizing movers West Vancouver'],
     lead: 'Careful house, condo and downsizing moves across West Vancouver.',
-    moving: 'West Vancouver moves often include fine furniture, art and long driveways. We wrap every piece in blankets, protect floors and doorways, and place everything where you want it in your new home.',
+    moving: 'West Vancouver moves often include fine furniture, art and long driveways. We wrap every piece in blankets, protect floors and doorways, and place everything where you want it in your new home. Downsizing? See [senior moving](/senior-moving). Art, antiques and pianos are covered by [specialty moving](/specialty-moving).',
+    services: ['senior', 'specialty', 'packing'],
     localTip: { title: 'Downsizing?', text: 'Moving to a smaller home? Tell us which pieces are coming with you and we will plan the crew and truck around just those.' },
     neighbourhoods: ['Ambleside', 'Dundarave', 'British Properties', 'Caulfeild', 'Horseshoe Bay', 'Park Royal', 'Cypress Park', 'Whytecliff'],
     faqs: [
@@ -165,7 +179,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Delta, BC - Ladner, Tsawwassen and North Delta. House, townhouse and apartment moves. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Delta', 'Ladner movers', 'Tsawwassen movers', 'North Delta movers', 'moving company Delta BC'],
     lead: 'House, townhouse and apartment moves across North Delta, Ladner and Tsawwassen.',
-    moving: 'Most of our Delta moves are family homes and townhouses. We wrap and load your furniture, handle the heavy pieces and set everything up at your new place.',
+    moving: 'Most of our Delta moves are family homes and townhouses. We wrap and load your furniture, handle the heavy pieces and set everything up at your new place. See [residential moving](/residential-moving) for how we handle a full home.',
+    services: ['residential', 'packing', 'apartment'],
     localTip: { title: 'Ladner or Tsawwassen?', text: 'We plan Ladner and Tsawwassen moves around tunnel traffic so your crew arrives inside the window.' },
     neighbourhoods: ['North Delta', 'Ladner', 'Tsawwassen', 'Sunshine Hills', 'Annieville', 'Beach Grove', 'Boundary Beach'],
     faqs: [
@@ -180,7 +195,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Langley City and Township - Willoughby, Walnut Grove, Murrayville and Aldergrove. House and townhouse moves from $130/hr + GST.',
     keywords: ['movers Langley', 'Langley movers', 'moving company Langley', 'Willoughby movers', 'Walnut Grove movers'],
     lead: 'House and townhouse moves across Langley City and Langley Township - from Willoughby townhouses to homes in Aldergrove.',
-    moving: 'Langley moves are often full family homes, so we plan the crew and truck size to match. We wrap, load and set up your furniture so moving day is one trip, not three.',
+    moving: 'Langley moves are often full family homes, so we plan the crew and truck size to match. We wrap, load and set up your furniture so moving day is one trip, not three. See [residential moving](/residential-moving), and add [packing services](/packing-services) if you want it boxed for you.',
+    services: ['residential', 'packing', 'long-distance'],
     localTip: { title: 'Bigger home?', text: 'Our 3-mover crew with the 16\' truck is usually the fastest option for full Langley houses. Tell us the home size when you book.' },
     neighbourhoods: ['Langley City', 'Willoughby', 'Walnut Grove', 'Murrayville', 'Brookswood', 'Fort Langley', 'Aldergrove', 'Willowbrook'],
     faqs: [
@@ -195,7 +211,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Port Coquitlam, BC. Apartment, townhouse and house moves across PoCo. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Port Coquitlam', 'PoCo movers', 'moving company Port Coquitlam'],
     lead: 'Apartment, townhouse and house moves across Port Coquitlam.',
-    moving: 'We move PoCo families between apartments, townhouses and houses - wrapping furniture, handling the heavy lifting and setting everything up in the new place.',
+    moving: 'We move PoCo families between apartments, townhouses and houses - wrapping furniture, handling the heavy lifting and setting everything up in the new place. Houses follow our [residential moving](/residential-moving) process, and apartments our [apartment and condo moving](/apartment-moving) one.',
+    services: ['residential', 'apartment', 'packing'],
     localTip: { title: 'Moving within the Tri-Cities?', text: 'Moves between PoCo, Coquitlam and Port Moody are short drives, so more of your time goes into the move itself.' },
     neighbourhoods: ['Downtown PoCo', 'Citadel Heights', 'Mary Hill', 'Oxford Heights', 'Birchland Manor', 'Riverwood', 'Lincoln Park'],
     faqs: [
@@ -210,7 +227,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Port Moody, BC. Condo moves at Suter Brook and Newport Village and house moves on Heritage Mountain. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Port Moody', 'Port Moody movers', 'condo movers Port Moody'],
     lead: 'Condo, townhouse and house moves across Port Moody.',
-    moving: 'Port Moody moves are a mix of condo villages with strict move-in rules and hillside homes on Heritage Mountain. We plan around both.',
+    moving: 'Port Moody moves are a mix of condo villages with strict move-in rules and hillside homes on Heritage Mountain. We plan around both. See [apartment and condo moving](/apartment-moving) for the condo villages and [residential moving](/residential-moving) for Heritage Mountain.',
+    services: ['apartment', 'residential', 'packing'],
     localTip: { title: 'Condo village rules', text: 'Suter Brook and Newport Village buildings have strict elevator hours - share them when you book and we will fit the schedule.' },
     neighbourhoods: ['Suter Brook', 'Newport Village', 'Inlet Centre', 'Heritage Mountain', 'College Park', 'Glenayre', 'Moody Centre', 'Ioco'],
     faqs: [
@@ -225,7 +243,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Maple Ridge, BC. House and townhouse moves in Town Centre, Albion, Cottonwood and Silver Valley. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Maple Ridge', 'Maple Ridge movers', 'moving company Maple Ridge'],
     lead: 'House and townhouse moves across Maple Ridge.',
-    moving: 'Most Maple Ridge moves are family homes with garages and outdoor furniture. We plan the crew and truck to get it all in one trip.',
+    moving: 'Most Maple Ridge moves are family homes with garages and outdoor furniture. We plan the crew and truck to get it all in one trip. See [residential moving](/residential-moving) for how we handle a full home.',
+    services: ['residential', 'packing', 'long-distance'],
     localTip: { title: 'Garage and patio too?', text: 'Let us know about garage shelving, patio sets and other outdoor items when you book so we bring enough truck space.' },
     neighbourhoods: ['Town Centre', 'Albion', 'Cottonwood', 'Silver Valley', 'Hammond', 'Haney', 'Websters Corners', 'Thornhill'],
     faqs: [
@@ -240,7 +259,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Pitt Meadows, BC. House, townhouse and apartment moves. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers Pitt Meadows', 'Pitt Meadows movers'],
     lead: 'House, townhouse and apartment moves in Pitt Meadows.',
-    moving: 'We move Pitt Meadows homes and townhouses - wrapping furniture, handling the heavy lifting and setting everything up in your new place.',
+    moving: 'We move Pitt Meadows homes and townhouses - wrapping furniture, handling the heavy lifting and setting everything up in your new place. See [residential moving](/residential-moving) for houses and townhouses.',
+    services: ['residential', 'apartment', 'packing'],
     localTip: { title: 'Paired with Maple Ridge', text: 'We often schedule Pitt Meadows and Maple Ridge moves together, which can mean more availability for you.' },
     neighbourhoods: ['Central Pitt Meadows', 'Mid Meadows', 'South Bonson', 'North Lougheed', 'Osprey Village'],
     faqs: [
@@ -255,7 +275,8 @@ export const CITIES: City[] = [
     description: 'Local movers in White Rock, BC. Condo, house and downsizing moves near the beach and uptown. 2 movers and a truck from $130/hr + GST.',
     keywords: ['movers White Rock', 'White Rock movers', 'downsizing movers White Rock'],
     lead: 'Condo, house and downsizing moves across White Rock.',
-    moving: 'Condo and downsizing moves are the most common White Rock jobs we do. We move what you are keeping, protect it on the way and place it room by room.',
+    moving: 'Condo and downsizing moves are the most common White Rock jobs we do. We move what you are keeping, protect it on the way and place it room by room. See [senior moving](/senior-moving) for downsizing and [apartment and condo moving](/apartment-moving) for condo moves.',
+    services: ['senior', 'apartment', 'packing'],
     localTip: { title: 'Steep hills', text: 'Many White Rock streets are steep with limited parking. Let us know about access when you book.' },
     neighbourhoods: ['East Beach', 'West Beach', 'Uptown', 'Hillside', 'Five Corners'],
     faqs: [
@@ -270,7 +291,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Anmore, BC. House moves for acreages and homes with long driveways in the Village of Anmore.',
     keywords: ['movers Anmore', 'Anmore movers'],
     lead: 'House moves in the Village of Anmore.',
-    moving: 'Anmore homes are often on large lots with long driveways. We plan the truck position and the carry before moving day so nothing slows the move down.',
+    moving: 'Anmore homes are often on large lots with long driveways. We plan the truck position and the carry before moving day so nothing slows the move down. See [residential moving](/residential-moving) for how a full home move runs.',
+    services: ['residential', 'specialty', 'packing'],
     localTip: { title: 'Long driveway?', text: 'Let us know if the truck cannot reach the house - we will plan for the extra carry.' },
     neighbourhoods: ['Anmore Village', 'Sunnyside', 'Eagle Mountain'],
     faqs: [
@@ -285,7 +307,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Belcarra, BC. House moves for waterfront and forested properties.',
     keywords: ['movers Belcarra', 'Belcarra movers'],
     lead: 'House moves in the Village of Belcarra.',
-    moving: 'Belcarra properties often have narrow roads and tricky access. We plan where the truck goes ahead of time so moving day runs smoothly.',
+    moving: 'Belcarra properties often have narrow roads and tricky access. We plan where the truck goes ahead of time so moving day runs smoothly. See [residential moving](/residential-moving) for how a full home move runs.',
+    services: ['residential', 'packing', 'specialty'],
     localTip: { title: 'Access first', text: 'Send us a photo of your driveway when you book so we can plan where the truck goes.' },
     neighbourhoods: ['Belcarra Village', 'Bedwell Bay', 'Woodhaven'],
     faqs: [
@@ -300,7 +323,8 @@ export const CITIES: City[] = [
     description: 'Local movers in Lions Bay, BC. House moves from hillside homes with stairs and limited parking.',
     keywords: ['movers Lions Bay', 'Lions Bay movers'],
     lead: 'House moves from hillside homes in Lions Bay.',
-    moving: 'Lions Bay homes are steep, with long stair runs and limited parking. We bring the crew size the job needs and plan the carry before we arrive.',
+    moving: 'Lions Bay homes are steep, with long stair runs and limited parking. We bring the crew size the job needs and plan the carry before we arrive. See [residential moving](/residential-moving) for how a full home move runs.',
+    services: ['residential', 'specialty', 'packing'],
     localTip: { title: 'Steep and narrow', text: 'Tell us about stairs and parking when booking - it helps us bring the right crew size.' },
     neighbourhoods: ['Lions Bay Village', 'Brunswick Beach', 'Kelvin Grove'],
     faqs: [
