@@ -24,8 +24,8 @@ export const sectionWrap = 'max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8'
 export const MASCOT = '/moving/mascot.png'
 
 const TIERS = [
-  { crew: '2 movers + truck', price: '$130', fit: 'Most studios and 1-bedroom homes' },
-  { crew: '3 movers + 16\' truck', price: '$170', fit: 'Most homes of 2 bedrooms and up' },
+  { crew: '2 movers + truck', price: '$130', fit: 'Studios, 1- and 2-bedroom apartments' },
+  { crew: '3 movers + 16\' truck', price: '$170', fit: 'Anything bigger than a 2-bedroom apartment' },
 ]
 
 const filterOf = (p: ServicePhoto) => (p.brightness ? `brightness(${p.brightness})` : 'none')
@@ -109,7 +109,7 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo,
           </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-7 sm:mt-8 short:mt-5">
             {([
-              { Icon: Shield, label: 'Fully Insured' },
+              { Icon: Shield, label: 'Insured' },
               { Icon: GoogleLogo, label: '4.9-Star Rated' },
             ] as const).map(({ Icon, label }) => (
               <li key={label} className="flex items-center gap-2">

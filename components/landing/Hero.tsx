@@ -92,7 +92,7 @@ export default function Hero() {
               {/* Trust badges */}
               <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 sm:mt-auto sm:pt-2 lg:gap-y-3 lg:mb-3">
                 {([
-                  { Icon: Shield, label: 'Fully Insured' },
+                  { Icon: Shield, label: 'Insured' },
                   { Icon: GoogleLogo, label: '4.9-Star Rated' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (

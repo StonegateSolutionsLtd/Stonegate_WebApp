@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowRight, Clock, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react'
+import { CircleCheck, Clock, HardHat, PackageCheck, ReceiptText, ShieldCheck } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import GoogleStars from '@/components/GoogleStars'
@@ -10,7 +9,7 @@ import StickyCallBar from '@/components/landing/StickyCallBar'
 import GoogleLogo from '@/components/GoogleLogo'
 import { MovingReviews, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
 import { CITIES } from '@/lib/seo/cities'
-import { MOVE_BOOK_HREF } from '@/lib/seo/site'
+import { MOVE_BOOK_HREF, WORKSAFEBC_STATEMENT } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'About Us | Stonegate Moving Solutions' },
@@ -40,6 +39,22 @@ const values = [
   },
 ]
 
+// A move with us, from booking to the last box (same terms as the pricing page)
+const steps = [
+  { title: 'Request your estimate', text: 'Tell us where you are moving from and to, and roughly what is coming. It takes a couple of minutes online, or call and we will do it with you.' },
+  { title: 'Know the price before you book', text: 'You get the hourly rate for your crew and the fixed travel fee upfront. Stairs or a long carry? We talk about it now, not on moving day.' },
+  { title: 'Moving day', text: 'The crew arrives on time with a fully equipped truck. The clock starts when we arrive at your pickup and stops once everything is in place at your new home.' },
+  { title: 'Pay when it is done', text: 'Payment is collected after the job is complete, by e-transfer, credit card or cash.' },
+]
+
+// Included in the hourly rate on every move
+const included = [
+  'Moving blankets and stretch wrap for your furniture',
+  'Dollies, straps and tools on the truck',
+  'Furniture taken apart and put back together',
+  'CGL insurance for damage to property',
+]
+
 // The crew at work
 const gallery = [
   { src: '/about/photo-2.jpg', alt: 'A Stonegate mover on the truck ramp under the Moving made effortless sign', pos: 'center 40%', caption: 'Ready on the ramp' },
@@ -52,65 +67,65 @@ export default function AboutPage() {
   const facts = [
     { big: '4.9', small: 'Google rating', google: true },
     { big: 'Burnaby', small: 'where we are based' },
-    { big: String(CITIES.length), small: 'cities across Metro Vancouver' },
-    { big: 'Insured', small: 'every move is covered' },
+    { big: String(CITIES.length), small: 'cities we serve' },
   ]
-
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: CREAM }}>
       <Navbar />
 
       <main className="flex-1">
-        {/* Hero: just who we are, no booking form */}
-        <section id="about-hero" className="relative overflow-hidden" style={{ backgroundColor: INK }}>
-          <Image
-            src="/about/photo-3.jpg"
-            alt="The three-person Stonegate crew standing in front of the moving truck"
-            fill
-            priority
-            quality={90}
-            sizes="100vw"
-            className="object-cover"
-            style={{ objectPosition: 'center 60%' }}
-          />
-          <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 420px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0.35) 78%, transparent 100%)' }} />
-          <div className="absolute inset-0 hidden lg:block" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.3) 45%, transparent 65%)' }} />
-          <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-start lg:items-center min-h-[520px] sm:min-h-[600px] lg:min-h-[min(calc(80svh-68px),720px)] pt-14 pb-12 lg:py-16 short:min-h-[calc(64svh-68px)] short:py-9">
+        {/* Hero: who we are, with the crew photo in a rounded frame */}
+        <section id="about-hero" style={{ backgroundColor: CREAM }}>
+          <div className={`${sectionWrap} pt-10 pb-14 sm:pt-14 lg:py-16 short:py-10 grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center`}>
             <div>
-              <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
-              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-5 short:mb-4 w-fit" style={{ fontSize: 'clamp(2.4rem, min(7.3vw, 7.5svh), 4.8rem)' }}>
-                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Meet the</span>
-                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
-                  <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />
-                  <span className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>STONEGATE</span>
-                  <span style={{ flex: 1.7, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.4), transparent)' }} />
-                </span>
-                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>Crew</span>
+              <GoogleStars onLight className="mb-5" />
+              <p className={eyebrow} style={{ color: GREEN }}>About Stonegate</p>
+              <h1 className="text-[2.6rem] sm:text-6xl short:text-[3.4rem] font-extrabold tracking-tight leading-[1.02] mb-5" style={{ color: INK }}>
+                Meet the <span style={{ color: CLAY }}>Stonegate Crew</span>
               </h1>
-              <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[480px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
-                A young, local moving team from Burnaby, making moves across Metro Vancouver feel effortless.
+              <p className="text-[18px] sm:text-xl leading-relaxed max-w-[520px] mb-8" style={{ color: MUTED }}>
+                A young, local moving team from Burnaby, making moves across Metro Vancouver feel effortless. The people who answer your call are the people who show up with the truck.
               </p>
+              <ul className="grid grid-cols-3 max-w-[520px]" style={{ borderTop: `1px solid ${LINE}` }}>
+                {facts.map((f, i) => (
+                  <li key={f.small} className={`pt-5 ${i ? 'pl-4 sm:pl-6' : ''}`} style={i ? { borderLeft: `1px solid ${LINE}` } : undefined}>
+                    <p className="flex items-center gap-1.5 text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: INK }}>
+                      {f.google && <GoogleLogo size={20} />}{f.big}
+                    </p>
+                    <p className="mt-0.5 text-[13px] sm:text-sm font-semibold" style={{ color: MUTED }}>{f.small}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative">
+              <div className="relative rounded-[28px] overflow-hidden aspect-[4/3] shadow-[0_24px_60px_-28px_rgba(26,23,20,0.45)]" style={{ backgroundColor: LINE }}>
+                <Image
+                  src="/about/photo-3.jpg"
+                  alt="The three-person Stonegate crew standing in front of the moving truck"
+                  fill
+                  priority
+                  quality={90}
+                  sizes="(max-width: 1024px) 100vw, 640px"
+                  className="object-cover"
+                  style={{ objectPosition: 'center 60%' }}
+                />
+              </div>
+              <div className="absolute -bottom-6 left-4 sm:left-6 lg:-left-6 flex items-center gap-3 rounded-2xl px-4 py-3 bg-white shadow-[0_12px_32px_-12px_rgba(26,23,20,0.35)]">
+                <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: GREEN }}>
+                  <ShieldCheck size={20} style={{ color: CREAM }} aria-hidden />
+                </span>
+                <span className="leading-tight">
+                  <span className="block text-[15px] font-extrabold" style={{ color: INK }}>Insured</span>
+                  <span className="block text-[13px] font-medium" style={{ color: MUTED }}>CGL for damage to property</span>
+                </span>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Quick facts */}
-        <section style={{ backgroundColor: GREEN }}>
-          <ul className={`${sectionWrap} py-8 sm:py-10 grid grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4`}>
-            {facts.map(f => (
-              <li key={f.small} className="text-center">
-                <p className="flex items-center justify-center gap-2 text-3xl sm:text-4xl font-extrabold tracking-tight" style={{ color: CREAM }}>
-                  {f.google && <span className="w-9 h-9 rounded-full flex items-center justify-center bg-white"><GoogleLogo size={20} /></span>}
-                  {f.big}
-                </p>
-                <p className="mt-1 text-[15px] font-semibold" style={{ color: '#B5C9B0' }}>{f.small}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         {/* Our story */}
-        <section style={{ backgroundColor: CREAM }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }}>
           <div className={`${sectionWrap} py-16 sm:py-24 grid md:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center`}>
             <FadeIn>
               <div>
@@ -125,10 +140,10 @@ export default function AboutPage() {
                   <p>
                     We&apos;re a young, driven team based right here in Metro Vancouver. Every job gets our full attention, whether it&apos;s a studio across town or a whole family home.
                   </p>
+                  <p>
+                    We keep it simple on purpose: one hourly rate you know before booking, a travel fee we tell you upfront, and a crew that wraps every piece of furniture without charging extra for blankets or stretch wrap.
+                  </p>
                 </div>
-                <Link href={MOVE_BOOK_HREF} className="mt-9 inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
-                  Request a Free Estimate <ArrowRight size={18} aria-hidden />
-                </Link>
               </div>
             </FadeIn>
             <FadeIn delay={120}>
@@ -166,14 +181,56 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-8 flex items-center justify-center gap-2 text-base font-semibold" style={{ color: INK }}>
-              <ShieldCheck size={20} style={{ color: GREEN }} aria-hidden /> Fully insured on every move
-            </p>
+            <div className="mt-8 flex flex-col items-center gap-2 text-center">
+              <p className="flex items-center justify-center gap-2 text-base font-semibold" style={{ color: INK }}>
+                <ShieldCheck size={20} style={{ color: GREEN }} aria-hidden /> CGL insurance for property damage on every move
+              </p>
+              <p className="flex items-center justify-center gap-2 text-[15px]" style={{ color: MUTED }}>
+                <HardHat size={18} style={{ color: GREEN }} aria-hidden /> {WORKSAFEBC_STATEMENT}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* How a move with us works, step by step */}
+        <section style={{ backgroundColor: CREAM }}>
+          <div className={`${sectionWrap} py-16 sm:py-20 grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16`}>
+            <FadeIn>
+              <p className={eyebrow} style={{ color: GREEN }}>How we work</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-[1.1] mb-5" style={{ color: INK }}>
+                No Surprises, From the First Call to the Last Box
+              </h2>
+              <p className="text-[17px] leading-relaxed mb-8" style={{ color: MUTED }}>
+                Everything that affects your price is settled before moving day, so the day itself is just the move.
+              </p>
+              <ul className="flex flex-col gap-3">
+                {included.map(item => (
+                  <li key={item} className="flex items-start gap-3 text-[16px] font-semibold" style={{ color: INK }}>
+                    <CircleCheck size={20} className="shrink-0 mt-0.5" style={{ color: GREEN }} aria-hidden /> {item}
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
+            <ol className="flex flex-col gap-4">
+              {steps.map((st, i) => (
+                <li key={st.title}>
+                  <FadeIn delay={i * 80}>
+                    <div className="flex gap-5 rounded-3xl p-6 sm:p-7 bg-white" style={{ border: `1px solid ${LINE}` }}>
+                      <span className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 text-lg font-extrabold" style={{ backgroundColor: '#E8F0E6', color: GREEN }}>{i + 1}</span>
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-extrabold mb-1.5" style={{ color: INK }}>{st.title}</h3>
+                        <p className="text-base leading-relaxed" style={{ color: MUTED }}>{st.text}</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
         {/* The crew in action: swipe row on phones, grid on desktop */}
-        <section style={{ backgroundColor: CREAM }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: CREAM }}>
           <div className={`${sectionWrap} pt-16 sm:pt-20`}>
             <FadeIn>
               <p className={eyebrow} style={{ color: GREEN }}>The team in action</p>

@@ -45,6 +45,15 @@ const locationsGroup: NavGroup = {
   ],
 }
 
+const aboutGroup: NavGroup = {
+  label: 'About',
+  href: '/about',
+  links: [
+    { label: 'About Us', href: '/about' },
+    { label: 'Customer Reviews', href: '/reviews' },
+  ],
+}
+
 const PRICING_HREF = '/pricing/moving'
 
 const groups = [servicesGroup, locationsGroup]
@@ -155,9 +164,10 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
             <Link href={PRICING_HREF} className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
               Pricing
             </Link>
-            <Link href="/about" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
-              About
+            <Link href="/guides" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+              Guides
             </Link>
+            <DesktopDropdown group={aboutGroup} />
             <a
               href={phone.tel}
               aria-label="Call Stonegate"
@@ -233,9 +243,10 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
               <Link href={PRICING_HREF} onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
                 Pricing
               </Link>
-              <Link href="/about" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
-                About
+              <Link href="/guides" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+                Guides
               </Link>
+              <MobileGroup group={aboutGroup} onNavigate={closeMenu} />
               <Link
                 href={MOVE_BOOK_HREF}
                 onClick={closeMenu}

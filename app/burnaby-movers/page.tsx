@@ -19,7 +19,7 @@ import { SITE_URL, providerLd, hourlyOfferLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'Burnaby Movers | Local Moving Company | Stonegate Moving Solutions' },
-  description: 'Professional local movers in Burnaby, BC. 2 uniformed movers with a fully-equipped truck from $130/hr + GST. Transparent pricing, fully insured, no hidden fees.',
+  description: 'Professional local movers in Burnaby, BC. 2 uniformed movers with a fully-equipped truck from $130/hr + GST. Transparent pricing, insured, no hidden fees.',
   alternates: { canonical: 'https://www.stonegatemoving.com/burnaby-movers' },
 }
 
@@ -33,7 +33,7 @@ const whyChoose = [
   { title: 'Transparent Pricing', desc: 'One flat hourly rate, quoted upfront. No fuel surcharge, no surprise fees.' },
   { title: 'Truck Included', desc: 'Our fully-equipped moving truck is part of the hourly rate, not billed separately.' },
   { title: 'Professional Equipment', desc: 'Moving blankets, straps, and dollies included on every job.' },
-  { title: 'Fully Insured', desc: 'Every move is covered, so you can relax while we handle your belongings.' },
+  { title: 'Insured', desc: 'Every move is covered by our CGL insurance for damage to property.' },
   { title: 'Professional Crew', desc: 'Our own uniformed team - no subcontractors, no surprises on moving day.' },
   { title: 'No Hidden Fees', desc: 'The rate we quote is the rate you pay, plus GST.' },
 ]
@@ -127,7 +127,7 @@ export default function BurnabyMoversPage() {
                 <div className="flex flex-wrap gap-x-6 gap-y-3">
                   {([
                     { Icon: GoogleLogo, label: '4.9 Google Rating' },
-                    { Icon: Shield, label: 'Fully Insured' },
+                    { Icon: Shield, label: 'Insured' },
                     { Icon: DollarSign, label: 'Transparent Pricing' },
                     { Icon: Users, label: 'Local Crew' },
                   ] as const).map(({ Icon, label }) => (
@@ -169,7 +169,7 @@ export default function BurnabyMoversPage() {
                 Stonegate Moving Solutions is based in Burnaby, and it shows in how we work - we know the buildings, the elevator booking windows, and the fastest routes around town. We also serve the rest of Metro Vancouver, but Burnaby is home base, which means quicker scheduling and local know-how on every job.
               </p>
               <p className="text-base leading-relaxed mt-4" style={{ color: '#6B5E54' }}>
-                <LinkedText text="Moving out of a Metrotown or Brentwood tower? See [apartment and condo moving](/apartment-moving) for how we work around elevator bookings and loading bays. Moving a house near Deer Lake or Burnaby Heights? See [residential moving](/residential-moving). Every move is billed at the same hourly [moving rates](/pricing/moving)." />
+                <LinkedText text="Moving out of a Metrotown or Brentwood tower? See [apartment and condo moving](/apartment-moving) for how we work around elevator bookings and loading bays. Moving a house near Deer Lake or Burnaby Heights? See [residential moving](/residential-moving). Every move is billed at the same hourly [moving rates](/pricing/moving). Before a condo move, see our [condo moving checklist](/guides/vancouver-condo-moving-checklist)." />
               </p>
             </FadeIn>
           </div>

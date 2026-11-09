@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
       { source: '/burnaby-junk-removal', destination: '/burnaby-movers', permanent: true },
       { source: '/junk-removal/:path*', destination: '/', permanent: true },
       { source: '/book-service/:path*', destination: '/', permanent: true },
+      // The guides were briefly previewed under /blog: send any shared links to the same guide
+      { source: '/blog', destination: '/guides', permanent: true },
+      { source: '/blog/:slug', destination: '/guides/:slug', permanent: true },
     ]
   },
 };

@@ -49,7 +49,7 @@ export const CITIES: City[] = [
     keywords: ['Downtown Vancouver movers', 'condo movers Vancouver', 'Yaletown movers', 'West End movers', 'Kitsilano movers', 'East Vancouver movers'],
     heading: ['City of Vancouver', 'Movers'],
     lead: 'Apartment, condo and house moves across the City of Vancouver - from Downtown towers to East Van character homes. We wrap, load, move and set up.',
-    moving: 'Vancouver moves range from a studio in a West End walk-up to a full Kerrisdale family home. We wrap furniture in blankets, take apart what needs it, protect hallways and elevators, and reassemble everything in your new place - whether you are moving across the street or across Metro Vancouver. Condo and tower moves follow our [apartment and condo moving](/apartment-moving) process, and houses our [residential moving](/residential-moving) one. Moving on to [Burnaby](/burnaby-movers) or the [North Shore](/locations/north-vancouver)? It is the same hourly rate.',
+    moving: 'Vancouver moves range from a studio in a West End walk-up to a full Kerrisdale family home. We wrap furniture in blankets, take apart what needs it, protect hallways and elevators, and reassemble everything in your new place - whether you are moving across the street or across Metro Vancouver. Condo and tower moves follow our [apartment and condo moving](/apartment-moving) process, and houses our [residential moving](/residential-moving) one. Moving on to [Burnaby](/burnaby-movers) or the [North Shore](/locations/north-vancouver)? It is the same hourly rate. Moving in or out of a tower? Read our [condo moving checklist](/guides/vancouver-condo-moving-checklist).',
     services: ['apartment', 'residential', 'office', 'packing'],
     localTip: { title: 'Moving in or out of a Vancouver high-rise?', text: 'Most Downtown and Yaletown buildings need a move-in or move-out elevator booking and a loading bay reservation. Book both for your moving window and we will handle everything else.' },
     neighbourhoods: ['Downtown', 'Yaletown', 'West End', 'Coal Harbour', 'Kitsilano', 'Mount Pleasant', 'Fairview', 'Kerrisdale', 'Dunbar', 'Point Grey', 'Commercial Drive', 'Hastings-Sunrise', 'Marpole', 'Oakridge', 'Killarney', 'Renfrew', 'South Granville', 'UBC'],
@@ -71,7 +71,7 @@ export const CITIES: City[] = [
     localTip: { title: 'Moving a full house in Surrey?', text: 'For a 3+ bedroom home, our 3-mover crew with the 16\' truck usually saves time overall. Tell us the size of your home when you book and we will suggest the right crew.' },
     neighbourhoods: ['Whalley', 'City Centre', 'Guildford', 'Fleetwood', 'Newton', 'Cloverdale', 'Fraser Heights', 'Panorama Ridge', 'South Surrey', 'Morgan Creek', 'Grandview Heights', 'Sullivan Heights'],
     faqs: [
-      { q: 'Do you move houses as well as apartments in Surrey?', a: 'Yes - from one-bedroom apartments to full family homes. For larger homes we recommend our 3-mover crew with a 16\' truck.' },
+      { q: 'Do you move houses as well as apartments in Surrey?', a: 'Yes - from one-bedroom apartments to full family homes. For anything bigger than a 2-bedroom apartment we recommend our 3-mover crew with the 16\' truck.' },
       { q: 'Do you cover all of Surrey?', a: 'Yes - Whalley, Guildford, Fleetwood, Newton, Cloverdale, South Surrey and everywhere in between.' },
     ],
     nearby: ['delta', 'langley', 'white-rock', 'new-westminster'],
