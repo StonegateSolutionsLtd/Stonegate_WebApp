@@ -14,22 +14,12 @@ import {
   MovingHero, MovingPriceBlock, MovingReviews, MovingFaq, MovingClose, CityPills,
   GREEN, INK, MUTED, CREAM, LINE, eyebrow, sectionWrap,
 } from '@/components/moving/MovingSections'
-import { TEMPLATE_CITIES, CITY_BY_SLUG, CITIES, cityJobPhoto, cityHeroPhoto, cityHref } from '@/lib/seo/cities'
+import { TEMPLATE_CITIES, CITY_BY_SLUG, cityJobPhoto, cityHeroPhoto, cityHref } from '@/lib/seo/cities'
 import { movingServiceCards } from '@/lib/moving-services'
+import LinkedText from '@/components/moving/LinkedText'
 import { SITE_URL, MOVE_BOOK_HREF, providerLd, breadcrumbLd, faqLd, type Faq } from '@/lib/seo/site'
 
 export const dynamicParams = false
-
-const MOVING_SERVICES = [
-  { href: '/residential-moving', name: 'Residential Moving' },
-  { href: '/apartment-moving', name: 'Apartment & Condo Moving' },
-  { href: '/commercial-moving', name: 'Commercial Moving & Corporate Relocation' },
-  { href: '/office-moving', name: 'Office Moving' },
-  { href: '/packing-services', name: 'Packing Services' },
-  { href: '/long-distance-moving', name: 'Long-Distance Moving' },
-  { href: '/senior-moving', name: 'Senior Moving' },
-  { href: '/specialty-moving', name: 'Specialty Moving' },
-]
 
 export function generateStaticParams() {
   return TEMPLATE_CITIES.map(c => ({ city: c.slug }))
@@ -56,6 +46,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
 
   const detail = cityJobPhoto(city)
   const nearby = city.nearby.map(s => CITY_BY_SLUG.get(s)!).filter(Boolean)
+  const services = movingServiceCards(undefined, city.services)
   const faqs: Faq[] = [
     ...city.faqs,
     { q: `How much do movers cost in ${city.name}?`, a: `Moving is $130/hr + GST for 2 professional movers and a fully-equipped truck, or $170/hr + GST for 3 movers with a 16' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time.` },
@@ -91,7 +82,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
 
       <main className="flex-1">
         <MovingHero
-          heading={[city.name, 'Movers']}
+          heading={city.heading ?? [city.name, 'Movers']}
           divider={city.slug === 'vancouver' ? 'BRITISH COLUMBIA' : 'METRO VANCOUVER'}
           intro={city.lead}
           photo={cityHeroPhoto(city)}
@@ -112,16 +103,21 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
                 <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5" style={{ color: INK }}>
                   The 4.9-Star Rated Moving Team in {city.name}
                 </h2>
-                <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: MUTED }}>{city.moving}</p>
+                <p className="text-base sm:text-lg leading-relaxed mb-8" style={{ color: MUTED }}><LinkedText text={city.moving} /></p>
                 <ul className="flex flex-col gap-3.5 mb-9">
-                  {MOVING_SERVICES.map(s => (
+                  {services.map(s => (
                     <li key={s.href}>
                       <Link href={s.href} className="flex items-center gap-3 font-bold text-lg hover:underline" style={{ color: INK }}>
                         <CheckCircle2 size={22} className="shrink-0" style={{ color: GREEN }} aria-hidden />
-                        {s.name}
+                        {s.name} in {city.name}
                       </Link>
                     </li>
                   ))}
+                  <li>
+                    <Link href="/moving" className="flex items-center gap-2 text-sm font-extrabold underline" style={{ color: GREEN }}>
+                      All moving services <ArrowRight size={14} aria-hidden />
+                    </Link>
+                  </li>
                 </ul>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
@@ -179,7 +175,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
               <h2 className="text-3xl font-extrabold tracking-tight mb-6" style={{ color: INK }}>How We Can Help in {city.name}</h2>
             </FadeIn>
           </div>
-          <ServicesCarousel cards={movingServiceCards()} label="Moving services" />
+          <ServicesCarousel cards={services} label="Moving services" />
         </section>
 
         {/* Nearby and other cities */}
@@ -193,11 +189,8 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
               </FadeIn>
             )}
             <FadeIn>
-              <p className={eyebrow} style={{ color: GREEN }}>Service areas</p>
-              <h2 className="text-2xl font-extrabold tracking-tight mb-6" style={{ color: INK }}>Movers in Other Metro Vancouver Cities</h2>
-              <CityPills links={CITIES.filter(c => c.slug !== city.slug).map(c => ({ href: cityHref(c), label: c.name }))} />
-              <Link href="/locations" className="inline-flex items-center gap-2 mt-8 text-sm font-extrabold underline" style={{ color: GREEN }}>
-                All service areas <ArrowRight size={14} aria-hidden />
+              <Link href="/locations" className="inline-flex items-center gap-2 text-sm font-extrabold underline" style={{ color: GREEN }}>
+                All Metro Vancouver service areas <ArrowRight size={14} aria-hidden />
               </Link>
             </FadeIn>
           </div>

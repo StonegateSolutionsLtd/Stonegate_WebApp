@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import GoogleLogo from '@/components/GoogleLogo'
-import { ArrowRight, CheckCircle2, Clock, MapPin, Route, ShieldCheck, Star, Truck, Users } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock, HardHat, Layers, MapPin, PackageX, ShieldCheck, Star, Truck, User, Users } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
 import GoogleStars from '@/components/GoogleStars'
@@ -12,7 +12,7 @@ import { JsonLd } from '@/components/seo/SeoBlocks'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import PriceEstimator from '@/components/moving/PriceEstimator'
 import { MovingReviews, MovingFaq, MovingClose, GREEN, INK, MUTED, CREAM, CLAY, LINE, MASCOT, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
-import { SITE_URL, MOVE_BOOK_HREF, providerLd, hourlyOfferLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
+import { SITE_URL, MOVE_BOOK_HREF, WORKSAFEBC_STATEMENT, providerLd, hourlyOfferLd, breadcrumbLd, faqLd } from '@/lib/seo/site'
 
 export const metadata: Metadata = {
   title: { absolute: 'Moving Prices in Vancouver | $130-$170/hr + GST | Stonegate' },
@@ -23,15 +23,37 @@ export const metadata: Metadata = {
 
 const GOOGLE_REVIEWS = 'https://maps.app.goo.gl/ooQYs564eGP7JZbC6'
 
+/** The two crews as bookable tiers; `featured` gets the highlighted border */
 const tiers = [
-  { Icon: Users, crew: '2 Movers + Truck', price: '$130', fit: 'Studios, 1- and 2-bedroom homes' },
-  { Icon: Truck, crew: '3 Movers + 16\' Truck', price: '$170', fit: 'Houses and bigger moves, finished faster' },
+  {
+    name: 'Standard Move',
+    fit: 'Studios, 1- and 2-bedroom apartments',
+    price: '$130',
+    movers: 2,
+    crew: '2 professional movers + a fully equipped truck',
+    featured: true,
+  },
+  {
+    name: 'Large Move',
+    fit: 'Anything bigger than a 2-bedroom apartment',
+    price: '$170',
+    movers: 3,
+    crew: '3 professional movers + a fully equipped truck',
+    featured: false,
+  },
+]
+
+
+/** The two things customers most need to hear are included, shown first and larger */
+const keyIncluded = [
+  { Icon: ShieldCheck, title: 'Insurance for property damage', text: 'Every move is covered by our Commercial General Liability (CGL) insurance for damage to property, at no extra cost.' },
+  { Icon: Layers, title: 'All furniture wrapping materials', text: 'Moving blankets and stretch wrap for every piece of furniture, included in the hourly rate.' },
 ]
 
 const included = [
   'Professional, uniformed movers',
-  'Moving truck - fully equipped',
-  'Moving blankets, straps and dollies',
+  'Fully equipped moving truck',
+  'Dollies, straps and a loading ramp',
   'Disassembly & reassembly of basic furniture',
   'Floor and door-frame protection',
   'No fuel surcharge, no hidden fees',
@@ -49,10 +71,12 @@ const bill = [
 ] as const
 
 const faqs = [
-  { q: 'How much do movers cost in Vancouver?', a: '2 professional movers with a fully equipped truck cost $130/hr + GST, with a 3-hour minimum. For bigger moves, 3 movers with a 16\' truck are $170/hr + GST. Most 1-bedroom moves take 3-4 hours.' },
+  { q: 'How much do movers cost in Vancouver?', a: '2 professional movers with a fully equipped truck cost $130/hr + GST, with a 3-hour minimum. For anything bigger than a 2-bedroom apartment, 3 movers with a 16\' truck are $170/hr + GST. On average a 1-bedroom move takes 3-6 hours and a 2-bedroom 4-9 hours.' },
   { q: 'How is the travel fee worked out?', a: "It covers the truck's drive time: from our base to your pickup address, and back from your drop-off. It's a fixed, one-time amount based on that travel time, and we tell you the exact figure before your move. It doesn't change on moving day." },
   { q: 'When does the clock start?', a: 'Time starts when our team arrives at your pickup address and stops once everything is in place at your new home.' },
   { q: 'Are stairs or long carry distances extra?', a: 'Not in most cases. If your building has no elevator and requires many flights of stairs, we\'ll discuss it with you at booking - never a surprise on moving day.' },
+  { q: 'Is insurance included in the price?', a: 'Yes. Every move is covered by our Commercial General Liability (CGL) insurance for damage to property, included in the hourly rate at no extra cost.' },
+  { q: 'Do I pay extra for wrapping materials?', a: 'No. Moving blankets and stretch wrap for your furniture are included in the hourly rate. Only our packing service is extra: if you want us to pack your home, boxes and packing materials are charged separately.' },
   { q: 'What payment methods do you accept?', a: 'We accept e-transfer, credit card, and cash. Payment is collected after the job is complete.' },
 ]
 
@@ -125,33 +149,56 @@ export default function MovingPricingPage() {
               </div>
             </div>
 
-            <ul className="order-3 grid grid-cols-2 gap-2.5 sm:gap-4 -mx-1 sm:mx-0">
-              {tiers.map(({ Icon, crew, price, fit }, i) => (
-                <li key={crew}>
-                  <FadeIn delay={i * 100} className="h-full">
-                    <div className="h-full rounded-2xl sm:rounded-3xl p-[18px] sm:p-6 flex flex-col transition-transform duration-300 hover:-translate-y-1" style={{ backgroundColor: CREAM }}>
-                      <span className="hidden sm:flex lg:hidden w-12 h-12 rounded-2xl items-center justify-center mb-5" style={{ backgroundColor: '#E8F0E6' }}>
-                        <Icon size={22} style={{ color: GREEN }} aria-hidden />
+            {/* Both tiers side by side at every width, so phones see both options without scrolling */}
+            <div className="order-3 flex flex-col gap-3 sm:gap-4">
+              <ul className="grid grid-cols-2 gap-2.5 sm:gap-4 items-stretch">
+                {tiers.map(({ name, fit, price, movers, crew, featured }, i) => (
+                  <li key={name}>
+                    <FadeIn delay={i * 100} className="h-full">
+                      {/* The featured tier sits in an amber frame, like a highlighted plan */}
+                      <div className="h-full rounded-[22px] sm:rounded-[26px] p-[3px] sm:p-1 transition-transform duration-300 hover:-translate-y-1" style={{ background: featured ? `linear-gradient(135deg, ${CLAY}, #E8B577)` : 'transparent' }}>
+                        <div className="h-full rounded-[19px] sm:rounded-[22px] p-3.5 sm:p-5 flex flex-col text-center" style={{ backgroundColor: CREAM }}>
+                          <p className="text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide" style={{ color: featured ? '#A9692A' : GREEN }}>{name}</p>
+                          <p className="text-[12px] sm:text-[13px] font-semibold mt-1 leading-snug min-h-[2.5em]" style={{ color: MUTED }}>{fit}</p>
+                          <p className="mt-2.5 sm:mt-3 flex items-end justify-center gap-1">
+                            <span className="text-[2.3rem] sm:text-[3rem] font-extrabold leading-none tracking-tight" style={{ color: featured ? '#A9692A' : GREEN }}>{price}</span>
+                            <span className="text-[13px] sm:text-[15px] font-bold mb-1" style={{ color: MUTED }}>/hr</span>
+                          </p>
+                          {/* Crew and truck, with one figure per mover */}
+                          <div className="mt-3 pt-3 flex flex-col items-center gap-1.5" style={{ borderTop: `1px solid ${LINE}` }}>
+                            <span className="flex items-end" aria-hidden>
+                              {Array.from({ length: movers }, (_, n) => <User key={n} size={18} strokeWidth={2.5} className="-mr-0.5" style={{ color: INK }} />)}
+                              <Truck size={24} strokeWidth={2} className="ml-1.5" style={{ color: INK }} />
+                            </span>
+                            <p className="text-[12.5px] sm:text-[14px] font-bold leading-snug" style={{ color: INK }}>{crew}</p>
+                          </div>
+                          <Link href={MOVE_BOOK_HREF} className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl min-h-[44px] sm:min-h-[50px] px-3 text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: '#FFFFFF' }}>
+                            Book Now <ArrowRight size={15} className="hidden min-[400px]:block" aria-hidden />
+                          </Link>
+                        </div>
+                      </div>
+                    </FadeIn>
+                  </li>
+                ))}
+              </ul>
+              {/* What both rates include: insurance and wrapping first, then the rest, then the terms */}
+              <div className="rounded-2xl px-4 py-4 sm:px-5" style={{ backgroundColor: 'rgba(250,247,242,0.08)', border: '1px solid rgba(250,247,242,0.18)' }}>
+                <p className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Included in both rates</p>
+                <ul className="grid sm:grid-cols-2 gap-2.5 mb-3">
+                  {keyIncluded.map(({ Icon, title }) => (
+                    <li key={title} className="flex items-center gap-2.5 text-[14px] sm:text-[15px] font-extrabold leading-snug" style={{ color: CREAM }}>
+                      <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: CLAY }}>
+                        <Icon size={16} style={{ color: '#FFFFFF' }} aria-hidden />
                       </span>
-                      <p className="text-[16px] sm:text-lg font-extrabold leading-tight" style={{ color: INK }}>{crew}</p>
-                      <p className="mt-2 sm:mt-3 flex items-end gap-1">
-                        <span className="text-[2.5rem] sm:text-[3.25rem] font-extrabold leading-none tracking-tight" style={{ color: GREEN }}>{price}</span>
-                        <span className="text-base sm:text-lg font-bold mb-0.5 sm:mb-1" style={{ color: MUTED }}>/hr</span>
-                      </p>
-                      <p className="mt-1.5 text-[14px] sm:text-sm font-semibold leading-snug" style={{ color: MUTED }}>+ GST · 3-hour minimum<span className="hidden sm:inline"> · + fixed travel fee</span></p>
-                      <p className="mt-3.5 pt-3.5 sm:mt-4 sm:pt-4 text-[15px] font-semibold leading-snug" style={{ color: INK, borderTop: `1px solid ${LINE}` }}>{fit}</p>
-                    </div>
-                  </FadeIn>
-                </li>
-              ))}
-              {/* The travel fee, said plainly next to the rates */}
-              <li className="col-span-2 flex items-start gap-3 rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5" style={{ backgroundColor: 'rgba(250,247,242,0.08)', border: '1px solid rgba(250,247,242,0.18)' }}>
-                <Route size={22} className="shrink-0 mt-0.5" style={{ color: CLAY }} aria-hidden />
-                <p className="text-[14px] sm:text-[15px] leading-relaxed" style={{ color: '#D6E2D3' }}>
-                  <span className="font-bold" style={{ color: CREAM }}>Plus a one-time travel fee.</span>{' '}Based on the truck&apos;s drive to your pickup and back from your drop-off, and confirmed with you before moving day.
+                      {title}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: '#D6E2D3' }}>
+                  Truck, dollies and straps, furniture disassembly and floor protection. 3-hour minimum, plus GST and a one-time travel fee for the truck&apos;s drive to you and back.
                 </p>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -178,7 +225,7 @@ export default function MovingPricingPage() {
                   <p className="flex items-center gap-1.5 text-sm mb-6" style={{ color: MUTED }}><GoogleLogo size={14} /> Aryan Kapoor, Google review</p>
                   <ul className="flex flex-wrap gap-2">
                     {([
-                      { Icon: ShieldCheck, label: 'Fully insured' },
+                      { Icon: ShieldCheck, label: 'Property damage insurance included' },
                       { Icon: Users, label: 'Uniformed movers' },
                       { Icon: MapPin, label: 'Based in Burnaby' },
                     ] as const).map(({ Icon, label }) => (
@@ -187,6 +234,9 @@ export default function MovingPricingPage() {
                       </li>
                     ))}
                   </ul>
+                  <p className="mt-4 flex items-start gap-2 text-[14px] leading-snug" style={{ color: MUTED }}>
+                    <HardHat size={16} className="shrink-0 mt-0.5" style={{ color: GREEN }} aria-hidden /> {WORKSAFEBC_STATEMENT}
+                  </p>
                 </div>
               </div>
             </FadeIn>
@@ -203,6 +253,10 @@ export default function MovingPricingPage() {
             <FadeIn delay={80}>
               <PriceEstimator />
             </FadeIn>
+            <p className="mt-6 text-center text-[15px]" style={{ color: MUTED }}>
+              How long will your move take?{' '}
+              <Link href="/guides/how-long-does-it-take-to-move-a-house" className="font-bold underline underline-offset-2" style={{ color: GREEN }}>See average moving times by home size</Link>
+            </p>
           </div>
         </section>
 
@@ -263,7 +317,18 @@ export default function MovingPricingPage() {
               <div>
                 <p className={eyebrow} style={{ color: GREEN }}>Included in the rate</p>
                 <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8" style={{ color: INK }}>Everything Comes With the Crew</h2>
-                <ul className="grid gap-4 mb-9">
+                <ul className="grid sm:grid-cols-2 gap-3 mb-7">
+                  {keyIncluded.map(({ Icon, title, text }) => (
+                    <li key={title} className="rounded-2xl p-5" style={{ backgroundColor: '#E8F0E6' }}>
+                      <span className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: GREEN }}>
+                        <Icon size={19} style={{ color: CREAM }} aria-hidden />
+                      </span>
+                      <p className="text-lg font-extrabold leading-snug mb-1" style={{ color: INK }}>{title}</p>
+                      <p className="text-[15px] leading-relaxed" style={{ color: MUTED }}>{text}</p>
+                    </li>
+                  ))}
+                </ul>
+                <ul className="grid gap-4 mb-7">
                   {included.map(item => (
                     <li key={item} className="flex items-start gap-3">
                       <CheckCircle2 size={22} className="shrink-0" style={{ color: GREEN }} aria-hidden />
@@ -271,6 +336,11 @@ export default function MovingPricingPage() {
                     </li>
                   ))}
                 </ul>
+                {/* The one thing that is not included */}
+                <p className="flex items-start gap-3 rounded-2xl px-4 py-3.5 mb-9 text-[15px] leading-relaxed" style={{ backgroundColor: '#F5F0EB', color: MUTED }}>
+                  <PackageX size={20} className="shrink-0 mt-0.5" style={{ color: CLAY }} aria-hidden />
+                  <span><span className="font-bold" style={{ color: INK }}>Not included: packing service.</span> If you want us to pack your home for you, boxes and packing materials are charged separately. Wrapping your furniture is always included. See <Link href="/packing-services" className="font-semibold underline" style={{ color: GREEN }}>packing services</Link>.</span>
+                </p>
                 <Link href={MOVE_BOOK_HREF} className="inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
                   Check Moving Availability <ArrowRight size={18} aria-hidden />
                 </Link>

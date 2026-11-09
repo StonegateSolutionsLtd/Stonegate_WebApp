@@ -43,7 +43,7 @@ export default function Hero() {
       <main className="flex-1">
 
         {/* Hero - full-screen video with text overlay */}
-        <section className="relative flex items-start min-h-[calc(70vh-65px)] lg:min-h-[min(calc(96vh-65px),60vw)] 3xl:min-h-[max(min(calc(84vh-65px),900px),calc(34vw+110px))]" style={{ overflow: 'hidden' }}>
+        <section className="relative flex items-start min-h-[calc(70vh-65px)] lg:min-h-[min(calc(96vh-65px),60vw)] short:min-h-0 3xl:min-h-[max(min(calc(84vh-65px),900px),calc(34vw+110px))]" style={{ overflow: 'hidden' }}>
 
           {/* Full-screen image */}
           <div className="absolute inset-0 lg:bottom-[110px] overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
@@ -63,10 +63,10 @@ export default function Hero() {
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.79) 18%, rgba(0,0,0,0.7) 32%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.12) 75%, rgba(0,0,0,0.04) 84%, transparent 92%)' }} />
 
           {/* Text - left side, vertically centered */}
-          <div className="relative z-20 self-stretch flex flex-col pl-8 pr-6 sm:pl-16 sm:pr-16 lg:pl-24 lg:pr-0 pt-12 pb-16 lg:pt-16 lg:pb-[140px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
+          <div className="relative z-20 self-stretch flex flex-col pl-8 pr-6 sm:pl-16 sm:pr-16 lg:pl-24 lg:pr-0 pt-12 pb-16 lg:pt-16 lg:pb-[140px] short:pt-9 short:pb-[132px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
             <div className="flex flex-col flex-1">
-              <GoogleStars className="mb-4 lg:mb-5" />
-              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit 3xl:[--hero-h1-max:5.4rem]" style={{ fontSize: 'clamp(2.05rem, 7.3vw, var(--hero-h1-max, 4.55rem))' }}>
+              <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
+              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit 3xl:[--hero-h1-max:5.4rem]" style={{ fontSize: 'clamp(2.05rem, min(7.3vw, 7.5svh), var(--hero-h1-max, 4.55rem))' }}>
                 <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Moving</span>
                 <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.8rem, 2.4vw, 1.35rem)', margin: '0.3em 0', letterSpacing: '0.35em' }}>
                   <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
@@ -79,20 +79,20 @@ export default function Hero() {
                 Local movers across Metro Vancouver.<br />
                 You pick the day, we do the lifting.
               </p>
-              <p className="hidden sm:block text-[21px] font-medium leading-snug mb-4 lg:mb-6 3xl:text-[25px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
+              <p className="hidden sm:block text-[21px] font-medium leading-snug mb-4 lg:mb-6 short:mb-4 short:text-[19px] 3xl:text-[25px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
                 Local movers across Metro Vancouver.<br />
                 You pick the day - we wrap, carry and set it all up.
               </p>
 
               {/* Start a booking: two addresses and Next, with the phone number under it (pushed lower in the photo on phones) */}
-              <div className="mt-auto pt-8 mb-6 sm:mt-1 sm:pt-0 sm:mb-4 lg:mb-6 lg:mt-2">
+              <div className="mt-auto pt-8 mb-6 sm:mt-1 sm:pt-0 sm:mb-4 lg:mb-6 lg:mt-2 short:mb-4">
                 <BookingStart />
               </div>
 
               {/* Trust badges */}
               <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 sm:mt-auto sm:pt-2 lg:gap-y-3 lg:mb-3">
                 {([
-                  { Icon: Shield, label: 'Fully Insured' },
+                  { Icon: Shield, label: 'Insured' },
                   { Icon: GoogleLogo, label: '4.9-Star Rated' },
                   { Icon: DollarSign, label: 'No Hidden Fees' },
                 ] as const).map(({ Icon, label }) => (
@@ -104,7 +104,7 @@ export default function Hero() {
               </div>
 
               {/* Serving area */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-1 lg:mt-3">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-1 lg:mt-3 short:mt-2">
                 <div className="flex items-center gap-2 shrink-0">
                   <MapPin size={13} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
                   <span className="text-[11px] 3xl:text-xs font-semibold uppercase tracking-widest [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: 'rgba(255,255,255,0.8)' }}>Serving Metro Vancouver</span>

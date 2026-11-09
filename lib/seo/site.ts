@@ -6,6 +6,12 @@ export const BUSINESS_NAME = 'Stonegate Moving Solutions'
 
 export const PRIMARY_PHONE = CONTACT_PHONES[0]
 
+/**
+ * WorkSafeBC's approved wording for employers in good standing, to be used in this exact form only and only while true.
+ * WorkSafeBC does not allow employers to use its logo, so this sentence is shown on its own.
+ */
+export const WORKSAFEBC_STATEMENT = 'Stonegate Moving Solutions is registered and in good standing with WorkSafeBC.'
+
 export const MOVE_BOOK_HREF = '/order'
 
 export interface SeoImage {

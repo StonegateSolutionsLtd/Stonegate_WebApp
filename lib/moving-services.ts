@@ -39,6 +39,12 @@ export interface MovingService {
   faqHeading: string
   faqs: { q: string; a: string }[]
   listPhoto: ServicePhoto
+  /** A short section that links to the most related pages in context; links are written inline as [text](/path) */
+  related: { heading: string; text: string }
+  /** The 3-4 other services shown under "We can also help with" */
+  relatedServices: MovingService['slug'][]
+  /** The 4-5 most relevant city slugs; every city stays linked from the menu, the footer and /locations */
+  cities: string[]
 }
 
 export const RATE_TEXT = '3-hour minimum. A one-time flat travel fee, explained before you book. Prices plus GST.'
@@ -58,9 +64,9 @@ export const MOVING_SERVICES: MovingService[] = [
     slug: 'local',
     path: '/moving',
     name: 'Local moving',
-    metaTitle: 'Local Movers in Metro Vancouver | Stonegate Moving Solutions',
-    metaDescription: 'Local moving across Metro Vancouver: apartments, condos and houses. 2 movers and a truck from $130/hr + GST. Request a free estimate online.',
-    heading: ['Local', 'Movers'],
+    metaTitle: 'Local Moving Services: How It Works & Hourly Rates | Stonegate',
+    metaDescription: 'How a local move with Stonegate works, from wrapping to setting up, what the hourly rate includes, and which moving service fits your home. From $130/hr + GST.',
+    heading: ['Local Moving', 'Services'],
     cardPhoto: { src: '/burnaby/burnaby-move-truck-loading-bright.png', alt: 'A Stonegate mover carrying wrapped furniture up the ramp into the truck', pos: 'center 40%' },
     cardText: 'Apartments, condos and houses moved anywhere in Metro Vancouver.',
     includedHeading: 'Any home, any building',
@@ -84,10 +90,16 @@ export const MOVING_SERVICES: MovingService[] = [
       { q: 'When does the clock start?', a: 'When the crew arrives at your pickup address, and it stops when the last piece is in place at the new one.' },
       INCLUDED_FAQ,
       { q: 'My building needs an elevator booking. Who arranges it?', a: 'You book the elevator and loading bay with your building for the arrival window we give you. We work inside the building\'s rules from there.' },
-      { q: 'Do 2 or 3 movers make more sense for me?', a: 'Two movers suit most studios and one-bedrooms. For two bedrooms and up, 3 movers with the bigger truck usually finish sooner. Tell us your home size and we will suggest one.' },
+      { q: 'Do 2 or 3 movers make more sense for me?', a: 'Two movers suit studios, one- and two-bedroom apartments. For anything bigger, we recommend 3 movers with our 16\' truck. Tell us your home size and we will suggest one.' },
       { q: 'How far ahead should I book?', a: 'As early as you can for weekends and the end of the month. Pick a date online to see what is open.' },
     ],
     listPhoto: { src: '/about/photo-2.jpg', alt: 'A Stonegate mover standing on the truck ramp under the Moving made effortless sign', pos: 'center 40%' },
+    related: {
+      heading: "Not sure which kind of move you need?",
+      text: "Most local moves fit one of a few types. Moving a family home? See [residential moving](/residential-moving). Leaving a condo, tower or walk-up? [Apartment and condo moving](/apartment-moving) covers elevator bookings and loading bays. Want everything boxed before moving day? Add [packing services](/packing-services). Every local move is billed by the hour, so check the [moving rates](/pricing/moving) for a 2- or 3-mover crew, or find your city in our [service areas](/locations). Wondering how long it will take? See [how long it takes to move a house](/guides/how-long-does-it-take-to-move-a-house).",
+    },
+    relatedServices: ['residential', 'apartment', 'packing', 'long-distance'],
+    cities: ['vancouver', 'burnaby', 'surrey', 'richmond', 'coquitlam'],
   },
   {
     slug: 'residential',
@@ -116,13 +128,19 @@ export const MOVING_SERVICES: MovingService[] = [
     faqHeading: 'Moving a whole home',
     faqs: [
       PRICE_FAQ,
-      { q: 'How many movers does a house need?', a: 'For most homes of two bedrooms and up, 3 movers with the 16\' truck finish sooner than 2. Tell us the size of your home and we will suggest a crew.' },
+      { q: 'How many movers does a house need?', a: 'For anything bigger than a 2-bedroom apartment, we recommend 3 movers with our 16\' truck. These moves take from about 6 hours to a full day, depending on stairs and access. Tell us the size of your home and we will suggest a crew.' },
       INCLUDED_FAQ,
       { q: 'Do you take apart and rebuild beds?', a: 'Yes. Bed frames, tables and other furniture that will not fit through a door are taken apart and put back together at the new home.' },
       { q: 'Can you move the garage and shed too?', a: 'Yes. Tell us about the garage, shed and outdoor furniture when you book so we bring enough truck space.' },
       { q: 'Do you pack as well?', a: 'Yes, with our packing service: full packing, just the kitchen and fragile items, or unpacking at the new home. It runs at the same hourly rate, with materials extra.' },
     ],
     listPhoto: { src: '/team-with-truck.jpg', alt: 'The Stonegate crew standing in front of the truck', pos: 'center 60%' },
+    related: {
+      heading: "Moving a house in Metro Vancouver?",
+      text: "House moves are where crew size matters most: for anything bigger than a 2-bedroom apartment we recommend 3 movers and our 16' truck, and the move takes from about 6 hours to a full day. See [how long a move takes](/guides/how-long-does-it-take-to-move-a-house) for what changes it. Compare both crews on the [moving rates](/pricing/moving) page. Want the kitchen and fragile items boxed before we arrive? Add [packing services](/packing-services). We move family homes from [Burnaby](/burnaby-movers) and [Vancouver](/locations/vancouver) to the larger houses in [Surrey](/locations/surrey) and [Langley](/locations/langley). Moving into a condo instead? See [apartment and condo moving](/apartment-moving).",
+    },
+    relatedServices: ['packing', 'apartment', 'senior', 'specialty'],
+    cities: ['surrey', 'langley', 'coquitlam', 'burnaby', 'delta'],
   },
   {
     slug: 'commercial',
@@ -159,6 +177,12 @@ export const MOVING_SERVICES: MovingService[] = [
       { q: 'How do we book?', a: 'Request a free estimate online or call us. For a bigger move, call first so we can plan the crew and the number of trips.' },
     ],
     listPhoto: { src: '/crew-walking-truck.jpg', alt: 'A Stonegate mover walking a dolly beside the truck', pos: 'center 55%' },
+    related: {
+      heading: "Moving a business?",
+      text: "A commercial move is planned around your trading hours, so tell us when the space can close and when it has to reopen. Moving desks, workstations and a boardroom? See [office moving](/office-moving). Relocating an employee into a new home? That runs as a [residential move](/residential-moving) with the same crew. Heavy pieces such as a safe or gym equipment are covered by [specialty moving](/specialty-moving). We move businesses across [Vancouver](/locations/vancouver), [Burnaby](/burnaby-movers), [Richmond](/locations/richmond) and [Surrey](/locations/surrey), at the hourly [moving rates](/pricing/moving). For the planning side, see our [office relocation checklist](/guides/office-relocation-checklist).",
+    },
+    relatedServices: ['office', 'packing', 'specialty', 'residential'],
+    cities: ['vancouver', 'burnaby', 'richmond', 'surrey'],
   },
   {
     slug: 'office',
@@ -195,6 +219,12 @@ export const MOVING_SERVICES: MovingService[] = [
       { q: 'How do we book?', a: 'Request a free estimate online or call us. For a bigger office, call first so we can plan the crew and the number of trips.' },
     ],
     listPhoto: { src: '/junk/driver-cab-4534-mobile.jpg', alt: 'A smiling Stonegate mover in the cab of the truck', pos: 'center 45%' },
+    related: {
+      heading: "Planning an office move?",
+      text: "Send us the new floor plan and label each desk, chair and cabinet with its new spot, and the crew sets everything up to the plan. Moving a store, showroom or studio rather than an office? See [commercial moving](/commercial-moving). Need files and supplies boxed? Add [packing services](/packing-services). We move offices in [Downtown Vancouver](/locations/vancouver), [Burnaby](/burnaby-movers), [Richmond](/locations/richmond) and [North Vancouver](/locations/north-vancouver), at the hourly [moving rates](/pricing/moving). Planning the whole move? Our [office relocation checklist](/guides/office-relocation-checklist) covers the timeline, labelling, IT and who to notify of your new address.",
+    },
+    relatedServices: ['commercial', 'packing', 'specialty', 'local'],
+    cities: ['vancouver', 'burnaby', 'richmond', 'north-vancouver'],
   },
   {
     slug: 'packing',
@@ -230,6 +260,12 @@ export const MOVING_SERVICES: MovingService[] = [
       INCLUDED_FAQ,
     ],
     listPhoto: { src: '/crew-walking-truck.jpg', alt: 'A Stonegate mover walking a dolly beside the truck', pos: 'center 55%' },
+    related: {
+      heading: "Adding packing to your move",
+      text: "Packing runs at the same hourly rate as the move, with materials extra; see the [moving rates](/pricing/moving). It is most often added to a [residential move](/residential-moving) or an [apartment move](/apartment-moving), and it is a big part of a [senior move](/senior-moving) when someone is downsizing. Moving out of the region? Pair it with [long-distance moving](/long-distance-moving) so everything is boxed before the truck leaves. Packed boxes also make the move itself faster; see [what makes a move take longer](/guides/how-long-does-it-take-to-move-a-house).",
+    },
+    relatedServices: ['residential', 'apartment', 'senior', 'long-distance'],
+    cities: ['vancouver', 'burnaby', 'north-vancouver', 'west-vancouver', 'richmond'],
   },
   {
     slug: 'apartment',
@@ -260,12 +296,18 @@ export const MOVING_SERVICES: MovingService[] = [
     faqs: [
       PRICE_FAQ,
       { q: 'My building needs an elevator booking. Who arranges it?', a: 'You book the elevator and loading bay with your building for the arrival window we give you. We work inside the building\'s rules from there.' },
-      { q: 'How long does a one-bedroom move take?', a: 'Most one-bedroom moves take 3 to 4 hours with 2 movers. Floors, elevator waits and the distance between the two buildings all change it.' },
+      { q: 'How long does a one-bedroom move take?', a: 'On average 3 to 6 hours with 2 movers. Floors, elevator waits and how far the truck parks from the door all change it.' },
       { q: 'Do you move walk-up apartments?', a: 'Yes. Tell us the floor and the stairs at both addresses so we bring the right crew size for them.' },
-      { q: 'Do 2 or 3 movers make more sense for me?', a: 'Two movers suit most studios and one-bedrooms. For two bedrooms and up, 3 movers with the bigger truck usually finish sooner.' },
+      { q: 'Do 2 or 3 movers make more sense for me?', a: 'Two movers suit studios, one- and two-bedroom apartments. For anything bigger, we recommend 3 movers with our 16\' truck.' },
       INCLUDED_FAQ,
     ],
     listPhoto: { src: '/burnaby/burnaby-move-crew-loading.jpg', alt: 'A Stonegate mover loading boxes into the truck', pos: 'center 45%' },
+    related: {
+      heading: "Moving in or out of a condo?",
+      text: "Book your elevator and loading bay for the arrival window we give you, and tell us the floor, the building's move hours and how far the truck parks from the door. In Downtown and Yaletown towers in [Vancouver](/locations/vancouver), and the high-rises around Metrotown and Brentwood in [Burnaby](/burnaby-movers), that booked window is the whole schedule, so we size the crew to finish inside it. Short on time to pack? See [packing services](/packing-services), and compare a 2- and 3-mover crew on the [moving rates](/pricing/moving) page. Moving into a house? See [residential moving](/residential-moving). Before moving day, read our [Vancouver condo moving checklist](/guides/vancouver-condo-moving-checklist) for elevator bookings, strata fees and truck parking.",
+    },
+    relatedServices: ['packing', 'residential', 'local', 'specialty'],
+    cities: ['vancouver', 'burnaby', 'richmond', 'new-westminster', 'port-moody'],
   },
   {
     slug: 'long-distance',
@@ -304,6 +346,12 @@ export const MOVING_SERVICES: MovingService[] = [
       INCLUDED_FAQ,
     ],
     listPhoto: { src: '/junk/crew-4539-cab.jpg', alt: 'A Stonegate mover standing at the open cab door of the truck', pos: 'center 40%' },
+    related: {
+      heading: "Moving out of Metro Vancouver?",
+      text: "Long-distance moves are quoted as one flat price for the route, so send us both addresses and your dates. Only moving across the region? A [local move](/moving) billed by the hour is usually the better fit; see the [moving rates](/pricing/moving). Want everything boxed before the truck leaves? Add [packing services](/packing-services). Bringing a piano or a safe? See [specialty moving](/specialty-moving).",
+    },
+    relatedServices: ['packing', 'specialty', 'residential', 'local'],
+    cities: ['vancouver', 'burnaby', 'surrey', 'coquitlam'],
   },
   {
     slug: 'senior',
@@ -340,6 +388,12 @@ export const MOVING_SERVICES: MovingService[] = [
       { q: 'Do you bring boxes?', a: 'Yes. The crew brings boxes, packing paper, tape and wardrobe boxes.' },
     ],
     listPhoto: { src: '/junk/driver-cab-4520-mobile.jpg', alt: 'A smiling Stonegate mover leaning out of the truck cab window', pos: 'center 45%' },
+    related: {
+      heading: "Helping a parent move?",
+      text: "Most senior moves start with deciding what comes along. Tell us which pieces are going and we plan the crew and truck around just those. Add [packing services](/packing-services) for packing and unpacking, and see [specialty moving](/specialty-moving) for a piano or heirloom furniture. We help seniors move into condos and residences across [West Vancouver](/locations/west-vancouver), [North Vancouver](/locations/north-vancouver), [White Rock](/locations/white-rock) and [Burnaby](/burnaby-movers), at the same hourly [moving rates](/pricing/moving) as any move.",
+    },
+    relatedServices: ['packing', 'specialty', 'apartment', 'residential'],
+    cities: ['west-vancouver', 'north-vancouver', 'white-rock', 'burnaby', 'langley'],
   },
   {
     slug: 'specialty',
@@ -377,6 +431,12 @@ export const MOVING_SERVICES: MovingService[] = [
       INCLUDED_FAQ,
     ],
     listPhoto: { src: '/junk/driver-standing-by-truck-side-2.jpg', alt: 'A Stonegate mover standing beside the branded truck', pos: 'center 30%' },
+    related: {
+      heading: "One heavy item, or part of a full move?",
+      text: "Specialty items can move on their own or with the rest of your home. Pianos and safes usually come along on a [residential move](/residential-moving) or an [apartment move](/apartment-moving): mention them when you book so we bring the right crew and gear. Moving gym equipment or a safe out of a business? See [commercial moving](/commercial-moving). Fragile art and antiques can be wrapped and boxed with [packing services](/packing-services).",
+    },
+    relatedServices: ['residential', 'apartment', 'packing', 'commercial'],
+    cities: ['vancouver', 'west-vancouver', 'burnaby', 'north-vancouver'],
   },
 ]
 
@@ -422,9 +482,10 @@ export const MOVING_REVIEWS = [
   },
 ]
 
-/** The moving services as cards, linking to their pages */
-export function movingServiceCards(except?: MovingService['slug']) {
-  return MOVING_SERVICES.filter(o => o.slug !== except).map(o => ({
+/** The moving services as cards, linking to their pages: all of them (minus `except`), or only `only`, in that order */
+export function movingServiceCards(except?: MovingService['slug'], only?: MovingService['slug'][]) {
+  const list = only ? only.map(s => SERVICE_BY_SLUG[s]) : MOVING_SERVICES.filter(o => o.slug !== except)
+  return list.map(o => ({
     href: o.path,
     kind: 'Moving' as const,
     name: o.name,

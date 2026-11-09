@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { CONTACT_EMAIL } from '@/lib/contact'
 import { PhoneLink } from '@/components/PhoneNumber'
 import { CITIES, cityHref } from '@/lib/seo/cities'
+import { WORKSAFEBC_STATEMENT } from '@/lib/seo/site'
 
 const columns = [
   {
@@ -30,7 +31,9 @@ const columns = [
     title: 'Company',
     links: [
       { label: 'About', href: '/about' },
+      { label: 'Customer Reviews', href: '/reviews' },
       { label: 'Moving Prices', href: '/pricing/moving' },
+      { label: 'Moving Guides', href: '/guides' },
     ],
   },
 ]
@@ -63,8 +66,9 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        <div style={{ paddingTop: '8px' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
           <span className="text-sm font-medium" style={{ color: '#6B5E54' }}>© {new Date().getFullYear()} Stonegate Moving Solutions. All rights reserved.</span>
+          <span className="text-sm font-medium" style={{ color: '#6B5E54' }}>{WORKSAFEBC_STATEMENT}</span>
         </div>
       </div>
     </footer>

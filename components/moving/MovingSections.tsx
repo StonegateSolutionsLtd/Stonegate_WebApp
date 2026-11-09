@@ -24,8 +24,8 @@ export const sectionWrap = 'max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8'
 export const MASCOT = '/moving/mascot.png'
 
 const TIERS = [
-  { crew: '2 movers + truck', price: '$130', fit: 'Most studios and 1-bedroom homes' },
-  { crew: '3 movers + 16\' truck', price: '$170', fit: 'Most homes of 2 bedrooms and up' },
+  { crew: '2 movers + truck', price: '$130', fit: 'Studios, 1- and 2-bedroom apartments' },
+  { crew: '3 movers + 16\' truck', price: '$170', fit: 'Anything bigger than a 2-bedroom apartment' },
 ]
 
 const filterOf = (p: ServicePhoto) => (p.brightness ? `brightness(${p.brightness})` : 'none')
@@ -88,10 +88,10 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo,
           : 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.14) 58%, transparent 75%)' }} />
       </div>
 
-      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-10 pb-8 sm:pt-14 sm:pb-12 lg:py-16">
+      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-10 pb-8 sm:pt-14 sm:pb-12 lg:py-16 short:min-h-0 short:py-9">
         <div className="flex flex-col w-full">
-          <GoogleStars className="mb-4 lg:mb-5" />
-          <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, 7.3vw, 4.4rem)' }}>
+          <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
+          <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, min(7.3vw, 7.5svh), 4.4rem)' }}>
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>{heading[0]}</span>
             <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
               <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />
@@ -100,16 +100,16 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo,
             </span>
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>{heading[1]}</span>
           </h1>
-          <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[520px] mb-7 [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
+          <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[520px] mb-7 short:mb-5 short:text-[19px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
             {intro}
           </p>
           {/* Lower in the photo on phones, then the badges under it */}
           <div className="mt-24 sm:mt-0">
             <BookingStart id="booking-start" />
           </div>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-7 sm:mt-8">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-7 sm:mt-8 short:mt-5">
             {([
-              { Icon: Shield, label: 'Fully Insured' },
+              { Icon: Shield, label: 'Insured' },
               { Icon: GoogleLogo, label: '4.9-Star Rated' },
             ] as const).map(({ Icon, label }) => (
               <li key={label} className="flex items-center gap-2">

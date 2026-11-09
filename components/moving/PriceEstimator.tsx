@@ -15,19 +15,21 @@ const CLAY = '#C98A45'
 const MIN_HOURS = 3
 
 /**
- * Typical times are the ones the pricing page has always quoted (1-bedroom 3-4 h, 2-bedroom 4-5 h).
- * Bigger homes vary too much to guess, so they show the 3-hour minimum and a call instead.
+ * Average times from our own moves (1-bedroom 3-6 h, 2-bedroom 4-9 h, the same figures as the moving-time guide).
+ * Homes bigger than a 2-bedroom apartment take about 6 hours to a full day, so they show a "from" price and a call instead.
  */
 const ESTIMATES: Record<ApartmentSize, { crew: 2 | 3; hours: [number, number] | null }> = {
   studio: { crew: 2, hours: [3, 3] },
-  '1br': { crew: 2, hours: [3, 4] },
-  '2br': { crew: 2, hours: [4, 5] },
+  '1br': { crew: 2, hours: [3, 6] },
+  '2br': { crew: 2, hours: [4, 9] },
   '3br': { crew: 3, hours: null },
   '4br+': { crew: 3, hours: null },
 }
 
 const RATE = { 2: 130, 3: 170 } as const
 const CREW_LABEL = { 2: '2 movers + truck', 3: '3 movers + 16\' truck' } as const
+/** Bigger homes: about 6 hours to a full day */
+const BIG_HOME_MIN_HOURS = 6
 
 const money = (n: number) => `$${n.toLocaleString('en-CA')}`
 
@@ -80,7 +82,7 @@ export default function PriceEstimator() {
             <Users size={16} aria-hidden /> {CREW_LABEL[crew]} · ${rate}/hr
           </span>
           <span className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#B5C9B0' }}>
-            <Clock size={16} aria-hidden /> {hours ? (hours[0] === hours[1] ? `About ${hours[0]} hours` : `${hours[0]}–${hours[1]} hours`) : 'Depends on your list'}
+            <Clock size={16} aria-hidden /> {hours ? (hours[0] === hours[1] ? `About ${hours[0]} hours` : `${hours[0]}–${hours[1]} hours`) : 'About 6 hours to a full day'}
           </span>
         </div>
         {hours ? (
@@ -93,14 +95,14 @@ export default function PriceEstimator() {
         ) : (
           <p className="flex flex-wrap items-end gap-x-2 leading-none" style={{ color: CREAM }}>
             <span className="text-base font-semibold mb-2" style={{ color: '#B5C9B0' }}>From</span>
-            <span className="text-[2.6rem] min-[400px]:text-5xl sm:text-6xl font-extrabold tracking-tight whitespace-nowrap">{money(rate * MIN_HOURS)}</span>
+            <span className="text-[2.6rem] min-[400px]:text-5xl sm:text-6xl font-extrabold tracking-tight whitespace-nowrap">{money(rate * BIG_HOME_MIN_HOURS)}</span>
             <span className="text-base font-semibold mb-1.5" style={{ color: '#B5C9B0' }}>+ fixed travel fee + GST</span>
           </p>
         )}
         <p className="mt-4 text-[15px] leading-relaxed" style={{ color: '#D6E2D3' }}>
           {hours
-            ? `Most ${APARTMENT_SIZE_LABELS[size].toLowerCase()} moves take ${hours[0] === hours[1] ? `about ${hours[0]} hours` : `${hours[0]} to ${hours[1]} hours`}.`
-            : 'Bigger homes vary a lot. Call us with your list and we will give you a time estimate.'}
+            ? `On average, ${APARTMENT_SIZE_LABELS[size].toLowerCase()} moves take ${hours[0] === hours[1] ? `about ${hours[0]} hours` : `${hours[0]} to ${hours[1]} hours`}. Stairs, elevators and how close the truck can park decide where yours lands.`
+            : 'Bigger homes take from about 6 hours to a full day, depending on stairs, access and how much is moving. Call us with your list for a closer estimate.'}
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <button

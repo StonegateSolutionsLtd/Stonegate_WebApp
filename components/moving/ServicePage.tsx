@@ -9,12 +9,14 @@ import StickyCallBar from '@/components/landing/StickyCallBar'
 import { JsonLd } from '@/components/seo/SeoBlocks'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { SITE_URL, MOVE_BOOK_HREF, providerLd, faqLd } from '@/lib/seo/site'
-import { CITIES, cityHref } from '@/lib/seo/cities'
+import { CITY_BY_SLUG, cityHref } from '@/lib/seo/cities'
 import { movingServiceCards, type MovingService } from '@/lib/moving-services'
+import LinkedText from './LinkedText'
 import { MovingHero, MovingPriceBlock, MovingReviews, CityPills, GREEN, INK, MUTED, CREAM, LINE, MASCOT, eyebrow, sectionWrap } from './MovingSections'
 
 export default function ServicePage({ service }: { service: MovingService }) {
-  const otherCards = movingServiceCards(service.slug)
+  const otherCards = movingServiceCards(service.slug, service.relatedServices)
+  const cities = service.cities.map(s => CITY_BY_SLUG.get(s)!).filter(Boolean)
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: CREAM }}>
@@ -103,6 +105,16 @@ export default function ServicePage({ service }: { service: MovingService }) {
           </ol>
         </section>
 
+        {/* Related pages, linked in context */}
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+          <div className={`${sectionWrap} py-14 sm:py-16`}>
+            <FadeIn className="max-w-3xl">
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4" style={{ color: INK }}>{service.related.heading}</h2>
+              <p className="text-base sm:text-lg leading-relaxed" style={{ color: MUTED }}><LinkedText text={service.related.text} /></p>
+            </FadeIn>
+          </div>
+        </section>
+
         <MovingPriceBlock note={service.priceNote} quotePoints={service.quotePoints} />
 
         <MovingReviews />
@@ -153,7 +165,10 @@ export default function ServicePage({ service }: { service: MovingService }) {
               <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>Movers Across Metro Vancouver</h2>
               <p className="text-base leading-relaxed max-w-2xl mb-8" style={{ color: MUTED }}>Pick your city to see local moving details.</p>
             </FadeIn>
-            <CityPills links={CITIES.map(c => ({ href: cityHref(c), label: c.name }))} />
+            <CityPills links={cities.map(c => ({ href: cityHref(c), label: `${c.name} Movers` }))} />
+            <Link href="/locations" className="inline-flex items-center gap-2 mt-8 text-sm font-extrabold underline" style={{ color: GREEN }}>
+              All service areas <ArrowRight size={14} aria-hidden />
+            </Link>
           </div>
         </section>
 
