@@ -7,20 +7,42 @@ import Footer from '@/components/landing/Footer'
 import GoogleLogo from '@/components/GoogleLogo'
 import ReviewsGrid from '@/components/reviews/ReviewsGrid'
 import { GREEN, INK, MUTED, CREAM, CLAY, LINE, MASCOT, eyebrow, sectionWrap } from '@/components/moving/MovingSections'
-import { BUSINESS_PROFILES, MOVE_BOOK_HREF } from '@/lib/seo/site'
+import { BUSINESS_PROFILES, MOVE_BOOK_HREF, SITE_URL, breadcrumbLd } from '@/lib/seo/site'
+import { JsonLd } from '@/components/seo/SeoBlocks'
 import { GOOGLE_MOVING_REVIEWS } from '@/lib/reviews'
 
 const GOOGLE_PROFILE = BUSINESS_PROFILES[0]
 
 export const metadata: Metadata = {
-  title: { absolute: 'Customer Reviews | Stonegate Moving Solutions' },
-  description: 'Real Google reviews from customers who moved with Stonegate Moving Solutions across Metro Vancouver. Rated 4.9 on Google.',
+  title: { absolute: 'Stonegate Moving Solutions Reviews | Google Reviews of Our Movers' },
+  description: 'Google reviews of Stonegate Moving Solutions, the Burnaby moving company rated 4.9 on Google by customers across Vancouver and Metro Vancouver.',
   alternates: { canonical: 'https://www.stonegatemoving.com/reviews' },
 }
 
 export default function ReviewsPage() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: CREAM }}>
+      {/* Each Google review, word for word, attached to the business defined in the root layout.
+          Self-hosted reviews do not earn star snippets in Google, but search and AI crawlers read them. No aggregate rating:
+          the 4.9 average covers every Google review, not just the ones listed here. */}
+      <JsonLd graph={[
+        {
+          '@type': 'WebPage',
+          '@id': `${SITE_URL}/reviews#page`,
+          url: `${SITE_URL}/reviews`,
+          name: 'Customer Reviews',
+          about: { '@id': `${SITE_URL}/#business` },
+        },
+        breadcrumbLd([{ name: 'Home', href: '/' }, { name: 'Reviews', href: '/reviews' }]),
+        ...GOOGLE_MOVING_REVIEWS.map(r => ({
+          '@type': 'Review',
+          itemReviewed: { '@id': `${SITE_URL}/#business` },
+          author: { '@type': 'Person', name: r.name },
+          reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5, worstRating: 1 },
+          reviewBody: r.text,
+          publisher: { '@type': 'Organization', name: 'Google' },
+        })),
+      ]} />
       <Navbar />
 
       <main className="flex-1">
@@ -31,9 +53,9 @@ export default function ReviewsPage() {
               {/* On phones the mascot stands beside the headline; from lg it moves next to the rating card */}
               <div className="flex items-end justify-between gap-3 mb-5">
                 <div>
-                  <p className={eyebrow} style={{ color: GREEN }}>About Stonegate</p>
+                  <p className={eyebrow} style={{ color: GREEN }}>Google reviews</p>
                   <h1 className="text-[2.3rem] min-[400px]:text-[2.5rem] sm:text-6xl font-extrabold tracking-tight leading-[1.02]" style={{ color: INK }}>
-                    What Our Customers <span style={{ color: CLAY }}>Say</span>
+                    Stonegate Moving <span style={{ color: CLAY }}>Reviews</span>
                   </h1>
                 </div>
                 <div className="lg:hidden relative shrink-0 w-[130px] min-[400px]:w-[140px] sm:w-[190px] aspect-square -mb-1">
@@ -41,7 +63,7 @@ export default function ReviewsPage() {
                 </div>
               </div>
               <p className="text-[18px] sm:text-xl leading-relaxed max-w-[600px]" style={{ color: MUTED }}>
-                Real experiences from people who moved with our crew across Metro Vancouver, copied word for word from our Google reviews.
+                Google reviews of Stonegate Moving Solutions, the Burnaby moving company serving Vancouver and Metro Vancouver, copied word for word from people who moved with our crew.
               </p>
             </div>
 

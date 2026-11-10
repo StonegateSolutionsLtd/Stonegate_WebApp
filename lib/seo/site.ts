@@ -95,6 +95,15 @@ export const businessLd = {
     postalCode: 'V5C 0N7',
     addressCountry: 'CA',
   },
+  // Building location (OpenStreetMap, 2186 Gilmore Ave, Burnaby); 5 decimals is about 1 m
+  geo: { '@type': 'GeoCoordinates', latitude: 49.26526, longitude: -123.01379 },
+  // Open every day of the week, weekends included (confirmed by the owner 2026-11-09)
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '06:00',
+    closes: '22:00',
+  }],
   areaServed: [
     { '@type': 'AdministrativeArea', name: 'Metro Vancouver' },
     ...CITIES.map(c => ({ '@type': 'City', name: `${c.name}, BC` })),

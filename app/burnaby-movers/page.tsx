@@ -10,22 +10,25 @@ import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import {
   Shield, DollarSign, Users, Truck, Star, CheckCircle2, Building2,
   Home, MapPin, ArrowRight,
+  Warehouse,
 } from 'lucide-react'
 import FadeIn from '@/components/landing/FadeIn'
 import LinkedText from '@/components/moving/LinkedText'
 import ReviewsRow from '@/components/landing/ReviewsRow'
 import { MOVING_REVIEWS } from '@/lib/moving-services'
-import { SITE_URL, providerLd, hourlyOfferLd } from '@/lib/seo/site'
+import { SITE_URL, providerLd, hourlyOfferLd, faqLd } from '@/lib/seo/site'
+import { JsonLd } from '@/components/seo/SeoBlocks'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Burnaby Movers | Local Moving Company | Stonegate Moving Solutions' },
-  description: 'Professional local movers in Burnaby, BC. 2 uniformed movers with a fully-equipped truck from $130/hr + GST. Transparent pricing, insured, no hidden fees.',
+  title: { absolute: 'Burnaby Movers & Moving Company | Stonegate Moving Solutions' },
+  description: 'Stonegate Moving Solutions is a Burnaby moving company: apartment, condo, house and storage unit moves with 2 uniformed movers and a truck from $130/hr + GST.',
   alternates: { canonical: 'https://www.stonegatemoving.com/burnaby-movers' },
 }
 
 const services = [
   { label: 'Apartment & Condo Moving', href: '/apartment-moving', desc: 'Studio to 3-bedroom moves across Burnaby high-rises and low-rises.', Icon: Building2 },
   { label: 'House Moving', href: '/residential-moving', desc: 'Full household moves, handled by our own uniformed crew.', Icon: Home },
+  { label: 'Storage Unit Moves', href: '/moving', desc: 'Contents of a storage unit or locker picked up or delivered, as one more stop at the same hourly rate.', Icon: Warehouse },
   { label: 'Packing Services', href: '/packing-services', desc: 'The whole home, just the kitchen, or only what breaks. Same hourly rate, materials extra.', Icon: Truck },
 ]
 
@@ -56,6 +59,10 @@ const faqs = [
     a: 'Moving is $130/hr + GST for 2 professional movers and a fully-equipped truck, or $170/hr + GST for 3 movers with a 16\' truck, with a 3-hour minimum. We also charge a one-time flat-rate travel fee, explained to you ahead of time. Since we\'re based in Burnaby, local jobs often work out more affordably too - see our full pricing breakdown for details.',
   },
   {
+    q: 'Can you move things from a storage unit in Burnaby?',
+    a: 'Yes. We pick up the contents of a storage unit or locker and bring them to your home, or take them into storage. It is one more stop on the same hourly rate, so tell us the storage address and unit size when you book.',
+  },
+  {
     q: 'Do you provide moving blankets and equipment?',
     a: 'Yes - moving blankets, straps, and dollies are included on every job at no extra cost, along with floor and door-frame protection.',
   },
@@ -73,8 +80,7 @@ const faqs = [
   },
 ]
 
-const jsonLd = {
-  '@context': 'https://schema.org',
+const serviceLd = {
   '@type': 'Service',
   serviceType: 'Moving Company',
   name: 'Burnaby Movers - Stonegate Moving Solutions',
@@ -94,7 +100,7 @@ const jsonLd = {
 export default function BurnabyMoversPage() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd graph={[serviceLd, faqLd(faqs)]} />
       <Navbar />
 
       <main className="flex-1">
@@ -115,7 +121,7 @@ export default function BurnabyMoversPage() {
                   Professional Movers in <span style={{ color: '#254220' }}>Burnaby, BC</span>
                 </h1>
                 <p className="text-lg leading-relaxed max-w-lg mb-8" style={{ color: '#6B5E54' }}>
-                  A local, uniformed moving crew with a fully-equipped truck - based right here in Burnaby and serving all of Metro Vancouver. Transparent hourly pricing, no hidden fees.
+                  Stonegate Moving Solutions is a Burnaby moving company: a local, uniformed crew with a fully equipped truck for apartment, condo, house and storage unit moves across Burnaby and all of Metro Vancouver. Transparent hourly pricing, no hidden fees.
                 </p>
                 <div className="flex flex-wrap gap-4 mb-10">
                   <Link href="/order">
@@ -182,7 +188,7 @@ export default function BurnabyMoversPage() {
               <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
               <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Moving Services in Burnaby</h2>
             </FadeIn>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {services.map(({ label, href, desc, Icon }, i) => (
                 <FadeIn key={label} delay={i * 80}>
                   <Link href={href} className="block h-full rounded-2xl p-6 transition-colors hover:bg-[#EDE6DD]" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>

@@ -95,7 +95,8 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo,
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>{heading[0]}</span>
             <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
               <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />
-              <span className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{divider}</span>
+              {/* Drawn from CSS so the decorative divider is not read as part of the H1 ("Residential Movers", not "Residential METRO VANCOUVER Movers") */}
+              <span aria-hidden data-divider={divider} className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] before:content-[attr(data-divider)]" style={{ color: '#FFFFFF' }} />
               <span style={{ flex: 1.7, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.4), transparent)' }} />
             </span>
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>{heading[1]}</span>
