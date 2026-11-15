@@ -10,22 +10,22 @@ import { PUBLISHED_GUIDES, guidePath } from '@/lib/guides'
  * Layout-only tweaks and site-wide footer/menu changes do not count.
  */
 const PAGES: [path: string, updated: string][] = [
-  ['', '2026-11-08'],
-  ['/moving', '2026-11-08'],
-  ['/residential-moving', '2026-11-08'],
-  ['/commercial-moving', '2026-11-08'],
-  ['/office-moving', '2026-11-08'],
+  ['', '2026-11-09'],
+  ['/moving', '2026-11-09'],
+  ['/residential-moving', '2026-11-09'],
+  ['/commercial-moving', '2026-11-09'],
+  ['/office-moving', '2026-11-09'],
   ['/packing-services', '2026-11-08'],
-  ['/apartment-moving', '2026-11-08'],
+  ['/apartment-moving', '2026-11-09'],
   ['/long-distance-moving', '2026-11-08'],
   ['/senior-moving', '2026-11-08'],
   ['/specialty-moving', '2026-11-08'],
   ['/pricing/moving', '2026-11-08'],
   ['/locations', '2026-11-02'],
   ['/about', '2026-11-08'],
-  ['/reviews', '2026-11-08'],
+  ['/reviews', '2026-11-09'],
   ['/order', '2026-11-02'],
-  ['/burnaby-movers', '2026-11-08'],
+  ['/burnaby-movers', '2026-11-09'],
 ]
 
 /** All city pages share one template and one data file (lib/seo/cities.ts), so they share a date */
