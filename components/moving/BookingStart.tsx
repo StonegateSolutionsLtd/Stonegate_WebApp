@@ -32,7 +32,7 @@ export default function BookingStart({ id }: { id?: string }) {
     <div id={id} className="w-full max-w-[640px]">
       <form onSubmit={start} aria-label="Get your free estimate">
         <p className="mb-2.5 text-[16px] sm:text-[17px] font-bold [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: '#FFFFFF' }}>
-          Get your free moving quote
+          Get Your Free Moving Quote
         </p>
         <div className="flex gap-2 sm:gap-2.5 max-w-[360px] sm:max-w-none">
           <label className="flex-1 min-w-0">

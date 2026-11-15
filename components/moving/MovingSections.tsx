@@ -55,10 +55,12 @@ function HeroPicture({ photo, desktop }: { photo: ServicePhoto; desktop: Service
 }
 
 /** Photo hero with the stacked headline, then the two-address booking start */
-export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo, desktopPhoto }: {
+export function MovingHero({ heading, divider = 'METRO VANCOUVER', dividerInH1 = false, intro, photo, desktopPhoto }: {
   /** White line, then the orange line under the divider */
   heading: [string, string]
   divider?: string
+  /** The divider is part of the heading's wording ("House & Residential / Movers in / Vancouver"), so it is real H1 text */
+  dividerInH1?: boolean
   intro: string
   photo: ServicePhoto
   /** A different photo from the lg breakpoint up; phones keep `photo` */
@@ -92,13 +94,20 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', intro, photo,
         <div className="flex flex-col w-full">
           <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
           <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, min(7.3vw, 7.5svh), 4.4rem)' }}>
-            <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>{heading[0]}</span>
+            {/* A long top line ("House & Residential") is set smaller so it stays on one line on phones */}
+            <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF', fontSize: heading[0].length > 12 ? '0.72em' : undefined }}>{heading[0]}</span>
+            {/* Real spaces between the lines, so the heading text reads "Surrey Movers", not "SurreyMovers" (ignored by the flex layout) */}
+            {' '}
             <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
               <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4))' }} />
-              {/* Drawn from CSS so the decorative divider is not read as part of the H1 ("Residential Movers", not "Residential METRO VANCOUVER Movers") */}
-              <span aria-hidden data-divider={divider} className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] before:content-[attr(data-divider)]" style={{ color: '#FFFFFF' }} />
+              {/* A decorative divider is drawn from CSS so it is not read as part of the H1 ("Residential Movers", not "Residential METRO VANCOUVER Movers");
+                  one that is part of the wording ("Movers in") is real text */}
+              {dividerInH1
+                ? <span className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{divider}</span>
+                : <span aria-hidden data-divider={divider} className="font-extrabold whitespace-nowrap [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] before:content-[attr(data-divider)]" style={{ color: '#FFFFFF' }} />}
               <span style={{ flex: 1.7, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.4), transparent)' }} />
             </span>
+            {dividerInH1 && ' '}
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>{heading[1]}</span>
           </h1>
           <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[520px] mb-7 short:mb-5 short:text-[19px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
