@@ -4,7 +4,7 @@ import { sendOwnerOrderNotification, sendCustomerOrderConfirmation } from '@/lib
 import { addDays, nowInBusinessZone } from '@/lib/scheduling'
 import { MOVE_TYPES, sizesFor, type ApartmentSize, type OrderFormData } from '@/lib/types'
 
-const DATE_FLEX = ['today', 'this_week', 'date']
+const DATE_FLEX = ['today', 'this_week', 'date', 'not_sure']
 
 /** A free estimate request from the public form - no time slot is held until we confirm the move */
 export async function POST(request: NextRequest) {

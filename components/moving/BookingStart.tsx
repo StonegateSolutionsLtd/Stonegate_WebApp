@@ -6,6 +6,7 @@ import { ArrowRight, Phone } from 'lucide-react'
 import { ORDER_START_KEY, type OrderStart } from '@/lib/types'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { formLocationFor, trackEvent } from '@/lib/analytics'
+import AddressAutocomplete from '@/components/AddressAutocomplete'
 
 const inputClass =
   'w-full min-w-0 rounded-full min-h-[44px] sm:min-h-[52px] px-4 sm:px-5 text-[16px] font-semibold border-0 outline-none transition-shadow focus:shadow-[0_0_0_3px_#C98A45] placeholder:font-medium placeholder:text-[#8A7E74]'
@@ -37,7 +38,7 @@ export default function BookingStart({ id }: { id?: string }) {
         <div className="flex gap-2 sm:gap-2.5 max-w-[360px] sm:max-w-none">
           <label className="flex-1 min-w-0">
             <span className="sr-only">Pickup city or postal code</span>
-            <input value={pickup} onChange={e => setPickup(e.target.value)} placeholder="Pickup city or postal code" autoComplete="postal-code" className={inputClass} style={{ backgroundColor: '#FAF7F2', color: '#1A1714' }} />
+            <AddressAutocomplete value={pickup} onValueChange={setPickup} placeholder="Pickup city or postal code" autoComplete="postal-code" className={inputClass} style={{ backgroundColor: '#FAF7F2', color: '#1A1714' }} />
           </label>
           <button
             type="submit"

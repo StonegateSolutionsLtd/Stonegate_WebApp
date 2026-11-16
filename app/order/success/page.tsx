@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import PageCanvas from '@/components/PageCanvas'
 import ConversionEvent from '@/components/ConversionEvent'
 
-export const metadata = { title: 'Quote Request Received - Stonegate Moving Solutions' }
+export const metadata = { title: 'Moving Request Sent - Stonegate Moving Solutions', robots: { index: false } }
 
 export default async function SuccessPage({
   searchParams,
@@ -26,15 +26,15 @@ export default async function SuccessPage({
         </div>
 
         <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
-          Quote request received
+          Your moving request is sent
         </h1>
         <p className="mt-4 text-base leading-relaxed" style={{ color: '#9A8E83' }}>
-          We&apos;ve received your details and will reach out within 24 hours to confirm availability and finalize your quote.
+          Thank you. We&apos;ll contact you within 24 hours with your free estimate and to confirm your moving day.
         </p>
 
         <div className="mt-8 p-5 rounded-2xl text-sm text-left"
           style={{ backgroundColor: '#FFFFFF', border: '1px solid #EDE6DE', color: '#9A8E83' }}>
-          Check your email for a confirmation with your quote summary.
+          We&apos;ve emailed you a copy of your request. If you don&apos;t see it, check your spam folder.
         </div>
 
         <div className="mt-8">
