@@ -5,7 +5,7 @@ export type OrderStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' 
 export type MoveType = 'house' | 'apartment' | 'commercial' | 'storage' | 'small'
 
 /** When the customer wants to move: today, some day this week, or a picked date */
-export type DateFlex = 'today' | 'this_week' | 'date'
+export type DateFlex = 'today' | 'this_week' | 'date' | 'not_sure'
 
 export interface OrderFormData {
   // Public estimate form: type, size, date, pickup, drop-off, contact
@@ -95,6 +95,7 @@ export function moveSummary(type: string | null | undefined, size: string | null
 /** Compact date for admin tables: "Today, 2026-11-02", "Week of 2026-11-02" or "2026-11-02" */
 export function moveDateShort(flex: string | null | undefined, date: string | null | undefined): string {
   if (!date) return 'Not set'
+  if (flex === 'not_sure') return 'Not sure yet'
   return `${flex === 'today' ? 'Today, ' : flex === 'this_week' ? 'Week of ' : ''}${date}`
 }
 
@@ -107,6 +108,7 @@ export function moveDateLabel(flex: string | null | undefined, date: string | nu
   if (!date) return 'Not set'
   if (flex === 'today') return `Today (${longDate(date)})`
   if (flex === 'this_week') return `Any day this week (from ${longDate(date)})`
+  if (flex === 'not_sure') return 'Not sure yet'
   if (!time) return longDate(date)
   const t = new Date(`1970-01-01T${time}`).toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit', hour12: true })
   return `${longDate(date)}, ${t}`

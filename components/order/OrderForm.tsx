@@ -2,18 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { trackEvent } from '@/lib/analytics'
+import { trackEvent, trackLead } from '@/lib/analytics'
 import {
-  EMPTY_ORDER_FORM, HOME_SIZES, MOVE_TYPES, ORDER_START_KEY, sizesFor,
+  EMPTY_ORDER_FORM, HOME_SIZES, MOVE_TYPES, ORDER_START_KEY, sizesFor, moveDateLabel, moveSummary,
   type DateFlex, type MoveType, type OrderFormData, type OrderStart,
 } from '@/lib/types'
 import { addDays, nowInBusinessZone } from '@/lib/scheduling'
 import { Textarea } from '@/components/ui/textarea'
 import MonthCalendar from './MonthCalendar'
+import AddressAutocomplete from '@/components/AddressAutocomplete'
 import { cn } from '@/lib/utils'
 import {
   MapPin, User, Mail, Phone, ArrowRight, Check, CheckCircle2,
-  Home, Building2, Briefcase, Warehouse, Package, Zap, CalendarRange, CalendarDays,
+  Home, Building2, Briefcase, Warehouse, Package, Zap, CalendarRange, CalendarDays, CircleHelp,
 } from 'lucide-react'
 
 type StepKey = 'type' | 'size' | 'date' | 'pickup' | 'dropoff' | 'contact'
@@ -21,7 +22,7 @@ type StepKey = 'type' | 'size' | 'date' | 'pickup' | 'dropoff' | 'contact'
 const STEP_INFO: Record<StepKey, { short: string; title: string; desc: string }> = {
   type:    { short: 'Move', title: 'What are you moving?',               desc: 'Choose the type of move.' },
   size:    { short: 'Size', title: 'How big is the move?',               desc: 'Pick the closest size.' },
-  date:    { short: 'Date', title: 'When do you want to move?',          desc: 'Pick a day, or any day this week. We confirm the arrival time with you.' },
+  date:    { short: 'Date', title: 'When do you want to move?',          desc: 'Pick a day, or let us know you are not sure yet. We confirm the arrival time with you.' },
   pickup:  { short: 'From', title: 'Where are we picking up?',           desc: 'The address we are moving you from.' },
   dropoff: { short: 'To',   title: 'Where are you moving to?',           desc: 'A full address, a city or a postal code is fine.' },
   contact: { short: 'You',  title: 'Where should we send your estimate?', desc: 'We reply within 24 hours.' },
@@ -46,6 +47,7 @@ const DATE_OPTIONS: { value: DateFlex; label: string; Icon: React.ElementType }[
   { value: 'today', label: 'Today', Icon: Zap },
   { value: 'this_week', label: 'This week', Icon: CalendarRange },
   { value: 'date', label: 'Choose a date', Icon: CalendarDays },
+  { value: 'not_sure', label: 'Not sure yet', Icon: CircleHelp },
 ]
 
 /** A small move needs no size */
@@ -216,6 +218,9 @@ export default function OrderForm() {
   useEffect(() => { stepRef.current = step }, [step])
   const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+
   // Which date card is open; a day picked under "This week" is saved as an exact date
   const [dateMode, setDateMode] = useState<DateFlex | ''>('')
 
@@ -288,8 +293,40 @@ export default function OrderForm() {
       setStep(next)
       return
     }
-    sessionStorage.setItem('pendingOrder', JSON.stringify(form))
-    router.push('/order/confirm')
+    void submit()
+  }
+
+  /** The last step sends the request straight away and opens the confirmation page */
+  async function submit() {
+    if (submitting) return
+    setSubmitError('')
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setSubmitError(data.error ?? 'Something went wrong. Please try again, or call us.')
+        setSubmitting(false)
+        return
+      }
+      const { orderId } = await res.json()
+      trackLead(orderId, { move_type: form.moveType || undefined })
+      // Stays in the "Sending…" state while the confirmation page loads
+      router.push(`/order/success?id=${orderId}`)
+    } catch {
+      setSubmitError('We could not send your request. Check your connection and try again, or call us.')
+      setSubmitting(false)
+    }
+  }
+
+  /** Jumps back to an earlier step from the summary, through history so the browser Back button stays in step */
+  function editStep(target: StepKey) {
+    const index = steps.indexOf(target)
+    if (index >= 0 && index < step) window.history.go(index - step)
   }
 
   /** Choosing a card moves on by itself, after a beat so the choice is seen */
@@ -306,9 +343,10 @@ export default function OrderForm() {
   }
 
   function chooseDate(mode: DateFlex) {
-    if (mode === 'today') {
-      setDateMode('today')
-      chooseAndAdvance({ dateFlex: 'today', movingDate: today })
+    // "Today" and "Not sure yet" move straight on; an undecided move keeps the request day as its date, and we agree the day later
+    if (mode === 'today' || mode === 'not_sure') {
+      setDateMode(mode)
+      chooseAndAdvance({ dateFlex: mode, movingDate: today })
       return
     }
     // "This week" opens the next 7 days and "Choose a date" the calendar; picking a day there moves on
@@ -394,10 +432,10 @@ export default function OrderForm() {
             </div>
           )}
 
-          {/* Step: date - today, this week or a day on the calendar */}
+          {/* Step: date - today, this week, a day on the calendar, or not sure yet */}
           {key === 'date' && (
             <>
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 {DATE_OPTIONS.map(({ value, label, Icon }) => {
                   const selected = dateMode === value
                   return (
@@ -459,13 +497,14 @@ export default function OrderForm() {
           {key === 'pickup' && (
             <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(0)}>
               <FieldIcon icon={MapPin} label="Pickup address" id="pickupAddress" valid={form.pickupAddress.trim().length > 0}>
-                <StyledInput
+                <AddressAutocomplete
+                  input={StyledInput}
                   id="pickupAddress"
                   placeholder="123 Main St, Vancouver"
                   autoComplete="street-address"
                   autoFocus
                   value={form.pickupAddress}
-                  onChange={e => set('pickupAddress', e.target.value)}
+                  onValueChange={v => set('pickupAddress', v)}
                   onKeyDown={e => { if (e.key === 'Enter' && ready) goNext() }}
                 />
               </FieldIcon>
@@ -476,12 +515,14 @@ export default function OrderForm() {
           {key === 'dropoff' && (
             <div className="animate-in fade-in slide-in-from-bottom-2" style={fadeUp(0)}>
               <FieldIcon icon={MapPin} label="Drop-off address, city or postal code" id="dropoffAddress" valid={form.dropoffAddress.trim().length > 0}>
-                <StyledInput
+                <AddressAutocomplete
+                  input={StyledInput}
                   id="dropoffAddress"
                   placeholder="Burnaby, or V5C 0N7"
+                  autoComplete="street-address"
                   autoFocus
                   value={form.dropoffAddress}
-                  onChange={e => set('dropoffAddress', e.target.value)}
+                  onValueChange={v => set('dropoffAddress', v)}
                   onKeyDown={e => { if (e.key === 'Enter' && ready) goNext() }}
                 />
               </FieldIcon>
@@ -546,6 +587,28 @@ export default function OrderForm() {
                   style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714' }}
                 />
               </div>
+
+              {/* What is being sent, right above the button; each line jumps back to its step */}
+              <div className="rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2" style={{ ...fadeUp(240), backgroundColor: '#F7F3EE', border: '1px solid #EDE6DE' }}>
+                <p className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: '#254220' }}>Your move</p>
+                <dl className="text-sm">
+                  {([
+                    ['type', 'Move', moveSummary(form.moveType, form.moveSize)],
+                    ['date', 'Date', moveDateLabel(form.dateFlex, form.movingDate)],
+                    ['pickup', 'From', form.pickupAddress],
+                    ['dropoff', 'To', form.dropoffAddress],
+                  ] as const).map(([target, label, value]) => (
+                    <div key={target} className="flex items-baseline gap-3 py-1">
+                      <dt className="w-12 shrink-0" style={{ color: '#9A8E83' }}>{label}</dt>
+                      <dd className="flex-1 min-w-0 font-medium break-words" style={{ color: '#1A1714' }}>{value}</dd>
+                      <button type="button" onClick={() => editStep(target)} className="shrink-0 text-xs font-semibold underline underline-offset-2 hover:no-underline" style={{ color: '#254220' }}>
+                        Edit
+                      </button>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              {submitError && <p role="alert" className="text-sm font-medium" style={{ color: '#B42318' }}>{submitError}</p>}
             </>
           )}
           </div>
@@ -567,7 +630,7 @@ export default function OrderForm() {
           <button
             type="button"
             onClick={goNext}
-            disabled={!ready}
+            disabled={!ready || submitting}
             className={cn(
               'group flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed',
               ready && 'hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.97]'
@@ -578,7 +641,7 @@ export default function OrderForm() {
               boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
             }}
           >
-            {step < steps.length - 1 ? 'Continue' : 'Review Request'}
+            {step < steps.length - 1 ? 'Continue' : submitting ? 'Sending…' : 'Send My Moving Request'}
             <ArrowRight size={14} strokeWidth={2.5} className="transition-transform duration-200 group-hover:translate-x-1" />
           </button>
         </div>
