@@ -36,7 +36,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
 
       <main className="flex-1">
 
-        <MovingHero heading={service.heading} divider={service.divider} intro={service.intro} photo={service.heroPhoto} desktopPhoto={service.heroPhotoDesktop} />
+        <MovingHero heading={service.heading} divider={service.divider} dividerInH1={service.dividerInH1} intro={service.intro} photo={service.heroPhoto} desktopPhoto={service.heroPhotoDesktop} />
 
         {/* What this service includes */}
         <section style={{ backgroundColor: CREAM }}>
