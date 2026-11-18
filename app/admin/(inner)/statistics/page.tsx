@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import { LEAD_SOURCES, type LeadSource } from '@/lib/types'
+import { entryPay, groupRates, type MoverRate } from '@/lib/mover-rates'
 
 export const dynamic = 'force-dynamic'
 
@@ -208,7 +209,7 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
     jobsQ = jobsQ.gte('event_date', startStr)
   }
 
-  const [movingRes, junkRes, calendarJobsRes, moversRes, jobAssignmentsRes, manualAssignmentsRes, moverPaymentsRes] = await Promise.all([
+  const [movingRes, junkRes, calendarJobsRes, moversRes, jobAssignmentsRes, manualAssignmentsRes, moverPaymentsRes, moverRatesRes] = await Promise.all([
     ordersQ, serviceQ, jobsQ,
     supabase.from('movers').select('id, name, hourly_rate'),
     // Payroll is fetched unfiltered: a payment covers a pay week, and crediting it to the
@@ -216,6 +217,7 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
     supabase.from('mover_assignments').select('mover_id, hours, amount_override, calendar_jobs!inner(event_date, job_type)'),
     supabase.from('mover_assignments').select('mover_id, hours, amount_override, work_date').is('calendar_job_id', null),
     supabase.from('mover_payments').select('mover_id, amount'),
+    supabase.from('mover_rates').select('*'),
   ])
 
   const movingRecords = (movingRes.data ?? []) as QuoteRecord[]
@@ -226,10 +228,12 @@ export default async function StatisticsPage({ searchParams }: { searchParams: P
   const movers = (moversRes.data ?? []) as { id: string; name: string; hourly_rate: number | string }[]
   const moverRates: Record<string, number> = Object.fromEntries(movers.map(m => [m.id, Number(m.hourly_rate)]))
   const moverNames: Record<string, string> = Object.fromEntries(movers.map(m => [m.id, m.name]))
+  const rateHistory = groupRates((moverRatesRes.data ?? []) as MoverRate[])
   type AssignmentRow = { mover_id: string; hours: number | string | null; amount_override: number | string | null }
   const toEntry = (a: AssignmentRow, date: string, jobType: PayrollEntry['jobType']): PayrollEntry => {
     const hours = a.hours != null ? Number(a.hours) : 0
-    const cost = a.amount_override != null ? Number(a.amount_override) : hours * (moverRates[a.mover_id] ?? 0)
+    // Hours cost the rate in effect on the day they were worked
+    const cost = entryPay(a, date, rateHistory[a.mover_id], moverRates[a.mover_id] ?? 0)
     return { moverId: a.mover_id, date, jobType, hours, cost }
   }
   const allPayrollEntries: PayrollEntry[] = [

@@ -29,7 +29,7 @@ const PAGES: [path: string, updated: string][] = [
 ]
 
 /** All city pages share one template and one data file (lib/seo/cities.ts), so they share a date */
-const CITY_PAGES_UPDATED = '2026-11-08'
+const CITY_PAGES_UPDATED = '2026-11-17'
 
 /** Only loc and lastmod: Google ignores priority and changefreq */
 export default function sitemap(): MetadataRoute.Sitemap {

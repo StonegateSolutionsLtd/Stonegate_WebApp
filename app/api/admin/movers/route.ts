@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import { FIRST_RATE_DATE } from '@/lib/mover-rates-server'
 
 export async function GET(request: NextRequest) {
   const activeOnly = request.nextUrl.searchParams.get('active') === 'true'
@@ -52,6 +53,12 @@ export async function POST(request: NextRequest) {
     console.error('Mover insert error:', error)
     return NextResponse.json({ error: 'Failed to save mover' }, { status: 500 })
   }
+
+  // The starting rate covers every week until it is changed
+  const { error: rateError } = await supabase
+    .from('mover_rates')
+    .insert({ mover_id: mover.id, hourly_rate: rate, effective_from: FIRST_RATE_DATE })
+  if (rateError) console.error('Mover rate insert error:', rateError)
 
   return NextResponse.json({ moverId: mover.id }, { status: 201 })
 }

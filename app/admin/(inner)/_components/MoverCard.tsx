@@ -5,6 +5,7 @@ import type { Mover, MoverAssignmentWithJob, MoverPayment } from '@/lib/types'
 import MoverModal from './MoverModal'
 import RecordPaymentModal from './RecordPaymentModal'
 import ManualEntryModal from './ManualEntryModal'
+import { entryPay, rateOn, type MoverRate } from '@/lib/mover-rates'
 
 const JOB_ICON = { moving: '🚛', junk_removal: '🗑️' } as const
 
@@ -29,11 +30,13 @@ interface Props {
   assignments: MoverAssignmentWithJob[]
   payments: MoverPayment[]
   carryover: number
+  /** This mover's rate changes, oldest first */
+  rateHistory: MoverRate[]
   periodStart: string
   periodEnd: string
 }
 
-export default function MoverCard({ mover, assignments, payments, carryover, periodStart, periodEnd }: Props) {
+export default function MoverCard({ mover, assignments, payments, carryover, rateHistory, periodStart, periodEnd }: Props) {
   const router = useRouter()
   const [editOpen, setEditOpen] = useState(false)
   const [payOpen, setPayOpen] = useState(false)
@@ -45,7 +48,9 @@ export default function MoverCard({ mover, assignments, payments, carryover, per
   const [savingId, setSavingId] = useState<string | null>(null)
 
   const totalHours = assignments.reduce((sum, a) => sum + (a.hours ?? 0), 0)
-  const owed = assignments.reduce((sum, a) => sum + (a.amount_override != null ? Number(a.amount_override) : (a.hours ?? 0) * mover.hourly_rate), 0)
+  // The rate for the week on screen; each entry is paid at the rate on its own day
+  const weekRate = rateOn(rateHistory, periodStart, mover.hourly_rate)
+  const owed = assignments.reduce((sum, a) => sum + entryPay(a, a.calendar_jobs?.event_date ?? a.work_date, rateHistory, mover.hourly_rate), 0)
   const paid = payments.reduce((sum, p) => sum + Number(p.amount), 0)
   const remaining = carryover + owed - paid
   // This week's payments pay off old debt first, so the carryover warning
@@ -115,7 +120,7 @@ export default function MoverCard({ mover, assignments, payments, carryover, per
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: '15px', fontWeight: 700, color: '#1A1714' }}>{mover.name}</div>
             <div style={{ fontSize: '11.5px', color: '#9A8E83' }}>
-              {money(mover.hourly_rate)}/hr{mover.phone ? ` · ${mover.phone}` : ''}{!mover.active ? ' · Inactive' : ''}
+              {money(weekRate)}/hr this week{mover.phone ? ` · ${mover.phone}` : ''}{!mover.active ? ' · Inactive' : ''}
             </div>
           </div>
         </div>
@@ -221,13 +226,13 @@ export default function MoverCard({ mover, assignments, payments, carryover, per
         </div>
       </div>
 
-      <MoverModal key={editOpen ? 'edit-open' : 'edit-closed'} open={editOpen} mover={mover} onClose={() => setEditOpen(false)} onSaved={() => router.refresh()} />
+      <MoverModal key={editOpen ? 'edit-open' : 'edit-closed'} open={editOpen} mover={mover} rateHistory={rateHistory} weekStart={periodStart} onClose={() => setEditOpen(false)} onSaved={() => router.refresh()} />
       <ManualEntryModal
         key={manualOpen ? 'manual-open' : 'manual-closed'}
         open={manualOpen}
         moverId={mover.id}
         moverName={mover.name}
-        hourlyRate={mover.hourly_rate}
+        hourlyRate={weekRate}
         defaultDate={defaultEntryDate}
         onClose={() => setManualOpen(false)}
         onSaved={() => router.refresh()}

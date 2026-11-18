@@ -3,6 +3,7 @@ import MoversWeekNav from '../_components/MoversWeekNav'
 import AddMoverButton from '../_components/AddMoverButton'
 import MoversWeekView from '../_components/MoversWeekView'
 import type { Mover, MoverAssignmentWithJob, MoverPayment } from '@/lib/types'
+import { entryPay, groupRates, type MoverRate } from '@/lib/mover-rates'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,6 +37,7 @@ export default async function MoversPage({ searchParams }: { searchParams: Promi
     { data: priorJobAssignments },
     { data: priorManualAssignments },
     { data: priorPayments },
+    { data: rateRows },
   ] = await Promise.all([
     supabase.from('movers').select('*').order('active', { ascending: false }).order('name', { ascending: true }),
     supabase
@@ -54,16 +56,21 @@ export default async function MoversPage({ searchParams }: { searchParams: Promi
     supabase.from('mover_payments').select('*').eq('period_start', weekStartStr).order('paid_date', { ascending: true }),
     // Everything before this week — used to carry forward any balance that hasn't been paid off yet.
     supabase.from('mover_assignments').select('mover_id, hours, amount_override, calendar_jobs!inner(event_date)').lt('calendar_jobs.event_date', weekStartStr),
-    supabase.from('mover_assignments').select('mover_id, hours, amount_override').is('calendar_job_id', null).lt('work_date', weekStartStr),
+    supabase.from('mover_assignments').select('mover_id, hours, amount_override, work_date').is('calendar_job_id', null).lt('work_date', weekStartStr),
     supabase.from('mover_payments').select('mover_id, amount').lt('period_start', weekStartStr),
+    supabase.from('mover_rates').select('*'),
   ])
 
   const assignments = [...(jobAssignments ?? []), ...(manualAssignments ?? [])]
 
   const priorOwedByMover: Record<string, number> = {}
-  const moverRates: Record<string, number> = Object.fromEntries((movers ?? []).map(m => [m.id, Number(m.hourly_rate)]))
-  for (const a of [...(priorJobAssignments ?? []), ...(priorManualAssignments ?? [])]) {
-    const owed = a.amount_override != null ? Number(a.amount_override) : (a.hours ?? 0) * (moverRates[a.mover_id] ?? 0)
+  // Each entry is paid at the rate in effect on the day it was worked, so a later raise never changes old weeks
+  const rateHistory = groupRates((rateRows ?? []) as MoverRate[])
+  const currentRates: Record<string, number> = Object.fromEntries((movers ?? []).map(m => [m.id, Number(m.hourly_rate)]))
+  type PriorEntry = { mover_id: string; hours: number | null; amount_override: number | null; work_date?: string | null; calendar_jobs?: { event_date: string } | null }
+  for (const a of [...(priorJobAssignments ?? []), ...(priorManualAssignments ?? [])] as unknown as PriorEntry[]) {
+    const date = a.calendar_jobs?.event_date ?? a.work_date
+    const owed = entryPay(a, date, rateHistory[a.mover_id], currentRates[a.mover_id] ?? 0)
     priorOwedByMover[a.mover_id] = (priorOwedByMover[a.mover_id] ?? 0) + owed
   }
   const priorPaidByMover: Record<string, number> = {}
@@ -94,6 +101,7 @@ export default async function MoversPage({ searchParams }: { searchParams: Promi
         assignments={assignments as unknown as MoverAssignmentWithJob[]}
         payments={(payments ?? []) as MoverPayment[]}
         carryovers={carryoverByMover}
+        rateHistory={rateHistory}
         weekStartStr={weekStartStr}
         weekEndStr={weekEndStr}
       />

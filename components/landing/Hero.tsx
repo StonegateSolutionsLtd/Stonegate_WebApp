@@ -114,14 +114,6 @@ export default function Hero() {
                   <MapPin size={13} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
                   <span className="text-[11px] 3xl:text-xs font-semibold uppercase tracking-widest [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: 'rgba(255,255,255,0.8)' }}>Serving Metro Vancouver</span>
                 </div>
-                <div className="hidden sm:flex flex-wrap items-center gap-y-1">
-                  {['Vancouver', 'Burnaby', 'Richmond', 'Surrey', 'Coquitlam', 'North Vancouver', 'West Vancouver', '& More'].map((city, i, arr) => (
-                    <span key={city} className="flex items-center whitespace-nowrap">
-                      <span className="text-sm 3xl:text-base font-medium px-3 [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_6px_rgba(0,0,0,0.8)]" style={{ color: 'rgba(255,255,255,0.95)' }}>{city}</span>
-                      {i < arr.length - 1 && <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
@@ -333,7 +325,7 @@ export default function Hero() {
         {/* Close: the mascot standing on the green band, as on the service pages */}
         <MovingClose heading="Ready for your free estimate?" text="Tell us what you're moving and when in about 2 minutes, or call and we will sort it out with you." />
 
-        {/* Contact & Service Area */}
+        {/* Contact & hours */}
         <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
 
           <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16 grid sm:grid-cols-2 gap-12">
@@ -350,16 +342,9 @@ export default function Hero() {
             </FadeIn>
             <FadeIn delay={120}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>We operate in Metro Vancouver</p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-2">
-                {[
-                  'Vancouver', 'Burnaby', 'Richmond', 'Coquitlam',
-                  'Surrey', 'New Westminster', 'Port Coquitlam', 'Port Moody',
-                  'Delta', 'North Vancouver',
-                ].map(city => (
-                  <span key={city} className="text-sm font-medium" style={{ color: '#6B5E54' }}>{city}</span>
-                ))}
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>Hours</p>
+              <p className="font-semibold" style={{ color: '#1A1714' }}>6 am to 10 pm, 7 days a week</p>
+              <p className="mt-2 text-sm font-medium" style={{ color: '#6B5E54' }}>Based in Burnaby, moving across Metro Vancouver.</p>
             </div>
             </FadeIn>
           </div>
