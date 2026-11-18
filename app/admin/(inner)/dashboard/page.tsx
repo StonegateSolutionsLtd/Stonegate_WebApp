@@ -7,6 +7,7 @@ import AddMovingOrderModal from '../_components/AddMovingOrderModal'
 import AddToCalendarButton from '../_components/AddToCalendarButton'
 import StatusFilter from '../_components/StatusFilter'
 import DurationSelect from '../_components/DurationSelect'
+import TravelFeeCell from '../_components/TravelFeeCell'
 import { moveDateShort, moveSummary } from '@/lib/types'
 import { durationFor } from '@/lib/scheduling'
 
@@ -53,8 +54,8 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#254220' }}>
-              {['Order #', 'Submitted', 'Customer', 'Move Date', 'Size', 'Duration', 'Status', 'Quote', ''].map((h, i) => (
-                <th key={h || i} style={{ padding: '12px 12px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', whiteSpace: 'nowrap', borderRadius: i === 0 ? '11px 0 0 0' : i === 8 ? '0 11px 0 0' : undefined }}>{h}</th>
+              {['Order #', 'Submitted', 'Customer', 'Move Date', 'Size', 'Duration', 'Status', 'Travel', 'Quote', ''].map((h, i) => (
+                <th key={h || i} style={{ padding: '12px 12px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'white', letterSpacing: '0.5px', whiteSpace: 'nowrap', borderRadius: i === 0 ? '11px 0 0 0' : i === 9 ? '0 11px 0 0' : undefined }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -82,6 +83,9 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                     <StatusSelect orderId={order.id} current={order.status} apiPath="/api/admin/orders" />
                   </td>
                   <td style={{ padding: '14px 12px' }}>
+                    <TravelFeeCell orderId={order.id} estimate={order.travel_estimate ?? null} />
+                  </td>
+                  <td style={{ padding: '14px 12px' }}>
                     {order.estimated_price != null ? (
                       <span style={{ background: '#D6E8D3', color: '#254220', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>${Number(order.estimated_price).toFixed(2)}</span>
                     ) : (
@@ -100,6 +104,9 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                           {order.estimated_price != null ? 'Edit' : 'Generate Quote'}
                         </Link>
                         <DeleteButton orderId={order.id} customerName={order.customer_name} apiPath="/api/admin/orders" />
+                        <Link href={`/admin/orders/${order.id}`} style={{ gridColumn: '1 / 3', background: 'white', color: '#254220', padding: '7px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', border: '1.5px solid #E8E0D5', textAlign: 'center', boxSizing: 'border-box' }}>
+                          Details
+                        </Link>
                       </div>
                       {order.status === 'confirmed' && (
                         <AddToCalendarButton
@@ -124,7 +131,7 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
               )
             })}
             {(!orders || orders.length === 0) && (
-              <tr><td colSpan={9} style={{ padding: '48px', textAlign: 'center', color: '#9A8E83', fontSize: '14px' }}>No moving orders yet.</td></tr>
+              <tr><td colSpan={10} style={{ padding: '48px', textAlign: 'center', color: '#9A8E83', fontSize: '14px' }}>No moving orders yet.</td></tr>
             )}
           </tbody>
         </table>
@@ -175,8 +182,15 @@ export default async function MovingOrdersPage({ searchParams }: { searchParams:
                     <span style={{ background: '#F5F0EB', color: '#9A8E83', padding: '2px 8px', borderRadius: '20px', fontSize: '12px', fontWeight: 600 }}>Pending</span>
                   )}
                 </div>
+                <div>
+                  <div style={{ fontSize: '10px', color: '#9A8E83', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '2px' }}>TRAVEL</div>
+                  <TravelFeeCell orderId={order.id} estimate={order.travel_estimate ?? null} />
+                </div>
               </div>
               <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid #F5F0EB', paddingTop: '12px' }}>
+                <Link href={`/admin/orders/${order.id}`} style={{ flex: 1, background: 'white', color: '#254220', padding: '9px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', textAlign: 'center', border: '1.5px solid #E8E0D5' }}>
+                  Details
+                </Link>
                 {order.estimated_price != null && (
                   <Link href={`/admin/quote/${order.id}/print`} target="_blank" style={{ flex: 1, background: 'white', color: '#254220', padding: '9px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', textAlign: 'center', border: '1.5px solid #254220' }}>
                     View PDF

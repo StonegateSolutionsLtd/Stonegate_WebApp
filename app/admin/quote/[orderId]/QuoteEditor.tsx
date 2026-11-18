@@ -6,7 +6,8 @@ import { moveDateLabel, moveSummary } from '@/lib/types'
 import type { DetailedQuoteInputs } from '@/lib/quote-pricing'
 import { useDetailedQuoteState } from '@/components/admin/useDetailedQuoteState'
 import { DetailedQuoteForm } from '@/components/admin/DetailedQuoteForm'
-import { DEFAULT_JOB_HOURS, DEFAULT_START, DEPOT, type TravelEstimate } from '@/lib/travel-fee-info'
+import { DEFAULT_JOB_HOURS, type TravelEstimate } from '@/lib/travel-fee-info'
+import TravelFeePanel from '@/components/admin/TravelFeePanel'
 
 interface Order {
   id: string
@@ -55,28 +56,10 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const [error, setError] = useState('')
   const router = useRouter()
 
-  // Travel fee: worked out when the request came in; recalculated here with the real start time and hours
-  const [travel, setTravel] = useState<TravelEstimate | null>(order.travel_estimate)
-  const [travelStart, setTravelStart] = useState((order.moving_time ?? order.travel_estimate?.startTime ?? DEFAULT_START).slice(0, 5))
-  const [travelBusy, setTravelBusy] = useState(false)
-  const [travelError, setTravelError] = useState('')
+  // Travel fee: recalculated with the start time and the hours entered here
   const jobHoursForTravel = (parseFloat(hours) || 0) > 0
     ? parseFloat(hours)
     : order.estimated_hours ?? (order.duration_minutes ? order.duration_minutes / 60 : DEFAULT_JOB_HOURS)
-
-  async function recalcTravel() {
-    setTravelError('')
-    setTravelBusy(true)
-    const res = await fetch(`/api/admin/orders/${order.id}/travel`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ startTime: travelStart, jobHours: jobHoursForTravel }),
-    })
-    const data = await res.json().catch(() => ({}))
-    if (res.ok && data.estimate) setTravel(data.estimate)
-    else setTravelError(data.error ?? 'Could not calculate. Try again.')
-    setTravelBusy(false)
-  }
 
   const year = new Date(order.created_at).getFullYear()
   const num = String(order.order_number ?? '-').padStart(4, '0')
@@ -202,15 +185,12 @@ export default function QuoteEditor({ order }: { order: Order }) {
             </div>
           )}
 
-          <TravelPanel
-            travel={travel}
-            start={travelStart}
-            onStart={setTravelStart}
+          <TravelFeePanel
+            orderId={order.id}
+            initial={order.travel_estimate}
+            initialStart={order.moving_time}
             jobHours={jobHoursForTravel}
-            busy={travelBusy}
-            error={travelError}
-            onRecalc={recalcTravel}
-            onUseAsFee={tab === 'standard' && travel ? () => setFees(String(travel.fee)) : undefined}
+            onUseAsFee={tab === 'standard' ? fee => setFees(String(fee)) : undefined}
           />
         </div>
 
@@ -351,79 +331,6 @@ export default function QuoteEditor({ order }: { order: Order }) {
           </div>
         </div>
       </main>
-    </div>
-  )
-}
-
-const clock = (departAt: string) =>
-  new Date(`1970-01-01T${departAt.slice(-5)}`).toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit', hour12: true })
-const duration = (min: number) => (min >= 60 ? `${Math.floor(min / 60)} h ${min % 60} min` : `${min} min`)
-
-/** The truck's drive from the parking spot to the pickup and back from the drop-off, as time and money */
-function TravelPanel({ travel, start, onStart, jobHours, busy, error, onRecalc, onUseAsFee }: {
-  travel: TravelEstimate | null
-  start: string
-  onStart: (v: string) => void
-  jobHours: number
-  busy: boolean
-  error: string
-  onRecalc: () => void
-  onUseAsFee?: () => void
-}) {
-  const label: React.CSSProperties = { fontSize: '11px', fontWeight: 700, color: '#9A8E83', letterSpacing: '1px' }
-  const line: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', gap: '12px', fontSize: '13px', color: '#1A1714', marginBottom: '6px' }
-  const muted: React.CSSProperties = { color: '#9A8E83', fontSize: '12px' }
-  return (
-    <div style={{ marginTop: '20px', padding: '16px', background: '#F3F7F2', border: '1px solid #DCE8D9', borderRadius: '10px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '12px', gap: '8px', flexWrap: 'wrap' }}>
-        <div style={label}>TRAVEL FEE</div>
-        <div style={muted}>From {DEPOT.label}</div>
-      </div>
-
-      {travel ? (
-        <>
-          <div style={line}>
-            <span>To pickup <span style={muted}>· leaves {clock(travel.out.departAt)} · {travel.out.km} km</span></span>
-            <strong>{duration(travel.out.minutes)}</strong>
-          </div>
-          <div style={line}>
-            <span>Back from drop-off <span style={muted}>· leaves {clock(travel.back.departAt)} · {travel.back.km} km</span></span>
-            <strong>{duration(travel.back.minutes)}</strong>
-          </div>
-          <div style={{ ...line, borderTop: '1px solid #DCE8D9', paddingTop: '8px', marginTop: '4px', fontSize: '14px', fontWeight: 700, color: '#254220' }}>
-            <span>{duration(travel.totalMinutes)} × ${travel.rate}/hr</span>
-            <span>${travel.fee.toFixed(0)}</span>
-          </div>
-          <div style={{ ...muted, marginTop: '8px', lineHeight: 1.5 }}>
-            Pickup matched as: {travel.pickupMatch}<br />
-            Drop-off matched as: {travel.dropoffMatch}<br />
-            Based on a {clock(`T${travel.startTime}`)} start and {travel.jobHours} h of work, with typical traffic for that day and time.
-          </div>
-        </>
-      ) : (
-        <div style={{ ...muted, marginBottom: '8px' }}>Not calculated yet.</div>
-      )}
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
-        <label style={{ fontSize: '12px', color: '#6B5E54', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          Start
-          <input type="time" value={start} onChange={e => onStart(e.target.value)}
-            style={{ padding: '6px 8px', border: '1.5px solid #E8E0D5', borderRadius: '8px', fontSize: '13px' }} />
-        </label>
-        <span style={{ fontSize: '12px', color: '#6B5E54' }}>· {jobHours} h of work</span>
-        <button type="button" onClick={onRecalc} disabled={busy}
-          style={{ marginLeft: 'auto', padding: '7px 12px', background: '#254220', color: 'white', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer' }}>
-          {busy ? 'Calculating…' : 'Recalculate'}
-        </button>
-        {onUseAsFee && (
-          <button type="button" onClick={onUseAsFee}
-            style={{ padding: '7px 12px', background: 'white', color: '#254220', border: '1.5px solid #254220', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
-            Add to fees
-          </button>
-        )}
-      </div>
-      <div style={{ ...muted, marginTop: '6px' }}>Hours come from Estimated Hours; change it there and recalculate.</div>
-      {error && <p style={{ color: '#ef4444', fontSize: '12px', margin: '8px 0 0' }}>{error}</p>}
     </div>
   )
 }
