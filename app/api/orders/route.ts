@@ -1,8 +1,9 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { after, NextResponse, type NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sendOwnerOrderNotification, sendCustomerOrderConfirmation } from '@/lib/email'
 import { addDays, nowInBusinessZone } from '@/lib/scheduling'
 import { MOVE_TYPES, sizesFor, type ApartmentSize, type OrderFormData } from '@/lib/types'
+import { estimateTravel } from '@/lib/travel-fee'
 
 const DATE_FLEX = ['today', 'this_week', 'date', 'not_sure']
 
@@ -78,6 +79,21 @@ export async function POST(request: NextRequest) {
     sendOwnerOrderNotification({ orderId: order.id, order: saved }),
     sendCustomerOrderConfirmation({ orderId: order.id, order: saved }),
   ])
+
+  // The travel fee is worked out after the customer has their answer, so a slow map lookup never delays the form.
+  // No start time or hours yet: a 9am start and the default job length; the admin can recalculate on the quote page.
+  after(async () => {
+    try {
+      const estimate = await estimateTravel({
+        pickup: body.pickupAddress,
+        dropoff: body.dropoffAddress,
+        date: body.movingDate,
+      })
+      if (estimate) await supabase.from('orders').update({ travel_fee: estimate.fee, travel_estimate: estimate }).eq('id', order.id)
+    } catch (err) {
+      console.error('Travel fee calculation failed:', err)
+    }
+  })
 
   return NextResponse.json({ orderId: order.id }, { status: 201 })
 }

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import type { Mover } from '@/lib/types'
+import { mondayOf, rateOn, type MoverRate } from '@/lib/mover-rates'
 
 interface FormState {
   name: string
@@ -14,27 +15,42 @@ function emptyForm(): FormState {
   return { name: '', phone: '', hourlyRate: '', active: true, notes: '' }
 }
 
-function formFromMover(mover: Mover): FormState {
+function formFromMover(mover: Mover, rate: number): FormState {
   return {
     name: mover.name,
     phone: mover.phone ?? '',
-    hourlyRate: String(mover.hourly_rate),
+    hourlyRate: String(rate),
     active: mover.active,
     notes: mover.notes ?? '',
   }
 }
 
+const FIRST_RATE_DATE = '2000-01-03'
+const weekLabel = (monday: string) => {
+  const [y, m, d] = monday.split('-').map(Number)
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
 interface Props {
   open: boolean
   mover?: Mover | null
+  /** The mover's rate changes, oldest first */
+  rateHistory?: MoverRate[]
+  /** Monday of the payroll week on screen: the default start for a new rate */
+  weekStart?: string
   onClose: () => void
   onSaved: () => void
 }
 
-export default function MoverModal({ open, mover, onClose, onSaved }: Props) {
-  const [form, setForm] = useState<FormState>(() => (mover ? formFromMover(mover) : emptyForm()))
+export default function MoverModal({ open, mover, rateHistory = [], weekStart, onClose, onSaved }: Props) {
+  // The rate shown is the one for the week on screen, so a change is compared against that week
+  const weekRate = mover ? rateOn(rateHistory, weekStart, mover.hourly_rate) : 0
+  const [form, setForm] = useState<FormState>(() => (mover ? formFromMover(mover, weekRate) : emptyForm()))
+  const [rateFrom, setRateFrom] = useState(() => weekStart ?? mondayOf(new Date().toLocaleDateString('en-CA')))
+  const [history, setHistory] = useState(rateHistory)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const rateChanged = !!mover && Number(form.hourlyRate) !== weekRate && form.hourlyRate !== ''
 
   if (!open) return null
 
@@ -54,7 +70,8 @@ export default function MoverModal({ open, mover, onClose, onSaved }: Props) {
     const payload = {
       name: form.name.trim(),
       phone: form.phone || null,
-      hourly_rate: rate,
+      // Editing: a rate is only sent when it changed, and applies from the chosen week onwards
+      ...(!mover ? { hourly_rate: rate } : rateChanged ? { hourly_rate: rate, rate_effective_from: rateFrom } : {}),
       active: form.active,
       notes: form.notes || null,
     }
@@ -78,6 +95,18 @@ export default function MoverModal({ open, mover, onClose, onSaved }: Props) {
     } else {
       const data = await res.json().catch(() => ({}))
       setError(data.error || 'Failed to save. Try again.')
+    }
+  }
+
+  async function removeRate(rate: MoverRate) {
+    if (!mover || !confirm(`Remove the $${rate.hourly_rate.toFixed(2)}/hr rate? Those weeks go back to the rate before it.`)) return
+    const res = await fetch(`/api/admin/movers/${mover.id}/rates/${rate.id}`, { method: 'DELETE' })
+    if (res.ok) {
+      setHistory(h => h.filter(x => x.id !== rate.id))
+      onSaved()
+    } else {
+      const data = await res.json().catch(() => ({}))
+      setError(data.error || 'Could not remove the rate.')
     }
   }
 
@@ -114,10 +143,40 @@ export default function MoverModal({ open, mover, onClose, onSaved }: Props) {
               <input style={inp} value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="Optional" />
             </div>
             <div>
-              <label style={lbl}>Hourly Rate *</label>
+              <label style={lbl}>{mover ? 'Hourly Rate (this week) *' : 'Hourly Rate *'}</label>
               <input style={inp} type="number" min="0" step="0.5" required value={form.hourlyRate} onChange={e => set('hourlyRate', e.target.value)} placeholder="25.00" />
             </div>
           </div>
+
+          {rateChanged && (
+            <div style={{ marginBottom: '16px', padding: '12px', background: '#F3F7F2', border: '1px solid #DCE8D9', borderRadius: '8px' }}>
+              <label style={lbl}>New rate applies from the week of</label>
+              <input style={inp} type="date" value={rateFrom} onChange={e => e.target.value && setRateFrom(mondayOf(e.target.value))} />
+              <p style={{ fontSize: '12px', color: '#6B5E54', margin: '6px 0 0' }}>
+                ${Number(form.hourlyRate).toFixed(2)}/hr from Monday, {weekLabel(rateFrom)}. Hours worked before that week keep the rate they were paid at.
+              </p>
+            </div>
+          )}
+
+          {mover && history.length > 0 && (
+            <div style={{ marginBottom: '16px' }}>
+              <label style={lbl}>Rate history</label>
+              <div style={{ border: '1px solid #F0EBE3', borderRadius: '8px', overflow: 'hidden' }}>
+                {[...history].reverse().map(h => (
+                  <div key={h.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 10px', fontSize: '12.5px', borderBottom: '1px solid #F5F0EB' }}>
+                    <span style={{ color: '#6B5E54' }}>{h.effective_from === FIRST_RATE_DATE ? 'From the start' : `From week of ${weekLabel(h.effective_from)}`}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <strong style={{ color: '#1A1714' }}>${h.hourly_rate.toFixed(2)}/hr</strong>
+                      {history.length > 1 && (
+                        <button type="button" onClick={() => removeRate(h)} title="Remove this rate" style={{ background: 'transparent', border: 'none', color: '#9A8E83', fontSize: '15px', cursor: 'pointer', lineHeight: 1 }}>×</button>
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontSize: '11.5px', color: '#9A8E83', margin: '6px 0 0' }}>To fix an earlier week, view that week and change the rate there.</p>
+            </div>
+          )}
 
           <div style={{ marginBottom: '16px' }}>
             <label style={lbl}>Status</label>

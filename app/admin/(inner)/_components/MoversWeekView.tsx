@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react'
 import type { Mover, MoverAssignmentWithJob, MoverPayment } from '@/lib/types'
 import MoverCard from './MoverCard'
+import { entryPay, type MoverRate } from '@/lib/mover-rates'
 
 const money = (n: number) => `$${n.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 
@@ -10,11 +11,13 @@ interface Props {
   assignments: MoverAssignmentWithJob[]
   payments: MoverPayment[]
   carryovers: Record<string, number>
+  /** Each mover's rate changes, oldest first */
+  rateHistory: Record<string, MoverRate[]>
   weekStartStr: string
   weekEndStr: string
 }
 
-export default function MoversWeekView({ movers, assignments, payments, carryovers, weekStartStr, weekEndStr }: Props) {
+export default function MoversWeekView({ movers, assignments, payments, carryovers, rateHistory, weekStartStr, weekEndStr }: Props) {
   const [showInactive, setShowInactive] = useState(false)
 
   const { totals, visibleMovers } = useMemo(() => {
@@ -22,7 +25,7 @@ export default function MoversWeekView({ movers, assignments, payments, carryove
       const moverAssignments = assignments.filter(a => a.mover_id === m.id)
       const moverPayments = payments.filter(p => p.mover_id === m.id)
       const hours = moverAssignments.reduce((sum, a) => sum + (a.hours ?? 0), 0)
-      const owed = moverAssignments.reduce((sum, a) => sum + (a.amount_override != null ? Number(a.amount_override) : (a.hours ?? 0) * m.hourly_rate), 0)
+      const owed = moverAssignments.reduce((sum, a) => sum + entryPay(a, a.calendar_jobs?.event_date ?? a.work_date, rateHistory[m.id], m.hourly_rate), 0)
       const paid = moverPayments.reduce((sum, p) => sum + Number(p.amount), 0)
       const carryover = carryovers[m.id] ?? 0
       const totalRemaining = carryover + owed - paid
@@ -43,7 +46,7 @@ export default function MoversWeekView({ movers, assignments, payments, carryove
       totals: summed,
       visibleMovers: visible,
     }
-  }, [movers, assignments, payments, carryovers, showInactive])
+  }, [movers, assignments, payments, carryovers, rateHistory, showInactive])
 
   const hiddenInactiveCount = movers.filter(m => !m.active && !assignments.some(a => a.mover_id === m.id) && !payments.some(p => p.mover_id === m.id) && Math.abs(carryovers[m.id] ?? 0) <= 0.004).length
 
@@ -82,7 +85,7 @@ export default function MoversWeekView({ movers, assignments, payments, carryove
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {visibleMovers.map(({ mover, assignments: a, payments: p, carryover }) => (
-            <MoverCard key={mover.id} mover={mover} assignments={a} payments={p} carryover={carryover} periodStart={weekStartStr} periodEnd={weekEndStr} />
+            <MoverCard key={mover.id} mover={mover} assignments={a} payments={p} carryover={carryover} rateHistory={rateHistory[mover.id] ?? []} periodStart={weekStartStr} periodEnd={weekEndStr} />
           ))}
         </div>
       )}

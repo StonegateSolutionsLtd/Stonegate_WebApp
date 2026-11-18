@@ -6,6 +6,8 @@ import { moveDateLabel, moveSummary } from '@/lib/types'
 import type { DetailedQuoteInputs } from '@/lib/quote-pricing'
 import { useDetailedQuoteState } from '@/components/admin/useDetailedQuoteState'
 import { DetailedQuoteForm } from '@/components/admin/DetailedQuoteForm'
+import { DEFAULT_JOB_HOURS, type TravelEstimate } from '@/lib/travel-fee-info'
+import TravelFeePanel from '@/components/admin/TravelFeePanel'
 
 interface Order {
   id: string
@@ -34,6 +36,9 @@ interface Order {
   estimated_price: number | null
   quote_type: string | null
   quote_details: { inputs: DetailedQuoteInputs } | null
+  duration_minutes: number | null
+  travel_fee: number | null
+  travel_estimate: TravelEstimate | null
   created_at: string
 }
 
@@ -50,6 +55,11 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+
+  // Travel fee: recalculated with the start time and the hours entered here
+  const jobHoursForTravel = (parseFloat(hours) || 0) > 0
+    ? parseFloat(hours)
+    : order.estimated_hours ?? (order.duration_minutes ? order.duration_minutes / 60 : DEFAULT_JOB_HOURS)
 
   const year = new Date(order.created_at).getFullYear()
   const num = String(order.order_number ?? '-').padStart(4, '0')
@@ -174,6 +184,14 @@ export default function QuoteEditor({ order }: { order: Order }) {
               <strong>Notes:</strong> {order.special_notes}
             </div>
           )}
+
+          <TravelFeePanel
+            orderId={order.id}
+            initial={order.travel_estimate}
+            initialStart={order.moving_time}
+            jobHours={jobHoursForTravel}
+            onUseAsFee={tab === 'standard' ? fee => setFees(String(fee)) : undefined}
+          />
         </div>
 
         {/* Quote Input Panel */}

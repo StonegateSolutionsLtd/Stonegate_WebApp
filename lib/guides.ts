@@ -79,6 +79,54 @@ const SOURCE = {
   cnvStreetUse: { label: 'City of North Vancouver: Street use permits', href: 'https://www.cnv.org/Streets-Transportation/Street-Use-Permits' },
 }
 
+/**
+ * Our own move log, from the job calendar in /admin: one entry per completed move where the home size
+ * and the crew that went are both on record. Only the city is kept, never the address.
+ * Add hours once they are recorded per job (billed time, not crew pay hours, which include travel).
+ */
+export interface MoveLogEntry {
+  /** YYYY-MM-DD */
+  date: string
+  from: string
+  /** Left out when the drop-off city is not on record */
+  to?: string
+  /** 0 for a studio */
+  bedrooms: number
+  crew: 2 | 3
+  /** e.g. '2nd floor, elevator' */
+  access?: string[]
+  billedHours?: number
+}
+
+export const MOVE_LOG: MoveLogEntry[] = [
+  { date: '2026-09-27', from: 'Abbotsford', bedrooms: 1, crew: 2 },
+  { date: '2026-09-27', from: 'Burnaby', bedrooms: 2, crew: 3 },
+  { date: '2026-09-30', from: 'Burnaby', bedrooms: 2, crew: 2 },
+  { date: '2026-10-20', from: 'Richmond', bedrooms: 3, crew: 2 },
+  { date: '2026-10-26', from: 'Burnaby', to: 'Burnaby', bedrooms: 2, crew: 2, access: ['2nd floor, elevator', '4th floor, elevator'] },
+  { date: '2026-10-30', from: 'Burnaby', bedrooms: 2, crew: 2 },
+  { date: '2026-10-30', from: 'Coquitlam', bedrooms: 2, crew: 2 },
+  { date: '2026-11-17', from: 'Maple Ridge', to: 'Maple Ridge', bedrooms: 1, crew: 2, access: ['ground floor', 'ground floor'] },
+]
+
+const homeSize = (b: number) => (b === 0 ? 'Studio' : `${b}-bedroom`)
+const monthYear = (d: string) => new Date(`${d}T12:00:00`).toLocaleDateString('en-CA', { month: 'short', year: 'numeric' })
+
+/** The move log as a guide table */
+function moveLogTable(): GuideBlock {
+  return {
+    type: 'table',
+    head: ['When', 'Move', 'Home', 'Crew'],
+    rows: MOVE_LOG.map(m => [
+      monthYear(m.date),
+      m.to ? `${m.from} to ${m.to}` : `From ${m.from}`,
+      homeSize(m.bedrooms) + (m.access ? ` (${m.access.join(' to ')})` : ''),
+      `${m.crew} movers`,
+    ]),
+    caption: `Moves in our job calendar from September to November 2026 where the city, the home size and the crew are all on record (${MOVE_LOG.length} moves). Cities only, never addresses.`,
+  }
+}
+
 export const GUIDES: Guide[] = [
   {
     slug: 'vancouver-condo-moving-checklist',
@@ -439,8 +487,8 @@ export const GUIDES: Guide[] = [
     answer: 'For a studio, a 1-bedroom or a 2-bedroom apartment, 2 movers are usually the cheaper choice. For anything bigger, 3 movers usually cost less overall even at a higher hourly rate. With our rates, 2 movers at $130/hr and 3 at $170/hr, the third mover adds $40 an hour, so the bigger crew wins as soon as it finishes about a quarter faster. It cannot win on short moves: with the 3-hour minimum, 3 movers cost at least $510, which 2 movers only reach after almost 4 hours of work.',
     hero: { src: '/about/photo-3.jpg', alt: 'Three Stonegate movers standing in front of the moving truck', pos: 'center 60%' },
     published: '2026-11-14',
-    updated: '2026-11-14',
-    reviewed: '2026-11-14',
+    updated: '2026-11-17',
+    reviewed: '2026-11-17',
     body: [
       { type: 'h2', id: 'third-mover-cost', text: 'What a third mover actually costs' },
       { type: 'p', text: 'Most people compare the two hourly rates and stop there: $170 is more than $130, so 3 movers must be more expensive. The more useful number is the difference. The truck, the equipment and the travel fee are there either way, so the third mover adds **$40 an hour**.' },
@@ -503,6 +551,9 @@ export const GUIDES: Guide[] = [
       { type: 'h3', text: 'A 4-bedroom house with a full garage' },
       { type: 'p', text: 'Plenty of work for three people, lots of two-person furniture and a garage nobody has emptied in years. If 2 movers would take 10 hours ($1,300), 3 movers only need to finish within 7 h 39 min to be cheaper, and they also finish in daylight. **3 movers and the 26 ft truck.**' },
 
+      { type: 'h2', id: 'our-moves', text: 'What we actually sent: crew by home size' },
+      { type: 'p', text: 'This is our own job calendar for the fall of 2026, every move where we recorded the city, the home size and the crew. Most 1 and 2-bedroom moves went with 2 movers, as the maths above suggests. There are exceptions, because every home is different: one 2-bedroom got a third mover, and one 3-bedroom went with 2.' },
+      moveLogTable(),
       { type: 'h2', id: 'cut-cost', text: 'How to spend less, whichever crew you book' },
       { type: 'checklist', items: [
         'Pack and close every box before the crew arrives. Packing on the day is slower than carrying.',
@@ -663,26 +714,3 @@ export function readingMinutes(g: Guide) {
   return Math.max(2, Math.round(text.split(/\s+/).length / 220))
 }
 
-/**
- * Our own move log: one entry per completed move, filled in after the job.
- * Once there are enough house moves, it gives the typical times in "How long does it take to move a house in Vancouver?"
- * and becomes a real Metro Vancouver dataset other sites can cite.
- */
-export interface MoveLogEntry {
-  date: string
-  city: string
-  property: 'apartment' | 'condo' | 'townhouse' | 'house'
-  bedrooms: number
-  crew: 2 | 3
-  truck: string
-  /** Rough volume, e.g. 'half the 16\' truck' */
-  volume: string
-  access: string[]
-  /** Hours at each stage, if timed */
-  loadHours?: number
-  driveHours?: number
-  unloadHours?: number
-  billedHours: number
-}
-
-export const MOVE_LOG: MoveLogEntry[] = []
