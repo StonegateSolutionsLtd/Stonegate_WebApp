@@ -39,6 +39,7 @@ interface Order {
   duration_minutes: number | null
   travel_fee: number | null
   travel_estimate: TravelEstimate | null
+  quote_travel_fee: number | null
   created_at: string
 }
 
@@ -69,7 +70,12 @@ export default function QuoteEditor({ order }: { order: Order }) {
   const parsedRate = parseFloat(rate) || 0
   const parsedHours = parseFloat(hours) || 0
   const parsedFees = parseFloat(fees) || 0
-  const total = Math.round((parsedRate * parsedHours + parsedFees) * 100) / 100
+
+  // Travel is charged only when ticked; otherwise the quote shows it as included
+  const [travelEstimate, setTravelEstimate] = useState<TravelEstimate | null>(order.travel_estimate ?? null)
+  const [includeTravel, setIncludeTravel] = useState(order.quote_travel_fee != null)
+  const travelCharge = includeTravel && travelEstimate ? travelEstimate.fee : 0
+  const total = Math.round((parsedRate * parsedHours + parsedFees + travelCharge) * 100) / 100
 
   async function handleSaveAndPrint() {
     setError('')
@@ -86,7 +92,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
       const res = await fetch(`/api/admin/quote/${order.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quote_type: 'standard', hourly_rate: r, estimated_hours: h, additional_fees: f }),
+        body: JSON.stringify({ quote_type: 'standard', hourly_rate: r, estimated_hours: h, additional_fees: f, include_travel: includeTravel && !!travelEstimate }),
       })
       if (res.ok) {
         router.refresh()
@@ -190,7 +196,7 @@ export default function QuoteEditor({ order }: { order: Order }) {
             initial={order.travel_estimate}
             initialStart={order.moving_time}
             jobHours={jobHoursForTravel}
-            onUseAsFee={tab === 'standard' ? fee => setFees(String(fee)) : undefined}
+            onEstimate={setTravelEstimate}
           />
         </div>
 
@@ -273,6 +279,25 @@ export default function QuoteEditor({ order }: { order: Order }) {
                   Extra charges beyond hourly rate (stairs, long carry, etc.)
                 </p>
               </div>
+
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '20px', padding: '12px', border: `1.5px solid ${includeTravel && travelEstimate ? '#254220' : '#E8E0D5'}`, borderRadius: '10px', cursor: travelEstimate ? 'pointer' : 'not-allowed', opacity: travelEstimate ? 1 : 0.6 }}>
+                <input
+                  type="checkbox"
+                  checked={includeTravel && !!travelEstimate}
+                  disabled={!travelEstimate}
+                  onChange={e => setIncludeTravel(e.target.checked)}
+                  style={{ marginTop: '2px', accentColor: '#254220', width: '16px', height: '16px' }}
+                />
+                <span style={{ fontSize: '13px', color: '#1A1714', lineHeight: 1.4 }}>
+                  <strong>Include travel fee</strong>
+                  {travelEstimate
+                    ? <> · ${travelEstimate.fee} <span style={{ color: '#9A8E83' }}>({travelEstimate.totalMinutes} min drive × ${travelEstimate.rate}/hr)</span></>
+                    : <span style={{ color: '#9A8E83' }}> · calculate it in the Travel fee panel first</span>}
+                  <span style={{ display: 'block', fontSize: '12px', color: '#9A8E83', marginTop: '2px' }}>
+                    Unticked, the quote shows travel time as included.
+                  </span>
+                </span>
+              </label>
             </>
           )}
 
@@ -309,6 +334,9 @@ export default function QuoteEditor({ order }: { order: Order }) {
                     <span>Additional Fees</span><span>${parsedFees.toFixed(2)}</span>
                   </div>
                 )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#6B5E54', marginBottom: '4px' }}>
+                  <span>Travel</span><span>{travelCharge > 0 ? `$${travelCharge.toFixed(2)}` : 'Included'}</span>
+                </div>
                 <div style={{ borderTop: '1px solid #E8E0D5', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 700, color: '#254220' }}>
                   <span>Total</span><span>${total.toFixed(2)}</span>
                 </div>
