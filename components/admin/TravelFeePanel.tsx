@@ -11,14 +11,14 @@ const duration = (min: number) => (min >= 60 ? `${Math.floor(min / 60)} h ${min 
  * The truck's drive from the parking spot to the pickup and back from the drop-off, as time and money.
  * Shows the estimate saved with the order and recalculates it with a start time and the job hours.
  */
-export default function TravelFeePanel({ orderId, initial, initialStart, jobHours, onUseAsFee }: {
+export default function TravelFeePanel({ orderId, initial, initialStart, jobHours, onEstimate }: {
   orderId: string
   initial: TravelEstimate | null
   /** The order's start time, if it has one */
   initialStart?: string | null
   jobHours: number
-  /** Copies the fee into the quote; omitted where there is no quote to add it to */
-  onUseAsFee?: (fee: number) => void
+  /** Called with the new estimate after a recalculation */
+  onEstimate?: (estimate: TravelEstimate) => void
 }) {
   const [travel, setTravel] = useState<TravelEstimate | null>(initial)
   const [start, onStart] = useState((initialStart ?? initial?.startTime ?? DEFAULT_START).slice(0, 5))
@@ -34,7 +34,7 @@ export default function TravelFeePanel({ orderId, initial, initialStart, jobHour
       body: JSON.stringify({ startTime: start, jobHours }),
     })
     const data = await res.json().catch(() => ({}))
-    if (res.ok && data.estimate) setTravel(data.estimate)
+    if (res.ok && data.estimate) { setTravel(data.estimate); onEstimate?.(data.estimate) }
     else setError(data.error ?? 'Could not calculate. Try again.')
     setBusy(false)
   }
@@ -84,12 +84,6 @@ export default function TravelFeePanel({ orderId, initial, initialStart, jobHour
           style={{ marginLeft: 'auto', padding: '7px 12px', background: '#254220', color: 'white', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: busy ? 'wait' : 'pointer' }}>
           {busy ? 'Calculating…' : 'Recalculate'}
         </button>
-        {onUseAsFee && travel && (
-          <button type="button" onClick={() => onUseAsFee(travel.fee)}
-            style={{ padding: '7px 12px', background: 'white', color: '#254220', border: '1.5px solid #254220', borderRadius: '8px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
-            Add to fees
-          </button>
-        )}
       </div>
       <div style={{ ...muted, marginTop: '6px' }}>Hours come from Estimated Hours; change it there and recalculate.</div>
       {error && <p style={{ color: '#ef4444', fontSize: '12px', margin: '8px 0 0' }}>{error}</p>}

@@ -375,11 +375,12 @@ export default function OrderForm() {
         >
           {/* Header */}
           <div className="mb-6 pb-5" style={{ borderBottom: '1px solid #F0EBE3' }}>
-            <h2 className="text-xl font-bold" style={{ color: '#1A1714' }}>{title}</h2>
-            <p className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEP_INFO[key].desc}</p>
+            <h2 id="order-step-title" className="text-xl font-bold" style={{ color: '#1A1714' }}>{title}</h2>
+            <p id="order-step-desc" className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEP_INFO[key].desc}</p>
           </div>
 
-          <div className="flex flex-col gap-5">
+          {/* One labelled group per step, so screen readers and browser agents know what the choices are for */}
+          <div role="group" aria-labelledby="order-step-title" aria-describedby="order-step-desc" className="flex flex-col gap-5">
 
           {/* Step: move type */}
           {key === 'type' && (

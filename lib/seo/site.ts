@@ -117,6 +117,12 @@ export const businessLd = {
       itemOffered: { '@type': 'Service', name: s.name, serviceType: s.name, url: `${SITE_URL}${s.path}`, provider: { '@id': BUSINESS_ID } },
     })),
   },
+  // Where an assistant or browser agent should send someone who wants a quote
+  potentialAction: {
+    '@type': 'ReserveAction',
+    name: 'Request a free moving estimate',
+    target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}${MOVE_BOOK_HREF}`, actionPlatform: ['https://schema.org/DesktopWebPlatform', 'https://schema.org/MobileWebPlatform'] },
+  },
   makesOffer: [
     hourlyOfferLd('2 movers with a truck', 130),
     hourlyOfferLd("3 movers with a 16' truck", 170),

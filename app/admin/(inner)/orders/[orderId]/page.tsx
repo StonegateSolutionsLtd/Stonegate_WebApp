@@ -105,6 +105,7 @@ export default async function OrderDetailsPage({ params }: { params: Promise<{ o
                 <Row label="Total">${Number(order.estimated_price).toFixed(2)}</Row>
                 {order.quote_type !== 'detailed' && order.hourly_rate != null && <Row label="Rate">${Number(order.hourly_rate).toFixed(2)}/hr × {order.estimated_hours} h</Row>}
                 {order.quote_type !== 'detailed' && Number(order.additional_fees) > 0 && <Row label="Extra fees">${Number(order.additional_fees).toFixed(2)}</Row>}
+                {order.quote_type !== 'detailed' && <Row label="Travel">{order.quote_travel_fee != null ? `$${Number(order.quote_travel_fee).toFixed(2)} charged` : 'Included (not charged)'}</Row>}
                 {order.quote_type === 'detailed' && <Row label="Type">Detailed quote</Row>}
               </>
             ) : (

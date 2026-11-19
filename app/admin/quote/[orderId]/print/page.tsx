@@ -44,6 +44,9 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
   let hourlyRate = 0
   let baseAmount = 0
   let additionalCharges = 0
+  // Travel time is listed as included unless the quote charges it
+  const travelFee = order.quote_travel_fee != null ? Number(order.quote_travel_fee) : null
+  const travelHours = order.quote_travel_minutes != null ? Math.round((order.quote_travel_minutes / 60) * 100) / 100 : null
 
   if (isDetailed) {
     lineItems = calcDetailedQuote(order.quote_details.inputs as DetailedQuoteInputs).lineItems
@@ -54,6 +57,7 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
     baseAmount = Math.round(estHours * hourlyRate * 100) / 100
 
     lineItems = [{ label: '2 Movers + Truck', amount: baseAmount }]
+    if (travelFee != null) lineItems.push({ label: 'Travel Time', amount: travelFee })
     if (additionalCharges > 0) lineItems.push({ label: 'Additional Charges', amount: additionalCharges })
   }
 
@@ -231,10 +235,21 @@ export default async function PrintQuotePage({ params }: { params: Promise<{ ord
                     <span style={{ fontSize: '12px', fontWeight: 700 }}>Travel Time</span>
                   </div>
                 </td>
-                <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Travel time to and from locations</td>
-                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
-                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
-                <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
+                {travelFee != null ? (
+                  <>
+                    <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Truck drive from our base to pickup and back from drop-off</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px' }}>$100.00 / hr</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px' }}>{travelHours ?? '-'}</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', fontWeight: 700 }}>${travelFee.toFixed(2)}</td>
+                  </>
+                ) : (
+                  <>
+                    <td style={{ padding: '10px 12px', fontSize: '11px', color: '#555' }}>Travel time to and from locations</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>-</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'right', fontSize: '12px', color: '#555' }}>Included</td>
+                  </>
+                )}
               </tr>
               <tr style={{ borderBottom: '1px solid #e0e0e0' }}>
                 <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: '12px', fontWeight: 600 }}>3</td>
