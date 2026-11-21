@@ -92,7 +92,9 @@ export interface MoveLogEntry {
   to?: string
   /** 0 for a studio */
   bedrooms: number
-  crew: 2 | 3
+  /** Recorded as "4+ bedrooms" rather than an exact count */
+  bedroomsPlus?: boolean
+  crew: 2 | 3 | 4
   /** e.g. '2nd floor, elevator' */
   access?: string[]
   billedHours?: number
@@ -106,10 +108,17 @@ export const MOVE_LOG: MoveLogEntry[] = [
   { date: '2026-10-26', from: 'Burnaby', to: 'Burnaby', bedrooms: 2, crew: 2, access: ['2nd floor, elevator', '4th floor, elevator'] },
   { date: '2026-10-30', from: 'Burnaby', bedrooms: 2, crew: 2 },
   { date: '2026-10-30', from: 'Coquitlam', bedrooms: 2, crew: 2 },
+  { date: '2026-11-02', from: 'Surrey', bedrooms: 3, crew: 4 },
+  { date: '2026-11-12', from: 'Maple Ridge', bedrooms: 4, bedroomsPlus: true, crew: 4 },
+  { date: '2026-11-14', from: 'Surrey', bedrooms: 3, crew: 3 },
   { date: '2026-11-17', from: 'Maple Ridge', to: 'Maple Ridge', bedrooms: 1, crew: 2, access: ['ground floor', 'ground floor'] },
+  { date: '2026-11-19', from: 'Vancouver', bedrooms: 2, crew: 2 },
+  { date: '2026-11-19', from: 'North Vancouver', to: 'North Vancouver', bedrooms: 1, crew: 2, access: ['ground floor', 'ground floor'] },
+  { date: '2026-11-20', from: 'Surrey', to: 'Langley', bedrooms: 3, crew: 3, access: ['house, ground floor', 'house, ground floor'] },
+  { date: '2026-11-20', from: 'Vancouver', bedrooms: 1, crew: 2 },
 ]
 
-const homeSize = (b: number) => (b === 0 ? 'Studio' : `${b}-bedroom`)
+const homeSize = (b: number, plus = false) => (b === 0 ? 'Studio' : plus ? `${b}+ bedroom` : `${b}-bedroom`)
 const monthYear = (d: string) => new Date(`${d}T12:00:00`).toLocaleDateString('en-CA', { month: 'short', year: 'numeric' })
 
 /** The move log as a guide table */
@@ -120,7 +129,7 @@ function moveLogTable(): GuideBlock {
     rows: MOVE_LOG.map(m => [
       monthYear(m.date),
       m.to ? `${m.from} to ${m.to}` : `From ${m.from}`,
-      homeSize(m.bedrooms) + (m.access ? ` (${m.access.join(' to ')})` : ''),
+      homeSize(m.bedrooms, m.bedroomsPlus) + (m.access ? ` (${m.access.join(' to ')})` : ''),
       `${m.crew} movers`,
     ]),
     caption: `Moves in our job calendar from September to November 2026 where the city, the home size and the crew are all on record (${MOVE_LOG.length} moves). Cities only, never addresses.`,
@@ -487,8 +496,8 @@ export const GUIDES: Guide[] = [
     answer: 'For a studio, a 1-bedroom or a 2-bedroom apartment, 2 movers are usually the cheaper choice. For anything bigger, 3 movers usually cost less overall even at a higher hourly rate. With our rates, 2 movers at $130/hr and 3 at $170/hr, the third mover adds $40 an hour, so the bigger crew wins as soon as it finishes about a quarter faster. It cannot win on short moves: with the 3-hour minimum, 3 movers cost at least $510, which 2 movers only reach after almost 4 hours of work.',
     hero: { src: '/about/photo-3.jpg', alt: 'Three Stonegate movers standing in front of the moving truck', pos: 'center 60%' },
     published: '2026-11-14',
-    updated: '2026-11-17',
-    reviewed: '2026-11-17',
+    updated: '2026-11-20',
+    reviewed: '2026-11-20',
     body: [
       { type: 'h2', id: 'third-mover-cost', text: 'What a third mover actually costs' },
       { type: 'p', text: 'Most people compare the two hourly rates and stop there: $170 is more than $130, so 3 movers must be more expensive. The more useful number is the difference. The truck, the equipment and the travel fee are there either way, so the third mover adds **$40 an hour**.' },
@@ -552,7 +561,7 @@ export const GUIDES: Guide[] = [
       { type: 'p', text: 'Plenty of work for three people, lots of two-person furniture and a garage nobody has emptied in years. If 2 movers would take 10 hours ($1,300), 3 movers only need to finish within 7 h 39 min to be cheaper, and they also finish in daylight. **3 movers and the 26 ft truck.**' },
 
       { type: 'h2', id: 'our-moves', text: 'What we actually sent: crew by home size' },
-      { type: 'p', text: 'This is our own job calendar for the fall of 2026, every move where we recorded the city, the home size and the crew. Most 1 and 2-bedroom moves went with 2 movers, as the maths above suggests. There are exceptions, because every home is different: one 2-bedroom got a third mover, and one 3-bedroom went with 2.' },
+      { type: 'p', text: 'This is our own job calendar for the fall of 2026, every move where we recorded the city, the home size and the crew. Most 1 and 2-bedroom moves went with 2 movers, as the maths above suggests. Bigger homes mostly went with 3, and two of them, a 4+ bedroom and a 3-bedroom, with 4. There are exceptions, because every home is different: one 2-bedroom got a third mover, and one 3-bedroom went with 2.' },
       moveLogTable(),
       { type: 'h2', id: 'cut-cost', text: 'How to spend less, whichever crew you book' },
       { type: 'checklist', items: [
@@ -689,6 +698,195 @@ export const GUIDES: Guide[] = [
       { href: '/guides/2-vs-3-movers', label: '2 vs. 3 Movers', text: 'Which crew is cheaper for your move.' },
       { href: '/pricing/moving', label: 'Moving Rates', text: 'Both crews and trucks, and how the travel fee works.' },
       { href: '/residential-moving', label: 'Residential Moving', text: 'Houses and townhouses with our 26 ft truck.' },
+    ],
+  },
+  {
+    slug: '3-4-bedroom-house-moving-vancouver',
+    title: 'Moving a 3- or 4-Bedroom House in Vancouver: What to Plan Before Moving Day',
+    metaTitle: '3 & 4 Bedroom House Moving in Vancouver: Planning Guide',
+    description: 'Planning a 3 or 4 bedroom house move in Vancouver? How to size the crew and truck, protect stairs and door frames, pack, park and check insurance.',
+    keywords: [
+      "moving a 3 bedroom house",
+      "moving a 4 bedroom house",
+      "3 bedroom house moving Vancouver",
+      "4 bedroom house movers Vancouver",
+      "large house movers Vancouver",
+      "full house moving checklist",
+      "preparing for a large house move",
+      "moving a house with a garage",
+      "questions to ask movers about insurance",
+    ],
+    takeaways: [
+      "For homes bigger than a 2-bedroom, we recommend 3 movers and our larger truck; the final plan depends on what is moving and the access at both homes.",
+      "Bedrooms are a poor measure of a house: the garage, basement, shed and patio often hold as much as the bedrooms.",
+      "Protect the house, not just the furniture: door frames, stairs, railings and walls are the main damage risks on a house move.",
+      "Full packing makes a house move smoother: loose, unpacked small items are a common cause of delays.",
+      "Before you book any mover, ask if they are insured and what exactly their insurance covers if something is damaged.",
+    ],
+    short: 'Moving a 3-4 bedroom house',
+    answer: 'Moving a 3- or 4-bedroom house takes more planning than counting bedrooms. The garage, basement, stairs, amount of furniture and where the truck can park all change how many movers you need, what size truck to send and how long the move takes. For homes bigger than a 2-bedroom, we recommend 3 movers and our larger truck; a lightly furnished 3-bedroom can sometimes suit 2. Start by walking through every room, including storage spaces, and listing or photographing the furniture before you choose a crew.',
+    hero: { src: '/guides/house-move-truck-at-house.jpg', alt: 'The Stonegate moving truck parked outside a two-storey house, a mover carrying boxes down the front path to the ramp', pos: 'center 58%' },
+    published: '2026-11-20',
+    updated: '2026-11-20',
+    reviewed: '2026-11-20',
+    body: [
+      { type: 'p', text: 'House moves are our specialty, and the larger the house, the more the planning matters. This guide is what we tell homeowners before a 3- or 4-bedroom move: what to count, what to protect, how we plan the crew and truck, and what to ask any moving company before you book.' },
+
+      { type: 'h2', id: 'bedrooms-mislead', text: 'Why bedroom count is a poor measure of a house' },
+      { type: 'p', text: '"3 bedrooms" tells us how many beds you sleep in, not how much is moving. Two houses with the same number of bedrooms can be completely different jobs.' },
+      { type: 'table', head: ['', 'House A: 3 bedrooms', 'House B: 3 bedrooms'], rows: [
+        ['Layout', 'Rancher, everything on one floor', 'Two storeys plus a basement'],
+        ['Garage', 'Parking only', 'Full: tools, shelving, bikes, a second fridge'],
+        ['Outside', 'Small patio set', 'Shed, patio furniture, BBQ, planters'],
+        ['Stairs', 'None', 'Inside stairs to every bedroom and the basement'],
+        ['Truck', 'In the driveway, 10 m from the door', 'On the street, down a slope'],
+      ], caption: 'An illustration, not two real jobs: the same bedroom count can mean very different moves.' },
+      { type: 'p', text: 'House B may hold significantly more than House A, and every item in it travels further and up or down more stairs. That is why we ask about the whole property, not just the bedrooms, and why your quote depends on the list you send.' },
+
+      { type: 'h2', id: 'forgotten', text: 'The things people forget to mention' },
+      { type: 'p', text: 'In a house, the spaces outside the living area fill up quietly over the years. These are the ones that change the plan on moving day when nobody mentioned them:' },
+      { type: 'list', items: [
+        '**The garage.** Tool chests, shelving units, bikes, a second fridge or chest freezer, sports gear, paint and leftover building material.',
+        '**The basement and crawl space.** Storage bins, old furniture, holiday decorations and a lot of things people forgot they owned.',
+        '**The shed and yard.** Lawn mower, patio furniture, planters, garden tools and the BBQ.',
+        '**Exercise equipment.** Treadmills, bikes and weight racks are heavy, awkward and often need taking apart.',
+        '**Shelving and wall units.** Garage and pantry shelving usually has to be emptied and taken down.',
+        '**Rooms that are "nearly packed".** Half-packed rooms with open bins and loose items take longer than a room that has not been started, because everything has to be finished on the day.',
+      ] },
+      { type: 'callout', tone: 'tip', title: 'Walk the property with your phone', text: 'Before you ask for a quote, walk through every room, the garage, the basement and the yard, and take a photo of each. It takes ten minutes and it is the best way to make sure nothing is missing from the list.' },
+
+      { type: 'h2', id: 'inventory', text: 'A room-by-room checklist for a full-house move' },
+      { type: 'p', text: 'Use this to build the list you send to your mover. Large and heavy pieces matter most; boxes can be a rough count.' },
+      { type: 'checklist', items: [
+        '**Living room:** sofas and sectionals, armchairs, coffee and side tables, TV and stand, bookcases, rugs, lamps.',
+        '**Dining room:** table and leaves, chairs, buffet or hutch, glass-front cabinets.',
+        '**Kitchen:** fridge, freezer, small appliances, dishes, pantry. Usually the most boxes of any room.',
+        '**Primary bedroom:** bed frame and mattress size, dressers, nightstands, wardrobe, mirror.',
+        '**Other bedrooms:** beds, desks, dressers, cribs and kids\' furniture.',
+        '**Office:** desk, office chair, filing cabinet, computer and monitors.',
+        '**Bathrooms and linen closets:** usually boxes only.',
+        '**Laundry:** washer and dryer, if they are moving with you.',
+        '**Basement:** furniture, storage bins, a second TV area or spare bed.',
+        '**Garage, shed and yard:** tools, shelving, bikes, mower, patio set, BBQ, planters.',
+        '**Anything special:** piano, safe, aquarium, large mirrors or art. Some of these need [specialty moving](/specialty-moving).',
+      ] },
+
+      { type: 'h2', id: 'protect-the-house', text: 'Protect the house, not just the furniture' },
+      { type: 'p', text: 'Everyone thinks about wrapping the sofa. In our experience, on a house move an equally important risk is to the house itself: the door frames, the stairs, the railings and the walls along the path from each room to the truck. A dresser that is perfectly wrapped can still take a corner off a door frame or scrape a stairwell wall if the crew misjudges the turn.' },
+      { type: 'list', items: [
+        '**Door frames.** Every large piece passes through several of them, at both homes. The front door and the narrow inside doors to bedrooms and bathrooms are where most knocks happen.',
+        '**Stairs.** The tightest point of most houses: a turn at a landing, a low ceiling over the steps, a railing in the way. Furniture coming down the stairs is heavy at the bottom and hard to see past at the top.',
+        '**Railings and banisters.** Easy to lean a heavy piece against without noticing.',
+        '**Walls along the path.** Especially in hallways and on stair walls, where there is no room to swing a long piece.',
+        '**Floors.** Hardwood near the entrance takes every trip, in wet shoes when it rains.',
+      ] },
+      { type: 'image', src: '/moving/protect-wrapped-furniture.png', alt: 'A Stonegate mover wrapping a tall piece of furniture in a moving blanket and plastic wrap in the hallway of a house', caption: 'Wrapping a tall piece in the hallway, before it goes through the front door. The furniture is protected; the door frames and walls along the way need the same attention.', portrait: true },
+      { type: 'callout', tone: 'crew', title: 'Why experience matters on stairs', text: 'Carrying a dresser down a turning staircase without touching the wall is a skill, not strength. Experienced movers measure the turn before they lift, decide which end goes first, take legs and doors off when a piece will not clear, and communicate on every step. That is what keeps the walls and the stairs of your house undamaged, and it is the main reason to hire an experienced crew rather than the cheapest pair of hands.' },
+      { type: 'p', text: 'You can help: take down pictures and mirrors along the stairs and hallways, clear the path to the front door, and tell us about any tight turns, low ceilings or fresh paint before moving day.' },
+
+      { type: 'h2', id: 'how-we-plan', text: 'How we plan a large house move before moving day' },
+      { type: 'p', text: 'Before we send a truck to a 3- or 4-bedroom house, we go through the same five questions with you, by phone or from your list and photos.' },
+      { type: 'list', ordered: true, items: [
+        '**What is moving?** The furniture room by room, roughly how many boxes, the garage, basement, shed and yard, and anything oversized or that has to be taken apart.',
+        '**What is the access like at both homes?** Stairs and tight turns inside the house, steps to the front door, the driveway or street, and how far the truck can park from the door.',
+        '**Which truck?** Whether the load fits our 16 ft truck or needs the 26 ft, aiming for everything in one trip.',
+        '**Which crew?** How much of the work can happen at once. On a big house with room to work, a third mover keeps wrapping and loading going while two carry; on one narrow staircase, the extra hands help less.',
+        '**What will it cost?** The hourly rate for the crew, the travel fee for the drive to you and back, and whether packing is part of the job, all told to you before you book.',
+      ] },
+      { type: 'p', text: 'The more of this you can tell us up front, the closer the plan is to the real moving day. A missing garage or a staircase we did not know about is a common reason a plan changes on the day.' },
+
+      { type: 'h2', id: 'crew-truck', text: 'How we decide crew and truck size for a house' },
+      { type: 'p', text: 'For homes bigger than a 2-bedroom, we recommend **3 movers and our 26 ft truck**: 3- and 4-bedroom houses, larger townhouses and most homes with a full garage. It is a starting point, not a rule. A lightly furnished 3-bedroom on one floor can suit 2 movers, and the final plan comes from your list and the access at both homes.' },
+      { type: 'list', items: [
+        '**3 movers keep the move going.** Two people carry each heavy piece while the third wraps, takes furniture apart or builds the load inside the truck. With 2 movers, every heavy piece stops everything else.',
+        '**Aim for one trip.** A 26 ft truck holds roughly twice our 16 ft, which is why we choose it for bigger homes. Whether everything fits in one load depends on your inventory, so a complete list matters: a second trip adds two more drives between homes to your bill.',
+        '**A third mover can lower the total cost.** At $170/hr for 3 movers against $130/hr for 2, the bigger crew is cheaper when it finishes about a quarter faster. Whether it does depends on how much work can happen at once: carrying, wrapping, taking apart and loading. The full maths is in [2 vs. 3 movers](/guides/2-vs-3-movers).',
+        '**Stairs are the exception to "more is faster".** On one narrow staircase only one piece moves at a time, so the third mover works elsewhere: wrapping, taking apart, loading. Tell us about the stairs and we plan around them.',
+      ] },
+      { type: 'image', src: '/team-with-truck.jpg', alt: 'Three Stonegate movers standing in front of the moving truck', caption: 'A crew of 3: what we recommend for any home bigger than a 2-bedroom.' },
+      { type: 'p', text: 'As a planning range, with 3 movers a 3- or 4-bedroom house usually takes from about 6 hours to a full day, depending on access and how much is packed. It is a range to plan around, not a promise: your estimate comes from your own list. See [how long it takes to move a house](/guides/how-long-does-it-take-to-move-a-house) for what changes it, and [what size moving truck you need](/guides/what-size-moving-truck-do-i-need) for what a 26 ft truck holds.' },
+
+      { type: 'h2', id: 'packing', text: 'Why full packing makes a house move smoother' },
+      { type: 'p', text: 'The furniture is rarely what makes a house move messy. It is the small things: the kitchen drawers, the bathroom cabinets, the garage shelves, the toys, the last box of cables. A house has years of them, spread across every room and every storage space. When they are not packed, the crew stops carrying to deal with loose items, and the move slows down and gets disorganised at both ends.' },
+      { type: 'quote', text: 'In a house, it is usually the small things that make the mess, not the furniture.' },
+      { type: 'image', src: '/guides/house-wrapped-sofas-living-room.jpg', alt: 'Sofas and armchairs wrapped in moving blankets and green stretch wrap in the living room of a house, ready to be loaded', caption: 'Sofas wrapped in blankets and stretch wrap in the living room, ready to go out to the truck. The furniture is the easy part; the shelves, cabinets and side tables full of small things are what take the time.', portrait: true },
+      { type: 'p', text: 'If you want a smooth house move, book **full packing**: we box every room, wrap the fragile things and label each box with its room before the truck is loaded, then put everything where it belongs at the new home. If you would rather pack most of it yourself, partial packing of just the kitchen and fragile items still takes the hardest part off your list. Packing runs at the same hourly rate as the move, with boxes and materials charged for what we use. See [packing services](/packing-services).' },
+
+      { type: 'h2', id: 'access', text: 'What makes a house move in Metro Vancouver harder' },
+      { type: 'list', items: [
+        '**Where the truck parks.** A driveway at the front door is ideal. A long or steep driveway, a back lane or a street lined with parked cars means a longer carry for every item, at both homes.',
+        '**Steep streets and driveways.** Common on the North Shore and in parts of Burnaby and Coquitlam, and harder on everyone carrying heavy pieces. West Vancouver also restricts vehicles over 11,800 kg gross weight from driving downhill on many hillside streets; our trucks are under that limit, but heavier trucks have to plan their route. See our notes for [West Vancouver](/locations/west-vancouver).',
+        '**Street parking permits.** In the City of Vancouver, metered or restricted street space can be reserved with a temporary street occupancy permit. In [Belcarra](/locations/belcarra), the Village\'s parking bylaw means a vehicle without a resident decal or guest permit can be ticketed, so ask the Village office for a guest permit for the truck.',
+        '**Basement suites and separate entrances.** Two or three entrances mean planning which door each room goes out of.',
+        '**Long carries.** Townhouse complexes and houses set back from the road can mean a long walk from the truck for every piece.',
+        '**Rain.** More wrapping, more floor protection and more care on wet steps and ramps.',
+      ] },
+      { type: 'p', text: 'Where the truck parks also changes how long the move takes, not just whether it is allowed. Every item is a round trip between the door and the truck, at both homes, so a truck parked 10 metres further away makes every one of those trips longer. See [how long it takes to move a house](/guides/how-long-does-it-take-to-move-a-house) for how much it adds. Every city page in our [service areas](/locations) lists the local parking rules, permits and drive times we know from working there.' },
+
+      { type: 'h2', id: 'insurance', text: 'Ask your mover about insurance before you book' },
+      { type: 'p', text: 'On a house move, a lot of heavy furniture passes through your door frames and up and down your stairs. Before you book any moving company, ask:' },
+      { type: 'checklist', items: [
+        '**Are you insured?** A real moving company can tell you which insurance it carries, and can show you a certificate of insurance.',
+        '**What exactly does it cover?** Damage to your home (walls, floors, stairs, door frames) and damage to your belongings are often covered differently, or not at all. Ask which ones are covered.',
+        '**What happens if something is damaged?** Who you call, how it is reported and how long it takes to resolve.',
+        '**Are your workers covered?** In BC, ask whether the company is registered with WorkSafeBC. You can also check a company yourself with a WorkSafeBC clearance letter.',
+      ] },
+      { type: 'p', text: 'Get the answers before moving day, not after something happens, and ask what the policy excludes as well as what it covers. Our own answer: we carry commercial general liability (CGL) insurance for damage to property, and can tell you what it covers before you book. Stonegate Moving Solutions is registered and in good standing with WorkSafeBC.' },
+
+      { type: 'h2', id: 'our-moves', text: 'Real 3- and 4-bedroom moves: the crews we sent this fall' },
+      { type: 'p', text: 'From our own job calendar: every move of 3 bedrooms or more where the home size and the crew are on record. It is a small sample, and we do not yet record hours or truck size per job, so we show only what was recorded rather than estimate the rest.' },
+      { type: 'table', head: ['When', 'Move', 'Home', 'Crew'], rows: MOVE_LOG.filter(m => m.bedrooms >= 3).map(m => [
+        monthYear(m.date),
+        m.to ? `${m.from} to ${m.to}` : `From ${m.from}`,
+        homeSize(m.bedrooms, m.bedroomsPlus) + (m.access ? ` (${m.access.join(' to ')})` : ''),
+        `${m.crew} movers`,
+      ]), caption: 'Cities only, never addresses. The full log, with smaller homes, is in our 2 vs. 3 movers guide.' },
+      { type: 'p', text: 'Four of the five went with 3 or 4 movers. Two of them, a 4+ bedroom home in Maple Ridge and a 3-bedroom in Surrey, went with a crew of 4: on a large, full home a fourth mover keeps carrying, wrapping and loading going at the same time. The Richmond move went with 2, which shows that bedrooms are only a starting point: a lighter 3-bedroom can suit 2 movers, while a full home with a garage needs 3 or more. That is why we ask for your list.' },
+
+      { type: 'h2', id: 'prepare', text: 'How to prepare your house before the movers arrive' },
+      { type: 'h3', text: 'Two to four weeks before' },
+      { type: 'checklist', items: [
+        'Send your mover a complete list, room by room, including the garage, basement, shed and yard.',
+        'Decide on full packing, partial packing or packing yourself, and book it with the move.',
+        'Sell, donate or throw out what you are not taking. Every item left behind is time and money saved.',
+        'Check parking at both homes: driveway, street, lane, and whether you need a permit.',
+      ] },
+      { type: 'h3', text: 'The week before' },
+      { type: 'checklist', items: [
+        'Finish packing every room you are packing yourself, and label each box with its room.',
+        'Empty dressers and desks of anything loose, heavy or breakable.',
+        'Take down pictures, mirrors and shelves along the stairs and hallways.',
+        'Disconnect and drain the washer, and defrost and dry the fridge and freezer.',
+      ] },
+      { type: 'h3', text: 'The day before and the morning of' },
+      { type: 'checklist', items: [
+        'Move your cars out of the driveway and the space in front of the house, at both homes.',
+        'Clear the path from every room to the front door.',
+        'Keep a bag with documents, medication, chargers and keys with you, not in the truck.',
+        'Keep kids and pets away from the stairs and the doorways while the crew is carrying.',
+        'Walk the house with the crew lead at the start: what goes, what stays, and anything fragile.',
+      ] },
+      { type: 'callout', tone: 'tip', title: 'Planning a 3- or 4-bedroom house move?', text: 'Send us your moving date, both addresses and a list or photos of your furniture, including the garage, basement and storage areas. We will tell you which crew and truck fit your home and plan the move with you. [Request your moving estimate](/order).' },
+    ],
+    faqs: [
+      { q: 'How many movers do I need for a 3-bedroom house?', a: 'We recommend 3 movers and our 26 ft truck for homes bigger than a 2-bedroom. A lightly furnished 3-bedroom can sometimes suit 2, so send us your list and we will tell you which fits.' },
+      { q: 'How many movers do I need for a 4-bedroom house?', a: 'We recommend 3 movers and our 26 ft truck. A 4-bedroom with a full garage and stairs is often a full day, and the third mover keeps wrapping, taking apart and loading going while two carry.' },
+      { q: 'How long does it take to move a 3- or 4-bedroom house?', a: 'As a planning range, with 3 movers, from about 6 hours to a full day. A house with a driveway and everything packed is at the low end; stairs, a full garage, a basement and a long carry push it towards a full day.' },
+      { q: 'Should I pay for packing on a house move?', a: 'If you want the move to go smoothly, full packing is worth it. Loose, unpacked small items are a common cause of delays on house moves. Packing runs at the same hourly rate as the move, with materials charged for what we use.' },
+      { q: 'What should I ask a moving company about insurance?', a: 'Ask whether they are insured, what exactly it covers (damage to your home, your belongings, or both), what happens if something is damaged, and whether they are registered with WorkSafeBC. Stonegate carries commercial general liability (CGL) insurance for damage to property.' },
+      { q: 'What do people forget to tell movers about a house?', a: 'The garage, the basement, the shed and the yard. Tool chests, shelving, a second fridge, exercise equipment and patio furniture are the most common surprises on moving day.' },
+    ],
+    sources: [
+      { label: 'City of Vancouver: Temporary street occupancy permits', href: 'https://vancouver.ca/streets-transportation/reserve-metered-spaces.aspx' },
+      { label: 'District of West Vancouver: Restricted downhill routes for heavy vehicles', href: 'https://www.westvancouver.ca/sites/default/files/media/documents/200326-HeavyVehicleRoutes-cropped.pdf' },
+      { label: 'Village of Belcarra: Parking Regulations Bylaw No. 518 reminder', href: 'https://belcarra.ca/assets/media/2023/06/2023-06-26-REMINDER-Parking-Regulations-Bylaw-No-518-2018.pdf' },
+      { label: 'Stonegate Moving Solutions: Moving rates', href: 'https://www.stonegatemoving.com/pricing/moving' },
+    ],
+    related: [
+      { href: '/residential-moving', label: 'Residential Moving', text: 'House and townhouse moves with a crew of 3.' },
+      { href: '/packing-services', label: 'Packing Services', text: 'Full or partial packing, at the moving rate.' },
+      { href: '/guides/2-vs-3-movers', label: '2 vs. 3 Movers', text: 'Why a third mover usually costs less on a house.' },
+      { href: '/guides/how-long-does-it-take-to-move-a-house', label: 'How Long Does a Move Take?', text: 'Average times by home size.' },
     ],
   },
 ]
