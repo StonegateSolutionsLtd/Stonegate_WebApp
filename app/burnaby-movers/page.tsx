@@ -99,7 +99,7 @@ const serviceLd = {
 
 export default function BurnabyMoversPage() {
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
       <JsonLd graph={[serviceLd, faqLd(faqs)]} />
       <Navbar />
 
@@ -113,19 +113,19 @@ export default function BurnabyMoversPage() {
                 <GoogleStars onLight className="mb-4" />
                 <span
                   className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-6 border rounded-full px-4 py-1.5"
-                  style={{ color: '#254220', borderColor: '#B5C9B0' }}
+                  style={{ color: '#3D1878', borderColor: '#CDBFEA' }}
                 >
                   <MapPin size={13} /> Based in Burnaby
                 </span>
-                <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#1A1714' }}>
-                  Professional Movers in <span style={{ color: '#254220' }}>Burnaby, BC</span>
+                <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-none mb-6" style={{ color: '#1E1530' }}>
+                  Professional Movers in <span style={{ color: '#3D1878' }}>Burnaby, BC</span>
                 </h1>
-                <p className="text-lg leading-relaxed max-w-lg mb-8" style={{ color: '#6B5E54' }}>
+                <p className="text-lg leading-relaxed max-w-lg mb-8" style={{ color: '#5F5870' }}>
                   Stonegate Moving Solutions is a Burnaby moving company: a local, uniformed crew with a fully equipped truck for apartment, condo, house and storage unit moves across Burnaby and all of Metro Vancouver. Transparent hourly pricing, no hidden fees.
                 </p>
                 <div className="flex flex-wrap gap-4 mb-10">
                   <Link href="/order">
-                    <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
+                    <Button className="text-base py-6 px-8 sg-btn font-bold border-0" style={{ backgroundColor: '#3D1878', color: '#FFFFFF' }}>
                       Request a Free Estimate →
                     </Button>
                   </Link>
@@ -138,8 +138,8 @@ export default function BurnabyMoversPage() {
                     { Icon: Users, label: 'Local Crew' },
                   ] as const).map(({ Icon, label }) => (
                     <div key={label} className="flex items-center gap-2">
-                      <Icon size={15} style={{ color: '#254220' }} />
-                      <span className="text-xs font-bold" style={{ color: '#1A1714' }}>{label}</span>
+                      <Icon size={15} style={{ color: '#3D1878' }} />
+                      <span className="text-xs font-bold" style={{ color: '#1E1530' }}>{label}</span>
                     </div>
                   ))}
                 </div>
@@ -148,7 +148,7 @@ export default function BurnabyMoversPage() {
             <FadeIn delay={150}>
               <div
                 className="relative mx-auto lg:mx-0 rounded-3xl overflow-hidden"
-                style={{ aspectRatio: '1125 / 2000', height: 'clamp(440px, 65vh, 760px)', width: 'auto', maxWidth: '100%', backgroundColor: '#F5F0EB' }}
+                style={{ aspectRatio: '1125 / 2000', height: 'clamp(440px, 65vh, 760px)', width: 'auto', maxWidth: '100%', backgroundColor: '#F6F2FC' }}
               >
                 <Image
                   src="/burnaby/burnaby-movers-hero.jpg"
@@ -164,17 +164,17 @@ export default function BurnabyMoversPage() {
         </section>
 
         {/* Local Burnaby Moving Company */}
-        <section style={{ borderTop: '1px solid #E8E0D5', borderBottom: '1px solid #E8E0D5' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0', borderBottom: '1px solid #E6DFF0' }}>
           <div className="max-w-3xl mx-auto px-6 py-16 text-center">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>Local Burnaby moving company</p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5" style={{ color: '#1A1714' }}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#4B1D8F' }}>Local Burnaby moving company</p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5" style={{ color: '#1E1530' }}>
                 A Moving Company That Actually Lives Here
               </h2>
-              <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>
+              <p className="text-base leading-relaxed" style={{ color: '#5F5870' }}>
                 Stonegate Moving Solutions is based in Burnaby, and it shows in how we work - we know the buildings, the elevator booking windows, and the fastest routes around town. We also serve the rest of Metro Vancouver, but Burnaby is home base, which means quicker scheduling and local know-how on every job.
               </p>
-              <p className="text-base leading-relaxed mt-4" style={{ color: '#6B5E54' }}>
+              <p className="text-base leading-relaxed mt-4" style={{ color: '#5F5870' }}>
                 <LinkedText text="Moving out of a Metrotown or Brentwood tower? See [apartment and condo moving](/apartment-moving) for how we work around elevator bookings and loading bays. Moving a house near Deer Lake or Burnaby Heights? See [residential moving](/residential-moving). Every move is billed at the same hourly [moving rates](/pricing/moving). Before a condo move, see our [condo moving checklist](/guides/vancouver-condo-moving-checklist)." />
               </p>
             </FadeIn>
@@ -185,18 +185,18 @@ export default function BurnabyMoversPage() {
         <section>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Moving Services in Burnaby</h2>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#4B1D8F' }}>What we do</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1E1530' }}>Moving Services in Burnaby</h2>
             </FadeIn>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {services.map(({ label, href, desc, Icon }, i) => (
                 <FadeIn key={label} delay={i * 80}>
-                  <Link href={href} className="block h-full rounded-2xl p-6 transition-colors hover:bg-[#EDE6DD]" style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5' }}>
-                    <span className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#E8F0E6' }}>
-                      <Icon size={20} style={{ color: '#254220' }} />
+                  <Link href={href} className="block h-full rounded-2xl p-6 transition-colors hover:bg-[#EDE6DD]" style={{ backgroundColor: '#F6F2FC', border: '1px solid #E6DFF0' }}>
+                    <span className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#EEE7FA' }}>
+                      <Icon size={20} style={{ color: '#3D1878' }} />
                     </span>
-                    <p className="font-bold text-sm mb-2" style={{ color: '#1A1714' }}>{label}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: '#9A8E83' }}>{desc}</p>
+                    <p className="font-bold text-sm mb-2" style={{ color: '#1E1530' }}>{label}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: '#8A82A0' }}>{desc}</p>
                   </Link>
                 </FadeIn>
               ))}
@@ -205,20 +205,20 @@ export default function BurnabyMoversPage() {
         </section>
 
         {/* Why Choose Stonegate */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#254220' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0', backgroundColor: '#3D1878' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#B5C9B0' }}>Why choose us</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#FAF7F2' }}>Why Choose Stonegate</h2>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#CDBFEA' }}>Why choose us</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#FFFFFF' }}>Why Choose Stonegate</h2>
             </FadeIn>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {whyChoose.map((item, i) => (
                 <FadeIn key={item.title} delay={i * 60}>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#B5C9B0' }} />
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#CDBFEA' }} />
                     <div>
-                      <p className="font-bold text-sm mb-1" style={{ color: '#FAF7F2' }}>{item.title}</p>
-                      <p className="text-sm leading-relaxed" style={{ color: '#B5C9B0' }}>{item.desc}</p>
+                      <p className="font-bold text-sm mb-1" style={{ color: '#FFFFFF' }}>{item.title}</p>
+                      <p className="text-sm leading-relaxed" style={{ color: '#CDBFEA' }}>{item.desc}</p>
                     </div>
                   </div>
                 </FadeIn>
@@ -231,9 +231,9 @@ export default function BurnabyMoversPage() {
         <section>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Coverage</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>Burnaby Areas We Serve</h2>
-              <p className="text-base leading-relaxed max-w-2xl mb-8" style={{ color: '#6B5E54' }}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#4B1D8F' }}>Coverage</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-4" style={{ color: '#1E1530' }}>Burnaby Areas We Serve</h2>
+              <p className="text-base leading-relaxed max-w-2xl mb-8" style={{ color: '#5F5870' }}>
                 From Metrotown high-rises to houses near Deer Lake, we move Burnaby residents across every neighbourhood, including:
               </p>
             </FadeIn>
@@ -242,30 +242,30 @@ export default function BurnabyMoversPage() {
                 <FadeIn key={area} delay={i * 40}>
                   <span
                     className="inline-flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2"
-                    style={{ backgroundColor: '#F5F0EB', border: '1px solid #E8E0D5', color: '#1A1714' }}
+                    style={{ backgroundColor: '#F6F2FC', border: '1px solid #E6DFF0', color: '#1E1530' }}
                   >
-                    <MapPin size={13} style={{ color: '#254220' }} /> {area}
+                    <MapPin size={13} style={{ color: '#3D1878' }} /> {area}
                   </span>
                 </FadeIn>
               ))}
             </div>
-            <p className="text-base leading-relaxed max-w-2xl mt-8" style={{ color: '#6B5E54' }}>
+            <p className="text-base leading-relaxed max-w-2xl mt-8" style={{ color: '#5F5870' }}>
               <LinkedText text="Moving between Burnaby and a neighbouring city? We also move people in [Vancouver](/locations/vancouver), [New Westminster](/locations/new-westminster), [Coquitlam](/locations/coquitlam) and [Richmond](/locations/richmond), or see [all service areas](/locations)." />
             </p>
           </div>
         </section>
 
         {/* Real Moving Jobs */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0', backgroundColor: '#F6F2FC' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Real moves</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1A1714' }}>Real Moving Jobs</h2>
+              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#4B1D8F' }}>Real moves</p>
+              <h2 className="text-3xl font-extrabold tracking-tight mb-10" style={{ color: '#1E1530' }}>Real Moving Jobs</h2>
             </FadeIn>
             <div className="grid sm:grid-cols-3 gap-4" style={{ gridAutoRows: '300px' }}>
               {jobs.map((job, i) => (
                 <FadeIn key={job.src} delay={i * 80}>
-                  <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E8E0D5' }}>
+                  <div className="relative rounded-2xl overflow-hidden h-full" style={{ border: '1px solid #E6DFF0' }}>
                     <Image src={job.src} alt={job.alt} fill className="object-cover" style={{ objectPosition: job.position }} />
                   </div>
                 </FadeIn>
@@ -278,21 +278,21 @@ export default function BurnabyMoversPage() {
         <section>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>Reviews</p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-4" style={{ color: '#1A1714' }}>What Our Customers Say</h2>
+              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#4B1D8F' }}>Reviews</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-4" style={{ color: '#1E1530' }}>What Our Customers Say</h2>
               <div className="flex items-center justify-center gap-2 mb-14">
                 <div className="flex items-center gap-1">
                   {Array.from({ length: 5 }, (_, i) => (
                     <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
                   ))}
                 </div>
-                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
+                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1E1530' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
               </div>
             </FadeIn>
             <ReviewsRow reviews={MOVING_REVIEWS} />
             <div className="text-center">
               <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
-                <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+                <Button className="text-base py-6 px-8 sg-btn font-bold border-0" style={{ backgroundColor: '#4B1D8F', color: '#FFFFFF' }}>
                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
                 </Button>
               </a>
@@ -301,23 +301,23 @@ export default function BurnabyMoversPage() {
         </section>
 
         {/* Pricing summary */}
-        <section style={{ borderTop: '1px solid #E8E0D5' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0' }}>
           <div className="max-w-4xl mx-auto px-6 py-16">
             <FadeIn>
               <div
                 className="rounded-3xl overflow-hidden flex flex-col sm:flex-row items-center gap-8 p-8 sm:p-10"
-                style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #254220 60%, #2f5229 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #1e3a1a 0%, #3D1878 60%, #2f5229 100%)' }}
               >
                 <div className="flex-1">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Moving pricing</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#CDBFEA' }}>Moving pricing</p>
                   <div className="flex items-end gap-2 mb-2">
-                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FAF7F2' }}>$130</span>
-                    <span className="text-lg font-semibold mb-1" style={{ color: '#B5C9B0' }}>/hr and up</span>
+                    <span className="text-6xl font-extrabold leading-none" style={{ color: '#FFFFFF' }}>$130</span>
+                    <span className="text-lg font-semibold mb-1" style={{ color: '#CDBFEA' }}>/hr and up</span>
                   </div>
-                  <p className="text-sm" style={{ color: '#B5C9B0' }}>2 movers from $130/hr, or 3 movers + 16&apos; truck from $170/hr. Plus a one-time flat-rate travel fee, explained upfront.</p>
+                  <p className="text-sm" style={{ color: '#CDBFEA' }}>2 movers from $130/hr, or 3 movers + 16&apos; truck from $170/hr. Plus a one-time flat-rate travel fee, explained upfront.</p>
                 </div>
                 <Link href="/pricing/moving" className="flex-shrink-0">
-                  <Button className="rounded-full text-sm font-bold px-7 py-6 border-0" style={{ backgroundColor: '#FAF7F2', color: '#254220' }}>
+                  <Button className="sg-btn text-sm font-bold px-7 py-6 border-0" style={{ backgroundColor: '#FFFFFF', color: '#3D1878' }}>
                     See Full Pricing <ArrowRight size={15} className="ml-1" />
                   </Button>
                 </Link>
@@ -327,16 +327,16 @@ export default function BurnabyMoversPage() {
         </section>
 
         {/* FAQ */}
-        <section style={{ borderTop: '1px solid #E8E0D5' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0' }}>
           <div className="max-w-6xl mx-auto px-6 py-16">
             <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-10" style={{ color: '#1A1714' }}>Common questions</p>
+              <p className="text-xs font-bold uppercase tracking-widest mb-10" style={{ color: '#1E1530' }}>Common questions</p>
             </FadeIn>
             <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
               {faqs.map(({ q, a }, i) => (
                 <FadeIn key={q} delay={i * 60}>
-                  <p className="font-bold mb-2" style={{ color: '#1A1714' }}>{q}</p>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{a}</p>
+                  <p className="font-bold mb-2" style={{ color: '#1E1530' }}>{q}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: '#5F5870' }}>{a}</p>
                 </FadeIn>
               ))}
             </div>
@@ -344,22 +344,22 @@ export default function BurnabyMoversPage() {
         </section>
 
         {/* Final CTA */}
-        <section style={{ borderTop: '1px solid #E8E0D5' }}>
+        <section style={{ borderTop: '1px solid #E6DFF0' }}>
           <FadeIn>
             <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4" style={{ color: '#1E1530' }}>
                 Get a Free Estimate for Your Burnaby Move
               </h2>
-              <p className="text-lg mb-10 max-w-lg mx-auto" style={{ color: '#6B5E54' }}>
+              <p className="text-lg mb-10 max-w-lg mx-auto" style={{ color: '#5F5870' }}>
                 Transparent hourly pricing, no surprises.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link href="/order">
-                  <Button className="text-base px-10 py-6 rounded-full font-bold border-0" style={{ backgroundColor: '#254220', color: '#FAF7F2' }}>
+                  <Button className="text-base px-10 py-6 sg-btn font-bold border-0" style={{ backgroundColor: '#3D1878', color: '#FFFFFF' }}>
                     Request a Free Estimate
                   </Button>
                 </Link>
-                <PhoneLink className="inline-flex items-center justify-center text-base px-10 py-3 rounded-full font-bold" style={{ color: '#254220', border: '2px solid #254220' }}>
+                <PhoneLink className="inline-flex items-center justify-center text-base px-10 py-3 sg-btn font-bold" style={{ color: '#3D1878', border: '2px solid #3D1878' }}>
                   Call <PhoneNumber />
                 </PhoneLink>
               </div>

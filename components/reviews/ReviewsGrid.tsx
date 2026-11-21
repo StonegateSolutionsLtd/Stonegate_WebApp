@@ -5,10 +5,10 @@ import { Star } from 'lucide-react'
 import GoogleLogo from '@/components/GoogleLogo'
 import { GOOGLE_MOVING_REVIEWS, REVIEW_TOPICS, type ReviewTopic } from '@/lib/reviews'
 
-const GREEN = '#014421'
-const INK = '#1A1714'
-const MUTED = '#6B5E54'
-const LINE = '#E8E0D5'
+const GREEN = '#4B1D8F'
+const INK = '#1E1530'
+const MUTED = '#5F5870'
+const LINE = '#E6DFF0'
 
 const initials = (name: string) => name.split(' ').filter(Boolean).slice(0, 2).map(p => p[0]?.toUpperCase()).join('')
 
@@ -30,7 +30,7 @@ export default function ReviewsGrid() {
               aria-pressed={active}
               onClick={() => setTopic(c.id)}
               className="shrink-0 inline-flex items-center gap-2 rounded-full px-4 min-h-[42px] text-sm font-bold whitespace-nowrap transition-colors cursor-pointer"
-              style={active ? { backgroundColor: GREEN, color: '#FAF7F2', border: `1px solid ${GREEN}` } : { backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
+              style={active ? { backgroundColor: GREEN, color: '#FFFFFF', border: `1px solid ${GREEN}` } : { backgroundColor: '#FFFFFF', color: INK, border: `1px solid ${LINE}` }}
             >
               {c.label}
             </button>
@@ -49,7 +49,7 @@ export default function ReviewsGrid() {
             </div>
             <p className="text-[16px] leading-relaxed mb-5" style={{ color: INK }}>{r.text}</p>
             <div className="flex items-center gap-3">
-              <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-[13px] font-bold" style={{ backgroundColor: '#E8F0E6', color: GREEN }}>
+              <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-[13px] font-bold" style={{ backgroundColor: '#EEE7FA', color: GREEN }}>
                 {initials(r.name)}
               </span>
               <span className="leading-tight">

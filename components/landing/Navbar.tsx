@@ -54,13 +54,64 @@ const aboutGroup: NavGroup = {
   ],
 }
 
+interface MegaColumn {
+  title: string
+  links: NavLink[]
+}
+
+/** Desktop mega menus: the same links, grouped into titled columns */
+const cityLink = (slug: string) => {
+  const c = CITIES.find(x => x.slug === slug)
+  return c ? { label: c.name, href: cityHref(c) } : null
+}
+const cityLinks = (slugs: string[]) => slugs.map(cityLink).filter((l): l is NavLink => l !== null)
+
+const MEGA: Record<string, { kicker: string; columns: MegaColumn[]; footer?: NavLink }> = {
+  Services: {
+    kicker: 'Services',
+    columns: [
+      { title: 'Home moving', links: [
+        { label: 'Local Moving', href: '/moving' },
+        { label: 'Residential Moving', href: '/residential-moving' },
+        { label: 'Apartment & Condo Moving', href: '/apartment-moving' },
+        { label: 'Senior Moving', href: '/senior-moving' },
+      ] },
+      { title: 'Business moving', links: [
+        { label: 'Commercial Moving & Corporate Relocation', href: '/commercial-moving' },
+        { label: 'Office Moving', href: '/office-moving' },
+      ] },
+      { title: 'More services', links: [
+        { label: 'Long-Distance Moving', href: '/long-distance-moving' },
+        { label: 'Specialty Moving', href: '/specialty-moving' },
+        { label: 'Packing Services', href: '/packing-services' },
+      ] },
+    ],
+    footer: { label: 'See moving prices', href: '/pricing/moving' },
+  },
+  Locations: {
+    kicker: 'Locations',
+    columns: [
+      { title: 'Vancouver & North Shore', links: cityLinks(['vancouver', 'north-vancouver', 'west-vancouver', 'lions-bay']) },
+      { title: 'Burnaby & Tri-Cities', links: cityLinks(['burnaby', 'new-westminster', 'coquitlam', 'port-coquitlam', 'port-moody', 'anmore', 'belcarra']) },
+      { title: 'South of the Fraser', links: cityLinks(['richmond', 'surrey', 'delta', 'white-rock', 'langley']) },
+      { title: 'Ridge Meadows', links: cityLinks(['maple-ridge', 'pitt-meadows']) },
+    ],
+    footer: { label: 'All areas we serve', href: '/locations' },
+  },
+}
+
 const PRICING_HREF = '/pricing/moving'
+
+/** Brand bar: purple header with white logo, links and icons; orange for the main call to action */
+const BAR = '#4B1D8F'
+const ORANGE = '#F26B21'
 
 const groups = [servicesGroup, locationsGroup]
 
 function DesktopDropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const mega = MEGA[group.label]
 
   function openNow() {
     if (closeTimer.current) clearTimeout(closeTimer.current)
@@ -71,28 +122,52 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
   }
 
   return (
-    <div className="relative" onMouseEnter={openNow} onMouseLeave={closeSoon}>
+    // A mega menu is positioned against the header (full width), so its wrapper is not `relative`
+    <div className={mega ? '' : 'relative'} onMouseEnter={openNow} onMouseLeave={closeSoon} onFocus={openNow} onBlur={closeSoon}>
       <Link
         href={group.href}
-        className="flex items-center gap-1 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60"
-        style={{ color: '#1A1714' }}
+        aria-expanded={open}
+        className="relative flex items-center gap-1 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-90 h-[68px]"
+        style={{ color: '#FFFFFF' }}
       >
         {group.label}
         <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+        {/* Underline marks the open menu */}
+        <span aria-hidden className="absolute left-0 right-0 bottom-[18px] h-[3px] rounded-full transition-opacity" style={{ backgroundColor: '#FFFFFF', opacity: open ? 1 : 0 }} />
       </Link>
-      {open && (
-        <div
-          className={`absolute top-full pt-3 ${group.links.length > 10 ? 'left-1/2 -translate-x-1/2' : 'left-0'}`}
-          style={{ minWidth: group.links.length > 10 ? '460px' : '260px' }}
-        >
-          <div className={`rounded-2xl overflow-hidden py-2 ${group.links.length > 10 ? 'grid grid-cols-2' : ''}`} style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', boxShadow: '0 12px 32px rgba(26,23,20,0.12)' }}>
+      {open && mega && (
+        <div className="absolute left-0 right-0 top-full" style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #E6DFF0', boxShadow: '0 18px 30px -18px rgba(30,21,48,0.25)' }}>
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-8 pt-8 pb-9">
+            <p className="text-[14px] font-extrabold uppercase tracking-[0.08em] mb-4" style={{ color: ORANGE }}>{mega.kicker}</p>
+            <div className="grid gap-0" style={{ gridTemplateColumns: `repeat(${mega.columns.length}, minmax(0, 1fr))` }}>
+              {mega.columns.map((col, i) => (
+                <div key={col.title} className={i ? 'pl-8' : 'pr-8'} style={i ? { borderLeft: '1px solid #E6DFF0' } : undefined}>
+                  <p className="text-[19px] font-extrabold mb-3" style={{ color: '#1E1530' }}>{col.title}</p>
+                  <ul className="flex flex-col">
+                    {col.links.map(link => (
+                      <li key={link.href}>
+                        <Link href={link.href} className="block py-1.5 text-[15px] font-semibold transition-colors hover:text-[#4B1D8F]" style={{ color: '#3A3448' }}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            {mega.footer && (
+              <Link href={mega.footer.href} className="inline-flex items-center gap-1.5 mt-6 text-[15px] font-extrabold" style={{ color: BAR }}>
+                {mega.footer.label} <ChevronRight size={16} aria-hidden />
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+      {open && !mega && (
+        <div className="absolute top-full left-0" style={{ minWidth: '240px' }}>
+          <div className="rounded-2xl overflow-hidden py-2 mt-1" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E6DFF0', boxShadow: '0 12px 32px rgba(30,21,48,0.12)' }}>
             {group.links.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-[#F5F0EB]"
-                style={{ color: '#1A1714' }}
-              >
+              <Link key={link.href} href={link.href} className="block px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-[#F6F2FC]" style={{ color: '#1E1530' }}>
                 {link.label}
               </Link>
             ))}
@@ -106,14 +181,14 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
 function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () => void }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ borderBottom: '1px solid #E8E0D5' }}>
+    <div style={{ borderBottom: '1px solid #E6DFF0' }}>
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between py-4 text-base font-bold text-left cursor-pointer"
-        style={{ color: '#1A1714', background: 'none', border: 'none' }}
+        style={{ color: '#1E1530', background: 'none', border: 'none' }}
       >
         {group.label}
-        <ChevronRight size={18} style={{ transform: open ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s', color: '#9A8E83' }} />
+        <ChevronRight size={18} style={{ transform: open ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s', color: '#8A82A0' }} />
       </button>
       {open && (
         <div className="flex flex-col pb-3 pl-3">
@@ -123,7 +198,7 @@ function MobileGroup({ group, onNavigate }: { group: NavGroup; onNavigate: () =>
               href={link.href}
               onClick={onNavigate}
               className="py-2.5 text-sm font-semibold"
-              style={{ color: '#6B5E54' }}
+              style={{ color: '#5F5870' }}
             >
               {link.label}
             </Link>
@@ -144,72 +219,75 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
 
   return (
     <>
-      <header className="relative z-40" style={{ backgroundColor: '#FAF7F2', borderBottom: '1px solid #E8E0D5' }}>
+      <header className="relative z-40" style={{ backgroundColor: BAR }}>
         <div className="flex h-[68px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:px-16 3xl:max-w-[2200px] 3xl:mx-auto">
 
           <Link href="/" className="flex shrink-0 items-center gap-3">
-            <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover" />
-            <span className="hidden min-[1400px]:inline whitespace-nowrap font-extrabold text-xl tracking-tight" style={{ color: '#1A1714' }}>
+            <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 object-cover brightness-0 invert" />
+            <span className="hidden min-[1400px]:inline whitespace-nowrap font-extrabold text-xl tracking-tight" style={{ color: '#FFFFFF' }}>
               Stonegate Moving Solutions
             </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
             {!isHome && (
-              <Link href="/" className="flex items-center gap-1.5 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+              <Link href="/" className="flex items-center gap-1.5 whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-70" style={{ color: '#FFFFFF' }}>
                 <Home size={16} /> Home
               </Link>
             )}
             {groups.map(group => <DesktopDropdown key={group.label} group={group} />)}
-            <Link href={PRICING_HREF} className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+            <Link href={PRICING_HREF} className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-70" style={{ color: '#FFFFFF' }}>
               Pricing
             </Link>
-            <Link href="/guides" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-60" style={{ color: '#1A1714' }}>
+            <Link href="/guides" className="whitespace-nowrap text-base font-extrabold transition-opacity hover:opacity-70" style={{ color: '#FFFFFF' }}>
               Guides
             </Link>
             <DesktopDropdown group={aboutGroup} />
+            {/* The phone number as a solid deep-purple pill */}
             <a
               href={phone.tel}
-              aria-label="Call Stonegate"
-              className="flex items-center justify-center rounded-full transition-opacity hover:opacity-60"
-              style={{ width: '38px', height: '38px', border: '1.5px solid #E8E0D5' }}
+              className="flex items-center gap-2 rounded-full px-4 py-[9px] text-[15px] font-extrabold whitespace-nowrap transition-colors hover:bg-[#2A0F55]"
+              style={{ backgroundColor: '#36146B', color: '#FFFFFF', fontVariantNumeric: 'lining-nums tabular-nums' }}
             >
-              <Phone size={15} style={{ color: '#014421' }} />
+              <Phone size={15} fill="currentColor" aria-hidden /> <PhoneNumber />
             </a>
-            <Link
-              href={MOVE_BOOK_HREF}
-              className="whitespace-nowrap rounded-full text-sm font-extrabold px-6 py-3 transition-transform duration-200 hover:scale-105"
-              style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
-            >
-              Request a Free Estimate
-            </Link>
+            {/* Get Quote, with the opening hours under it on the white page just below the bar */}
+            <div className="relative">
+              <Link
+                href={MOVE_BOOK_HREF}
+                className="block whitespace-nowrap sg-btn text-sm font-extrabold px-6 py-3"
+                style={{ backgroundColor: ORANGE, color: '#FFFFFF' }}
+              >
+                Get Quote
+              </Link>
+              <span className={`absolute right-0 text-[13px] font-bold whitespace-nowrap leading-none pointer-events-none ${isHome ? '' : 'bg-white rounded-full px-2.5 py-1.5 shadow-[0_2px_8px_rgba(30,21,48,0.15)]'}`} style={{ top: isHome ? 'calc(100% + 20px)' : 'calc(100% + 16px)', color: '#4B1D8F' }}>7 days a week · 6AM–10PM</span>
+            </div>
           </nav>
 
-          <div className="flex lg:hidden items-center gap-1.5 min-[360px]:gap-2.5">
+          <div className="flex lg:hidden items-center gap-2 min-[375px]:gap-3">
             {minimalMobile ? (
               <a
                 href={phone.tel}
                 aria-label="Call Stonegate"
                 className="flex items-center justify-center rounded-full"
-                style={{ width: '44px', height: '44px', backgroundColor: '#014421' }}
+                style={{ width: '44px', height: '44px', backgroundColor: '#FFFFFF' }}
               >
-                <Phone size={18} fill="currentColor" style={{ color: '#FAF7F2' }} />
+                <Phone size={18} fill="currentColor" style={{ color: BAR }} />
               </a>
             ) : (<>
             <a
               href={phone.tel}
               aria-label="Call Stonegate"
-              className="flex items-center gap-1.5 whitespace-nowrap rounded-full font-extrabold transition-transform hover:scale-105 px-3.5 min-[360px]:px-[18px] py-[11px]"
-              style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
+              className="flex items-center justify-center rounded-full shrink-0 transition-transform hover:scale-105"
+              style={{ width: '44px', height: '44px', backgroundColor: '#FFFFFF' }}
             >
-              <Phone size={16} fill="currentColor" style={{ color: '#FAF7F2' }} />
-              <span className="text-[15px]">Call</span>
+              <Phone size={18} fill="currentColor" style={{ color: BAR }} />
             </a>
 
             <Link
               href={MOVE_BOOK_HREF}
-              className="whitespace-nowrap rounded-full font-extrabold text-[14px] min-[360px]:text-[15px] transition-transform hover:scale-105 px-3 min-[360px]:px-[18px] py-[11px]"
-              style={{ backgroundColor: '#FAF7F2', color: '#014421', border: '1.5px solid #014421' }}
+              className="whitespace-nowrap sg-btn font-extrabold text-[13px] min-[375px]:text-[14px] px-3 min-[375px]:px-3.5 py-[12px]"
+              style={{ backgroundColor: ORANGE, color: '#FFFFFF' }}
             >
               Free Estimate
             </Link>
@@ -217,47 +295,47 @@ export default function Navbar({ minimalMobile = false }: { minimalMobile?: bool
 
             <button
               onClick={() => setMenuOpen(o => !o)}
-              className="flex cursor-pointer p-1"
+              className="flex cursor-pointer p-1 -mr-1"
               style={{ background: 'none', border: 'none' }}
               aria-label="Toggle menu"
             >
               {menuOpen
-                ? <X size={24} style={{ color: '#1A1714' }} />
-                : <Menu size={24} style={{ color: '#1A1714' }} />
+                ? <X size={26} style={{ color: '#FFFFFF' }} />
+                : <Menu size={26} strokeWidth={2.5} style={{ color: '#FFFFFF' }} />
               }
             </button>
           </div>
         </div>
 
         {menuOpen && (
-          <div className="lg:hidden max-h-[calc(100vh-68px)] overflow-y-auto" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
+          <div className="lg:hidden max-h-[calc(100vh-68px)] overflow-y-auto" style={{ borderTop: '1px solid #E6DFF0', backgroundColor: '#FFFFFF' }}>
             <div className="px-5 py-2 flex flex-col">
               {!isHome && (
-                <Link href="/" onClick={closeMenu} className="flex items-center gap-2 py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+                <Link href="/" onClick={closeMenu} className="flex items-center gap-2 py-4 text-base font-bold" style={{ color: '#1E1530', borderBottom: '1px solid #E6DFF0' }}>
                   <Home size={17} /> Home
                 </Link>
               )}
               {groups.map(group => (
                 <MobileGroup key={group.label} group={group} onNavigate={closeMenu} />
               ))}
-              <Link href={PRICING_HREF} onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+              <Link href={PRICING_HREF} onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1E1530', borderBottom: '1px solid #E6DFF0' }}>
                 Pricing
               </Link>
-              <Link href="/guides" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1A1714', borderBottom: '1px solid #E8E0D5' }}>
+              <Link href="/guides" onClick={closeMenu} className="py-4 text-base font-bold" style={{ color: '#1E1530', borderBottom: '1px solid #E6DFF0' }}>
                 Guides
               </Link>
               <MobileGroup group={aboutGroup} onNavigate={closeMenu} />
               <Link
                 href={MOVE_BOOK_HREF}
                 onClick={closeMenu}
-                className="my-4 rounded-full text-sm font-bold text-center px-6 py-3 transition-opacity hover:opacity-90"
-                style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
+                className="my-4 sg-btn text-sm font-bold text-center px-6 py-3 hover:opacity-90"
+                style={{ backgroundColor: '#4B1D8F', color: '#FFFFFF' }}
               >
-                Request a Free Estimate
+                Get Quote
               </Link>
-              <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E8E0D5', paddingTop: '16px' }}>
-                <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B5E54' }}>
-                  <Phone size={14} style={{ color: '#014421' }} /> <PhoneNumber />
+              <div className="flex flex-col gap-2 pb-6" style={{ borderTop: '1px solid #E6DFF0', paddingTop: '16px' }}>
+                <a href={phone.tel} className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#5F5870' }}>
+                  <Phone size={14} style={{ color: '#4B1D8F' }} /> <PhoneNumber />
                 </a>
               </div>
             </div>

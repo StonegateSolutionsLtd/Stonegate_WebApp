@@ -112,12 +112,12 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
         className="w-full h-9 flex items-center gap-2.5 px-3 rounded-md border text-sm transition-colors focus:outline-none"
         style={{
           backgroundColor: '#FFFFFF',
-          borderColor: open ? '#254220' : '#E0D8D0',
-          color: displayValue ? '#1A1714' : '#C4B8AC',
-          boxShadow: open ? '0 0 0 3px rgba(77,107,71,0.15)' : 'none',
+          borderColor: open ? '#3D1878' : '#E3DCEC',
+          color: displayValue ? '#1E1530' : '#BDB4CF',
+          boxShadow: open ? '0 0 0 3px rgba(75,29,143,0.15)' : 'none',
         }}
       >
-        <CalendarDays size={15} style={{ color: '#9A8E83', flexShrink: 0 }} />
+        <CalendarDays size={15} style={{ color: '#8A82A0', flexShrink: 0 }} />
         <span className="flex-1 text-left">{displayValue || 'Select date'}</span>
       </button>
 
@@ -129,8 +129,8 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
             top: panelPos.top,
             left: panelPos.left,
             width: Math.max(panelPos.width, 280),
-            backgroundColor: '#FAF7F2',
-            borderColor: '#E8E0D5',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E6DFF0',
             boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
           }}
         >
@@ -139,26 +139,26 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
             <button
               type="button"
               onClick={prevMonth}
-              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors hover:bg-[#E8E0D5]"
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors hover:bg-[#E6DFF0]"
             >
-              <ChevronLeft size={14} style={{ color: '#6B5E54' }} />
+              <ChevronLeft size={14} style={{ color: '#5F5870' }} />
             </button>
-            <span className="text-sm font-semibold" style={{ color: '#1A1714' }}>
+            <span className="text-sm font-semibold" style={{ color: '#1E1530' }}>
               {MONTHS[viewMonth]} {viewYear}
             </span>
             <button
               type="button"
               onClick={nextMonth}
-              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors hover:bg-[#E8E0D5]"
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors hover:bg-[#E6DFF0]"
             >
-              <ChevronRight size={14} style={{ color: '#6B5E54' }} />
+              <ChevronRight size={14} style={{ color: '#5F5870' }} />
             </button>
           </div>
 
           {/* Weekday headers */}
           <div className="grid grid-cols-7 mb-2">
             {DAYS.map(d => (
-              <div key={d} className="text-center text-[11px] font-semibold uppercase tracking-wide py-1" style={{ color: '#B0A49A' }}>
+              <div key={d} className="text-center text-[11px] font-semibold uppercase tracking-wide py-1" style={{ color: '#A79EBF' }}>
                 {d}
               </div>
             ))}
@@ -179,16 +179,16 @@ export default function DatePicker({ id, value, onChange, min }: DatePickerProps
                   onClick={() => selectDay(day)}
                   className="h-8 w-8 mx-auto flex items-center justify-center rounded-full text-sm font-medium transition-colors"
                   style={{
-                    backgroundColor: sel ? '#254220' : 'transparent',
-                    color: disabled ? '#D9CFC4' : sel ? '#FAF7F2' : today ? '#254220' : '#1A1714',
+                    backgroundColor: sel ? '#3D1878' : 'transparent',
+                    color: disabled ? '#DDD5EA' : sel ? '#FFFFFF' : today ? '#3D1878' : '#1E1530',
                     fontWeight: sel || today ? 600 : 400,
                     cursor: disabled ? 'not-allowed' : 'pointer',
-                    outline: today && !sel ? '2px solid #254220' : 'none',
+                    outline: today && !sel ? '2px solid #3D1878' : 'none',
                     outlineOffset: '-2px',
                   }}
                   onMouseEnter={e => {
                     if (!disabled && !sel)
-                      (e.currentTarget as HTMLElement).style.backgroundColor = '#E8E0D5'
+                      (e.currentTarget as HTMLElement).style.backgroundColor = '#E6DFF0'
                   }}
                   onMouseLeave={e => {
                     if (!disabled && !sel)

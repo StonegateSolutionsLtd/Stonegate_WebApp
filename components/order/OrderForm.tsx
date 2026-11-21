@@ -75,10 +75,10 @@ function StepIndicator({ steps, current }: { steps: StepKey[]; current: number }
                 className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-sm font-bold transition-[background-color,color,box-shadow] duration-300"
                 style={
                   i < current
-                    ? { backgroundColor: '#254220', color: '#FAF7F2' }
+                    ? { backgroundColor: '#3D1878', color: '#FFFFFF' }
                     : i === current
-                      ? { backgroundColor: '#254220', color: '#FAF7F2', boxShadow: '0 0 0 5px rgba(77,107,71,0.18)' }
-                      : { backgroundColor: '#E8E0D5', color: '#B0A49A' }
+                      ? { backgroundColor: '#3D1878', color: '#FFFFFF', boxShadow: '0 0 0 5px rgba(75,29,143,0.18)' }
+                      : { backgroundColor: '#E6DFF0', color: '#A79EBF' }
                 }
               >
                 {i < current ? (
@@ -92,7 +92,7 @@ function StepIndicator({ steps, current }: { steps: StepKey[]; current: number }
             {/* Label centered under circle */}
             <div className="absolute top-full mt-1.5 w-8 sm:w-9 flex justify-center">
               <span className="text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap transition-colors duration-300"
-                style={{ color: i <= current ? '#254220' : '#C4B8AC' }}>
+                style={{ color: i <= current ? '#3D1878' : '#BDB4CF' }}>
                 {STEP_INFO[key].short}
               </span>
             </div>
@@ -100,7 +100,7 @@ function StepIndicator({ steps, current }: { steps: StepKey[]; current: number }
             {/* Connector line */}
             {i < steps.length - 1 && (
               <div className="flex-1 h-[2px] mx-1.5 sm:mx-2 rounded-full transition-colors duration-500"
-                style={{ backgroundColor: i < current ? '#254220' : '#E0D8D0' }} />
+                style={{ backgroundColor: i < current ? '#3D1878' : '#E3DCEC' }} />
             )}
           </div>
         ))}
@@ -115,7 +115,7 @@ function FieldIcon({ icon: Icon, label, id, children, valid }: {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center gap-1.5">
-        <label htmlFor={id} className="text-sm font-semibold" style={{ color: '#4A3F38' }}>{label}</label>
+        <label htmlFor={id} className="text-sm font-semibold" style={{ color: '#463E58' }}>{label}</label>
         {valid && (
           <CheckCircle2
             key="valid"
@@ -129,9 +129,9 @@ function FieldIcon({ icon: Icon, label, id, children, valid }: {
       <div className="relative">
         <span
           className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center pointer-events-none z-10 transition-colors duration-300"
-          style={{ backgroundColor: valid ? '#D6E8D3' : '#F0EBE3' }}
+          style={{ backgroundColor: valid ? '#D6E8D3' : '#EEE9F5' }}
         >
-          <Icon size={14} style={{ color: valid ? '#254220' : '#9A8E83' }} />
+          <Icon size={14} style={{ color: valid ? '#3D1878' : '#8A82A0' }} />
         </span>
         {children}
       </div>
@@ -144,14 +144,14 @@ function StyledInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={`w-full h-12 pl-10 pr-4 rounded-xl border text-base sm:text-sm transition-all outline-none
-        focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15 placeholder:text-[#C4B8AC] ${props.className ?? ''}`}
-      style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714', ...props.style }}
+        focus:border-[#3D1878] focus:ring-2 focus:ring-[#3D1878]/15 placeholder:text-[#BDB4CF] ${props.className ?? ''}`}
+      style={{ backgroundColor: '#FFFFFF', borderColor: '#E3DCEC', color: '#1E1530', ...props.style }}
     />
   )
 }
 
-const GREEN = '#014421'
-const CREAM = '#FAF7F2'
+const GREEN = '#4B1D8F'
+const CREAM = '#FFFFFF'
 
 /** A big tappable choice on a soft green tint; the selected one fills solid green */
 function ChoiceCard({ selected, onClick, className, children }: {
@@ -164,13 +164,13 @@ function ChoiceCard({ selected, onClick, className, children }: {
       aria-pressed={selected}
       className={cn(
         'rounded-xl border text-center transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.98]',
-        !selected && 'hover:border-[#014421] hover:bg-[#EAF2E7]',
+        !selected && 'hover:border-[#4B1D8F] hover:bg-[#EEE7FA]',
         className,
       )}
       style={{
-        backgroundColor: selected ? GREEN : '#F3F8F1',
+        backgroundColor: selected ? GREEN : '#F6F2FC',
         borderColor: selected ? GREEN : '#D6E4D2',
-        boxShadow: selected ? '0 8px 20px -10px rgba(1,68,33,0.6)' : 'none',
+        boxShadow: selected ? '0 8px 20px -10px rgba(75,29,143,0.6)' : 'none',
       }}
     >
       {children}
@@ -188,7 +188,7 @@ function IconBadge({ icon: Icon, selected }: { icon: React.ElementType; selected
   )
 }
 
-const choiceText = (selected: boolean) => ({ color: selected ? CREAM : '#1A1714' })
+const choiceText = (selected: boolean) => ({ color: selected ? CREAM : '#1E1530' })
 
 function readOrderStart(): Partial<OrderFormData> {
   if (typeof window === 'undefined') return {}
@@ -364,7 +364,7 @@ export default function OrderForm() {
 
       {/* Card */}
       <div className="rounded-2xl p-5 sm:p-8 lg:p-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
-        style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #EDE6DE' }}>
+        style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #E6DFF0' }}>
 
         <div
           key={key}
@@ -374,9 +374,9 @@ export default function OrderForm() {
           )}
         >
           {/* Header */}
-          <div className="mb-6 pb-5" style={{ borderBottom: '1px solid #F0EBE3' }}>
-            <h2 id="order-step-title" className="text-xl font-bold" style={{ color: '#1A1714' }}>{title}</h2>
-            <p id="order-step-desc" className="text-sm mt-1" style={{ color: '#9A8E83' }}>{STEP_INFO[key].desc}</p>
+          <div className="mb-6 pb-5" style={{ borderBottom: '1px solid #EEE9F5' }}>
+            <h2 id="order-step-title" className="text-xl font-bold" style={{ color: '#1E1530' }}>{title}</h2>
+            <p id="order-step-desc" className="text-sm mt-1" style={{ color: '#8A82A0' }}>{STEP_INFO[key].desc}</p>
           </div>
 
           {/* One labelled group per step, so screen readers and browser agents know what the choices are for */}
@@ -422,9 +422,9 @@ export default function OrderForm() {
                   >
                     <span className="text-[34px] font-black leading-none" style={{ color: selected ? CREAM : GREEN }}>{s.short}</span>
                     {form.moveType === 'storage' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider mt-0.5" style={{ color: selected ? '#B9D3B3' : '#A9743F' }}>sqft</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider mt-0.5" style={{ color: selected ? '#CDBFEA' : '#DD5A12' }}>sqft</span>
                     )}
-                    <span className="text-[13px] sm:text-sm font-semibold mt-1.5 leading-snug" style={{ color: selected ? '#D9E8D5' : '#4A3F38' }}>
+                    <span className="text-[13px] sm:text-sm font-semibold mt-1.5 leading-snug" style={{ color: selected ? '#D9E8D5' : '#463E58' }}>
                       {form.moveType === 'house' || form.moveType === 'apartment' ? (s.short === '1' ? 'Bedroom' : 'Bedrooms') : s.label}
                     </span>
                   </ChoiceCard>
@@ -454,7 +454,7 @@ export default function OrderForm() {
               </div>
               {dateMode === 'this_week' && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-200">
-                  <p className="text-sm font-semibold mb-2.5" style={{ color: '#4A3F38' }}>Which day works?</p>
+                  <p className="text-sm font-semibold mb-2.5" style={{ color: '#463E58' }}>Which day works?</p>
                   <div className="grid grid-cols-4 gap-2">
                     {[null, ...weekDays].map(day => {
                       const selected = day ? form.dateFlex === 'date' && form.movingDate === day : form.dateFlex === 'this_week'
@@ -468,7 +468,7 @@ export default function OrderForm() {
                         >
                           {d ? (
                             <>
-                              <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: selected ? '#B9D3B3' : '#A9743F' }}>
+                              <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: selected ? '#CDBFEA' : '#DD5A12' }}>
                                 {d.toLocaleDateString('en-CA', { weekday: 'short' })}
                               </span>
                               <span className="text-lg font-black leading-tight" style={{ color: selected ? CREAM : GREEN }}>{d.getDate()}</span>
@@ -572,9 +572,9 @@ export default function OrderForm() {
               </div>
 
               <div className="flex flex-col gap-1.5 animate-in fade-in slide-in-from-bottom-2" style={fadeUp(180)}>
-                <label htmlFor="specialNotes" className="text-sm font-semibold" style={{ color: '#4A3F38' }}>
+                <label htmlFor="specialNotes" className="text-sm font-semibold" style={{ color: '#463E58' }}>
                   {form.moveType === 'small' ? 'What are you moving?' : 'Anything we should know?'}{' '}
-                  <span className="font-normal text-[#B0A49A]">(optional)</span>
+                  <span className="font-normal text-[#A79EBF]">(optional)</span>
                 </label>
                 <Textarea
                   id="specialNotes"
@@ -584,14 +584,14 @@ export default function OrderForm() {
                   rows={3}
                   value={form.specialNotes}
                   onChange={e => set('specialNotes', e.target.value)}
-                  className="rounded-xl border resize-none text-base sm:text-sm placeholder:text-[#C4B8AC] focus:border-[#254220] focus:ring-2 focus:ring-[#254220]/15"
-                  style={{ backgroundColor: '#FFFFFF', borderColor: '#E0D8D0', color: '#1A1714' }}
+                  className="rounded-xl border resize-none text-base sm:text-sm placeholder:text-[#BDB4CF] focus:border-[#3D1878] focus:ring-2 focus:ring-[#3D1878]/15"
+                  style={{ backgroundColor: '#FFFFFF', borderColor: '#E3DCEC', color: '#1E1530' }}
                 />
               </div>
 
               {/* What is being sent, right above the button; each line jumps back to its step */}
-              <div className="rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2" style={{ ...fadeUp(240), backgroundColor: '#F7F3EE', border: '1px solid #EDE6DE' }}>
-                <p className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: '#254220' }}>Your move</p>
+              <div className="rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2" style={{ ...fadeUp(240), backgroundColor: '#F8F5FC', border: '1px solid #E6DFF0' }}>
+                <p className="text-xs font-bold uppercase tracking-widest mb-1.5" style={{ color: '#3D1878' }}>Your move</p>
                 <dl className="text-sm">
                   {([
                     ['type', 'Move', moveSummary(form.moveType, form.moveSize)],
@@ -600,9 +600,9 @@ export default function OrderForm() {
                     ['dropoff', 'To', form.dropoffAddress],
                   ] as const).map(([target, label, value]) => (
                     <div key={target} className="flex items-baseline gap-3 py-1">
-                      <dt className="w-12 shrink-0" style={{ color: '#9A8E83' }}>{label}</dt>
-                      <dd className="flex-1 min-w-0 font-medium break-words" style={{ color: '#1A1714' }}>{value}</dd>
-                      <button type="button" onClick={() => editStep(target)} className="shrink-0 text-xs font-semibold underline underline-offset-2 hover:no-underline" style={{ color: '#254220' }}>
+                      <dt className="w-12 shrink-0" style={{ color: '#8A82A0' }}>{label}</dt>
+                      <dd className="flex-1 min-w-0 font-medium break-words" style={{ color: '#1E1530' }}>{value}</dd>
+                      <button type="button" onClick={() => editStep(target)} className="shrink-0 text-xs font-semibold underline underline-offset-2 hover:no-underline" style={{ color: '#3D1878' }}>
                         Edit
                       </button>
                     </div>
@@ -621,8 +621,8 @@ export default function OrderForm() {
             <button
               type="button"
               onClick={() => window.history.back()}
-              className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-150 hover:bg-[#F0EBE3] hover:-translate-x-0.5"
-              style={{ color: '#9A8E83' }}
+              className="text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-150 hover:bg-[#EEE9F5] hover:-translate-x-0.5"
+              style={{ color: '#8A82A0' }}
             >
               ← Back
             </button>
@@ -633,14 +633,9 @@ export default function OrderForm() {
             onClick={goNext}
             disabled={!ready || submitting}
             className={cn(
-              'group flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed',
-              ready && 'hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.97]'
+              'sg-btn group flex items-center gap-2 px-7 py-3 text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed'
             )}
-            style={{
-              backgroundColor: '#254220',
-              color: '#FAF7F2',
-              boxShadow: ready ? '0 4px 14px rgba(77,107,71,0.35)' : 'none',
-            }}
+            style={{ backgroundColor: '#3D1878', color: '#FFFFFF' }}
           >
             {step < steps.length - 1 ? 'Continue' : submitting ? 'Sending…' : 'Send My Moving Request'}
             <ArrowRight size={14} strokeWidth={2.5} className="transition-transform duration-200 group-hover:translate-x-1" />

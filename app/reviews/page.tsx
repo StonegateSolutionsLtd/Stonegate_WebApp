@@ -76,7 +76,7 @@ export default function ReviewsPage() {
               href={GOOGLE_PROFILE}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex-1 min-w-0 flex flex-col rounded-3xl p-5 sm:p-7 bg-white transition-shadow hover:shadow-[0_16px_40px_-20px_rgba(26,23,20,0.35)]"
+              className="group flex-1 min-w-0 flex flex-col rounded-3xl p-5 sm:p-7 bg-white transition-shadow hover:shadow-[0_16px_40px_-20px_rgba(30,21,48,0.35)]"
               style={{ border: `1px solid ${LINE}` }}
             >
               <span className="flex items-center gap-3 mb-2">
@@ -106,14 +106,14 @@ export default function ReviewsPage() {
         </section>
 
         {/* Ask past customers for a review; a quiet link for anyone planning a move */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-14 sm:py-16 flex flex-col md:flex-row md:items-center justify-between gap-6`}>
             <div>
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2" style={{ color: INK }}>Moved with Stonegate?</h2>
               <p className="text-[17px]" style={{ color: MUTED }}>Tell others how it went. Every review helps a small local crew.</p>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-              <a href={GOOGLE_PROFILE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full min-h-[52px] px-6 font-bold whitespace-nowrap transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+              <a href={GOOGLE_PROFILE} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 sg-btn min-h-[52px] px-6 font-bold whitespace-nowrap hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: CREAM }}>
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Leave a Google review
               </a>
               <Link href={MOVE_BOOK_HREF} className="inline-flex items-center gap-1.5 font-bold whitespace-nowrap hover:underline underline-offset-4" style={{ color: GREEN }}>

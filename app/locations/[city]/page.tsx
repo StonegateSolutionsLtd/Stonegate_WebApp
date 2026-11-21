@@ -137,10 +137,10 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
                   </li>
                 </ul>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+                  <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: CREAM }}>
                     Check Moving Availability <ArrowRight size={18} aria-hidden />
                   </Link>
-                  <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 border-[#014421] transition-[transform,background-color] active:scale-[0.97] hover:bg-[#E8F0E6]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                  <PhoneLink className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-6 font-bold border-2 border-[#4B1D8F] hover:bg-[#EEE7FA]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                     Call <PhoneNumber />
                   </PhoneLink>
                 </div>
@@ -163,7 +163,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
                   <div className="rounded-3xl overflow-hidden" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}` }}>
                     <table className="w-full text-left text-[15px]">
                       <thead>
-                        <tr style={{ backgroundColor: '#F5F0EB', color: INK }}>
+                        <tr style={{ backgroundColor: '#F6F2FC', color: INK }}>
                           <th scope="col" className="px-4 sm:px-5 py-3 font-extrabold">Area</th>
                           <th scope="col" className="px-2 py-3 font-extrabold">Drive there</th>
                           <th scope="col" className="px-2 py-3 font-extrabold">Drive back</th>
@@ -212,7 +212,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         ) : null}
 
         {/* Neighbourhoods and the local tip */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-16 sm:py-20 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14 items-start`}>
             <FadeIn>
               <p className={eyebrow} style={{ color: GREEN }}>Where we move</p>
@@ -228,10 +228,10 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
             </FadeIn>
             <FadeIn delay={120}>
               <div className="rounded-3xl p-7 sm:p-8" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}` }}>
-                <span className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ backgroundColor: '#F3E6D6' }}>
-                  <Lightbulb size={20} style={{ color: '#A9743F' }} aria-hidden />
+                <span className="w-11 h-11 rounded-full flex items-center justify-center mb-5" style={{ backgroundColor: '#FFE8DA' }}>
+                  <Lightbulb size={20} style={{ color: '#DD5A12' }} aria-hidden />
                 </span>
-                <p className={eyebrow} style={{ color: '#A9743F' }}>Local tip</p>
+                <p className={eyebrow} style={{ color: '#DD5A12' }}>Local tip</p>
                 <h3 className="text-xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>{city.localTip.title}</h3>
                 <p className="text-base leading-relaxed" style={{ color: MUTED }}>{city.localTip.text}</p>
               </div>
@@ -258,7 +258,7 @@ export default async function CityPage({ params }: PageProps<'/locations/[city]'
         </section>
 
         {/* Nearby and other cities */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-16 flex flex-col gap-12`}>
             {nearby.length > 0 && (
               <FadeIn>

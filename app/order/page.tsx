@@ -18,10 +18,10 @@ export const metadata = {
   alternates: { canonical: 'https://www.stonegatemoving.com/order' },
 }
 
-const GREEN = '#014421'
-const INK = '#1A1714'
-const MUTED = '#6B5E54'
-const LINE = '#E8E0D5'
+const GREEN = '#4B1D8F'
+const INK = '#1E1530'
+const MUTED = '#5F5870'
+const LINE = '#E6DFF0'
 const GOOGLE_PROFILE = BUSINESS_PROFILES[0]
 
 const HELP = [
@@ -33,7 +33,7 @@ const HELP = [
 /** Free estimate: the mascot panel holds still on the left while the form, reviews and contact details scroll on the right */
 export default function OrderPage() {
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5F0EB' }}>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F6F2FC' }}>
       <Navbar />
 
       <main className="flex-1 lg:grid lg:grid-cols-[minmax(0,30fr)_minmax(0,70fr)] xl:grid-cols-[minmax(0,28fr)_minmax(0,72fr)] 2xl:grid-cols-[minmax(0,26fr)_minmax(0,74fr)]">
@@ -43,8 +43,8 @@ export default function OrderPage() {
             {/* Soft light behind the mascot */}
             <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 70% 85%, rgba(201,138,69,0.35), rgba(201,138,69,0) 55%)' }} />
             <div className="absolute left-5 top-5 sm:left-8 sm:top-7 lg:left-10 lg:top-12 z-10 max-w-[55%] lg:max-w-none">
-              <p className="text-[23px] sm:text-[32px] lg:text-4xl xl:text-[40px] 2xl:text-5xl font-black uppercase leading-[0.95] tracking-tight" style={{ color: '#FAF7F2' }}>
-                Moving<br />made<br /><span style={{ color: '#C98A45' }}>effortless</span>
+              <p className="text-[23px] sm:text-[32px] lg:text-4xl xl:text-[40px] 2xl:text-5xl font-black uppercase leading-[0.95] tracking-tight" style={{ color: '#FFFFFF' }}>
+                Moving<br />made<br /><span style={{ color: '#F26B21' }}>effortless</span>
               </p>
               <GoogleStars size="sm" className="mt-3 lg:mt-6" />
             </div>
@@ -90,7 +90,7 @@ export default function OrderPage() {
                     </span>
                   </span>
                 </span>
-                <span className="hidden sm:inline-flex rounded-full px-4 py-2 text-sm font-bold transition-colors group-hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: '#FAF7F2' }}>
+                <span className="hidden sm:inline-flex sg-btn px-4 py-2 text-sm font-bold group-hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: '#FFFFFF' }}>
                   Read reviews
                 </span>
               </a>
@@ -101,18 +101,18 @@ export default function OrderPage() {
               <div className="rounded-2xl p-6 sm:p-7 flex flex-col gap-4" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}` }}>
                 <PhoneLink className="flex items-center gap-3 text-xl font-extrabold hover:underline" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: GREEN }}>
-                    <Phone size={18} fill="#FAF7F2" style={{ color: '#FAF7F2' }} aria-hidden />
+                    <Phone size={18} fill="#FFFFFF" style={{ color: '#FFFFFF' }} aria-hidden />
                   </span>
                   <PhoneNumber />
                 </PhoneLink>
                 <a href={`mailto:${CONTACT_EMAIL}`} className="flex items-center gap-3 text-base font-semibold hover:underline" style={{ color: INK }}>
-                  <span className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#E8F0E6' }}>
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#EEE7FA' }}>
                     <Mail size={18} style={{ color: GREEN }} aria-hidden />
                   </span>
                   {CONTACT_EMAIL}
                 </a>
                 <p className="flex items-center gap-3 text-base font-semibold" style={{ color: INK }}>
-                  <span className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#E8F0E6' }}>
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: '#EEE7FA' }}>
                     <MapPin size={18} style={{ color: GREEN }} aria-hidden />
                   </span>
                   <span>Based in Burnaby, BC<span className="block text-sm font-normal" style={{ color: MUTED }}>Moving all of Metro Vancouver</span></span>
@@ -121,16 +121,16 @@ export default function OrderPage() {
 
               {/* Questions */}
               <div className="rounded-2xl p-6 sm:p-7 flex gap-4" style={{ backgroundColor: GREEN }}>
-                <MessageCircleQuestion size={34} strokeWidth={1.6} className="shrink-0" style={{ color: '#F3E6D6' }} aria-hidden />
+                <MessageCircleQuestion size={34} strokeWidth={1.6} className="shrink-0" style={{ color: '#FFE8DA' }} aria-hidden />
                 <div>
-                  <h2 className="text-lg font-extrabold" style={{ color: '#FAF7F2' }}>Questions about your move?</h2>
+                  <h2 className="text-lg font-extrabold" style={{ color: '#FFFFFF' }}>Questions about your move?</h2>
                   <p className="mt-1.5 text-[15px] leading-relaxed" style={{ color: '#CFE0CB' }}>
                     Call or email us before you book and we will talk it through with you:
                   </p>
                   <ul className="mt-3 flex flex-col gap-2">
                     {HELP.map(item => (
-                      <li key={item} className="flex items-start gap-2 text-[15px]" style={{ color: '#FAF7F2' }}>
-                        <Check size={17} strokeWidth={3} className="shrink-0 mt-0.5" style={{ color: '#C98A45' }} aria-hidden /> {item}
+                      <li key={item} className="flex items-start gap-2 text-[15px]" style={{ color: '#FFFFFF' }}>
+                        <Check size={17} strokeWidth={3} className="shrink-0 mt-0.5" style={{ color: '#F26B21' }} aria-hidden /> {item}
                       </li>
                     ))}
                   </ul>

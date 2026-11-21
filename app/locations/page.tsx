@@ -46,10 +46,10 @@ export default function LocationsPage() {
                   <FadeIn delay={(i % 3) * 60} className="h-full">
                     <Link
                       href={cityHref(city)}
-                      className="group h-full flex items-start gap-4 rounded-2xl p-6 transition-[transform,box-shadow,border-color] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(26,23,20,0.25)] hover:border-[#014421]"
+                      className="group h-full flex items-start gap-4 rounded-2xl p-6 transition-[transform,box-shadow,border-color] hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(30,21,48,0.25)] hover:border-[#4B1D8F]"
                       style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}` }}
                     >
-                      <span className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8F0E6' }}>
+                      <span className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#EEE7FA' }}>
                         <MapPin size={18} style={{ color: GREEN }} aria-hidden />
                       </span>
                       <span className="flex-1 min-w-0">

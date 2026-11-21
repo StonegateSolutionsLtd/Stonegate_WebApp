@@ -88,7 +88,7 @@ export default async function GuidePage({ params }: PageProps<'/guides/[slug]'>)
 
       <main className="flex-1" style={{ color: TEXT }}>
         {guide.draft && (
-          <div className="px-5 py-3 text-center text-sm font-bold" style={{ backgroundColor: '#F3E6D6', color: '#7A4F22' }}>
+          <div className="px-5 py-3 text-center text-sm font-bold" style={{ backgroundColor: '#FFE8DA', color: '#7A4F22' }}>
             Draft: not listed or indexed yet.
           </div>
         )}
@@ -97,7 +97,7 @@ export default async function GuidePage({ params }: PageProps<'/guides/[slug]'>)
           {/* Headline, standfirst and byline */}
           <header id="guide-header" className="max-w-[760px] mx-auto px-5 pt-10 sm:pt-16">
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] font-semibold mb-6" style={{ color: SOFT }}>
-              <Link href="/guides" className="rounded-full px-3 py-1 transition-colors hover:bg-[#E3EBE1]" style={{ backgroundColor: TINT, color: ACCENT }}>Moving Guides</Link>
+              <Link href="/guides" className="rounded-full px-3 py-1 transition-colors hover:bg-[#E7DEF6]" style={{ backgroundColor: TINT, color: ACCENT }}>Moving Guides</Link>
               <span style={{ color: FAINT }}>Metro Vancouver</span>
             </nav>
             <h1 className={`${serif} font-semibold text-[2.4rem] sm:text-[3.5rem] leading-[1.04] tracking-[-0.025em] mb-5`}>{guide.title}</h1>
@@ -165,14 +165,14 @@ export default async function GuidePage({ params }: PageProps<'/guides/[slug]'>)
 
             {/* A call to action that sits with the article rather than shouting over it */}
             <aside className="mt-14 rounded-3xl p-7 sm:p-9" style={{ backgroundColor: ACCENT, color: '#FFFFFF' }}>
-              <p className={`${label} mb-3`} style={{ color: '#B5C9B0' }}>Planning a move?</p>
+              <p className={`${label} mb-3`} style={{ color: '#CDBFEA' }}>Planning a move?</p>
               <p className={`${serif} text-[1.6rem] sm:text-[1.9rem] font-semibold leading-tight tracking-[-0.01em] mb-3`}>Get a quote from the team that wrote this guide</p>
-              <p className="text-[15.5px] leading-relaxed mb-6" style={{ color: '#D6E2D3' }}>Tell us what you are moving and when in about 2 minutes, or call and we will plan it with you.</p>
+              <p className="text-[15.5px] leading-relaxed mb-6" style={{ color: '#DCCFF2' }}>Tell us what you are moving and when in about 2 minutes, or call and we will plan it with you.</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link href={MOVE_BOOK_HREF} className="inline-flex items-center justify-center gap-2 rounded-full min-h-[50px] px-6 text-[15px] font-bold transition-transform active:scale-[0.97]" style={{ backgroundColor: '#FFFFFF', color: ACCENT }}>
+                <Link href={MOVE_BOOK_HREF} className="inline-flex items-center justify-center gap-2 sg-btn min-h-[50px] px-6 text-[15px] font-bold" style={{ backgroundColor: '#FFFFFF', color: ACCENT }}>
                   Request a Moving Quote <ArrowRight size={16} aria-hidden />
                 </Link>
-                <PhoneLink className="inline-flex items-center justify-center gap-2 rounded-full min-h-[50px] px-6 text-[15px] font-bold border transition-colors hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.5)', color: '#FFFFFF', fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                <PhoneLink className="inline-flex items-center justify-center gap-2 sg-btn min-h-[50px] px-6 text-[15px] font-bold border hover:bg-white/10" style={{ borderColor: 'rgba(255,255,255,0.5)', color: '#FFFFFF', fontVariantNumeric: 'lining-nums tabular-nums' }}>
                   Call <PhoneNumber />
                 </PhoneLink>
               </div>
@@ -204,7 +204,7 @@ export default async function GuidePage({ params }: PageProps<'/guides/[slug]'>)
           <ul className="grid sm:grid-cols-3 gap-4">
             {guide.related.map(r => (
               <li key={r.href}>
-                <Link href={r.href} className="group flex flex-col h-full rounded-2xl p-5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[#014421]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
+                <Link href={r.href} className="group flex flex-col h-full rounded-2xl p-5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-[#4B1D8F]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
                   <span className={`${serif} text-[1.2rem] font-semibold leading-snug`}>{r.label}</span>
                   <span className="mt-1.5 text-[14px] leading-snug" style={{ color: SOFT }}>{r.text}</span>
                   <span className="mt-auto pt-4 inline-flex items-center gap-1 text-[13px] font-bold" style={{ color: ACCENT }}>Read more <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" aria-hidden /></span>

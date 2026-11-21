@@ -3,32 +3,32 @@
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex justify-between items-start gap-4 py-2 text-sm">
-      <span className="w-32 shrink-0" style={{ color: '#9A8E83' }}>{label}</span>
-      <span className="font-medium text-right" style={{ color: '#1A1714' }}>{value}</span>
+      <span className="w-32 shrink-0" style={{ color: '#8A82A0' }}>{label}</span>
+      <span className="font-medium text-right" style={{ color: '#1E1530' }}>{value}</span>
     </div>
   )
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-widest pt-4 pb-1" style={{ color: '#254220' }}>{children}</p>
+    <p className="text-xs font-semibold uppercase tracking-widest pt-4 pb-1" style={{ color: '#3D1878' }}>{children}</p>
   )
 }
 
 export default function OrderSummary({ order }: { order: OrderFormData }) {
   return (
-    <div className="rounded-xl p-6" style={{ backgroundColor: '#F0EBE3', border: '1px solid #E8E0D5' }}>
+    <div className="rounded-xl p-6" style={{ backgroundColor: '#EEE9F5', border: '1px solid #E6DFF0' }}>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-bold" style={{ color: '#1A1714' }}>Estimate request</h2>
+        <h2 className="text-lg font-bold" style={{ color: '#1E1530' }}>Estimate request</h2>
         <span
           className="text-xs font-semibold uppercase tracking-widest border rounded-full px-3 py-1"
-          style={{ color: '#254220', borderColor: '#B5C9B0' }}
+          style={{ color: '#3D1878', borderColor: '#CDBFEA' }}
         >
           Free
         </span>
       </div>
 
-      <div style={{ borderTop: '1px solid #D9CFC4', marginTop: '8px' }} />
+      <div style={{ borderTop: '1px solid #DDD5EA', marginTop: '8px' }} />
 
       <SectionTitle>Move details</SectionTitle>
       <Row label="Type" value={moveTypeLabel(order.moveType)} />
@@ -47,7 +47,7 @@ export default function OrderSummary({ order }: { order: OrderFormData }) {
       {order.specialNotes && (
         <>
           <SectionTitle>Notes</SectionTitle>
-          <p className="text-sm py-1" style={{ color: '#6B5E54' }}>{order.specialNotes}</p>
+          <p className="text-sm py-1" style={{ color: '#5F5870' }}>{order.specialNotes}</p>
         </>
       )}
     </div>

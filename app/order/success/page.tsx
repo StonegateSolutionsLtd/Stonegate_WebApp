@@ -18,22 +18,22 @@ export default async function SuccessPage({
       <div className="max-w-md mx-auto pt-16 text-center">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-8"
-          style={{ backgroundColor: '#254220', boxShadow: '0 4px 20px rgba(77,107,71,0.35)' }}
+          style={{ backgroundColor: '#3D1878', boxShadow: '0 4px 20px rgba(75,29,143,0.35)' }}
         >
           <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
 
-        <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
+        <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1E1530' }}>
           Your moving request is sent
         </h1>
-        <p className="mt-4 text-base leading-relaxed" style={{ color: '#9A8E83' }}>
+        <p className="mt-4 text-base leading-relaxed" style={{ color: '#8A82A0' }}>
           Thank you. We&apos;ll contact you within 24 hours with your free estimate and to confirm your moving day.
         </p>
 
         <div className="mt-8 p-5 rounded-2xl text-sm text-left"
-          style={{ backgroundColor: '#FFFFFF', border: '1px solid #EDE6DE', color: '#9A8E83' }}>
+          style={{ backgroundColor: '#FFFFFF', border: '1px solid #E6DFF0', color: '#8A82A0' }}>
           We&apos;ve emailed you a copy of your request. If you don&apos;t see it, check your spam folder.
         </div>
 
@@ -41,7 +41,7 @@ export default async function SuccessPage({
           <Link href="/">
             <Button
               className="font-bold rounded-xl px-8 border-0"
-              style={{ backgroundColor: '#254220', color: '#FAF7F2', boxShadow: '0 4px 14px rgba(77,107,71,0.35)' }}
+              style={{ backgroundColor: '#3D1878', color: '#FFFFFF', boxShadow: '0 4px 14px rgba(75,29,143,0.35)' }}
             >
               Back to home
             </Button>

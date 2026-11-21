@@ -136,14 +136,14 @@ export default function MovingPricingPage() {
                 <Image src={MASCOT} alt="Stonegate mascot giving a thumbs up and holding a moving box" fill priority sizes="180px" className="object-contain" />
               </div>
               </div>
-              <p className="order-2 text-[17px] sm:text-[20px] leading-snug max-w-[480px] lg:mb-7" style={{ color: '#D6E2D3' }}>
+              <p className="order-2 text-[17px] sm:text-[20px] leading-snug max-w-[480px] lg:mb-7" style={{ color: '#DCCFF2' }}>
                 Pick your crew, pay for the hours we work. The truck, blankets and equipment are included.
               </p>
               <div className="order-4 flex flex-col sm:flex-row gap-3" id="pricing-cta">
-                <a href="#estimate" className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
+                <a href="#estimate" className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
                   Estimate My Move <ArrowRight size={18} aria-hidden />
                 </a>
-                <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 transition-[transform,background-color] active:scale-[0.97] hover:bg-white/10" style={{ color: CREAM, borderColor: CLAY, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                <PhoneLink className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-6 font-bold border-2 hover:bg-white/10" style={{ color: CREAM, borderColor: CLAY, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                   Call <PhoneNumber />
                 </PhoneLink>
               </div>
@@ -156,12 +156,12 @@ export default function MovingPricingPage() {
                   <li key={name}>
                     <FadeIn delay={i * 100} className="h-full">
                       {/* The featured tier sits in an amber frame, like a highlighted plan */}
-                      <div className="h-full rounded-[22px] sm:rounded-[26px] p-[3px] sm:p-1 transition-transform duration-300 hover:-translate-y-1" style={{ background: featured ? `linear-gradient(135deg, ${CLAY}, #E8B577)` : 'transparent' }}>
+                      <div className="h-full rounded-[22px] sm:rounded-[26px] p-[3px] sm:p-1 transition-transform duration-300 hover:-translate-y-1" style={{ background: featured ? `linear-gradient(135deg, ${CLAY}, #FF9A5C)` : 'transparent' }}>
                         <div className="h-full rounded-[19px] sm:rounded-[22px] p-3.5 sm:p-5 flex flex-col text-center" style={{ backgroundColor: CREAM }}>
-                          <p className="text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide" style={{ color: featured ? '#A9692A' : GREEN }}>{name}</p>
+                          <p className="text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide" style={{ color: featured ? '#C84E0E' : GREEN }}>{name}</p>
                           <p className="text-[12px] sm:text-[13px] font-semibold mt-1 leading-snug min-h-[2.5em]" style={{ color: MUTED }}>{fit}</p>
                           <p className="mt-2.5 sm:mt-3 flex items-end justify-center gap-1">
-                            <span className="text-[2.3rem] sm:text-[3rem] font-extrabold leading-none tracking-tight" style={{ color: featured ? '#A9692A' : GREEN }}>{price}</span>
+                            <span className="text-[2.3rem] sm:text-[3rem] font-extrabold leading-none tracking-tight" style={{ color: featured ? '#C84E0E' : GREEN }}>{price}</span>
                             <span className="text-[13px] sm:text-[15px] font-bold mb-1" style={{ color: MUTED }}>/hr</span>
                           </p>
                           {/* Crew and truck, with one figure per mover */}
@@ -172,7 +172,7 @@ export default function MovingPricingPage() {
                             </span>
                             <p className="text-[12.5px] sm:text-[14px] font-bold leading-snug" style={{ color: INK }}>{crew}</p>
                           </div>
-                          <Link href={MOVE_BOOK_HREF} className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl min-h-[44px] sm:min-h-[50px] px-3 text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: '#FFFFFF' }}>
+                          <Link href={MOVE_BOOK_HREF} className="mt-3 sm:mt-4 flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl min-h-[44px] sm:min-h-[50px] px-3 text-[13px] sm:text-[15px] font-extrabold uppercase tracking-wide transition-[transform,background-color] active:scale-[0.97] hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: '#FFFFFF' }}>
                             Book Now <ArrowRight size={15} className="hidden min-[400px]:block" aria-hidden />
                           </Link>
                         </div>
@@ -183,7 +183,7 @@ export default function MovingPricingPage() {
               </ul>
               {/* What both rates include: insurance and wrapping first, then the rest, then the terms */}
               <div className="rounded-2xl px-4 py-4 sm:px-5" style={{ backgroundColor: 'rgba(250,247,242,0.08)', border: '1px solid rgba(250,247,242,0.18)' }}>
-                <p className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest mb-3" style={{ color: '#B5C9B0' }}>Included in both rates</p>
+                <p className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest mb-3" style={{ color: '#CDBFEA' }}>Included in both rates</p>
                 <ul className="grid sm:grid-cols-2 gap-2.5 mb-3">
                   {keyIncluded.map(({ Icon, title }) => (
                     <li key={title} className="flex items-center gap-2.5 text-[14px] sm:text-[15px] font-extrabold leading-snug" style={{ color: CREAM }}>
@@ -194,7 +194,7 @@ export default function MovingPricingPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: '#D6E2D3' }}>
+                <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: '#DCCFF2' }}>
                   Truck, dollies and straps, furniture disassembly and floor protection. 3-hour minimum, plus GST and a one-time travel fee for the truck&apos;s drive to you and back.
                 </p>
               </div>
@@ -217,7 +217,7 @@ export default function MovingPricingPage() {
                     <span className="flex gap-0.5" aria-hidden>
                       {Array.from({ length: 5 }, (_, i) => <Star key={i} size={20} fill="#D4A017" style={{ color: '#D4A017' }} />)}
                     </span>
-                    <span className="flex items-center gap-1.5 text-[15px] font-semibold underline underline-offset-4 decoration-[#E8E0D5] group-hover:decoration-current" style={{ color: MUTED }}><GoogleLogo size={16} /> Google reviews</span>
+                    <span className="flex items-center gap-1.5 text-[15px] font-semibold underline underline-offset-4 decoration-[#E6DFF0] group-hover:decoration-current" style={{ color: MUTED }}><GoogleLogo size={16} /> Google reviews</span>
                   </a>
                   <blockquote className="text-lg sm:text-xl font-semibold leading-snug mb-2" style={{ color: INK }}>
                     &ldquo;The guys were on time, worked quickly, and took good care of my stuff.&rdquo;
@@ -229,7 +229,7 @@ export default function MovingPricingPage() {
                       { Icon: Users, label: 'Uniformed movers' },
                       { Icon: MapPin, label: 'Based in Burnaby' },
                     ] as const).map(({ Icon, label }) => (
-                      <li key={label} className="flex items-center gap-2 rounded-full px-4 py-2 text-[15px] font-semibold" style={{ backgroundColor: '#E8F0E6', color: GREEN }}>
+                      <li key={label} className="flex items-center gap-2 rounded-full px-4 py-2 text-[15px] font-semibold" style={{ backgroundColor: '#EEE7FA', color: GREEN }}>
                         <Icon size={16} aria-hidden /> {label}
                       </li>
                     ))}
@@ -244,7 +244,7 @@ export default function MovingPricingPage() {
         </section>
 
         {/* Estimator */}
-        <section id="estimate" style={{ backgroundColor: '#F5F0EB', scrollMarginTop: '80px' }}>
+        <section id="estimate" style={{ backgroundColor: '#F6F2FC', scrollMarginTop: '80px' }}>
           <div className={`${sectionWrap} py-16 sm:py-20`}>
             <FadeIn>
               <p className={`${eyebrow} text-center`} style={{ color: GREEN }}>Quick estimate</p>
@@ -256,6 +256,10 @@ export default function MovingPricingPage() {
             <p className="mt-6 text-center text-[15px]" style={{ color: MUTED }}>
               How long will your move take?{' '}
               <Link href="/guides/how-long-does-it-take-to-move-a-house" className="font-bold underline underline-offset-2" style={{ color: GREEN }}>See average moving times by home size</Link>
+            </p>
+            <p className="mt-2 text-center text-[15px]" style={{ color: MUTED }}>
+              Comparing quotes?{' '}
+              <Link href="/guides/cheap-movers-vancouver" className="font-bold underline underline-offset-2" style={{ color: GREEN }}>What to check before booking cheap movers</Link>
             </p>
           </div>
         </section>
@@ -282,19 +286,19 @@ export default function MovingPricingPage() {
                 <span className="self-center text-3xl font-extrabold leading-none" style={{ color: CLAY }} aria-hidden>=</span>
                 <div className="flex-1 rounded-2xl px-5 py-5 text-center" style={{ backgroundColor: GREEN }}>
                   <p className="text-xl font-extrabold" style={{ color: CREAM }}>Your total</p>
-                  <p className="text-sm mt-1" style={{ color: '#B5C9B0' }}>paid after the job</p>
+                  <p className="text-sm mt-1" style={{ color: '#CDBFEA' }}>paid after the job</p>
                 </div>
               </div>
             </FadeIn>
             <FadeIn delay={140}>
               <div className="mt-8 grid sm:grid-cols-2 gap-4">
-                <div className="flex gap-3 rounded-2xl p-5" style={{ backgroundColor: '#F5F0EB' }}>
+                <div className="flex gap-3 rounded-2xl p-5" style={{ backgroundColor: '#F6F2FC' }}>
                   <Clock size={22} className="shrink-0 mt-0.5" style={{ color: GREEN }} aria-hidden />
                   <p className="text-base leading-relaxed" style={{ color: INK }}>
                     <span className="font-bold">The clock starts</span> when the crew arrives at your pickup address.
                   </p>
                 </div>
-                <div className="flex gap-3 rounded-2xl p-5" style={{ backgroundColor: '#F5F0EB' }}>
+                <div className="flex gap-3 rounded-2xl p-5" style={{ backgroundColor: '#F6F2FC' }}>
                   <CheckCircle2 size={22} className="shrink-0 mt-0.5" style={{ color: GREEN }} aria-hidden />
                   <p className="text-base leading-relaxed" style={{ color: INK }}>
                     <span className="font-bold">It stops</span> once everything is in place at your new home.
@@ -319,7 +323,7 @@ export default function MovingPricingPage() {
                 <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-8" style={{ color: INK }}>Everything Comes With the Crew</h2>
                 <ul className="grid sm:grid-cols-2 gap-3 mb-7">
                   {keyIncluded.map(({ Icon, title, text }) => (
-                    <li key={title} className="rounded-2xl p-5" style={{ backgroundColor: '#E8F0E6' }}>
+                    <li key={title} className="rounded-2xl p-5" style={{ backgroundColor: '#EEE7FA' }}>
                       <span className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: GREEN }}>
                         <Icon size={19} style={{ color: CREAM }} aria-hidden />
                       </span>
@@ -337,11 +341,11 @@ export default function MovingPricingPage() {
                   ))}
                 </ul>
                 {/* The one thing that is not included */}
-                <p className="flex items-start gap-3 rounded-2xl px-4 py-3.5 mb-9 text-[15px] leading-relaxed" style={{ backgroundColor: '#F5F0EB', color: MUTED }}>
+                <p className="flex items-start gap-3 rounded-2xl px-4 py-3.5 mb-9 text-[15px] leading-relaxed" style={{ backgroundColor: '#F6F2FC', color: MUTED }}>
                   <PackageX size={20} className="shrink-0 mt-0.5" style={{ color: CLAY }} aria-hidden />
                   <span><span className="font-bold" style={{ color: INK }}>Not included: packing service.</span> If you want us to pack your home for you, boxes and packing materials are charged separately. Wrapping your furniture is always included. See <Link href="/packing-services" className="font-semibold underline" style={{ color: GREEN }}>packing services</Link>.</span>
                 </p>
-                <Link href={MOVE_BOOK_HREF} className="inline-flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+                <Link href={MOVE_BOOK_HREF} className="inline-flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: CREAM }}>
                   Check Moving Availability <ArrowRight size={18} aria-hidden />
                 </Link>
               </div>

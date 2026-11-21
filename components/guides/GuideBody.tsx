@@ -4,13 +4,13 @@ import LinkedText from '@/components/moving/LinkedText'
 import type { GuideBlock, GuideCredit } from '@/lib/guides'
 
 /** Editorial palette: warm off-white page, near-black text, green for small accents */
-export const PAPER = '#FBF9F6'
-export const TEXT = '#1C1A17'
+export const PAPER = '#FCFBFE'
+export const TEXT = '#1E1530'
 export const SOFT = '#5E554D'
 export const FAINT = '#8A8077'
-export const RULE = '#E3DCD2'
-export const ACCENT = '#014421'
-export const TINT = '#EEF3EC'
+export const RULE = '#E3DCEC'
+export const ACCENT = '#4B1D8F'
+export const TINT = '#F3EEFB'
 
 /** Serif for reading; labels, captions, tables and UI stay in the site's sans */
 export const serif = 'font-[family-name:var(--font-news)]'
@@ -19,8 +19,8 @@ export const bodyText = `${serif} text-[19px] sm:text-[20px] leading-[1.72]`
 
 const CALLOUT = {
   crew: { name: 'How Stonegate works', Icon: Truck, bg: TINT, fg: ACCENT },
-  tip: { name: 'Worth knowing', Icon: Lightbulb, bg: '#F6EEE3', fg: '#9A6631' },
-  note: { name: 'Note', Icon: Info, bg: '#F3F0EC', fg: SOFT },
+  tip: { name: 'Worth knowing', Icon: Lightbulb, bg: '#F6F2FC', fg: '#9A6631' },
+  note: { name: 'Note', Icon: Info, bg: '#F3F0F8', fg: SOFT },
 }
 
 export function Credit({ credit }: { credit: GuideCredit }) {
@@ -53,7 +53,7 @@ export default function GuideBody({ blocks }: { blocks: GuideBlock[] }) {
           case 'list': {
             const Tag = b.ordered ? 'ol' : 'ul'
             return (
-              <Tag key={i} className={`${bodyText} flex flex-col gap-2.5 pl-6 ${b.ordered ? 'list-decimal' : 'list-disc'} marker:text-[#014421]`}>
+              <Tag key={i} className={`${bodyText} flex flex-col gap-2.5 pl-6 ${b.ordered ? 'list-decimal' : 'list-disc'} marker:text-[#4B1D8F]`}>
                 {b.items.map(item => <li key={item} className="pl-1.5"><LinkedText text={item} variant="article" /></li>)}
               </Tag>
             )
@@ -76,7 +76,7 @@ export default function GuideBody({ blocks }: { blocks: GuideBlock[] }) {
               <figure key={i} className="my-2">
                 <div className="overflow-x-auto rounded-2xl" style={{ border: `1px solid ${RULE}`, backgroundColor: '#FFFFFF' }}>
                   <table className="w-full min-w-[540px] text-left text-[14.5px] leading-snug">
-                    <thead style={{ backgroundColor: '#F6F2EC' }}>
+                    <thead style={{ backgroundColor: '#F6F2FC' }}>
                       <tr>{b.head.map(h => <th key={h} scope="col" className={`${label} px-4 py-3`} style={{ color: SOFT }}>{h}</th>)}</tr>
                     </thead>
                     <tbody>
@@ -99,7 +99,7 @@ export default function GuideBody({ blocks }: { blocks: GuideBlock[] }) {
               <aside key={i} className="my-2 rounded-2xl p-6 sm:p-7" style={{ backgroundColor: bg }}>
                 <p className={`${label} mb-3 inline-flex items-center gap-1.5`} style={{ color: fg }}><Icon size={14} aria-hidden /> {name}</p>
                 <p className={`${serif} text-[1.25rem] font-semibold leading-snug mb-2`}>{b.title}</p>
-                <p className={`${serif} text-[17.5px] leading-[1.65]`} style={{ color: '#3D3732' }}><LinkedText text={b.text} variant="article" /></p>
+                <p className={`${serif} text-[17.5px] leading-[1.65]`} style={{ color: '#3A3448' }}><LinkedText text={b.text} variant="article" /></p>
               </aside>
             )
           }

@@ -22,16 +22,16 @@ export default function StickyCallBar({ watchId, quoteHref, quoteLabel = 'Free E
       style={{
         transform: show ? 'translateY(0)' : 'translateY(110%)',
         backgroundColor: 'rgba(250,247,242,0.97)',
-        borderTop: '1px solid #E8E0D5',
-        boxShadow: '0 -6px 20px rgba(26,23,20,0.08)',
+        borderTop: '1px solid #E6DFF0',
+        boxShadow: '0 -6px 20px rgba(30,21,48,0.08)',
         paddingBottom: 'calc(10px + env(safe-area-inset-bottom))',
       }}
       aria-hidden={!show}
     >
-      <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 rounded-full min-h-[52px] px-3 whitespace-nowrap text-base font-extrabold" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
+      <a href={quoteHref} tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-1.5 sg-btn min-h-[52px] px-3 whitespace-nowrap text-base font-extrabold" style={{ backgroundColor: '#4B1D8F', color: '#FFFFFF' }}>
         {quoteLabel} <ArrowRight size={16} aria-hidden />
       </a>
-      <PhoneLink tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 rounded-full min-h-[52px] text-base font-extrabold" style={{ color: '#014421', border: '2px solid #014421', backgroundColor: '#FFFFFF' }}>
+      <PhoneLink tabIndex={show ? 0 : -1} className="flex items-center justify-center gap-2 sg-btn min-h-[52px] text-base font-extrabold" style={{ color: '#4B1D8F', border: '2px solid #4B1D8F', backgroundColor: '#FFFFFF' }}>
         <Phone size={17} fill="currentColor" aria-hidden /> Call
       </PhoneLink>
     </div>

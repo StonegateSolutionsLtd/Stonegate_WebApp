@@ -84,7 +84,7 @@ export default function AboutPage() {
                 Meet the <span style={{ color: CLAY }}>Stonegate Crew</span>
               </h1>
               <p className="text-[18px] sm:text-xl leading-relaxed max-w-[520px] mb-8" style={{ color: MUTED }}>
-                A young, local moving team from Burnaby, making moves across Metro Vancouver feel effortless. The people who answer your call are the people who show up with the truck.
+                A young, local moving team from Burnaby, making moves across Metro Vancouver feel effortless.
               </p>
               <ul className="grid grid-cols-3 max-w-[520px]" style={{ borderTop: `1px solid ${LINE}` }}>
                 {facts.map((f, i) => (
@@ -99,7 +99,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative">
-              <div className="relative rounded-[28px] overflow-hidden aspect-[4/3] shadow-[0_24px_60px_-28px_rgba(26,23,20,0.45)]" style={{ backgroundColor: LINE }}>
+              <div className="relative rounded-[28px] overflow-hidden aspect-[4/3] shadow-[0_24px_60px_-28px_rgba(30,21,48,0.45)]" style={{ backgroundColor: LINE }}>
                 <Image
                   src="/about/photo-3.jpg"
                   alt="The three-person Stonegate crew standing in front of the moving truck"
@@ -111,7 +111,7 @@ export default function AboutPage() {
                   style={{ objectPosition: 'center 60%' }}
                 />
               </div>
-              <div className="absolute -bottom-6 left-4 sm:left-6 lg:-left-6 flex items-center gap-3 rounded-2xl px-4 py-3 bg-white shadow-[0_12px_32px_-12px_rgba(26,23,20,0.35)]">
+              <div className="absolute -bottom-6 left-4 sm:left-6 lg:-left-6 flex items-center gap-3 rounded-2xl px-4 py-3 bg-white shadow-[0_12px_32px_-12px_rgba(30,21,48,0.35)]">
                 <span className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: GREEN }}>
                   <ShieldCheck size={20} style={{ color: CREAM }} aria-hidden />
                 </span>
@@ -155,7 +155,7 @@ export default function AboutPage() {
         </section>
 
         {/* What we stand for, each with a photo */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-16 sm:py-20`}>
             <FadeIn>
               <p className={`${eyebrow} text-center`} style={{ color: GREEN }}>What we stand for</p>
@@ -216,7 +216,7 @@ export default function AboutPage() {
                 <li key={st.title}>
                   <FadeIn delay={i * 80}>
                     <div className="flex gap-5 rounded-3xl p-6 sm:p-7 bg-white" style={{ border: `1px solid ${LINE}` }}>
-                      <span className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 text-lg font-extrabold" style={{ backgroundColor: '#E8F0E6', color: GREEN }}>{i + 1}</span>
+                      <span className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 text-lg font-extrabold" style={{ backgroundColor: '#EEE7FA', color: GREEN }}>{i + 1}</span>
                       <div>
                         <h3 className="text-lg sm:text-xl font-extrabold mb-1.5" style={{ color: INK }}>{st.title}</h3>
                         <p className="text-base leading-relaxed" style={{ color: MUTED }}>{st.text}</p>

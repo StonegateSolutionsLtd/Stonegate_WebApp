@@ -134,7 +134,7 @@ export default function AddressAutocomplete({ value, onValueChange, input: Input
       {showing && rect && createPortal(
         <div
           className="fixed z-[100] overflow-hidden rounded-2xl bg-white text-left animate-in fade-in slide-in-from-top-1 duration-150"
-          style={{ left: rect.left, top: rect.top, width: Math.max(rect.width, 280), border: '1px solid #E8E0D5', boxShadow: '0 16px 40px rgba(26,23,20,0.18)' }}
+          style={{ left: rect.left, top: rect.top, width: Math.max(rect.width, 280), border: '1px solid #E6DFF0', boxShadow: '0 16px 40px rgba(30,21,48,0.18)' }}
         >
           <ul id={listId} role="listbox" className="py-1.5">
             {suggestions.map((s, i) => (
@@ -147,17 +147,17 @@ export default function AddressAutocomplete({ value, onValueChange, input: Input
                 onMouseDown={e => { e.preventDefault(); pick(s) }}
                 onMouseEnter={() => setActive(i)}
                 className="flex items-start gap-3 px-4 py-2.5 cursor-pointer"
-                style={{ backgroundColor: i === active ? '#EAF2E7' : undefined }}
+                style={{ backgroundColor: i === active ? '#EEE7FA' : undefined }}
               >
-                <MapPin size={16} className="shrink-0 mt-0.5" style={{ color: '#014421' }} aria-hidden />
+                <MapPin size={16} className="shrink-0 mt-0.5" style={{ color: '#4B1D8F' }} aria-hidden />
                 <span className="min-w-0 leading-snug">
-                  <span className="block text-[15px] font-semibold truncate" style={{ color: '#1A1714' }}>{s.name}</span>
-                  {s.context && <span className="block text-[13px] truncate" style={{ color: '#6B5E54' }}>{s.context}</span>}
+                  <span className="block text-[15px] font-semibold truncate" style={{ color: '#1E1530' }}>{s.name}</span>
+                  {s.context && <span className="block text-[13px] truncate" style={{ color: '#5F5870' }}>{s.context}</span>}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="px-4 py-1.5 text-[11px] text-right" style={{ color: '#9A8E83', borderTop: '1px solid #F0EBE3' }}>Search by Mapbox</p>
+          <p className="px-4 py-1.5 text-[11px] text-right" style={{ color: '#8A82A0', borderTop: '1px solid #EEE9F5' }}>Search by Mapbox</p>
         </div>,
         document.body,
       )}

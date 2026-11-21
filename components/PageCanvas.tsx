@@ -10,17 +10,17 @@ export default function PageCanvas({
   backLabel?: string
 }) {
   return (
-    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#254220' }}>
+    <div className="min-h-screen pt-4 sm:pt-8 flex flex-col" style={{ backgroundColor: '#3D1878' }}>
       {/* Cream canvas */}
       <div
         className="relative z-10 flex-1 rounded-t-2xl flex flex-col items-center justify-start px-6 pt-24 pb-12 overflow-hidden"
-        style={{ backgroundColor: '#F5F0EB' }}
+        style={{ backgroundColor: '#F6F2FC' }}
       >
         {/* Dot grid */}
         <div
           className="absolute inset-0 rounded-2xl pointer-events-none"
           style={{
-            backgroundImage: 'radial-gradient(circle, #C4B8AC 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, #BDB4CF 1px, transparent 1px)',
             backgroundSize: '28px 28px',
             opacity: 0.35,
           }}
@@ -30,7 +30,7 @@ export default function PageCanvas({
         <Link
           href={backHref}
           className="absolute top-5 left-6 text-sm font-semibold opacity-50 hover:opacity-100 transition-opacity z-20"
-          style={{ color: '#6B5E54' }}
+          style={{ color: '#5F5870' }}
         >
           {backLabel}
         </Link>

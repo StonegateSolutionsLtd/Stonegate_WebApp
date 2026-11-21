@@ -62,10 +62,10 @@ export default function ServicePage({ service }: { service: MovingService }) {
                   ))}
                 </ul>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+                  <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: CREAM }}>
                     Check Moving Availability <ArrowRight size={18} aria-hidden />
                   </Link>
-                  <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 border-[#014421] transition-[transform,background-color] active:scale-[0.97] hover:bg-[#E8F0E6]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                  <PhoneLink className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-6 font-bold border-2 border-[#4B1D8F] hover:bg-[#EEE7FA]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                     Call <PhoneNumber />
                   </PhoneLink>
                 </div>
@@ -106,7 +106,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
         </section>
 
         {/* Related pages, linked in context */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-14 sm:py-16`}>
             <FadeIn className="max-w-3xl">
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-4" style={{ color: INK }}>{service.related.heading}</h2>
@@ -125,7 +125,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
             <div className="flex flex-col">
               <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>{service.faqHeading}</h2>
               <p className="text-base leading-relaxed mb-6" style={{ color: MUTED }}>Still have a question? Call us and we will walk you through it.</p>
-              <PhoneLink className="self-start flex items-center gap-2 rounded-full min-h-[52px] px-6 font-bold border-2 border-[#014421] transition-[transform,background-color] active:scale-[0.97] hover:bg-[#E8F0E6]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+              <PhoneLink className="self-start flex items-center gap-2 sg-btn min-h-[52px] px-6 font-bold border-2 border-[#4B1D8F] hover:bg-[#EEE7FA]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                 <Phone size={16} fill="currentColor" aria-hidden /> Call <PhoneNumber />
               </PhoneLink>
               <div className="hidden lg:block relative mt-auto pt-10 w-full max-w-[340px] aspect-square">
@@ -158,7 +158,7 @@ export default function ServicePage({ service }: { service: MovingService }) {
         </section>
 
         {/* Service areas */}
-        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F5F0EB' }}>
+        <section style={{ borderTop: `1px solid ${LINE}`, backgroundColor: '#F6F2FC' }}>
           <div className={`${sectionWrap} py-16`}>
             <FadeIn>
               <p className={eyebrow} style={{ color: GREEN }}>Service areas</p>
@@ -177,12 +177,12 @@ export default function ServicePage({ service }: { service: MovingService }) {
           <div className={`${sectionWrap} relative grid md:grid-cols-[1.3fr_1fr] items-end gap-4`}>
             <div className="py-14 md:py-20">
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: CREAM }}>Ready for your free estimate?</h2>
-              <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#B5C9B0' }}>Tell us what you&apos;re moving and when in about 2 minutes, or call and we will sort it out with you.</p>
+              <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#CDBFEA' }}>Tell us what you&apos;re moving and when in about 2 minutes, or call and we will sort it out with you.</p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
+                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
                   Check Moving Availability <ArrowRight size={18} aria-hidden />
                 </Link>
-                <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 border-[rgba(250,247,242,0.7)] transition-[transform,background-color] active:scale-[0.97] hover:bg-white/10" style={{ color: CREAM, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+                <PhoneLink className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-6 font-bold border-2 border-[rgba(250,247,242,0.7)] hover:bg-white/10" style={{ color: CREAM, fontVariantNumeric: 'lining-nums tabular-nums' }}>
                   <Phone size={16} fill="currentColor" aria-hidden /> Call <PhoneNumber />
                 </PhoneLink>
               </div>

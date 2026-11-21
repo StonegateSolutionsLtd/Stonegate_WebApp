@@ -16,9 +16,9 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
 
   const arrowStyle: React.CSSProperties = {
     width: '40px', height: '40px', borderRadius: '50%',
-    backgroundColor: '#FAF7F2', border: '1px solid #E8E0D5',
+    backgroundColor: '#FFFFFF', border: '1px solid #E6DFF0',
     alignItems: 'center', justifyContent: 'center',
-    cursor: 'pointer', flexShrink: 0, color: '#014421',
+    cursor: 'pointer', flexShrink: 0, color: '#4B1D8F',
   }
 
   return (
@@ -39,23 +39,23 @@ export default function ReviewsRow({ reviews }: { reviews: Review[] }) {
           <div
             key={review.name}
             className="flex flex-col shrink-0 p-6 rounded-2xl w-[85vw] sm:w-[300px]"
-            style={{ border: '1px solid #E8E0D5', backgroundColor: '#F5F0EB', maxWidth: '300px', scrollSnapAlign: 'start' }}
+            style={{ border: '1px solid #E6DFF0', backgroundColor: '#F6F2FC', maxWidth: '300px', scrollSnapAlign: 'start' }}
           >
             <div className="flex items-center gap-3 mb-3">
               <span
                 className="rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
-                style={{ width: '40px', height: '40px', backgroundColor: '#E8F0E6', color: '#014421' }}
+                style={{ width: '40px', height: '40px', backgroundColor: '#EEE7FA', color: '#4B1D8F' }}
               >
                 {review.name.split(' ').filter(Boolean).slice(0, 2).map(p => p[0]?.toUpperCase()).join('')}
               </span>
-              <p className="font-bold text-sm" style={{ color: '#1A1714' }}>{review.name}</p>
+              <p className="font-bold text-sm" style={{ color: '#1E1530' }}>{review.name}</p>
             </div>
             <div className="flex items-center gap-1 mb-3">
               {Array.from({ length: 5 }, (_, j) => (
                 <Star key={j} size={14} fill="#D4A017" style={{ color: '#D4A017' }} />
               ))}
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: '#6B5E54' }}>{review.text}</p>
+            <p className="text-sm leading-relaxed" style={{ color: '#5F5870' }}>{review.text}</p>
           </div>
         ))}
       </div>

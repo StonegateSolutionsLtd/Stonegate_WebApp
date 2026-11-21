@@ -10,8 +10,8 @@ export interface ServiceCard {
   image: { src: string; alt: string; pos?: string; brightness?: number }
 }
 
-const GREEN = '#014421'
-const MUTED = '#6B5E54'
+const GREEN = '#4B1D8F'
+const MUTED = '#5F5870'
 
 // Up to four cards sit in one row on desktop
 const ONE_ROW: Record<number, string> = { 2: 'lg:grid-cols-2', 3: 'lg:grid-cols-3', 4: 'lg:grid-cols-4' }
@@ -33,9 +33,9 @@ export default function ServicesCarousel({ cards, label }: { cards: ServiceCard[
           <li key={c.href} className={`snap-start shrink-0 w-[84vw] max-w-[400px] sm:w-[400px] lg:max-w-none ${oneRow ? 'lg:w-auto' : rowsOfThree ? 'lg:w-[calc((100%-4.5rem)/3)]' : 'lg:w-[calc((100%-6rem)/4)]'}`}>
             <div
               className="group h-full flex flex-col rounded-[28px] p-3.5 pb-5 lg:p-5 lg:pb-6 text-center transition-shadow hover:shadow-lg"
-              style={{ backgroundColor: '#FFFFFF', boxShadow: '0 6px 24px -12px rgba(26,23,20,0.18)' }}
+              style={{ backgroundColor: '#FFFFFF', boxShadow: '0 6px 24px -12px rgba(30,21,48,0.18)' }}
             >
-              <Link href={c.href} tabIndex={-1} aria-hidden className="relative block aspect-[16/9] rounded-[20px] overflow-hidden mb-4" style={{ backgroundColor: '#E8E0D5' }}>
+              <Link href={c.href} tabIndex={-1} aria-hidden className="relative block aspect-[16/9] rounded-[20px] overflow-hidden mb-4" style={{ backgroundColor: '#E6DFF0' }}>
                 <Image
                   src={c.image.src}
                   alt={c.image.alt}
@@ -52,7 +52,7 @@ export default function ServicesCarousel({ cards, label }: { cards: ServiceCard[
               <p className="text-[14px] lg:text-[15px] leading-relaxed mb-4 px-2 line-clamp-4" style={{ color: MUTED }}>{c.text}</p>
               <Link
                 href={c.href}
-                className="mt-auto self-center inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[15px] font-bold transition-colors hover:bg-[#014421] hover:text-[#FAF7F2]"
+                className="mt-auto self-center inline-flex items-center gap-1.5 sg-btn px-5 py-2.5 text-[15px] font-bold hover:bg-[#4B1D8F] hover:text-[#FFFFFF]"
                 style={{ border: `2px solid ${GREEN}`, color: GREEN }}
               >
                 Learn More <ArrowUpRight size={16} aria-hidden />

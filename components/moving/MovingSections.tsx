@@ -10,18 +10,18 @@ import { MOVING_REVIEWS, type ServicePhoto } from '@/lib/moving-services'
 import BookingStart from './BookingStart'
 import GoogleStars from '@/components/GoogleStars'
 
-export const GREEN = '#014421'
-export const INK = '#1A1714'
-export const MUTED = '#6B5E54'
-export const CREAM = '#FAF7F2'
-export const CLAY = '#C98A45'
-export const LINE = '#E8E0D5'
+export const GREEN = '#4B1D8F'
+export const INK = '#1E1530'
+export const MUTED = '#5F5870'
+export const CREAM = '#FFFFFF'
+export const CLAY = '#F26B21'
+export const LINE = '#E6DFF0'
 
 export const eyebrow = 'text-xs font-bold uppercase tracking-widest mb-3'
 export const sectionWrap = 'max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8'
 
 /** The Stonegate mascot: thumbs up, holding an SG box; transparent PNG cut off at the waist */
-export const MASCOT = '/moving/mascot.png'
+export const MASCOT = '/moving/mascot-purple.png'
 
 const TIERS = [
   { crew: '2 movers + truck', price: '$130', fit: 'Studios, 1- and 2-bedroom apartments' },
@@ -143,15 +143,15 @@ export function MovingPriceBlock({ note, quotePoints }: { note: string; quotePoi
         <FadeIn>
           <div className="rounded-3xl p-7 sm:p-10 lg:p-12 grid lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-12 items-center" style={{ backgroundColor: GREEN }}>
             <div>
-              <p className={eyebrow} style={{ color: '#B5C9B0' }}>{quotePoints ? 'Quoted for your move' : 'Clear hourly pricing'}</p>
+              <p className={eyebrow} style={{ color: '#CDBFEA' }}>{quotePoints ? 'Quoted for your move' : 'Clear hourly pricing'}</p>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4" style={{ color: CREAM }}>Know the Price Before You Book</h2>
-              <p className="text-base leading-relaxed mb-7" style={{ color: '#B5C9B0' }}>{note}</p>
+              <p className="text-base leading-relaxed mb-7" style={{ color: '#CDBFEA' }}>{note}</p>
               {/* Buttons drop to their own rows rather than breaking their labels */}
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold whitespace-nowrap transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
+                <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold whitespace-nowrap hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
                   Request a Free Estimate <ArrowRight size={18} aria-hidden />
                 </Link>
-                <Link href="/pricing/moving" className="flex items-center justify-center rounded-full min-h-[56px] px-6 font-bold whitespace-nowrap transition-[transform,opacity] active:scale-[0.97] hover:opacity-80" style={{ color: CREAM, border: '2px solid rgba(250,247,242,0.6)' }}>
+                <Link href="/pricing/moving" className="flex items-center justify-center sg-btn min-h-[56px] px-6 font-bold whitespace-nowrap hover:opacity-80" style={{ color: CREAM, border: '2px solid rgba(250,247,242,0.6)' }}>
                   See All Moving Prices
                 </Link>
               </div>
@@ -204,7 +204,7 @@ export function MovingReviews() {
         </FadeIn>
         <ReviewsRow reviews={MOVING_REVIEWS} />
         <div className="text-center">
-          <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full min-h-[52px] px-8 font-bold transition-[transform,background-color] active:scale-[0.97] hover:bg-[#00341A]" style={{ backgroundColor: GREEN, color: CREAM }}>
+          <a href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center sg-btn min-h-[52px] px-8 font-bold hover:bg-[#36146B]" style={{ backgroundColor: GREEN, color: CREAM }}>
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
           </a>
         </div>
@@ -219,7 +219,7 @@ export function CityPills({ links }: { links: { href: string; label: string }[] 
     <ul className="flex flex-wrap gap-2.5">
       {links.map(l => (
         <li key={l.href}>
-          <Link href={l.href} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}`, color: INK }}>
+          <Link href={l.href} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:bg-[#EEE7FA]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${LINE}`, color: INK }}>
             <MapPin size={13} style={{ color: GREEN }} aria-hidden /> {l.label}
           </Link>
         </li>
@@ -236,7 +236,7 @@ export function MovingFaq({ heading, faqs }: { heading: string; faqs: { q: strin
         <div className="flex flex-col">
           <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: INK }}>{heading}</h2>
           <p className="text-base leading-relaxed mb-6" style={{ color: MUTED }}>Still have a question? Call us and we will walk you through it.</p>
-          <PhoneLink className="self-start flex items-center gap-2 rounded-full min-h-[52px] px-6 font-bold border-2 border-[#014421] transition-[transform,background-color] active:scale-[0.97] hover:bg-[#E8F0E6]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+          <PhoneLink className="self-start flex items-center gap-2 sg-btn min-h-[52px] px-6 font-bold border-2 border-[#4B1D8F] hover:bg-[#EEE7FA]" style={{ color: GREEN, fontVariantNumeric: 'lining-nums tabular-nums' }}>
             <Phone size={16} fill="currentColor" aria-hidden /> Call <PhoneNumber />
           </PhoneLink>
         </div>
@@ -263,12 +263,12 @@ export function MovingClose({ heading, text }: { heading: string; text: string }
       <div className={`${sectionWrap} relative grid md:grid-cols-[1.3fr_1fr] items-end gap-4`}>
         <div className="py-14 md:py-20">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: CREAM }}>{heading}</h2>
-          <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#B5C9B0' }}>{text}</p>
+          <p className="text-base leading-relaxed max-w-lg mb-8" style={{ color: '#CDBFEA' }}>{text}</p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-7 font-extrabold transition-[transform,background-color] active:scale-[0.97] hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
+            <Link href={MOVE_BOOK_HREF} className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-7 font-extrabold hover:bg-white" style={{ backgroundColor: CREAM, color: GREEN }}>
               Check Moving Availability <ArrowRight size={18} aria-hidden />
             </Link>
-            <PhoneLink className="flex items-center justify-center gap-2 rounded-full min-h-[56px] px-6 font-bold border-2 border-[rgba(250,247,242,0.7)] transition-[transform,background-color] active:scale-[0.97] hover:bg-white/10" style={{ color: CREAM, fontVariantNumeric: 'lining-nums tabular-nums' }}>
+            <PhoneLink className="flex items-center justify-center gap-2 sg-btn min-h-[56px] px-6 font-bold border-2 border-[rgba(250,247,242,0.7)] hover:bg-white/10" style={{ color: CREAM, fontVariantNumeric: 'lining-nums tabular-nums' }}>
               <Phone size={16} fill="currentColor" aria-hidden /> Call <PhoneNumber />
             </PhoneLink>
           </div>

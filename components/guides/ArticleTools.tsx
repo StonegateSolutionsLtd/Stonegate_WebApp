@@ -30,7 +30,7 @@ export function ReadingProgress({ targetId }: { targetId: string }) {
 
   return (
     <div aria-hidden className="fixed top-0 inset-x-0 z-[60] h-[3px] pointer-events-none">
-      <div className="h-full origin-left" style={{ transform: `scaleX(${progress})`, backgroundColor: '#014421', transition: 'transform 80ms linear' }} />
+      <div className="h-full origin-left" style={{ transform: `scaleX(${progress})`, backgroundColor: '#4B1D8F', transition: 'transform 80ms linear' }} />
     </div>
   )
 }
@@ -52,7 +52,7 @@ export function CopyLink() {
       type="button"
       onClick={copy}
       className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors hover:bg-[#EEE8E0]"
-      style={{ border: '1px solid #E3DCD2', color: '#1C1A17' }}
+      style={{ border: '1px solid #E3DCEC', color: '#1E1530' }}
     >
       {copied ? <Check size={14} aria-hidden /> : <Link2 size={14} aria-hidden />}
       {copied ? 'Link copied' : 'Copy link'}

@@ -54,7 +54,7 @@ export default function GuidesPage() {
         </header>
 
         {lead && (
-          <Link href={guidePath(lead)} className="group grid md:grid-cols-[1.3fr_1fr] rounded-3xl overflow-hidden transition-shadow hover:shadow-[0_18px_48px_-24px_rgba(28,26,23,0.35)]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
+          <Link href={guidePath(lead)} className="group grid md:grid-cols-[1.3fr_1fr] rounded-3xl overflow-hidden transition-shadow hover:shadow-[0_18px_48px_-24px_rgba(30,21,48,0.35)]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
             <span className="relative block aspect-[3/2] md:aspect-auto md:min-h-[380px] overflow-hidden" style={{ backgroundColor: RULE }}>
               <Image src={lead.hero.src} alt={lead.hero.alt} fill priority sizes="(max-width: 768px) 100vw, 620px" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" style={{ objectPosition: lead.hero.pos ?? 'center' }} />
             </span>
@@ -74,7 +74,7 @@ export default function GuidesPage() {
           <ul className="mt-6 grid sm:grid-cols-2 gap-6">
             {rest.map(g => (
               <li key={g.slug}>
-                <Link href={guidePath(g)} className="group flex flex-col h-full rounded-3xl overflow-hidden transition-shadow hover:shadow-[0_18px_48px_-24px_rgba(28,26,23,0.35)]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
+                <Link href={guidePath(g)} className="group flex flex-col h-full rounded-3xl overflow-hidden transition-shadow hover:shadow-[0_18px_48px_-24px_rgba(30,21,48,0.35)]" style={{ backgroundColor: '#FFFFFF', border: `1px solid ${RULE}` }}>
                   <span className="relative block aspect-[16/9] overflow-hidden" style={{ backgroundColor: RULE }}>
                     <Image src={g.hero.src} alt="" fill sizes="(max-width: 640px) 100vw, 540px" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" style={{ objectPosition: g.hero.pos ?? 'center' }} />
                   </span>

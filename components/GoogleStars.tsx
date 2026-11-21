@@ -16,7 +16,7 @@ function StarIcon({ size }: { size: number }) {
  * Google "G" and five gold stars, straight on the background; links to the Google reviews.
  * Shown at the top of every main page's hero. `onLight` drops the shadow that keeps it readable on photos.
  */
-export default function GoogleStars({ className, size = 'md', onLight = false }: { className?: string; size?: 'sm' | 'md'; onLight?: boolean }) {
+export default function GoogleStars({ className, size = 'md', onLight = false, label }: { className?: string; size?: 'sm' | 'md'; onLight?: boolean; label?: string }) {
   const star = size === 'sm' ? 15 : 19
   return (
     <a
@@ -35,6 +35,7 @@ export default function GoogleStars({ className, size = 'md', onLight = false }:
       <span className="flex items-center gap-px">
         {Array.from({ length: 5 }, (_, i) => <StarIcon key={i} size={star} />)}
       </span>
+      {label && <span className="ml-1 text-[15px] font-bold" style={{ color: onLight ? '#1E1530' : '#FFFFFF' }}>{label}</span>}
     </a>
   )
 }

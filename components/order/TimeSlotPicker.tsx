@@ -80,7 +80,7 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <span className="text-base font-bold" style={{ color: '#1A1714' }}>{longDate(activeDate)}</span>
+        <span className="text-base font-bold" style={{ color: '#1E1530' }}>{longDate(activeDate)}</span>
         <div className="flex gap-2">
           <button
             type="button"
@@ -88,7 +88,7 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
             disabled={atFirstWeek}
             aria-label="Previous week"
             className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-150 disabled:opacity-35 disabled:cursor-not-allowed hover:scale-110 hover:-translate-x-0.5 active:scale-95 disabled:hover:scale-100 disabled:hover:translate-x-0"
-            style={{ border: '1.5px solid #E0D8D0', backgroundColor: '#FFFFFF', color: '#254220' }}
+            style={{ border: '1.5px solid #E3DCEC', backgroundColor: '#FFFFFF', color: '#3D1878' }}
           >
             <ChevronLeft size={16} strokeWidth={2.5} />
           </button>
@@ -97,7 +97,7 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
             onClick={() => shiftWeek(1)}
             aria-label="Next week"
             className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-150 hover:scale-110 hover:translate-x-0.5 active:scale-95"
-            style={{ border: '1.5px solid #E0D8D0', backgroundColor: '#FFFFFF', color: '#254220' }}
+            style={{ border: '1.5px solid #E3DCEC', backgroundColor: '#FFFFFF', color: '#3D1878' }}
           >
             <ChevronRight size={16} strokeWidth={2.5} />
           </button>
@@ -117,9 +117,9 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
                 selected && 'scale-[1.04]'
               )}
               style={{
-                border: selected ? '1.5px solid #254220' : '1.5px solid transparent',
-                backgroundColor: selected ? '#254220' : 'transparent',
-                color: selected ? '#FAF7F2' : '#6B5E54',
+                border: selected ? '1.5px solid #3D1878' : '1.5px solid transparent',
+                backgroundColor: selected ? '#3D1878' : 'transparent',
+                color: selected ? '#FFFFFF' : '#5F5870',
                 animationDelay: `${i * 35}ms`,
                 animationDuration: '300ms',
                 animationFillMode: 'backwards',
@@ -136,11 +136,11 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
         })}
       </div>
 
-      <div className="my-5 h-px" style={{ backgroundColor: '#F0EBE3' }} />
+      <div className="my-5 h-px" style={{ backgroundColor: '#EEE9F5' }} />
 
       <div className="flex items-baseline justify-between mb-3.5">
-        <span className="text-sm font-bold" style={{ color: '#1A1714' }}>When works for you?</span>
-        <span className="text-xs" style={{ color: '#9A8E83' }}>
+        <span className="text-sm font-bold" style={{ color: '#1E1530' }}>When works for you?</span>
+        <span className="text-xs" style={{ color: '#8A82A0' }}>
           Usually about {formatDuration(DEFAULT_DURATION_MIN[jobType])}
         </span>
       </div>
@@ -151,19 +151,19 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
             <div
               key={i}
               className="h-11 rounded-xl animate-pulse"
-              style={{ backgroundColor: '#F0EBE3', animationDelay: `${i * 80}ms` }}
+              style={{ backgroundColor: '#EEE9F5', animationDelay: `${i * 80}ms` }}
             />
           ))}
         </div>
       ) : failed ? (
         <div className="py-4 animate-in fade-in duration-300">
           <p className="text-sm mb-2" style={{ color: '#ef4444' }}>Couldn&apos;t load availability.</p>
-          <button type="button" onClick={load} className="text-sm font-semibold underline transition-opacity hover:opacity-70" style={{ color: '#254220' }}>
+          <button type="button" onClick={load} className="text-sm font-semibold underline transition-opacity hover:opacity-70" style={{ color: '#3D1878' }}>
             Try again
           </button>
         </div>
       ) : !date ? (
-        <p className="text-sm py-4 animate-in fade-in duration-300" style={{ color: '#9A8E83' }}>Pick a day above to see open times.</p>
+        <p className="text-sm py-4 animate-in fade-in duration-300" style={{ color: '#8A82A0' }}>Pick a day above to see open times.</p>
       ) : slots.length === 0 ? (
         <div className="rounded-xl px-4 py-3.5 animate-in fade-in zoom-in-95 duration-300" style={{ backgroundColor: '#FDE4C8' }}>
           <p className="text-sm font-semibold" style={{ color: '#9A4B12' }}>
@@ -187,10 +187,10 @@ export default function TimeSlotPicker({ jobType, date, time, onChange }: Props)
                   selected && 'scale-[1.03]'
                 )}
                 style={{
-                  border: `1.5px solid ${selected ? '#254220' : '#E0D8D0'}`,
-                  backgroundColor: selected ? '#254220' : '#FFFFFF',
-                  color: selected ? '#FAF7F2' : '#4A3F38',
-                  boxShadow: selected ? '0 2px 8px rgba(77,107,71,0.25)' : 'none',
+                  border: `1.5px solid ${selected ? '#3D1878' : '#E3DCEC'}`,
+                  backgroundColor: selected ? '#3D1878' : '#FFFFFF',
+                  color: selected ? '#FFFFFF' : '#463E58',
+                  boxShadow: selected ? '0 2px 8px rgba(75,29,143,0.25)' : 'none',
                   animationDelay: `${i * 40}ms`,
                   animationDuration: '300ms',
                   animationFillMode: 'backwards',

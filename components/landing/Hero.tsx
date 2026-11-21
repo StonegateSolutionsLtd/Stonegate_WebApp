@@ -1,354 +1,69 @@
-import { Fragment } from 'react'
-import Link from 'next/link'
-import GoogleLogo from '@/components/GoogleLogo'
-import { CITIES, cityMovingHref } from '@/lib/seo/cities'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
 import Navbar from '@/components/landing/Navbar'
 import Footer from '@/components/landing/Footer'
-import { Truck, Shield, DollarSign, Star, CalendarDays, MapPin, ClipboardList, ArrowRight, CheckCircle2 } from 'lucide-react'
-import FadeIn from '@/components/landing/FadeIn'
-import ReviewsRow from '@/components/landing/ReviewsRow'
-import ServicesCarousel from '@/components/landing/ServicesCarousel'
-import { MOVING_REVIEWS, movingServiceCards } from '@/lib/moving-services'
-import { PhoneLink } from '@/components/PhoneNumber'
+import HomeSections from '@/components/landing/HomeSections'
 import BookingStart from '@/components/moving/BookingStart'
-import { MovingClose } from '@/components/moving/MovingSections'
+import MascotCouch from '@/components/landing/MascotCouch'
 import GoogleStars from '@/components/GoogleStars'
-
-const included = [
-  { title: 'Furniture wrapped and protected', text: 'Moving blankets and straps on every piece, so it arrives the way it left.' },
-  { title: 'Taken apart and put back together', text: 'Beds, tables and anything that won\'t fit through a door - reassembled in your new place.' },
-  { title: 'Truck and equipment included', text: 'A fully-equipped truck, dollies and ramp come with the crew. Nothing extra to rent.' },
-  { title: 'Clear hourly rate', text: '2 movers and a truck from $130/hr, or 3 movers with a 16\' truck from $170/hr, plus GST. 3-hour minimum.' },
-]
-
-const steps = [
-  { number: '01', title: 'Request a Free Estimate', description: 'Tell us what you\'re moving and when, online in about 2 minutes - no hidden fees, no stress.', Icon: CalendarDays },
-  { number: '02', title: 'We Confirm the Details', description: 'We go over your move with you and give you a clear, upfront rate before moving day.', Icon: ClipboardList },
-  { number: '03', title: 'We Move You In', description: 'Our crew arrives on time, wraps and loads your furniture, and sets it up in your new place.', Icon: Truck },
-]
+import { Montserrat } from 'next/font/google'
 
 
+/** Headlines: a bold geometric sans, in the spirit of Coca-Cola's headline face */
+const headline = Montserrat({ subsets: ['latin'], weight: ['700', '800'] })
 
-// Every moving service page
-const serviceCards = movingServiceCards()
-
-export default function Hero() {
+/** `headlineFont` / `accentFont` override the H1 typeface or just its last word (used only by the temporary /type-compare preview) */
+export default function Hero({ headlineFont, accentFont }: { headlineFont?: string; accentFont?: string } = {}) {
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FFFFFF' }}>
 
       <Navbar />
 
       <main className="flex-1">
 
-        {/* Hero - full-screen video with text overlay */}
-        <section className="relative flex items-start min-h-[calc(70vh-65px)] lg:min-h-[min(calc(96vh-65px),60vw)] short:min-h-0 3xl:min-h-[max(min(calc(84vh-65px),900px),calc(34vw+110px))]" style={{ overflow: 'hidden' }}>
+        {/* Hero. A centred headline on white, then the truck photo and the quote form.
+            Phones and tablets: the photo sits inside the purple quote card, with the mascot under it.
+            Desktop (lg+): the quote form sits centred above the photo, which is a wide rounded panel,
+            and the mascot pushes his couch along its bottom edge. */}
+        <section style={{ backgroundColor: '#FFFFFF' }}>
+          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-5 sm:px-6 pt-4 sm:pt-10 lg:pt-5 pb-2 lg:pb-12">
+            <div className="flex justify-center mb-2.5 lg:mb-2"><GoogleStars onLight label="4.9 on Google" /></div>
+            {/* The page's H1: the search people make */}
+            <h1 className={`${headlineFont ?? headline.className} text-center font-bold leading-[1.08] tracking-[-0.02em] text-[clamp(2.3rem,6vw,4.4rem)] lg:text-[clamp(2.8rem,4vw,3.9rem)] lg:leading-[1.05]`} style={{ color: '#1E1530' }}>
+              Professional Movers in <span className={accentFont} style={{ color: '#4B1D8F' }}>Vancouver</span>
+            </h1>
+            <p className="mt-2.5 lg:mt-2 mx-auto max-w-[580px] text-center text-[15px] sm:text-[19px] leading-snug" style={{ color: '#5F5870' }}>
+              Local moving company providing house, apartment, condo and commercial moving services across Metro Vancouver.
+            </p>
 
-          {/* Full-screen image */}
-          <div className="absolute inset-0 lg:bottom-[110px] overflow-hidden" style={{ backgroundColor: '#1A1714' }}>
-            <Image
-              src="/hero-truck-home-natural.jpg"
-              alt="Stonegate Moving Solutions truck outside a home"
-              fill
-              priority
-              quality={90}
-              sizes="(max-width: 1024px) 200vw, 100vw"
-              className="object-cover object-[42%_center] lg:object-[60%_75%]"
-              style={{ filter: 'brightness(0.95)' }}
-            />
-          </div>
-
-          {/* Left-side darkening gradient */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.79) 18%, rgba(0,0,0,0.7) 32%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.12) 75%, rgba(0,0,0,0.04) 84%, transparent 92%)' }} />
-
-          {/* Text - left side, vertically centered */}
-          <div className="relative z-20 self-stretch flex flex-col pl-8 pr-6 sm:pl-16 sm:pr-16 lg:pl-24 lg:pr-0 pt-12 pb-16 lg:pt-16 lg:pb-[140px] short:pt-9 short:pb-[132px] max-w-[680px] lg:max-w-[1040px] 3xl:pl-[max(4rem,calc((100vw-2200px)/2+4rem))] 3xl:max-w-none 3xl:pt-32 3xl:pb-[150px]">
-            <div className="flex flex-col flex-1">
-              <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
-              <p className="text-[12px] sm:text-[13px] font-extrabold uppercase tracking-[0.18em] mb-3 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#E8C99E' }}>
-                Vancouver &amp; Burnaby Movers
-              </p>
-              {/* The page's H1: the search people make, shown as the big headline */}
-              <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-3 lg:mb-4 w-fit 3xl:[--hero-h1-max:5.4rem]" style={{ fontSize: 'clamp(2.05rem, min(7.3vw, 7.5svh), var(--hero-h1-max, 4.55rem))' }}>
-                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF' }}>Professional</span>
-                {/* Real spaces between the lines, so the heading text reads "Professional Movers in Vancouver" (ignored by the flex layout) */}
-                {' '}
-                <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.8rem, 2.4vw, 1.35rem)', margin: '0.3em 0', letterSpacing: '0.35em' }}>
-                  <span style={{ flex: 0.3, height: '1.5px', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.35))' }} />
-                  <span className="font-extrabold [text-shadow:0_1px_6px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF', flexShrink: 0, whiteSpace: 'nowrap' }}>Movers in</span>
-                  <span style={{ flex: 1.7, height: '1.5px', background: 'linear-gradient(to right, rgba(255,255,255,0.35), transparent)' }} />
-                </span>
-                {' '}
-                <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#C98A45', whiteSpace: 'nowrap', fontSize: '1.15em' }}>Vancouver</span>
-              </h1>
-              <p className="sm:hidden text-[17px] font-medium leading-snug mb-3 [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
-                Local moving company providing house, apartment, condo and commercial moving services across Metro Vancouver.
-              </p>
-              <p className="hidden sm:block max-w-[640px] text-balance text-[21px] font-medium leading-snug mb-4 lg:mb-6 short:mb-4 short:text-[19px] 3xl:text-[25px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
-                Local moving company providing house, apartment, condo and commercial moving services across Metro Vancouver.
-              </p>
-
-              {/* Start a booking: two addresses and Next, with the phone number under it (pushed lower in the photo on phones) */}
-              <div className="mt-auto pt-8 mb-6 sm:mt-1 sm:pt-0 sm:mb-4 lg:mb-6 lg:mt-2 short:mb-4">
-                <BookingStart />
+            <div className="flex flex-col">
+            {/* Desktop: the truck photo in a wide rounded panel (below the form, with clear space between them), with the mascot pushing his couch along its bottom */}
+            <div className="hidden lg:block lg:order-2 relative">
+              <div className="relative h-[min(460px,calc(100svh-290px))] min-h-[340px] rounded-[32px] overflow-hidden" style={{ backgroundColor: '#E6DFF0' }}>
+                <Image src="/hero-truck-home-natural.jpg" alt="Stonegate Moving Solutions truck outside a home" fill priority quality={88} sizes="(min-width: 1024px) 1150px, 1px" className="object-cover object-[72%_62%] xl:object-[64%_62%]" />
               </div>
+              <MascotCouch className="absolute left-0 w-[34%] -bottom-[40px] h-[150px] justify-start pl-6 z-30" />
+            </div>
 
-              {/* Trust badges */}
-              <div className="flex flex-row flex-wrap gap-x-6 gap-y-2 mb-3 sm:mt-auto sm:pt-2 lg:gap-y-3 lg:mb-3">
-                {([
-                  { Icon: Shield, label: 'Insured' },
-                  { Icon: GoogleLogo, label: '4.9-Star Rated' },
-                  { Icon: DollarSign, label: 'No Hidden Fees' },
-                ] as const).map(({ Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <Icon size={17} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
-                    <span className="text-sm sm:text-[15px] 3xl:text-base font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: '#FFFFFF' }}>{label}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Serving area */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-1 lg:mt-3 short:mt-2">
-                <div className="flex items-center gap-2 shrink-0">
-                  <MapPin size={13} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,1)) drop-shadow(0 2px 6px rgba(0,0,0,0.8))' }} />
-                  <span className="text-[11px] 3xl:text-xs font-semibold uppercase tracking-widest [text-shadow:0_1px_3px_rgba(0,0,0,1),0_2px_8px_rgba(0,0,0,0.85)]" style={{ color: 'rgba(255,255,255,0.8)' }}>Serving Metro Vancouver</span>
+            <div className="relative z-20 mt-5 lg:order-1 lg:mt-4 lg:mb-4 max-w-[760px] lg:max-w-none mx-auto w-full lg:flex lg:items-center lg:justify-center">
+              {/* The quote card: the truck first (phones and tablets only), then the booking start on purple */}
+              <div className="rounded-[28px] lg:rounded-[26px] overflow-hidden flex flex-col lg:w-[540px]" style={{ backgroundColor: '#4B1D8F', color: '#FFFFFF' }}>
+                <div className="relative h-[165px] sm:h-[290px] lg:hidden">
+                  <Image src="/hero-truck-home-natural.jpg" alt="Stonegate Moving Solutions truck outside a home" fill priority quality={85} sizes="(max-width: 1023px) 100vw, 1px" className="object-cover object-[60%_70%]" />
+                </div>
+                <div className="px-4 sm:px-8 lg:p-[4px] pt-5 sm:pt-6 pb-4 sm:pb-5">
+                  <BookingStart center hideTitle phoneClassName="lg:hidden" />
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Solid cream strip - smooth transition into next section */}
-          <div className="absolute bottom-0 inset-x-0 h-10 lg:h-[110px]" style={{ backgroundColor: '#FAF7F2' }} />
-
-        </section>
-
-        {/* Real Crew */}
-        <section className="-mt-10 lg:-mt-[110px]" style={{ backgroundColor: '#FAF7F2', position: 'relative', zIndex: 10 }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-10 sm:pt-20 pb-16 grid md:grid-cols-2 gap-12 items-center">
-            <FadeIn className="order-2 md:order-1">
-              <div className="relative rounded-3xl overflow-hidden h-[380px] 3xl:h-[440px]">
-                <Image
-                  src="/team-with-truck.jpg"
-                  alt="The Stonegate Moving Solutions crew in front of their truck"
-                  fill
-                  className="object-cover"
-                  style={{ objectPosition: 'center 60%' }}
-                />
-              </div>
-            </FadeIn>
-            <FadeIn delay={120} className="order-1 md:order-2">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>
-                  Who shows up
-                </p>
-                <h2 className="text-3xl sm:text-4xl 3xl:text-5xl font-extrabold tracking-tight mb-4" style={{ color: '#1A1714' }}>
-                  Professional and Fast<br />Every Time.
-                </h2>
-                <p className="text-base 3xl:text-lg leading-relaxed" style={{ color: '#6B5E54' }}>
-                  Local movers who show up on time and ready to work, from the first box to the last piece of furniture. A moving company based in Burnaby, moving homes and businesses across Vancouver, Surrey, Coquitlam and all of Metro Vancouver.
-                </p>
-              </div>
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* What every move includes */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16 grid md:grid-cols-2 gap-12 items-center">
-            <FadeIn>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#014421' }}>Every move includes</p>
-                <h2 className="text-3xl sm:text-4xl 3xl:text-5xl font-extrabold tracking-tight mb-8" style={{ color: '#1A1714' }}>
-                  Everything You Need for Moving Day
-                </h2>
-                <ul className="flex flex-col gap-5 mb-8">
-                  {included.map(item => (
-                    <li key={item.title} className="flex gap-3">
-                      <CheckCircle2 size={22} className="shrink-0 mt-0.5" style={{ color: '#014421' }} aria-hidden />
-                      <div>
-                        <p className="font-bold 3xl:text-lg" style={{ color: '#1A1714' }}>{item.title}</p>
-                        <p className="text-sm 3xl:text-base leading-relaxed" style={{ color: '#6B5E54' }}>{item.text}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/order">
-                  <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                    Check Moving Availability →
-                  </Button>
-                </Link>
-              </div>
-            </FadeIn>
-            <FadeIn delay={120}>
-              <div className="relative rounded-3xl overflow-hidden h-[420px] md:h-[560px] 3xl:h-[640px]">
-                <Image
-                  src="/crew-walking-truck.jpg"
-                  alt="Stonegate mover walking with a dolly beside the moving truck"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                  style={{ objectPosition: 'center 55%' }}
-                />
-              </div>
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-20 pb-20">
-            <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
-                How it works
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-16" style={{ color: '#1A1714' }}>
-                Simple. Transparent. Stress-Free.
-              </h2>
-            </FadeIn>
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              {steps.map((step, i) => (
-                <Fragment key={step.number}>
-                  <FadeIn delay={i * 120} style={{ flex: 1 }}>
-                    <div className="flex flex-col gap-4">
-                      <div className="flex items-center gap-4">
-                        <span className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0"
-                          style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                          {step.number}
-                        </span>
-                        <div className="w-24 h-24 rounded-2xl flex items-center justify-center"
-                          style={{ backgroundColor: '#EDE8E3' }}>
-                          <step.Icon size={40} strokeWidth={1.5} style={{ color: '#014421' }} />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="font-bold text-lg mb-2" style={{ color: '#1A1714' }}>{step.title}</p>
-                        <p className="text-base leading-relaxed" style={{ color: '#6B5E54' }}>{step.description}</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                  {i < steps.length - 1 && (
-                    <div className="hidden sm:flex items-center self-start shrink-0" style={{ paddingTop: '30px' }}>
-                      <span style={{ color: 'rgba(0,0,0,0.18)', fontSize: '16px', letterSpacing: '3px' }}>——</span>
-                    </div>
-                  )}
-                </Fragment>
-              ))}
+            {/* Phones and tablets: the mascot rolls a couch along right under the card, overlapping the top of the next section */}
+            <div className="relative z-10 -mb-[34px] translate-y-[14px] lg:hidden">
+              <MascotCouch />
+            </div>
             </div>
           </div>
         </section>
 
-        {/* Reviews */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16">
-            <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest text-center mb-3" style={{ color: '#014421' }}>
-                Reviews
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-center mb-4" style={{ color: '#1A1714' }}>
-                What Our Customers Say
-              </h2>
-              <div className="flex items-center justify-center gap-2 mb-14">
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star key={i} size={18} fill="#D4A017" style={{ color: '#D4A017' }} />
-                  ))}
-                </div>
-                <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: '#1A1714' }}><GoogleLogo size={16} /> 4.9 from Google reviews</span>
-              </div>
-            </FadeIn>
-
-            <ReviewsRow reviews={MOVING_REVIEWS} />
-
-            <div className="text-center">
-              <a
-                href="https://maps.app.goo.gl/ooQYs564eGP7JZbC6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2"
-              >
-                <Button className="text-base py-6 px-8 rounded-full font-bold border-0" style={{ backgroundColor: '#014421', color: '#FAF7F2' }}>
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white"><GoogleLogo size={14} /></span> Read More Reviews on Google →
-                </Button>
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Our Services */}
-        <section className="pb-10 lg:pb-12" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 pt-10 lg:pt-12">
-            <FadeIn>
-              <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>What we do</p>
-                  <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: '#1A1714' }}>Moving Services</h2>
-                </div>
-                <Link href="/pricing/moving">
-                  <Button className="rounded-full font-bold border-0 px-6 py-5" style={{ backgroundColor: 'transparent', color: '#014421', border: '2px solid #014421' }}>
-                    See Moving Prices →
-                  </Button>
-                </Link>
-              </div>
-            </FadeIn>
-          </div>
-          <ServicesCarousel cards={serviceCards} label="Moving services" />
-        </section>
-
-        {/* Service areas */}
-        <section style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#F5F0EB' }}>
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16">
-            <FadeIn>
-              <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#014421' }}>Service areas</p>
-              <h2 className="text-3xl font-extrabold tracking-tight mb-3" style={{ color: '#1A1714' }}>Movers Across Metro Vancouver</h2>
-              <p className="text-base leading-relaxed max-w-2xl mb-8" style={{ color: '#6B5E54' }}>
-                Local movers in every city, from Vancouver and Burnaby to Surrey and Coquitlam. Pick yours to see local details.
-              </p>
-            </FadeIn>
-            <ul className="flex flex-wrap gap-2.5">
-              {CITIES.map(c => (
-                <li key={c.slug}>
-                  <Link href={cityMovingHref(c)} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors hover:bg-[#E8F0E6]" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E0D5', color: '#1A1714' }}>
-                    {c.name}
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <Link href="/locations" className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold" style={{ color: '#014421' }}>
-                  All areas <ArrowRight size={14} />
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        {/* Close: the mascot standing on the green band, as on the service pages */}
-        <MovingClose heading="Ready for your free estimate?" text="Tell us what you're moving and when in about 2 minutes, or call and we will sort it out with you." />
-
-        {/* Contact & hours */}
-        <section className="relative" style={{ borderTop: '1px solid #E8E0D5', backgroundColor: '#FAF7F2' }}>
-
-          <div className="max-w-6xl 3xl:max-w-7xl mx-auto px-6 3xl:px-8 py-16 grid sm:grid-cols-2 gap-12">
-            <FadeIn>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>Contact us</p>
-              <div className="flex flex-col gap-3">
-                <a href="mailto:orders@stonegatemoving.com" className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714' }}>
-                  orders@stonegatemoving.com
-                </a>
-                <PhoneLink className="font-semibold hover:opacity-60 transition-opacity" style={{ color: '#1A1714', fontVariantNumeric: 'lining-nums tabular-nums' }} />
-              </div>
-            </div>
-            </FadeIn>
-            <FadeIn delay={120}>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: '#014421' }}>Hours</p>
-              <p className="font-semibold" style={{ color: '#1A1714' }}>6 am to 10 pm, 7 days a week</p>
-              <p className="mt-2 text-sm font-medium" style={{ color: '#6B5E54' }}>Based in Burnaby, moving across Metro Vancouver.</p>
-            </div>
-            </FadeIn>
-          </div>
-        </section>
+        <HomeSections />
 
       </main>
 

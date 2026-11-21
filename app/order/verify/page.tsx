@@ -95,15 +95,15 @@ export default function VerifyPage() {
   return (
     <PageCanvas backHref="/order" backLabel="← Edit order">
       <div className="max-w-xl mx-auto pt-4 text-center">
-        <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1A1714' }}>
+        <h1 className="text-4xl font-black tracking-tight" style={{ color: '#1E1530' }}>
           Check your email
         </h1>
-        <p className="mt-3 text-base" style={{ color: '#9A8E83' }}>
+        <p className="mt-3 text-base" style={{ color: '#8A82A0' }}>
           We sent a 6-digit code to{' '}
-          <span className="font-semibold" style={{ color: '#1A1714' }}>{email}</span>
+          <span className="font-semibold" style={{ color: '#1E1530' }}>{email}</span>
         </p>
 
-        <div className="mt-10 rounded-2xl p-10" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #EDE6DE' }}>
+        <div className="mt-10 rounded-2xl p-10" style={{ backgroundColor: '#FFFFFF', boxShadow: '0 2px 32px rgba(0,0,0,0.08)', border: '1px solid #E6DFF0' }}>
           <div className="flex justify-center gap-3 mb-6" onPaste={handlePaste}>
             {digits.map((digit, i) => (
               <input
@@ -117,20 +117,20 @@ export default function VerifyPage() {
                 onKeyDown={e => handleKeyDown(i, e)}
                 className="w-12 h-14 text-center text-2xl font-bold rounded-xl outline-none transition-all"
                 style={{
-                  backgroundColor: '#FAF7F2',
-                  border: `2px solid ${digit ? '#254220' : '#D9CFC4'}`,
-                  color: '#1A1714',
+                  backgroundColor: '#FFFFFF',
+                  border: `2px solid ${digit ? '#3D1878' : '#DDD5EA'}`,
+                  color: '#1E1530',
                 }}
               />
             ))}
           </div>
 
           {error && <p className="text-sm text-red-500 text-center mb-4">{error}</p>}
-          {resent && <p className="text-sm text-center mb-4" style={{ color: '#254220' }}>A new code has been sent.</p>}
+          {resent && <p className="text-sm text-center mb-4" style={{ color: '#3D1878' }}>A new code has been sent.</p>}
 
           <Button
             className="w-full font-bold rounded-xl py-6 border-0"
-            style={{ backgroundColor: '#254220', color: '#FAF7F2' }}
+            style={{ backgroundColor: '#3D1878', color: '#FFFFFF' }}
             onClick={handleVerify}
             disabled={verifying}
           >
@@ -142,7 +142,7 @@ export default function VerifyPage() {
               onClick={handleResend}
               disabled={resending}
               className="text-sm transition-colors"
-              style={{ color: '#9A8E83' }}
+              style={{ color: '#8A82A0' }}
             >
               {resending ? 'Sending...' : "Didn't receive it? Resend code"}
             </button>

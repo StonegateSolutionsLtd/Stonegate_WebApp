@@ -149,3 +149,45 @@
   opacity: 0;
   transform: translateY(24px);
 }
+
+/*
+ * Homepage hero: the mascot pushing a couch (components/landing/MascotCouch). Plays once:
+ * 0-2.0s he walks in from just outside the section's left edge at a steady pace, his legs stepping the whole way (two walk cycles);
+ * at 2.0s the movement and the legs stop together, then the bubble appears and he stays put.
+ * --couch-start is set by the component to the distance from the section's left edge to the mascot.
+ */
+.couch-train { transform: translateX(var(--couch-start, -100vw)); will-change: transform; }
+/* Steady speed, so his feet never step in place or slide; he starts off-screen, so the even start isn't seen */
+.couch-train.is-playing { animation: couch-push 1.5s linear forwards; }
+@keyframes couch-push { from { transform: translateX(var(--couch-start, -100vw)); } to { transform: translateX(0); } }
+/* The walk cycle: two passes through the 12 frames over the same 1.5s, then back to frame 1 (both feet down) */
+.couch-train.is-playing .couch-frames { animation: couch-walk 0.75s steps(12, jump-none) 2; }
+@keyframes couch-walk { from { transform: translateX(0); } to { transform: translateX(-91.6667%); } }
+.couch-train .couch-bubble { opacity: 0; transform: translateY(6px) scale(0.92); transform-origin: left bottom; }
+.couch-train.is-playing .couch-bubble { animation: couch-bubble 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 1.65s forwards; }
+@keyframes couch-bubble { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .couch-train, .couch-train.is-playing { animation: none; transform: none; }
+  .couch-train.is-playing .couch-frames { animation: none; }
+  .couch-train .couch-bubble, .couch-train.is-playing .couch-bubble { animation: none; opacity: 1; transform: none; }
+}
+
+/*
+ * Buttons (calls to action): squared-off corners, bold caps and a solid offset shadow in the brand ink,
+ * so they read as Stonegate rather than a stock rounded pill. Pressing pushes the button into its shadow.
+ * Unlayered on purpose so it wins over component-library radius utilities; it never sets colours.
+ */
+.sg-btn {
+  border-radius: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 var(--btn-shadow, #1E1530);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease, color 0.15s ease;
+}
+.sg-btn:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--btn-shadow, #1E1530); }
+.sg-btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--btn-shadow, #1E1530); }
+.sg-btn:focus-visible { outline: 3px solid #F26B21; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .sg-btn, .sg-btn:hover:not(:disabled), .sg-btn:active:not(:disabled) { transition: none; transform: none; }
+}

@@ -1,25 +1,33 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState, useSyncExternalStore, type FormEvent } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { ArrowRight, Phone } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { ORDER_START_KEY, type OrderStart } from '@/lib/types'
 import { PhoneLink, PhoneNumber } from '@/components/PhoneNumber'
 import { formLocationFor, trackEvent } from '@/lib/analytics'
 import AddressAutocomplete from '@/components/AddressAutocomplete'
 
 const inputClass =
-  'w-full min-w-0 rounded-full min-h-[44px] sm:min-h-[52px] px-4 sm:px-5 text-[16px] font-semibold border-0 outline-none transition-shadow focus:shadow-[0_0_0_3px_#C98A45] placeholder:font-medium placeholder:text-[#8A7E74]'
+  'w-full min-w-0 bg-transparent min-h-[48px] sm:min-h-[54px] text-[16px] sm:text-[17px] font-semibold border-0 outline-none placeholder:font-medium placeholder:text-[#8A82A0]'
 
 /**
- * One pickup field (city or postal code) plus Next, on the hero photo. The answers carry over into
+ * One pickup field (city or postal code) plus Next, in a white card on the hero photo. The answers carry over into
  * /order through session storage rather than the URL, so home addresses stay out of links and logs.
  * Phones get one field and no call button here: the header already has Call.
  */
-export default function BookingStart({ id }: { id?: string }) {
+/** `center` for a centred card (the homepage); `titleClassName` sets the headline's typeface */
+/** `hideTitle` keeps the heading for screen readers only (where the form explains itself, e.g. the homepage card) */
+// Desktop has room for the full placeholder; narrow fields use the short one so it isn't cut off
+const wideQuery = '(min-width: 1024px)'
+const subscribeWide = (cb: () => void) => { const m = window.matchMedia(wideQuery); m.addEventListener('change', cb); return () => m.removeEventListener('change', cb) }
+const useWide = () => useSyncExternalStore(subscribeWide, () => window.matchMedia(wideQuery).matches, () => false)
+
+export default function BookingStart({ id, center = false, titleClassName = '', hideTitle = false, phoneClassName = '' }: { id?: string; center?: boolean; titleClassName?: string; hideTitle?: boolean; phoneClassName?: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const [pickup, setPickup] = useState('')
+  const wide = useWide()
 
   function start(e: FormEvent) {
     e.preventDefault()
@@ -30,35 +38,32 @@ export default function BookingStart({ id }: { id?: string }) {
   }
 
   return (
-    <div id={id} className="w-full max-w-[640px]">
+    <div id={id} className={`w-full max-w-[560px] ${center ? 'mx-auto text-center' : ''}`}>
       <form onSubmit={start} aria-label="Get your free estimate">
-        <p className="mb-2.5 text-[16px] sm:text-[17px] font-bold [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: '#FFFFFF' }}>
+        <p className={hideTitle ? 'sr-only' : `mb-3.5 text-[17px] sm:text-[19px] leading-tight font-bold [text-shadow:0_1px_3px_rgba(0,0,0,0.3)] ${titleClassName}`} style={{ color: '#FFFFFF' }}>
           Get Your Free Moving Quote
         </p>
-        <div className="flex gap-2 sm:gap-2.5 max-w-[360px] sm:max-w-none">
+        {/* One white pill, like a search bar: type the pickup, the orange Next sits inside it */}
+        <div className="flex items-center gap-2 rounded-[22px] bg-white pl-5 sm:pl-6 pr-1.5 py-1.5 text-left transition-shadow shadow-[0_14px_34px_-14px_rgba(20,8,40,0.6)] lg:shadow-none focus-within:shadow-[0_0_0_3px_#F26B21]">
           <label className="flex-1 min-w-0">
             <span className="sr-only">Pickup city or postal code</span>
-            <AddressAutocomplete value={pickup} onValueChange={setPickup} placeholder="Pickup city or postal code" autoComplete="postal-code" className={inputClass} style={{ backgroundColor: '#FAF7F2', color: '#1A1714' }} />
+            <AddressAutocomplete value={pickup} onValueChange={setPickup} placeholder={wide ? 'Pickup city or postal code' : 'City or postal code'} autoComplete="postal-code" className={inputClass} style={{ color: '#1E1530' }} />
           </label>
           <button
             type="submit"
-            className="shrink-0 flex items-center justify-center gap-1.5 rounded-full min-h-[44px] sm:min-h-[52px] px-4 sm:px-7 text-[15px] sm:text-[17px] font-extrabold transition-[transform,background-color] duration-150 active:scale-[0.97] hover:bg-[#00341A]"
-            style={{ backgroundColor: '#014421', color: '#FAF7F2' }}
+            className="shrink-0 flex items-center justify-center gap-1.5 sg-btn min-h-[44px] sm:min-h-[50px] px-4 sm:px-6 text-[16px] font-extrabold whitespace-nowrap hover:bg-[#DD5A12]"
+            style={{ backgroundColor: '#F26B21', color: '#FFFFFF' }}
           >
-            Next <ArrowRight size={16} aria-hidden />
+            Next <ArrowRight size={17} aria-hidden />
           </button>
         </div>
-        <p className="mt-2 text-[13px] sm:text-[14px] font-medium [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]" style={{ color: 'rgba(255,255,255,0.85)' }}>
-          Free quote · No obligation
-        </p>
       </form>
-      <PhoneLink
-        className="hidden sm:inline-flex items-center gap-2 mt-3 rounded-full min-h-[48px] px-5 text-[16px] font-bold [text-shadow:0_1px_3px_rgba(0,0,0,0.8)] transition-[transform,border-color] duration-150 active:scale-[0.97] border-2 border-[#2F7A4D] hover:border-[#4CA372]"
-        style={{ color: '#FFFFFF', fontVariantNumeric: 'lining-nums tabular-nums' }}
-      >
-        <Phone size={16} fill="currentColor" aria-hidden />
-        Call <PhoneNumber />
-      </PhoneLink>
+      <p className={`mt-4 text-[15px] font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,0.35)] ${phoneClassName}`} style={{ color: 'rgba(255,255,255,0.82)' }}>
+        or call{' '}
+        <PhoneLink className="font-extrabold underline underline-offset-4 decoration-2 decoration-[#F26B21] hover:decoration-white" style={{ color: '#FFFFFF', fontVariantNumeric: 'lining-nums tabular-nums' }}>
+          <PhoneNumber />
+        </PhoneLink>
+      </p>
     </div>
   )
 }
