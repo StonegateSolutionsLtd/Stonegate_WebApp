@@ -30,6 +30,9 @@ const TIERS = [
 
 const filterOf = (p: ServicePhoto) => (p.brightness ? `brightness(${p.brightness})` : 'none')
 
+/** The intro up to its first full stop (the whole text if it has only one sentence) */
+const firstSentence = (t: string) => { const i = t.search(/[.!?](\s|$)/); return i === -1 ? t : t.slice(0, i + 1) }
+
 /** One <picture>: the phone photo, swapped for the desktop photo from lg (1024px) up, so only one is downloaded */
 function HeroPicture({ photo, desktop }: { photo: ServicePhoto; desktop: ServicePhoto }) {
   // No preload link: it would fetch one of the two photos on every screen
@@ -83,19 +86,19 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', dividerInH1 =
             style={{ objectPosition: photo.pos ?? 'center', filter: photo.brightness ? `brightness(${photo.brightness})` : undefined }}
           />
         )}
-        {/* Phones: only the upper left, behind the headline, is darkened; desktop fades from the left */}
-        <div className="absolute inset-0 lg:hidden" style={{ background: 'radial-gradient(ellipse 130% 520px at 0% 0%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.68) 55%, rgba(0,0,0,0.45) 74%, rgba(0,0,0,0.15) 90%, transparent 100%)' }} />
+        {/* Phones and tablets: the same left-side fade as the homepage hero; desktop fades from the left below */}
+        <div className="absolute inset-0 lg:hidden" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.79) 18%, rgba(0,0,0,0.7) 32%, rgba(0,0,0,0.56) 44%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.12) 75%, rgba(0,0,0,0.04) 84%, transparent 92%)' }} />
         <div className="absolute inset-0 hidden lg:block" style={{ background: (desktopPhoto ?? photo).bright
           ? 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.74) 25%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.25) 58%, transparent 75%)'
           : 'linear-gradient(to right, rgba(0,0,0,0.66) 0%, rgba(0,0,0,0.55) 25%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.14) 58%, transparent 75%)' }} />
       </div>
 
-      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-center lg:min-h-[min(calc(88svh-68px),820px)] pt-10 pb-8 sm:pt-14 sm:pb-12 lg:py-16 short:min-h-0 short:py-9">
+      <div className="relative max-w-[1400px] 3xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 flex items-stretch sm:items-center min-h-[600px] sm:min-h-0 lg:min-h-[min(calc(88svh-68px),820px)] pt-14 pb-10 sm:pt-14 sm:pb-12 lg:py-16 short:min-h-0 short:py-9">
         <div className="flex flex-col w-full">
           <GoogleStars className="mb-4 lg:mb-5 short:mb-3" />
           <h1 className="flex flex-col font-extrabold uppercase tracking-tight leading-none mb-4 w-fit" style={{ fontSize: 'clamp(2.1rem, min(7.3vw, 7.5svh), 4.4rem)' }}>
-            {/* A long top line ("House & Residential") is set smaller so it stays on one line on phones */}
-            <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: '#FFFFFF', fontSize: heading[0].length > 12 ? '0.72em' : undefined }}>{heading[0]}</span>
+            {/* The top line is set as large as the last one; a long one ("House & Residential") wraps onto two lines instead of shrinking */}
+            <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)] max-w-[9.5em]" style={{ color: '#FFFFFF', fontSize: '1.15em', lineHeight: 1 }}>{heading[0]}</span>
             {/* Real spaces between the lines, so the heading text reads "Surrey Movers", not "SurreyMovers" (ignored by the flex layout) */}
             {' '}
             <span className="flex items-center gap-3" style={{ fontSize: 'clamp(0.7rem, 1.6vw, 1rem)', margin: '0.45em 0', letterSpacing: '0.3em' }}>
@@ -110,11 +113,15 @@ export function MovingHero({ heading, divider = 'METRO VANCOUVER', dividerInH1 =
             {dividerInH1 && ' '}
             <span className="[text-shadow:0_3px_8px_rgba(0,0,0,0.45)]" style={{ color: CLAY, fontSize: '1.15em' }}>{heading[1]}</span>
           </h1>
-          <p className="text-[18px] sm:text-[21px] font-medium leading-snug max-w-[520px] mb-7 short:mb-5 short:text-[19px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
+          {/* Phones show only the first sentence, so the photo isn't buried under text; larger screens show it all */}
+          <p className="sm:hidden text-[16px] font-medium leading-snug mb-5 [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
+            {firstSentence(intro)}
+          </p>
+          <p className="hidden sm:block text-[21px] font-medium leading-snug max-w-[520px] mb-7 short:mb-5 short:text-[19px] [text-shadow:0_1px_2px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.6)]" style={{ color: '#FFFFFF' }}>
             {intro}
           </p>
-          {/* Lower in the photo on phones, then the badges under it */}
-          <div className="mt-24 sm:mt-0">
+          {/* Phones: the quote form sits low in the photo; larger screens keep it under the text */}
+          <div className="mt-auto pt-8 sm:mt-0 sm:pt-0">
             <BookingStart id="booking-start" />
           </div>
           <ul className="flex flex-wrap gap-x-6 gap-y-2 mt-7 sm:mt-8 short:mt-5">
