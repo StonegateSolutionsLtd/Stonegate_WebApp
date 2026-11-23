@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import NoAdminTracking from '@/components/NoAdminTracking'
 
 export const metadata: Metadata = {
   title: 'Admin · Stonegate Moving Solutions',
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return <><NoAdminTracking />{children}</>
 }

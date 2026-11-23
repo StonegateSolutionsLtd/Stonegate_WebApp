@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import Script from "next/script";
 import { PhoneNumberProvider } from "@/components/PhoneNumber";
-import { PHONE_CONVERSION_SEND_TO, PHONE_CONVERSION_NUMBER } from "@/lib/googleAds";
+import { GOOGLE_TAG_ID, PHONE_CONVERSION_SEND_TO, PHONE_CONVERSION_NUMBER } from "@/lib/googleAds";
+import { GA4_MEASUREMENT_ID } from "@/lib/analytics";
 import { JsonLd } from "@/components/seo/SeoBlocks";
 import { businessLd, websiteLd } from "@/lib/seo/site";
 import "./globals.css";
@@ -58,6 +59,11 @@ export default function RootLayout({
       />
       <Script id="google-tag" strategy="afterInteractive">
         {`
+          // Admin pages are not tracked: turn the Google Ads and GA4 destinations off before anything is sent
+          if (location.pathname.startsWith('/admin')) {
+            window['ga-disable-${GOOGLE_TAG_ID}'] = true;
+            window['ga-disable-${GA4_MEASUREMENT_ID}'] = true;
+          }
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
